@@ -1,0 +1,40 @@
+package com.phzc.business.analysis.web.models;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
+
+/**
+ * Created by YANJINGZHOU299 on 2015/7/8.
+ */
+@XmlRootElement
+public class StatBaseQueryRequest {
+    private Date statDate;
+
+    private Date statDateS;
+
+    private Date statDateE;
+
+    public Date getStatDate() {
+        return statDate;
+    }
+
+    public void setStatDate(Date statDate) {
+        this.statDate = statDate;
+    }
+
+    public Date getStatDateS() {
+        return statDateS;
+    }
+
+    public void setStatDateS(Date statDateS) {
+        this.statDateS = statDateS;
+    }
+
+    public Date getStatDateE() {
+        return statDateE;
+    }
+
+    public void setStatDateE(Date statDateE) {
+        this.statDateE = statDateE;
+    }
+}

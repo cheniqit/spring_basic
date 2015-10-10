@@ -1,0 +1,84 @@
+package com.phzc.business.analysis.web.controller;
+
+import com.phzc.business.analysis.web.beans.UserBean;
+import com.phzc.business.analysis.web.dao.UserDao;
+import com.phzc.business.analysis.web.datas.UserData;
+import com.phzc.business.analysis.web.models.UserQueryRequest;
+import com.phzc.business.analysis.web.utils.MD5Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.Locale;
+
+/**
+ * Created by JingZhou on 2015/5/21.
+ */
+@Controller
+public class HomeController {
+
+    @Autowired
+    UserDao userDao;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String welcome(HttpSession httpSession) {
+        return isLogin(httpSession);
+    }
+
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
+    public String log() {
+        return "log";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(HttpSession httpSession) {
+        return isLogin(httpSession);
+    }
+
+    @RequestMapping(value = "/loginOut", method = RequestMethod.GET)
+    public String loginOut(HttpSession httpSession) {
+        Object object = httpSession.getAttribute("user");
+        UserData user = object == null ? null : (UserData) object;
+        if (user != null) {
+            httpSession.removeAttribute("user");
+        }
+        return isLogin(httpSession);
+    }
+
+    @RequestMapping(value = "/check/{name}/{pwd}", method = RequestMethod.GET)
+    public UserBean check(HttpSession httpSession, @PathVariable String name, @PathVariable String pwd) {
+        UserQueryRequest user = new UserQueryRequest();
+        user.setLoginName(name);
+        user.setPassWord(MD5Utils.getMD5(pwd.getBytes()));
+        UserData userData = userDao.query(user);
+        if (userData != null) {
+            httpSession.setAttribute("user", userData);
+            return buildUserBean(userData);
+        }
+        return new UserBean();
+    }
+
+
+    private String isLogin(HttpSession httpSession) {
+        Object object = httpSession.getAttribute("user");
+        UserData user = object == null ? null : (UserData) object;
+        if (user != null) {
+            return "product/wholeSummary";
+        } else {
+            return "login";
+        }
+    }
+
+    private UserBean buildUserBean(UserData userData) {
+        UserBean userBean = new UserBean();
+        userBean.setLoginName(userData.getLoginName());
+        return userBean;
+    }
+
+}

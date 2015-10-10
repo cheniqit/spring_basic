@@ -1,0 +1,402 @@
+package com.phzc.business.analysis.web.controller;
+
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.phzc.business.analysis.web.beans.DailyCashBean;
+import com.phzc.business.analysis.web.beans.StatAddEverydayBean;
+import com.phzc.business.analysis.web.beans.StatAllEverydayBean;
+import com.phzc.business.analysis.web.beans.StatDailyAllBean;
+import com.phzc.business.analysis.web.beans.StatDailyProBean;
+import com.phzc.business.analysis.web.beans.StatDailyUserBean;
+import com.phzc.business.analysis.web.beans.StatInvestEverydayBean;
+import com.phzc.business.analysis.web.beans.StatProProgressBean;
+import com.phzc.business.analysis.web.dao.DailyCashDao;
+import com.phzc.business.analysis.web.dao.StatAddEverydayDao;
+import com.phzc.business.analysis.web.dao.StatAllEverydayDao;
+import com.phzc.business.analysis.web.dao.StatDailyAllDao;
+import com.phzc.business.analysis.web.dao.StatDailyProDao;
+import com.phzc.business.analysis.web.dao.StatDailyUserDao;
+import com.phzc.business.analysis.web.dao.StatInvestEverydayDao;
+import com.phzc.business.analysis.web.dao.StatProProgressDao;
+import com.phzc.business.analysis.web.models.StatBaseQueryRequest;
+import com.phzc.business.analysis.web.service.ProductBuilder;
+import com.phzc.business.analysis.web.utils.ExcelUtils;
+import com.phzc.business.analysis.web.utils.ListSortUtils;
+
+/**
+ * Created by YANJINGZHOU299 on 2015/7/8.
+ */
+@Controller
+public class ProductController {
+
+    /**
+     * 整体统计Dao
+     */
+    @Autowired
+    StatDailyAllDao statDailyAllDao;
+    /**
+     * 日用户总况Dao
+     */
+    @Autowired
+    StatDailyUserDao statDailyUserDao;
+    @Autowired
+    StatAddEverydayDao statAddEverydayDao;
+    @Autowired
+    StatInvestEverydayDao statInvestEverydayDao;
+    @Autowired
+    StatAllEverydayDao statAllEverydayDao;
+    @Autowired
+    ProductBuilder productBuilder;
+    
+    /**
+     * 日项目总况Dao
+     */
+    @Autowired
+    StatDailyProDao statDailyProDao;
+    
+    /**
+     * 项目进展Dao
+     */
+    @Autowired
+    StatProProgressDao statProProgressDao;
+    
+    /**
+	 * 每日资金总况
+	 */
+	@Autowired
+	DailyCashDao dailyCashDao;
+
+    /**
+     * 整体统计
+     *
+     * @param locale
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/product/wholeSummary", method = RequestMethod.GET)
+    public String wholeSummary(Locale locale, Model model) {
+        return "product/wholeSummary";
+    }
+    
+    /**
+     * 日用户总况
+     *
+     * @param locale
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/product/dailyUser", method = RequestMethod.GET)
+    public String dailyUser(Locale locale, Model model) {
+    	return "product/dailyUser";
+    }
+
+    /**
+     * 日总况
+     *
+     * @param locale
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/product/general", method = RequestMethod.GET)
+    public String general(Locale locale, Model model) {
+        return "product/general";
+    }
+
+    /**
+     * 日新增
+     *
+     * @return
+     */
+    @RequestMapping(value = "/product/dailyProduct", method = RequestMethod.GET)
+    public String increase() {
+        return "product/dailyProduct";
+    }
+
+    /**
+     * 日投资
+     *
+     * @return
+     */
+    @RequestMapping(value = "/product/invest", method = RequestMethod.GET)
+    public String invest() {
+        return "product/invest";
+    }
+    
+    /**
+	 * 日资金总况
+	 */
+	@RequestMapping(value = "/product/dailyCash", method = RequestMethod.GET)
+	public String dailyCash() {
+		return "product/dailyCash";
+	}
+
+	/**
+	 * 日资金总况数据查询
+	 * 
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	@RequestMapping(value = "/product/dailyCash/{begin}/{end}", method = RequestMethod.GET)
+	public List<DailyCashBean> dailyCash(@PathVariable String begin, @PathVariable String end) {
+		StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+		List<DailyCashBean> beans = productBuilder.buildDailyCashBean(dailyCashDao.query(request));
+		ListSortUtils<DailyCashBean> sort = new ListSortUtils<DailyCashBean>();
+		sort.sort(beans, "statDate", "desc");
+		return beans;
+	}
+	
+	/**
+	 * 日资金总况下载导出
+	 * 
+	 * @param response
+	 * @param begin
+	 * @param end
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/product/dailyCash/download/{begin}/{end}")
+	public String dailyCashDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end)
+			throws IOException {
+		String fileName = ExcelUtils.buildExcelName("", begin, end);
+		List<DailyCashBean> beans = productBuilder.buildDailyCashBean(dailyCashDao.query(productBuilder
+				.buildStatBaseQueryRequest(begin, end)));
+		List<Map<String, Object>> list = ProductBuilder.createDailyCashExcelRecord(beans);
+		String columnNames[] = { "时间", "日充值总额", "日充值用户数", "日提现总额", "日提现用户数", "账户总余额", "有账户余额用户数" };
+		String keys[] = { "statDate", "saveAmt", "saveCnt", "cashAmt", "cashCnt", "totalAmt", "totalAmtCnt" };
+		ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+		return null;
+	}
+
+    /**
+     * 整体统计数据查询
+     * @param begin
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = "/product/wholeSummary/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatDailyAllBean> wholeSummary(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatDailyAllBean> beans = productBuilder.buildStatDailyAllBean(statDailyAllDao.query(request));
+        ListSortUtils<StatDailyAllBean> sort = new ListSortUtils<StatDailyAllBean>();
+        sort.sort(beans, "statDate", "desc");
+        return beans;
+    }
+    /**
+     * 日用户总况
+     * @param begin
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = "/product/dailyUser/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatDailyUserBean> dailyUser(@PathVariable String begin, @PathVariable String end) {
+    	StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+    	List<StatDailyUserBean> beans = productBuilder.buildStatDailyUserBean(statDailyUserDao.query(request));
+    	ListSortUtils<StatDailyUserBean> sort = new ListSortUtils<StatDailyUserBean>();
+    	sort.sort(beans, "statDate", "desc");
+    	return beans;
+    }
+
+    /**
+     * 日总况数据查询
+     * @param begin
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = "/product/general/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatAllEverydayBean> general(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatAllEverydayBean> beans = productBuilder.buildStatAllEverydayBean(statAllEverydayDao.query(request));
+        ListSortUtils<StatAllEverydayBean> sort = new ListSortUtils<StatAllEverydayBean>();
+        sort.sort(beans, "statDate", "desc");
+        return beans;
+    }
+
+
+    @RequestMapping(value = "/product/increase/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatAddEverydayBean> increase(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatAddEverydayBean> beans = productBuilder.buildStatAddEverydayBean(statAddEverydayDao.query(request));
+        ListSortUtils<StatAddEverydayBean> sort = new ListSortUtils<StatAddEverydayBean>();
+        sort.sort(beans, "statDate", "desc");
+        return beans;
+    }
+
+
+    @RequestMapping(value = "/product/invest/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatInvestEverydayBean> invest(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatInvestEverydayBean> beans = productBuilder.buildStatInvestEverydayBean(statInvestEverydayDao.query(request));
+        ListSortUtils<StatInvestEverydayBean> sort = new ListSortUtils<StatInvestEverydayBean>();
+        sort.sort(beans, "statDate", "desc");
+        return beans;
+    }
+
+    @RequestMapping(value = "/product/invest/download/{begin}/{end}")
+    public String investDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatInvestEverydayBean> beans = productBuilder.buildStatInvestEverydayBean(
+                statInvestEverydayDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        List<Map<String, Object>> list = ProductBuilder.createInvestExcelRecord(beans);
+        String columnNames[] = {"时间", "日投资总额", "日投资用户数", "日预约总额", "日预约用户数", "日充值总额", "日充值用户数", "账户存量总额", "账户存量用户数"};
+        String keys[] = {"statDate", "investMoneyNum", "investNum", "appointMoneyNum", "appointNum", "payMoneyNum", "payNum", "remainMoneyNum", "remainNum", "updDatetime"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+
+    @RequestMapping(value = "/product/increase/download/{begin}/{end}")
+    public String increaseDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatAddEverydayBean> beans = productBuilder.buildStatAddEverydayBean(
+                statAddEverydayDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        List<Map<String, Object>> list = ProductBuilder.createIncreaseExcelRecord(beans);
+        String columnNames[] = {"时间", "日新增用户", "日新增认证用户数", "日新增充值用户数", "日新增投资用户数"};
+        String keys[] = {"statDate", "addNum", "authAddNum", "payAddNum", "investAddNum"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+
+    @RequestMapping(value = "/product/general/download/{begin}/{end}")
+    public String generalDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatAllEverydayBean> beans = productBuilder.buildStatAllEverydayBean(
+                statAllEverydayDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        List<Map<String, Object>> list = ProductBuilder.createGeneralExcelRecord(beans);
+        String columnNames[] = {"时间", "新增用户", "登陆用户数", "总注册用户数", "总认证用户数", "总投资用户数"};
+        String keys[] = {"statDate", "addNum", "loginNum", "regNum", "authNum", "investNum"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+
+    /**
+     * 整体统计导出Excel
+     * @param response
+     * @param begin
+     * @param end
+     * @throws IOException
+     */
+    @RequestMapping(value = "/product/wholeSummary/download/{begin}/{end}")
+    public String wholeSummaryDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatDailyAllBean> beans = productBuilder.buildStatDailyAllBean(
+                statDailyAllDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        //ListSortUtils<StatDailyAllBean> sort = new ListSortUtils<StatDailyAllBean>();
+        //sort.sort(beans, "statDate", "desc");
+        List<Map<String, Object>> list = ProductBuilder.createWholeSummaryExcelRecord(beans);
+        String columnNames[] = {"时间", "总注册用户数", "总实名认证用户数", "总绑卡用户数", "总合格投资者认证用户数", "总充值用户数", "总成功投资客户数", "总上线项目数", "总众筹成功项目数", "总众筹成功金额"};
+        String keys[] = {"statDate", "regUser", "nameAuth", "bindCard", "invAuth", "saveCnt", "payCnt", "proTotCnt", "proSuccCnt", "proSuccAmt"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+    /**
+     * 日用户总况Excel
+     * @param response
+     * @param begin
+     * @param end
+     * @throws IOException
+     */
+    @RequestMapping(value = "/product/dailyUser/download/{begin}/{end}")
+    public String dailyUserDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+    	String fileName = ExcelUtils.buildExcelName("", begin, end);
+    	List<StatDailyUserBean> beans = productBuilder.buildStatDailyUserBean(
+    			statDailyUserDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+    	//ListSortUtils<StatDailyAllBean> sort = new ListSortUtils<StatDailyAllBean>();
+    	//sort.sort(beans, "statDate", "desc");
+    	List<Map<String, Object>> list = ProductBuilder.createDailyUserExcelRecord(beans);
+    	String columnNames[] = {"时间", "日注册用户数", "日登录用户数", "日实名认证用户数", "日绑卡用户数", "日合格投资者认证用户数", "日充值用户数", "日成功投资客户数"};
+    	String keys[] = {"statDate", "regUser","loginUser", "nameAuth", "bindCard", "invAuth", "saveCnt", "payCnt"};
+    	ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+    	return null;
+    }
+    
+    /**
+     * 日项目总况
+     * @param begin
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = "/product/dailyProduct/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatDailyProBean> dailyProduct(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatDailyProBean> beans = productBuilder.buildStatDailyProBean(statDailyProDao.query(request));
+        ListSortUtils<StatDailyProBean> sort = new ListSortUtils<StatDailyProBean>();
+        sort.sort(beans, "statDate", "desc");
+        return beans;
+    }
+    
+    /**
+     * 项目进展
+     *
+     * @return
+     */
+    @RequestMapping(value = "/product/statProProgress", method = RequestMethod.GET)
+    public String statProProgressInit() {
+        return "product/statProProgress";
+    }
+    
+    /**
+     * 项目进展总况
+     * @param begin
+     * @param end
+     * @return
+     */
+    @RequestMapping(value = "/product/statProProgress/{begin}/{end}", method = RequestMethod.GET)
+    public List<StatProProgressBean> statProProgress(@PathVariable String begin, @PathVariable String end) {
+        StatBaseQueryRequest request = productBuilder.buildStatBaseQueryRequest(begin, end);
+        List<StatProProgressBean> beans = productBuilder.buildStatProProgressBean(statProProgressDao.query(request));
+        ListSortUtils<StatProProgressBean> sort = new ListSortUtils<StatProProgressBean>();
+        sort.sort(beans, "onlineDate", "desc");
+        return beans;
+    }
+    
+    /**
+     * 整体统计导出Excel
+     * @param response
+     * @param begin
+     * @param end
+     * @throws IOException
+     */
+    @RequestMapping(value = "/product/statProProgress/download/{begin}/{end}")
+    public String statProProgressDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatProProgressBean> beans = productBuilder.buildStatProProgressBean(
+        		statProProgressDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        List<Map<String, Object>> list = ProductBuilder.createStatProProgressExcelRecord(beans);
+        String columnNames[] = {"上线时间", "项目编号", "项目类别", "项目名称", "项目结束日期", "项目开始日期", "目标金额","募集金额","订单客户数","订单笔数","订单金额","成功客户数","成功订单笔数","成功订单金额","项目状态"};
+        String keys[] = {"onlineDate", "proCode", "proType","proName","proStartdate","proEnddate","proAmt","raiseAmt","orderCust","orderCnt","orderAmt","orderSuccCust","orderSuccCnt","orderSuccAmt","proStatus"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+    
+    /**
+     * 整体统计导出Excel
+     * @param response
+     * @param begin
+     * @param end
+     * @throws IOException
+     */
+    @RequestMapping(value = "/product/dailyProduct/download/{begin}/{end}")
+    public String dailyProductDownload(HttpServletResponse response, @PathVariable String begin, @PathVariable String end) throws IOException {
+        String fileName = ExcelUtils.buildExcelName("", begin, end);
+        List<StatDailyProBean> beans = productBuilder.buildStatDailyProBean(
+        		statDailyProDao.query(productBuilder.buildStatBaseQueryRequest(begin, end)));
+        List<Map<String, Object>> list = ProductBuilder.createStatDailyProExcelRecord(beans);
+        String columnNames[] = {"统计日期", "日投资总额", "日投资用户数", "日预约总金额", "日预约用户数", "众筹中项目数", "众筹中项目目标总金额", "众筹中项目已募集金额"};
+        String keys[] = {"statDate", "payAmt", "payCnt", "appointAmt", "appointCnt", "proinCnt", "proAmt", "proamtSucc"};
+        ExcelUtils.createResponse(response, list, keys, columnNames, fileName);
+        return null;
+    }
+}

@@ -1,0 +1,30 @@
+package com.phzc.business.analysis.web.utils;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
+/**
+ * Created by YANJINGZHOU299 on 2015/7/13.
+ */
+public class DecimalUtils {
+
+    static String DECIMAL_NULL = "0.00";
+    
+    static String FORMAT = ",###,##0.00";
+
+    public static String format(BigDecimal decimal, int point) {
+        if (decimal == null) {
+            return DECIMAL_NULL;
+        }
+        decimal = decimal.setScale(point, BigDecimal.ROUND_DOWN);
+        DecimalFormat df = new DecimalFormat(FORMAT);
+        return df.format(decimal);
+    }
+
+    public static String format_common(BigDecimal decimal) {
+        if (decimal == null) {
+            return DECIMAL_NULL;
+        }
+        return format(decimal, 2);
+    }
+}

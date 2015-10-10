@@ -1,0 +1,16 @@
+package com.phzc.business.analysis.web.utils;
+
+import java.math.BigDecimal;
+
+/**
+ * Created by YANJINGZHOU299 on 2015/7/13.
+ */
+public class IntUtils {
+    static String INT_NULL = "0";
+    public static String format(Integer integer) {
+        if (integer == null) {
+            return INT_NULL;
+        }
+        return integer.toString();
+    }
+}
