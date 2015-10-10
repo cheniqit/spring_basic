@@ -4,12 +4,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>channel</artifactId>
+        <artifactId>taskfactory</artifactId>
         <groupId>com.mk</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>channel-biz</artifactId>
-    <name>channel-biz</name>
+    <artifactId>taskfactory-biz</artifactId>
+    <name>taskfactory-biz</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.mk</groupId>
-            <artifactId>channel-api</artifactId>
+            <artifactId>taskfactory-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
