@@ -25,4 +25,8 @@
     from t_room_repair
     where hotelid = #{hotelid}
   </select>
+
+  <delete id="deleteByRoomType" parameterType="Integer">
+    delete from t_roomtype_facility where roomTypeId = #{roomTypeId}
+  </delete>
 </mapper>

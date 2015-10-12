@@ -77,4 +77,9 @@
     <include refid="Base_Column_List" />   
     from t_roomtype_info a where roomtypeid in(select id from t_roomtype where thotelid=#{hotelid})
   </select>
+
+
+  <delete id="deleteByRoomType" parameterType="Integer">
+    delete from t_roomtype_info where roomTypeId = #{roomTypeId}
+  </delete>
 </mapper>

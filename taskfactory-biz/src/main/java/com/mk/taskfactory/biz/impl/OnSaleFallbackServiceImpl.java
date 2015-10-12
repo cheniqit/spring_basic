@@ -1,9 +1,6 @@
 package com.mk.taskfactory.biz.impl;
 
-import com.mk.taskfactory.api.OnSaleFallbackService;
-import com.mk.taskfactory.api.RoomSaleService;
-import com.mk.taskfactory.api.RoomService;
-import com.mk.taskfactory.api.RoomTypeService;
+import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
@@ -25,6 +22,15 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
     @Autowired
     private RoomTypeService roomTypeService;
 
+    @Autowired
+    private RoomTypeInfoService roomTypeInfoService;
+
+    @Autowired
+    private RoomSettingService roomSettingService;
+
+    @Autowired
+    private RoomTypeFacilityService roomTypeFacilityService;
+
     public void onSaleFallback() {
         //需要回退的结果
         List<TRoomSaleDto> roomSaleDtoList = this.roomSaleService.queryYesterdayRoomSale();
@@ -38,36 +44,58 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
                 continue;
             }
 
+            //TODO LOG roomTypeId oldRoomTypeId
             /*
              *（1）根据t_room_sale roomtypeid,count和old_roomtypeid 将t_roomtype 中的roomNum还回去
              */
-            int roomCount = this.roomService.countRoomByRoomType(roomTypeId);
-            TRoomTypeDto roomTypeDto = new TRoomTypeDto();
-            roomTypeDto.setId(oldRoomTypeId);
-            roomTypeDto.setRoomNum(roomCount);
-
-            this.roomTypeService.updatePlusRoomNum(roomTypeDto);
+            this.updatePlusRoomNum(roomTypeId, oldRoomTypeId);
 
             /*
-             *（2）更具t_room_sale roomtypeid和old_roomtypeid update t_room中的roomtypeid为old_roomtypeid
+             *（2）根据t_room_sale roomtypeid和old_roomtypeid update t_room中的roomtypeid为old_roomtypeid
              */
-            TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
-            roomChangeTypeDto.setRoomTypeId(roomTypeId);
-            roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-            this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+            this.updateRoomType(roomTypeId, oldRoomTypeId);
 
             /*
-             *（3）更具t_room_sale roomtypeid删除表t_roomtype_info中where roomtypeid=${roomtypeid}中数据
+             *（3）根据t_room_sale roomtypeid删除表t_roomtype_info中where roomtypeid=${roomtypeid}中数据
              */
+            this.roomTypeInfoService.deleteByRoomType(roomTypeId);
 
             /*
-             *（4）更具t_room_sale roomtypeid删除表t_room_setting中where roomtypeid=${roomtypeid}中数据
+             *（4）根据t_room_sale roomtypeid删除表t_room_setting中where roomtypeid=${roomtypeid}中数据
              */
+            this.roomSettingService.deleteByRoomType(roomTypeId);
 
             /*
-             *（5）更具t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+             *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
              */
+            this.roomTypeFacilityService.deleteByRoomType(roomTypeId);
 
         }
+    }
+
+    /**
+     * 根据t_room_sale roomtypeid和old_roomtypeid update t_room中的roomtypeid为old_roomtypeid
+     * @param roomTypeId
+     * @param oldRoomTypeId
+     */
+    private void updateRoomType(Integer roomTypeId, Integer oldRoomTypeId) {
+        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+        roomChangeTypeDto.setRoomTypeId(roomTypeId);
+        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
+        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+    }
+
+    /**
+     * 根据t_room_sale roomtypeid,count和old_roomtypeid 将t_roomtype 中的roomNum还回去
+     * @param roomTypeId
+     * @param oldRoomTypeId
+     */
+    private void updatePlusRoomNum(Integer roomTypeId, Integer oldRoomTypeId) {
+        int roomCount = this.roomService.countRoomByRoomType(roomTypeId);
+        TRoomTypeDto roomTypeDto = new TRoomTypeDto();
+        roomTypeDto.setId(oldRoomTypeId);
+        roomTypeDto.setRoomNum(roomCount);
+
+        this.roomTypeService.updatePlusRoomNum(roomTypeDto);
     }
 }

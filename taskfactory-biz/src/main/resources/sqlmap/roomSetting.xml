@@ -33,4 +33,8 @@
     from t_room_setting
     where hotelid = #{hotelid}
   </select>
+
+  <delete id="deleteByRoomType" parameterType="Integer">
+    delete from t_room_setting where roomTypeId = #{roomTypeId}
+  </delete>
 </mapper>
