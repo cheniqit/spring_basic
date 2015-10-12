@@ -11,6 +11,7 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <!-- cat集成 -->
+    <!--
     <filter>
         <filter-name>cat-filter</filter-name>
         <filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
@@ -21,7 +22,7 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
-
+    -->
     <servlet>
         <servlet-name>appServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

@@ -2,7 +2,7 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.dianping.cat.Cat;
-import com.mk.taskfactory.api.ValidRateTaskService;
+import com.mk.taskfactory.api.RoomSaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class HomeController {
 
     @Autowired
-    private ValidRateTaskService validRateTaskService;
+    private RoomSaleService roomSaleService;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
@@ -33,5 +33,12 @@ public class HomeController {
 
 
 
+    @RequestMapping(value = "/testRoomSale", method = RequestMethod.GET)
+    @ResponseBody
+    public void testRoomSale(HttpSession httpSession) {
+
+        this.roomSaleService.queryYesterdayRoomSale();
+        return;
+    }
 
 }
