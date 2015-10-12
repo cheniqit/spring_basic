@@ -27,7 +27,7 @@ public class HomeController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("check", "123");
         Cat.logEvent("CHECK_TEST", "123");
-       // validRateTaskService.validRateTaskRun();
+        validRateTaskService.validRateTaskRun();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

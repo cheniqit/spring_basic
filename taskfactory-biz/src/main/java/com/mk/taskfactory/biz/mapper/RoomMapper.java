@@ -14,5 +14,7 @@ public interface RoomMapper {
     public Integer deleteTRoomByRoomTypeId(Integer roomTypeId);
     public Integer updateRoomById(TRoomDto bean);
     public List<TRoom> findRoomsByHotelId(Integer hotelId);
+    public List<TRoom> findRoomsByRoomTypeId(Integer hotelId);
+    public TRoom findRoomsById(Integer id);
 
 }
