@@ -92,10 +92,12 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
      */
     private void updatePlusRoomNum(Integer roomTypeId, Integer oldRoomTypeId) {
         int roomCount = this.roomService.countRoomByRoomType(roomTypeId);
-        TRoomTypeDto roomTypeDto = new TRoomTypeDto();
-        roomTypeDto.setId(oldRoomTypeId);
-        roomTypeDto.setRoomNum(roomCount);
+        if (roomCount > 0) {
+            TRoomTypeDto roomTypeDto = new TRoomTypeDto();
+            roomTypeDto.setId(oldRoomTypeId);
+            roomTypeDto.setRoomNum(roomCount);
 
-        this.roomTypeService.updatePlusRoomNum(roomTypeDto);
+            this.roomTypeService.updatePlusRoomNum(roomTypeDto);
+        }
     }
 }

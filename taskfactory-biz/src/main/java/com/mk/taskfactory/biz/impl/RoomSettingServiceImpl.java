@@ -1,9 +1,7 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSettingService;
-import com.mk.taskfactory.api.RoomTypeInfoService;
-import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
-import com.mk.taskfactory.biz.mapper.RoomTypeSettingMapper;
+import com.mk.taskfactory.biz.mapper.RoomSettingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class RoomSettingServiceImpl implements RoomSettingService {
 
     @Autowired
-    private RoomTypeSettingMapper roomTypeSettingMapper;
+    private RoomSettingMapper roomTypeSettingMapper;
 
     @Override
     public void deleteByRoomType(int roomTypeId) {

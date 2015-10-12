@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.taskfactory.biz.mapper.TRoomTypeInfo" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper" >
   <sql id="Base_Column_List" >
     a.id, a.roomtypeid, a.minarea, a.maxarea, a.bedtype, a.bedsize, a.pics
   </sql>
@@ -78,8 +78,7 @@
     from t_roomtype_info a where roomtypeid in(select id from t_roomtype where thotelid=#{hotelid})
   </select>
 
-
-  <delete id="deleteByRoomType" parameterType="Integer">
+  <delete id="deleteByRoomType" parameterType="java.lang.Integer">
     delete from t_roomtype_info where roomTypeId = #{roomTypeId}
   </delete>
 </mapper>
