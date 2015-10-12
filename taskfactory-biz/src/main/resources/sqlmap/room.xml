@@ -69,4 +69,8 @@
     count(*)
     from t_room where roomtypeid = #{roomTypeId}
   </select>
+
+  <update id="updateRoomTypeByRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomChangeTypeDto">
+    update t_room set roomTypeId=#{oldRoomTypeId} where roomTypeId=#{roomTypeId}
+  </update>
 </mapper>

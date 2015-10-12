@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.mapper;
 
 
+import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 import com.mk.taskfactory.model.TRoom;
@@ -16,4 +17,6 @@ public interface RoomMapper {
     public List<TRoom> findRoomsByHotelId(Integer hotelId);
 
     public Integer countRoomByRoomType(int roomTypeId);
+
+    public void updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
 }

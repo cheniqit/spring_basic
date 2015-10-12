@@ -14,6 +14,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     public void updatePlusRoomNum(TRoomTypeDto roomTypeDto) {
+        if (null ==  roomTypeDto || null == roomTypeDto.getId() || null == roomTypeDto.getRoomNum()) {
+            //TODO LOG
+            return;
+        }
         this.roomTypeMapper.updatePlusRoomNum(roomTypeDto);
     }
 }
