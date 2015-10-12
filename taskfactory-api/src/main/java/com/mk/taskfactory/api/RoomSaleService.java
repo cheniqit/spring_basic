@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface RoomSaleService {
     List<TRoomSaleDto> queryYesterdayRoomSale();
+
+    public void saveRoomSale(TRoomSaleDto roomSaleDto);
 }

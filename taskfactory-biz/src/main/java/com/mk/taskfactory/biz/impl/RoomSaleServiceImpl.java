@@ -35,4 +35,11 @@ public class RoomSaleServiceImpl implements RoomSaleService {
 
         return roomSaleDtoList;
     }
+
+    @Override
+    public void saveRoomSale(TRoomSaleDto roomSaleDto) {
+        if (null != roomSaleDto) {
+            this.roomSaleMapper.saveRoomSale(roomSaleDto);
+        }
+    }
 }
