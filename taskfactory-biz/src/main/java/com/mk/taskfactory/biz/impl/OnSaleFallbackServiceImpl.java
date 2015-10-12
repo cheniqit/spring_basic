@@ -41,7 +41,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
              */
             int roomCount = this.roomService.countRoomByRoomType(roomTypeId);
             this.roomTypeService.updatePlusRoomNum(oldRoomTypeId,roomCount);
-            
+
             /*
              *（2）更具t_room_sale roomtypeid和old_roomtypeid update t_room中的roomtypeid为old_roomtypeid
              */

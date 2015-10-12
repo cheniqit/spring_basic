@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomTypeService;
+import com.mk.taskfactory.api.dtos.TRoomTypeDto;
 import com.mk.taskfactory.biz.mapper.RoomTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private RoomTypeMapper roomTypeMapper;
 
     @Override
-    public void updatePlusRoomNum(int roomTypeId, int plusNum) {
-
+    public void updatePlusRoomNum(TRoomTypeDto roomTypeDto) {
+        this.roomTypeMapper.updatePlusRoomNum(roomTypeDto);
     }
 }
