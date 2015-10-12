@@ -84,4 +84,12 @@
         <include refid="Base_Query_List"/>
         ORDER BY id DESC limit 1
     </select>
+
+    <select id="queryYesterdayRoomSale" resultMap="tRoomSale">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_room_sale
+        WHERE createDate > date_add(CURDATE() , interval -1 DAY)
+    </select>
+
 </mapper>
