@@ -15,11 +15,12 @@
         <result property="endTime" column="endTime" />
         <result property="roomId" column="roomId" />
         <result property="configId" column="configId" />
+        <result property="isBack" column="isBack" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
         id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice,
-        startTime,endTime,roomId,configId
+        startTime,endTime,roomId,configId,isBack
     </sql>
 
     <sql id="Base_Query_List" >
@@ -41,6 +42,8 @@
             </if>
             <if test="createDate != null">
                 AND createDate = #{createDate}
+            </if>  <if test="isBack != null">
+                AND isBack = #{isBack}
             </if>
         </where>
     </sql>
@@ -62,7 +65,7 @@
          VALUE
          (
             #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},
-            #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId}
+            #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},#{isBack}
          )
     </insert>
 
@@ -84,6 +87,7 @@
          endTime =  #{endTime},
          roomId =  #{roomId},
          configId =  #{configId}
+         isBack =  #{isBack}
         where id = #{id}
     </update>
 

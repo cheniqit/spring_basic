@@ -13,6 +13,7 @@ public class TRoomSale {
     private String endTime;
     private Integer roomId;
     private Integer configId;
+    private String isBack;
 
     public Integer getId() {
         return id;
@@ -108,5 +109,13 @@ public class TRoomSale {
 
     public void setConfigId(Integer configId) {
         this.configId = configId;
+    }
+
+    public String getIsBack() {
+        return isBack;
+    }
+
+    public void setIsBack(String isBack) {
+        this.isBack = isBack;
     }
 }
