@@ -12,7 +12,7 @@ public interface RoomSaleConfigMapper {
 
     public List<TRoomSaleConfig> queryRoomSaleConfigByParams(TRoomSaleConfigDto bean);
     public Integer saveRoomSaleConfig(TRoomSaleConfigDto bean);
-    public Integer deleteRoomSaleConfig(Integer id);
+    public Integer delTRoomTypeById(Integer id);
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
 
 }

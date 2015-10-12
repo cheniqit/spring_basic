@@ -9,6 +9,11 @@ public class TRoomSaleDto {
     private String createDate;
     private String salePrice;
     private String costPrice;
+    private String startTime;
+    private String endTime;
+    private Integer roomId;
+    private Integer configId;
+    private String isBack;
 
     public Integer getId() {
         return id;
@@ -72,5 +77,45 @@ public class TRoomSaleDto {
 
     public void setCostPrice(String costPrice) {
         this.costPrice = costPrice;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    public Integer getConfigId() {
+        return configId;
+    }
+
+    public void setConfigId(Integer configId) {
+        this.configId = configId;
+    }
+
+    public String getIsBack() {
+        return isBack;
+    }
+
+    public void setIsBack(String isBack) {
+        this.isBack = isBack;
     }
 }
