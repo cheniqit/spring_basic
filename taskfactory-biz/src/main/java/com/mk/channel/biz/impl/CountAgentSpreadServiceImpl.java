@@ -1,9 +1,7 @@
 package com.mk.channel.biz.impl;
 
 import com.mk.channel.api.CountAgentSpreadService;
-import com.mk.channel.api.dtos.CountAgentSpreadDto;
 import com.mk.channel.biz.mapper.channel.CountAgentSpreadMapper;
-import com.mk.channel.model.CountAgentSpread;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

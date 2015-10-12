@@ -1,6 +1,5 @@
 package com.mk.channel.biz.impl;
 
-import com.mk.channel.api.dtos.BOtaOrderDto;
 import com.mk.channel.api.BOtaOrderService;
 import com.mk.channel.biz.mapper.umember.BOtaOrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,5 @@
 package com.mk.channel.api;
 
-import com.mk.channel.api.dtos.CountAgentSpreadDto;
-
 import java.util.List;
 
 public interface CountAgentSpreadService {

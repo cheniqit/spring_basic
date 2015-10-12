@@ -1,7 +1,5 @@
 package com.mk.channel.api;
 
-import com.mk.channel.api.dtos.UMemberDto;
-
 import java.util.List;
 
 /**

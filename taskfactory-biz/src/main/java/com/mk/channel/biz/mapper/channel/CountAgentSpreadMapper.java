@@ -1,9 +1,7 @@
 package com.mk.channel.biz.mapper.channel;
 
 
-import com.mk.channel.api.dtos.CountAgentSpreadDto;
 import com.mk.channel.biz.repository.MyBatisRepository;
-import com.mk.channel.model.CountAgentSpread;
 
 import java.util.List;
 

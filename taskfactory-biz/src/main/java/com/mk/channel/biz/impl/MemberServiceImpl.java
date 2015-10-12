@@ -1,9 +1,7 @@
 package com.mk.channel.biz.impl;
 
-import com.mk.channel.api.dtos.UMemberDto;
 import com.mk.channel.api.MemberService;
 import com.mk.channel.biz.mapper.umember.UMemberMapper;
-import com.mk.channel.model.UMember;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
