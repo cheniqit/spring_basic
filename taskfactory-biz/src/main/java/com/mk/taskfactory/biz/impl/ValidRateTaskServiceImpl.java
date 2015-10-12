@@ -2,6 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleConfigService;
 import com.mk.taskfactory.api.RoomService;
+import com.mk.taskfactory.api.RoomTypeService;
 import com.mk.taskfactory.api.ValidRateTaskService;
 import com.mk.taskfactory.api.dtos.TRoomDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
@@ -20,6 +21,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomService roomService;
     @Autowired
     private RoomSaleConfigService roomSaleConfigService;
+    @Autowired
+    private RoomTypeService roomTypeService;
     public void validRateTaskRun(){
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
@@ -29,8 +32,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<String,Object> saleRoomMap=getSaleRoom(list);
         List<TRoomDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
-        for (TRoomDto roomDto:saleRooms){
-
+        for (TRoomTypeDto roomTypeDto:roomTypes){
+            roomTypeService.
         }
         for (TRoomDto roomDto:saleRooms){
 

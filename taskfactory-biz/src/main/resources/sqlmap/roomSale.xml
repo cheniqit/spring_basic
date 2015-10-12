@@ -11,10 +11,15 @@
         <result property="createDate" column="createDate" />
         <result property="salePrice" column="salePrice" />
         <result property="costPrice" column="costPrice" />
+        <result property="startTime" column="startTime" />
+        <result property="endTime" column="endTime" />
+        <result property="roomId" column="roomId" />
+        <result property="configId" column="configId" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice
+        id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice,
+        startTime,endTime,roomId,configId
     </sql>
 
     <sql id="Base_Query_List" >
@@ -56,7 +61,8 @@
         <include refid="Base_Column_List"/>
          VALUE
          (
-            #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},#{salePrice}, #{costPrice}
+            #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},
+            #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId}
          )
     </insert>
 
@@ -73,7 +79,11 @@
          pms =  #{pms},
          createDate  = #{createDate},
          salePrice =  #{salePrice},
-         costPrice =  #{costPrice}
+         costPrice =  #{costPrice},
+         startTime =  #{startTime},
+         endTime =  #{endTime},
+         roomId =  #{roomId},
+         configId =  #{configId}
         where id = #{id}
     </update>
 

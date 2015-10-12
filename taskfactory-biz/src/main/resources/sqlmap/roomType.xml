@@ -116,17 +116,6 @@
 		update t_roomtype set name=#{name}, cost=#{cost}, roomnum=#{roomnum} where
 		id=#{id}
 	</update>
-	<select id="findHotelPrices" resultMap="ResultMapWithBasePrice"
-		parameterType="java.lang.Long">
-		select a.id, a.thotelid, a.ehotelid, a.name, a.pms, a.bednum, a.roomnum,
-		a.cost
-		,b.roomtypeid,b.price,b.subprice,b.subper
-		from t_roomtype a
-		left outer join t_baseprice b
-		on a.id=b.roomtypeid
-		where a.thotelid = #{hotelid}
-	</select>
-
 
 	<update id="updatePlusRoomNum" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
 		update t_roomtype set roomNum= roomNum + #{roomNum} where
