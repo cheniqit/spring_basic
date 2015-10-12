@@ -24,6 +24,7 @@
   
    <context:property-placeholder location="classpath:db.properties"/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
         <property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
         <property name="url" value="${mysql.jdbc.url}"/>
         <property name="username" value="${mysql.jdbc.username}"/>
@@ -42,7 +43,8 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
-<tx:advice id="txadvice" transaction-manager="transactionManager">
+
+	<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -58,8 +60,10 @@
 		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
 	</aop:config>
 
+	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.mk.taskfactory.biz.mapper"/>
+
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 </beans>

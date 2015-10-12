@@ -30,8 +30,4 @@ public class HomeController {
         validRateTaskService.validRateTaskRun();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
-
-
-
-
 }

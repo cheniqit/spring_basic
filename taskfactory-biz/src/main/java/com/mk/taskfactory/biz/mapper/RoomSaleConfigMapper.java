@@ -9,6 +9,7 @@ import java.util.List;
 
 @MyBatisRepository
 public interface RoomSaleConfigMapper {
+
     public List<TRoomSaleConfig> queryRoomSaleConfigByParams(TRoomSaleConfigDto bean);
     public Integer saveRoomSaleConfig(TRoomSaleConfigDto bean);
     public Integer deleteRoomSaleConfig(Integer id);

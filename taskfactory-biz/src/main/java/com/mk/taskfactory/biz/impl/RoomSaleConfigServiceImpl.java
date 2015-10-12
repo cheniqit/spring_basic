@@ -1,5 +1,6 @@
 package com.mk.taskfactory.biz.impl;
 
+
 import com.mk.taskfactory.api.RoomSaleConfigService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
@@ -11,16 +12,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by admin on 2015/9/22.
- */
 @Service
 public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
 
     @Autowired
     private RoomSaleConfigMapper roomSaleConfigMapper;
 
-    public  List<TRoomSaleConfigDto> queryRoomSaleConfigByParams(TRoomSaleConfigDto bean){
+    public List<TRoomSaleConfigDto> queryRoomSaleConfigByParams(TRoomSaleConfigDto bean){
         List<TRoomSaleConfig> list=roomSaleConfigMapper.queryRoomSaleConfigByParams(bean);
         if (list==null){
             return  null;
