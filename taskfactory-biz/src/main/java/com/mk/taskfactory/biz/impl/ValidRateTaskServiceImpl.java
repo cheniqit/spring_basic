@@ -30,7 +30,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
         for (TRoomTypeDto roomTypeDto:roomTypes){
-            
+
         }
         for (TRoomDto roomDto:saleRooms){
 
