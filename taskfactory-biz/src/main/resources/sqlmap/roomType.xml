@@ -133,8 +133,4 @@
 		id=#{id}
 	</update>
 
-	<update id="updateRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
-		update t_roomtype set roomNum= roomNum + #{roomNum} where
-		id=#{id}
-	</update>
 </mapper>
