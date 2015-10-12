@@ -9,10 +9,9 @@ public class TRoomSaleConfigDto {
     private String endTime;
     private String startDate;
     private String endDate;
-    private Double salePrice;
-    private Double costPrice;
-    private Double markertPrice;
+    private Double saleValue;
     private Integer num;
+    private Integer type;
 
     public Integer getId() {
         return id;
@@ -78,28 +77,20 @@ public class TRoomSaleConfigDto {
         this.endDate = endDate;
     }
 
-    public Double getSalePrice() {
-        return salePrice;
+    public Double getSaleValue() {
+        return saleValue;
     }
 
-    public void setSalePrice(Double salePrice) {
-        this.salePrice = salePrice;
+    public void setSaleValue(Double saleValue) {
+        this.saleValue = saleValue;
     }
 
-    public Double getCostPrice() {
-        return costPrice;
+    public Integer getType() {
+        return type;
     }
 
-    public void setCostPrice(Double costPrice) {
-        this.costPrice = costPrice;
-    }
-
-    public Double getMarkertPrice() {
-        return markertPrice;
-    }
-
-    public void setMarkertPrice(Double markertPrice) {
-        this.markertPrice = markertPrice;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getNum() {

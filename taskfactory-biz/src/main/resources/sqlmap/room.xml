@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.TRoomMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoom" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pms" property="pms" jdbcType="VARCHAR" />
+    <result column="isLock" property="isLock" jdbcType="CHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="floor" property="floor" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DECIMAL" />
+    <result column="lockId" property="lockId" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="property" property="property" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, roomTypeId, name, pms, islock,memo, floor, score,lockId,tel,property
+  </sql>
+  <sql id="Base_Query_List" >
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="roomTypeId != null">
+        AND roomTypeId = #{roomTypeId}
+      </if>
+      <if test="name != null">
+        AND name = #{name}
+      </if>
+      <if test="isLock != null">
+        AND isLock = #{isLock}
+      </if>
+    </where>
+  </sql>
+  <select id="queryRoomByParams" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomDto" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM  t_room
+    <include refid="Base_Query_List"/>
+    ORDER  BY  id DESC
+  </select>
+  
+  <select id="findRoomsByHotelId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room where roomtypeid in( select id from t_roomtype where thotelid=#{hotelId}) 
+ </select>
+   
+   <insert id="saveTRoom" parameterType="com.mk.taskfactory.api.dtos.TRoomDto"
+   			useGeneratedKeys="true" keyProperty="id">
+   		insert into t_room
+     <include refid="Base_Column_List"/>
+     values (
+      #{id}, #{roomTypeId}, #{name}, #{pms},#{islock},#{memo},#{floor},#{score},#{lockId},#{tel},#{property}
+     )
+   </insert>
+   
+   <delete id="deleteTRoomByRoomTypeId" parameterType="java.lang.Long">
+   		delete from t_room where roomtypeid=#{roomTypeId,jdbcType=BIGINT}
+   </delete>
+   
+   <update id="updateRoomById" parameterType="com.mk.taskfactory.api.dtos.TRoomDto">
+   		update t_room set name=#{name} where id=#{id}
+   </update>
+   
+</mapper>

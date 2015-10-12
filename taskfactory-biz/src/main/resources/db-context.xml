@@ -24,10 +24,11 @@
   
    <context:property-placeholder location="classpath:db.properties"/>
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${umember.jdbc.driverClassName}"/>
-        <property name="url" value="${umember.jdbc.url}"/>
-        <property name="username" value="${umember.jdbc.username}"/>
-        <property name="password" value="${umember.jdbc.password}"/>
+
+        <property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+        <property name="url" value="${mysql.jdbc.url}"/>
+        <property name="username" value="${mysql.jdbc.username}"/>
+        <property name="password" value="${mysql.jdbc.password}"/>
     </bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -36,13 +37,13 @@
 
 	</bean>
 
-
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
     <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
 	<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
@@ -60,15 +61,9 @@
 	</aop:config>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
-
-
-
 	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.mk.taskfactory.biz.mapper"/>
 
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
-
-
-
 </beans>
