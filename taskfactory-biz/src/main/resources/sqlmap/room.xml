@@ -63,5 +63,10 @@
    <update id="updateRoomById" parameterType="com.mk.taskfactory.api.dtos.TRoomDto">
    		update t_room set name=#{name} where id=#{id}
    </update>
-   
+
+  <select id="countRoomByRoomType" resultType="Integer" parameterType="java.lang.Integer" >
+    select
+    count(*)
+    from t_room where roomtypeid = #{roomTypeId}
+  </select>
 </mapper>

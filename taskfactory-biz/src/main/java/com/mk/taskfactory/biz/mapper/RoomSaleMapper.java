@@ -8,5 +8,5 @@ import java.util.List;
 
 @MyBatisRepository
 public interface RoomSaleMapper {
-    List<TRoomSaleDto> queryYesterdayRoomSale();
+    public List<TRoomSaleDto> queryYesterdayRoomSale();
 }

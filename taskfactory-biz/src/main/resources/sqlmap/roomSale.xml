@@ -82,7 +82,7 @@
         <include refid="Base_Column_List"/>
         FROM  t_room_sale
         <include refid="Base_Query_List"/>
-        ORDER BY id DESC limit 1
+        ORDER BY id DESC
     </select>
 
     <select id="queryYesterdayRoomSale" resultMap="tRoomSale">

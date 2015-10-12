@@ -126,4 +126,10 @@
 		on a.id=b.roomtypeid
 		where a.thotelid = #{hotelid}
 	</select>
+
+
+	<update id="updatePlusRoomNum" parameterType="java.lang.Integer">
+		update t_roomtype set roomNum= roomNum + #{plusNum} where
+		id=#{roomTypeId}
+	</update>
 </mapper>
