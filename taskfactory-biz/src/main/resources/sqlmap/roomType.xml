@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.ots.mapper.TRoomTypeMapper">
-	<resultMap id="BaseResultMap" type="com.mk.ots.hotel.model.TRoomTypeModel">
+<mapper namespace="com.mk.taskfactory.biz.mapper.TRoomTypeMapper">
+	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomType">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="thotelId" property="thotelid" jdbcType="BIGINT" />
 		<result column="ehotelid" property="ehotelid" jdbcType="BIGINT" />
@@ -14,7 +14,7 @@
 		<result column="bedtypename" property="bedtypename" jdbcType="VARCHAR" />
 		<result column="bedlength" property="bedlength" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="ResultMapWithBasePrice" type="com.mk.ots.hotel.model.TRoomTypeWithBasePrice"
+	<resultMap id="ResultMapWithBasePrice" type="com.mk.taskfactory.api.dtos.TRoomTypeDto"
 		extends="BaseResultMap">
 		<result column="roomtypeid" property="roomtypeid" jdbcType="BIGINT" />
 		<result column="price" property="price" jdbcType="DECIMAL" />
@@ -89,7 +89,7 @@
 			and b.bedtype = #{bednum}
 		</if>
 	</select>
-	<insert id="saveTRoomType" parameterType="com.mk.ots.hotel.model.TRoomTypeModel"
+	<insert id="saveTRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into t_roomtype ( thotelid, ehotelid, name, pms, bednum, roomnum,
 		cost )
@@ -112,7 +112,7 @@
 		where a.id = #{id}
 	</select>
 
-	<update id="updateTRoomType" parameterType="com.mk.ots.hotel.model.TRoomTypeModel">
+	<update id="updateTRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
 		update t_roomtype set name=#{name}, cost=#{cost}, roomnum=#{roomnum} where
 		id=#{id}
 	</update>

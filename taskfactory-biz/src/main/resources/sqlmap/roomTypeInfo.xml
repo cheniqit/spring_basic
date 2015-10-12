@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.ots.mapper.TRoomtypeInfoMapper" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.TRoomTypeInfo" >
   <sql id="Base_Column_List" >
     a.id, a.roomtypeid, a.minarea, a.maxarea, a.bedtype, a.bedsize, a.pics
   </sql>
-  <select id="selectByRoomtypeid" resultType="com.mk.ots.hotel.model.TRoomTypeInfoModel" parameterType="java.lang.Long" >
+  <select id="selectByRoomtypeid" resultType="com.mk.taskfactory.model.TRoomTypeInfo" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     , '' as bedtypename
@@ -12,7 +12,7 @@
     where a.roomtypeid = #{roomtypeid} limit 1
   </select>
   
-  <select id="findByRoomtypeid" resultType="com.mk.ots.hotel.model.TRoomTypeInfoModel" parameterType="java.lang.Long" >
+  <select id="findByRoomtypeid" resultType="com.mk.taskfactory.model.TRoomTypeInfo" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     ,b.name as bedtypename
@@ -22,7 +22,7 @@
   </select>
   
   
-  <insert id="insertSelective" parameterType="com.mk.ots.hotel.model.TRoomTypeInfoModel" >
+  <insert id="insertSelective" parameterType="com.mk.taskfactory.model.TRoomTypeInfo" >
     insert into t_roomtype_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -72,7 +72,7 @@
     </trim>
   </insert>
   
-  <select id="findByHotelid" resultType="com.mk.ots.hotel.model.TRoomTypeInfoModel" parameterType="java.lang.Long" >
+  <select id="findByHotelid" resultType="com.mk.taskfactory.model.TRoomTypeInfo" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />   
     from t_roomtype_info a where roomtypeid in(select id from t_roomtype where thotelid=#{hotelid})

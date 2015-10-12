@@ -23,43 +23,26 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
   
    <context:property-placeholder location="classpath:db.properties"/>
-    <bean id="umemberDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${umember.jdbc.driverClassName}"/>
-        <property name="url" value="${umember.jdbc.url}"/>
-        <property name="username" value="${umember.jdbc.username}"/>
-        <property name="password" value="${umember.jdbc.password}"/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+        <property name="url" value="${mysql.jdbc.url}"/>
+        <property name="username" value="${mysql.jdbc.username}"/>
+        <property name="password" value="${mysql.jdbc.password}"/>
     </bean>
 
-	<bean id="channelDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${channel.jdbc.driverClassName}"/>
-		<property name="url" value="${channel.jdbc.url}"/>
-		<property name="username" value="${channel.jdbc.username}"/>
-		<property name="password" value="${channel.jdbc.password}"/>
-	</bean>
-
-	<bean id="umemberSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="umemberDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/umember/*.xml"/>
-
-	</bean>
-	<bean id="channelSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="channelDataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/channel/*.xml"/>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/*.xml"/>
 
 	</bean>
 
-
-    <bean id="umemberTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="umemberDataSource"/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
     </bean>
-
-	<bean id="channelTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="channelDataSource"/>
-	</bean>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
-    <tx:annotation-driven transaction-manager="umemberTransactionManager" proxy-target-class="true"/>
-<tx:advice id="txadvice" transaction-manager="umemberTransactionManager">
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
 			<tx:method name="save*" propagation="REQUIRED" />
@@ -75,36 +58,8 @@
 		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
 	</aop:config>
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-	<tx:annotation-driven transaction-manager="channelTransactionManager" proxy-target-class="true"/>
-	<tx:advice id="channelTxAdvice" transaction-manager="channelTransactionManager">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="channelTxPointcut" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="channelTxAdvice" pointcut-ref="channelTxPointcut" />
-	</aop:config>
-
-
-	<bean name="umemberScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.umember"/>
-
-		<property name="sqlSessionFactoryBeanName" value="umemberSqlSessionFactory"></property>
+	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
-
-	<bean name="channelScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.channel"/>
-
-		<property name="sqlSessionFactoryBeanName" value="channelSqlSessionFactory"></property>
-	</bean>
-
-
 </beans>
