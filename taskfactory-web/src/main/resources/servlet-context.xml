@@ -13,11 +13,11 @@
    	">
     <mvc:annotation-driven/>
     <context:component-scan base-package="
-    com.mk.channel.web.controller">
+    com.mk.taskfactory.web.controller">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-    <context:component-scan base-package=" com.mk.channel.task " />
-    <context:component-scan base-package=" com.mk.channel.api" />
+    <context:component-scan base-package=" com.mk.taskfactory.task " />
+    <context:component-scan base-package=" com.mk.taskfactory.api" />
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
 
@@ -50,7 +50,7 @@
         </property>
     </bean>
 
-    <bean id="validRateTask" class="com.mk.channel.task.ReFreshChannelTask" />
+    <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
 
     <task:scheduled-tasks>
         <task:scheduled ref="validRateTask" method="run" cron="0 40 18 * * ?"/>

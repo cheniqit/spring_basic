@@ -95,13 +95,13 @@
 
 
 	<bean name="umemberScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.channel.biz.mapper.umember"/>
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.umember"/>
 
 		<property name="sqlSessionFactoryBeanName" value="umemberSqlSessionFactory"></property>
 	</bean>
 
 	<bean name="channelScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.channel.biz.mapper.channel"/>
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.channel"/>
 
 		<property name="sqlSessionFactoryBeanName" value="channelSqlSessionFactory"></property>
 	</bean>

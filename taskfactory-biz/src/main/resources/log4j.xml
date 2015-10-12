@@ -11,7 +11,7 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="com.mk.channel.web">
+	<logger name="com.mk.taskfactory.web">
         <level value="debug" />
 	</logger>
 
