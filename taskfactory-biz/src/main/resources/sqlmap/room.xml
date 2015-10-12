@@ -41,12 +41,24 @@
     ORDER  BY  id DESC
   </select>
   
-  <select id="findRoomsByHotelId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="findRoomsByHotelId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_room where roomtypeid in( select id from t_roomtype where thotelid=#{hotelId}) 
+    from t_room where roomtypeid in( select id from t_roomtype where thotelid=#{hotelId})
  </select>
-   
+
+  <select id="findRoomsById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_room where id =#{id}
+  </select>
+
+  <select id="findRoomsByRoomTypeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_room where roomtypeid =#{roomTypeId}
+  </select>
+
    <insert id="saveTRoom" parameterType="com.mk.taskfactory.api.dtos.TRoomDto"
    			useGeneratedKeys="true" keyProperty="id">
    		insert into t_room

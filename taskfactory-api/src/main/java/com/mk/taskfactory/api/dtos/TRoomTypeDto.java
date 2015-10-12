@@ -8,7 +8,7 @@ public class TRoomTypeDto {
     private String pms;
     private Integer bedNum;
     private Integer roomNum;
-    private String cost;
+    private Double cost;
 
     public Integer getId() {
         return id;
@@ -66,11 +66,11 @@ public class TRoomTypeDto {
         this.roomNum = roomNum;
     }
 
-    public String getCost() {
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 }
