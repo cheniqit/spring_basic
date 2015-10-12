@@ -19,6 +19,6 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     @Override
     public List<TRoomSaleDto> queryYesterdayRoomSale() {
         List<TRoomSaleDto> roomSaleDtoList = this.roomSaleMapper.queryYesterdayRoomSale();
-        return null;
+        return roomSaleDtoList;
     }
 }

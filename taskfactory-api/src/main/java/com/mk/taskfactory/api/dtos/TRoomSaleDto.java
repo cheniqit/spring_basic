@@ -3,7 +3,7 @@ package com.mk.taskfactory.api.dtos;
 public class TRoomSaleDto {
     private Integer id;
     private Integer roomTypeId;
-    private String oldRoomTypeId;
+    private Integer oldRoomTypeId;
     private String name;
     private String pms;
     private String createDate;
@@ -26,11 +26,11 @@ public class TRoomSaleDto {
         this.roomTypeId = roomTypeId;
     }
 
-    public String getOldRoomTypeId() {
+    public Integer getOldRoomTypeId() {
         return oldRoomTypeId;
     }
 
-    public void setOldRoomTypeId(String oldRoomTypeId) {
+    public void setOldRoomTypeId(Integer oldRoomTypeId) {
         this.oldRoomTypeId = oldRoomTypeId;
     }
 
