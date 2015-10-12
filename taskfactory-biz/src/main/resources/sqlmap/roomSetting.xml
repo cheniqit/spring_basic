@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.TRoomSettingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomSetting" >
+    <id column="id" property="id"/>
+    <result column="hotelId" property="hotelId"/>
+    <result column="roomTypeId" property="roomTypeId"/>
+    <result column="roomNo" property="roomNo"/>
+    <result column="bedTypeName" property="bedTypeName"/>
+    <result column="roomDirection" property="roomDirection" />
+    <result column="roomFloor" property="roomFloor"/>
+    <result column="isWindow" property="isWindow"/>
+    <result column="isStair" property="isStair"/>
+    <result column="isElevator" property="isElevator"/>
+    <result column="isStreet" property="isStreet"/>
+    <result column="creteDate" property="creteDate"/>
+    <result column="updateDate" property="updateDate"/>
+    <result column="valid" property="valid"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotelId, roomTypeId, roomNo, bedTypeName, roomDirection,
+    roomFloor,isWindow,isStair,isElevator,isStreet,creteDate,updateDate,valid
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room_setting
+    where id = #{id}
+  </select>
+  <select id="findList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room_setting
+    where hotelid = #{hotelid}
+  </select>
+</mapper>

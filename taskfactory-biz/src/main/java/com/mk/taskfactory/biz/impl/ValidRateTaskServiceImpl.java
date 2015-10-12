@@ -1,9 +1,6 @@
 package com.mk.taskfactory.biz.impl;
 
-import com.mk.taskfactory.api.CountAgentSpreadService;
 import com.mk.taskfactory.api.ValidRateTaskService;
-import com.mk.taskfactory.api.BOtaOrderService;
-import com.mk.taskfactory.api.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
