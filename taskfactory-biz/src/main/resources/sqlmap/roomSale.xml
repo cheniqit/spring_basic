@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSaleMapper">
+
+	<resultMap id="tRoomSale" type="com.mk.taskfactory.model.TRoomSale">
+	    <result property="id" column="id" />
+	    <result property="roomTypeId" column="roomTypeId" />
+	    <result property="oldRoomTypeId" column="oldRoomTypeId" />
+        <result property="name" column="name" />
+        <result property="pms" column="pms" />
+        <result property="createDate" column="createDate" />
+        <result property="salePrice" column="salePrice" />
+        <result property="costPrice" column="costPrice" />
+	</resultMap>
+
+    <sql id="Base_Column_List" >
+        id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice
+    </sql>
+
+    <sql id="Base_Query_List" >
+        <where>
+            <if test="id != null">
+                 id = #{id}
+            </if>
+            <if test="roomTypeId != null">
+                AND roomTypeId = #{roomTypeId}
+            </if>
+            <if test="oldRoomTypeId != null">
+                AND oldRoomTypeId = #{oldRoomTypeId}
+            </if>
+            <if test="name != null">
+                AND name = #{name}
+            </if>
+            <if test="pms != null">
+                AND pms = #{pms}
+            </if>
+            <if test="createDate != null">
+                AND createDate = #{createDate}
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryRoomSale" resultMap="tRoomSale" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+         FROM  t_room_sale
+        <include refid="Base_Query_List"/>
+    </select>
+    <select id="countRoomSale" resultType="Integer" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
+        select count(*) from count_agent_spread
+        <include refid="Base_Query_List"/>
+    </select>
+
+    <insert id="saveRoomSale"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto" >
+        INSERT INTO t_room_sale
+        <include refid="Base_Column_List"/>
+         VALUE
+         (
+            #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},#{salePrice}, #{costPrice}
+         )
+    </insert>
+
+    <delete id="deleteRoomSale" parameterType="Integer">
+         delete from t_room_sale where id = #{id}
+    </delete>
+
+    <update id="updateRoomSale" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto" >
+        update t_room_sale
+        set
+         roomTypeId = #{roomTypeId},
+         oldRoomTypeId = #{oldRoomTypeId},
+         name =  #{name},
+         pms =  #{pms},
+         createDate  = #{createDate},
+         salePrice =  #{salePrice},
+         costPrice =  #{costPrice}
+        where id = #{id}
+    </update>
+
+    <select id="getRoomSale" resultMap="tRoomSale" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_room_sale
+        <include refid="Base_Query_List"/>
+        ORDER BY id DESC limit 1
+    </select>
+</mapper>
