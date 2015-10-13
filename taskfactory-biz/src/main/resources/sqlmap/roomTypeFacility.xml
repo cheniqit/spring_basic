@@ -3,29 +3,32 @@
 <mapper namespace="com.mk.taskfactory.biz.mapper.RoomTypeFacilityMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.api.dtos.TRoomTypeFacilityDto" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="hotelId" property="hotelid" jdbcType="BIGINT" />
-    <result column="repairId" property="repairid" jdbcType="VARCHAR" />
-    <result column="roomid" property="roomid" jdbcType="BIGINT" />
-    <result column="Begintime" property="begintime" jdbcType="TIMESTAMP" />
-    <result column="Endtime" property="endtime" jdbcType="TIMESTAMP" />
-    <result column="roomTypeId" property="roomtypeid" jdbcType="BIGINT" />
+    <result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="facId" property="facId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, hotelId, repairId, roomid, Begintime, Endtime, roomTypeId
+    id, roomTypeId, facId
   </sql>
-  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_room_repair
+    from t_roomtype_facility
     where id = #{id}
   </select>
-  <select id="findList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="findByRoomTypeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from t_room_repair
-    where hotelid = #{hotelid}
+    from t_roomtype_facility
+    where roomTypeId = #{roomTypeId}
   </select>
-
+  <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomTypeFacilityDto" >
+    INSERT INTO t_roomtype_facility
+    <include refid="Base_Column_List"/>
+    VALUE
+    (
+    #{id},#{roomTypeId}, #{facId}
+    )
+  </insert>
   <delete id="deleteByRoomType" parameterType="java.lang.Integer">
     delete from t_roomtype_facility where roomTypeId = #{roomTypeId}
   </delete>
