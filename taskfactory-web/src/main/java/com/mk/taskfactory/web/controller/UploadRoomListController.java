@@ -24,16 +24,6 @@ public class UploadRoomListController {
     @Autowired
     private OnSaleFallbackService onSaleFallbackService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> test(HttpSession httpSession) {
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        result.put("check", "123");
-        Cat.logEvent("CHECK_TEST", "123");
-//        validRateTaskService.validRateTaskRun();
-        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     public void importBrandSort(MultipartFile file) throws Exception {
 
