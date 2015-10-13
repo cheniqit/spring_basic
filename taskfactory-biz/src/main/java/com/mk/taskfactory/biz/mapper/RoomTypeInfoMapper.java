@@ -10,5 +10,4 @@ public interface RoomTypeInfoMapper {
     public TRoomTypeInfo findByRoomTypeId(Integer roomTypeId);
     public Integer saveRoomTypeInfo(TRoomTypeInfoDto bean);
 
-
 }
