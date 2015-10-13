@@ -37,10 +37,11 @@
 
   <insert id="saveTRoomSetting"  parameterType="com.mk.taskfactory.api.dtos.TRoomSettingDto" >
     INSERT INTO t_room_setting
-    <include refid="Base_Column_List"/>
+   ( hotelId, roomTypeId, roomNo, bedTypeName, roomDirection,
+    roomFloor,isWindow,isStair,isElevator,isStreet,creteDate,updateDate,valid)
     VALUE
     (
-    #{id},#{hotelId}, #{roomTypeId},#{roomNo}, #{bedTypeName}, #{roomDirection},
+    #{hotelId}, #{roomTypeId},#{roomNo}, #{bedTypeName}, #{roomDirection},
     #{roomFloor}, #{isWindow}, #{isStair}, #{isElevator}, #{isStreet}, #{creteDate},
     #{updateDate}, #{valid}
     )
@@ -112,5 +113,8 @@
         AND roomNo = #{roomNo}
       </if>
     </where>
+  </update>
+  <update id="updateTRoomSettingByRoomTypeId" parameterType="com.mk.taskfactory.api.dtos.TRoomChangeTypeDto">
+    update t_room_setting set roomTypeId=#{oldRoomTypeId} where roomTypeId=#{roomTypeId}
   </update>
 </mapper>

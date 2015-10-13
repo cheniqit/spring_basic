@@ -4,7 +4,6 @@ import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
-import com.mk.taskfactory.biz.mapper.RoomSaleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,15 +60,19 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
             this.roomTypeInfoService.deleteByRoomType(roomTypeId);
 
             /*
-             *（4）根据t_room_sale roomtypeid删除表t_room_setting中where roomtypeid=${roomtypeid}中数据
+             *（4）根据t_room_sale roomtypeid roomNo  还原t_room_setting中where roomtypeid=${roomtypeid}中数据为oldRoomTypeId
              */
-            this.roomSettingService.deleteByRoomType(roomTypeId);
+            this.updateRoomSetting(roomTypeId, oldRoomTypeId);
 
             /*
              *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
              */
             this.roomTypeFacilityService.deleteByRoomType(roomTypeId);
 
+             /*
+             *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+             */
+            this.roomTypeService.delTRoomTypeById(roomTypeId);
             //设置更新完
             TRoomSaleDto dto = new TRoomSaleDto();
             dto.setId(roomSaleDto.getId());
@@ -104,5 +107,17 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
             this.roomTypeService.updatePlusRoomNum(roomTypeDto);
         }
+    }
+    /**
+     * 根据t_room_sale roomtypeid,count和old_roomtypeid 将t_roomtype 中的roomNum还回去
+     * @param roomTypeId
+     * @param oldRoomTypeId
+     */
+    private void updateRoomSetting(Integer roomTypeId, Integer oldRoomTypeId) {
+        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+        roomChangeTypeDto.setRoomTypeId(roomTypeId);
+        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
+        this.roomSettingService.updateTRoomSettingByRoomTypeId(roomChangeTypeDto);
+
     }
 }

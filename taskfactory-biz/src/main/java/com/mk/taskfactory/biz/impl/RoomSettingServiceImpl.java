@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSettingService;
+import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSettingDto;
 import com.mk.taskfactory.biz.mapper.RoomSettingMapper;
 import com.mk.taskfactory.model.TRoomSetting;
@@ -14,8 +15,7 @@ public class RoomSettingServiceImpl implements RoomSettingService {
     @Autowired
     private RoomSettingMapper roomTypeSettingMapper;
 
-    @Override
-    public void deleteByRoomType(int roomTypeId) {
+    public void deleteByRoomType(Integer roomTypeId) {
         this.roomTypeSettingMapper.deleteByRoomType(roomTypeId);
     }
 
@@ -28,6 +28,9 @@ public class RoomSettingServiceImpl implements RoomSettingService {
     }
     public void updateTRoomSetting(TRoomSettingDto bean){
          roomTypeSettingMapper.updateTRoomSetting(bean);
+    }
+    public void updateTRoomSettingByRoomTypeId(TRoomChangeTypeDto bean){
+        roomTypeSettingMapper.updateTRoomSettingByRoomTypeId(bean);
     }
     private TRoomSettingDto buildTRoomSettingDto(TRoomSetting bean) {
         if (bean==null){

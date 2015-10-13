@@ -11,7 +11,7 @@
       <result column="bedSize" property="bedSize" jdbcType="VARCHAR" />
     </resultMap>
   <sql id="Base_Column_List" >
-    a.id, a.roomtypeid, a.minarea, a.maxarea, a.bedtype, a.bedsize, a.pics
+    id, roomtypeid, minarea, maxarea, pics,bedType,bedSize
   </sql>
   <select id="findByRoomTypeId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,11 +22,11 @@
 
   <insert id="saveRoomTypeInfo"  parameterType="com.mk.taskfactory.api.dtos.TRoomTypeInfoDto" >
     INSERT INTO t_roomtype_info
-    <include refid="Base_Column_List"/>
+    (roomtypeid, minarea, maxarea, pics,bedType,bedSize)
     VALUE
     (
-    #{id},#{roomTypeId}, #{minArea},#{maxArea}, #{pics}, #{bedType},
-    #{bedSize}
+     #{roomTypeId}, #{minArea},#{maxArea}, #{pics}, #{bedType},
+     #{bedSize}
     )
   </insert>
   

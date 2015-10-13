@@ -52,11 +52,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomTypeModel.setCost(roomTypeDto.getCost());
             roomTypeModel.setName(roomTypeDto.getName());
             //复制并创建活动房型
-            TRoomTypeDto roomTypeModel1=new TRoomTypeDto();
-            roomTypeModel1.setRoomNum(roomTypeDto.getRoomNum());
-            roomTypeModel1.setCost(roomTypeDto.getCost());
-            roomTypeModel1.setName(roomTypeDto.getName());
-            newRoomTypeId=roomTypeService.saveTRoomType(roomTypeModel1);
+            roomTypeService.saveTRoomType(roomTypeModel);
+            newRoomTypeId=roomTypeModel.getId();
             if (newRoomTypeId==null){
                 continue;
             }
@@ -168,9 +165,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                             roomSale.setSaleType(roomSaleConfig.getType());
                             saleRooms.put(room.getId(),roomSale);
                         saleNum++;
+                        if (saleNum==roomSaleConfig.getNum()){
+                            break;
+                        }
                     }
                 }
             }
+            roomTypeDto.setRoomNum(saleNum);
             //更新做活动房型map
             roomTypeList.put(roomSaleConfig.getRoomTypeId(), roomTypeDto);
 

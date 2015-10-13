@@ -69,10 +69,11 @@
 
     <insert id="saveRoomSale"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto" >
         INSERT INTO t_room_sale
-        <include refid="Base_Column_List"/>
+       (roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
+        startTime,endTime,roomId,configId,isBack,saleName,saleType)
          VALUE
          (
-            #{id},#{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
+            #{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
             #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},
             #{isBack},#{saleName},#{saleType}
          )

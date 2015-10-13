@@ -7,7 +7,6 @@ import com.mk.taskfactory.model.TRoomType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.List;
@@ -27,13 +26,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         this.roomTypeMapper.updatePlusRoomNum(roomTypeDto);
     }
     public Integer saveTRoomType(TRoomTypeDto bean){
-        return null;
+        return roomTypeMapper.saveTRoomType(bean);
     }
     public Integer delTRoomTypeById(Integer id){
-        return  null;
+        return  roomTypeMapper.deleteTRoomType(id);
     }
     public Integer updateTRoomType(TRoomTypeDto bean){
-        return null;
+        return roomTypeMapper.updateTRoomType(bean);
     }
     public TRoomTypeDto findTRoomTypeById(Integer id){
         TRoomType roomType=roomTypeMapper.findTRoomTypeById(id);

@@ -6,6 +6,7 @@
     <result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="pms" property="pms" jdbcType="VARCHAR" />
+    <result column="fromToTime" property="fromToTime" jdbcType="VARCHAR" />
     <result column="isLock" property="isLock" jdbcType="CHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="floor" property="floor" jdbcType="VARCHAR" />
@@ -15,7 +16,7 @@
     <result column="property" property="property" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, roomTypeId, name, pms, islock,memo, floor, score,lockId,tel,property
+    id, roomTypeId, name, pms,fromToTime, isLock,memo, floor, score,lockId,tel,property
   </sql>
   <sql id="Base_Query_List" >
     <where>
@@ -62,9 +63,9 @@
    <insert id="saveTRoom" parameterType="com.mk.taskfactory.api.dtos.TRoomDto"
    			useGeneratedKeys="true" keyProperty="id">
    		insert into t_room
-     <include refid="Base_Column_List"/>
+    (roomTypeId, name, pms,fromToTime, isLock,memo, floor, score,lockId,tel,property)
      values (
-      #{id}, #{roomTypeId}, #{name}, #{pms},#{islock},#{memo},#{floor},#{score},#{lockId},#{tel},#{property}
+      #{roomTypeId}, #{name}, #{pms},#{fromToTime},#{isLock},#{memo},#{floor},#{score},#{lockId},#{tel},#{property}
      )
    </insert>
    

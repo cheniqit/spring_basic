@@ -67,15 +67,16 @@
 			and a.thotelId = #{thotelId}
 		</if>
 	</select>
-	<insert id="saveTRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
-		insert into t_roomtype ( id,thotelId, ehotelId, `name`, pms, bedNum, roomNum,
+	<insert id="saveTRoomType" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into t_roomtype ( thotelId, ehotelId, name, pms, bedNum, roomNum,
 		cost )
 		values
-		( #{id,jdbcType=BIGINT },#{thotelId,jdbcType=BIGINT }, #{ehotelId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{pms,jdbcType=VARCHAR}, #{bedNum,jdbcType=BIGINT}, #{roomNum ,jdbcType=BIGINT},
-		#{cost,jdbcType=DECIMAL} )
+		( #{thotelId}, #{ehotelId}, #{name}, #{pms}, #{bedNum}, #{roomNum },
+		#{cost} )
 	</insert>
 
-	<delete id="delTRoomTypeById" parameterType="java.lang.Integer">
+	<delete id="deleteTRoomType" parameterType="java.lang.Integer">
 		delete from t_roomtype where id=#{id,jdbcType=BIGINT}
 	</delete>
 	<select id="findTRoomTypeById" resultMap="BaseResultMap"
