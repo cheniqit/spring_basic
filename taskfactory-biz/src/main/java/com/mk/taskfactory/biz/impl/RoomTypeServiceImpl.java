@@ -22,13 +22,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         this.roomTypeMapper.updatePlusRoomNum(roomTypeDto);
     }
-    public Integer saveRoomSaleConfig(TRoomTypeDto bean){
+    public Integer saveTRoomType(TRoomTypeDto bean){
         return null;
     }
     public Integer delTRoomTypeById(Integer id){
         return  null;
     }
-    public Integer updateRoomSaleConfig(TRoomTypeDto bean){
+    public Integer updateTRoomType(TRoomTypeDto bean){
         return null;
     }
     public TRoomTypeDto findTRoomTypeById(Integer id){

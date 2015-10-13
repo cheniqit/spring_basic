@@ -12,6 +12,7 @@ public class TRoomSaleConfigDto {
     private Double saleValue;
     private Integer num;
     private Integer type;
+    private String saleName;
 
     public Integer getId() {
         return id;
@@ -99,5 +100,13 @@ public class TRoomSaleConfigDto {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public String getSaleName() {
+        return saleName;
+    }
+
+    public void setSaleName(String saleName) {
+        this.saleName = saleName;
     }
 }

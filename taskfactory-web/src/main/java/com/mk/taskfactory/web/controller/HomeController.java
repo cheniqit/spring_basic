@@ -3,7 +3,6 @@ package com.mk.taskfactory.web.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.taskfactory.api.OnSaleFallbackService;
-import com.mk.taskfactory.api.RoomSaleService;
 import com.mk.taskfactory.api.ValidRateTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,8 @@ public class HomeController {
 
     @Autowired
     private OnSaleFallbackService onSaleFallbackService;
-
-//    private ValidRateTaskService validRateTaskService;
+    @Autowired
+    private ValidRateTaskService validRateTaskService;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
@@ -31,7 +30,7 @@ public class HomeController {
         HashMap<String, Object> result = new HashMap<String, Object>();
         result.put("check", "123");
         Cat.logEvent("CHECK_TEST", "123");
-//        validRateTaskService.validRateTaskRun();
+        validRateTaskService.validRateTaskRun();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

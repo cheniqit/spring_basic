@@ -1,6 +1,12 @@
 package com.mk.taskfactory.api;
 
-public interface RoomTypeFacilityService {
+import com.mk.taskfactory.api.dtos.TRoomTypeFacilityDto;
 
+import java.util.List;
+
+public interface RoomTypeFacilityService {
     public void deleteByRoomType(int roomTypeId);
+    public List<TRoomTypeFacilityDto> findByRoomTypeId(Integer roomTypeId);
+    public Integer saveRoomSaleConfig(TRoomTypeFacilityDto bean);
+
 }

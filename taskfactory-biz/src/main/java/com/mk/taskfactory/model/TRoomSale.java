@@ -7,8 +7,8 @@ public class TRoomSale {
     private String roomNo;
     private String pms;
     private String createDate;
-    private String salePrice;
-    private String costPrice;
+    private Double salePrice;
+    private Double costPrice;
     private String startTime;
     private String endTime;
     private Integer roomId;
@@ -65,19 +65,19 @@ public class TRoomSale {
         this.createDate = createDate;
     }
 
-    public String getSalePrice() {
+    public Double getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(String salePrice) {
+    public void setSalePrice(Double salePrice) {
         this.salePrice = salePrice;
     }
 
-    public String getCostPrice() {
+    public Double getCostPrice() {
         return costPrice;
     }
 
-    public void setCostPrice(String costPrice) {
+    public void setCostPrice(Double costPrice) {
         this.costPrice = costPrice;
     }
 

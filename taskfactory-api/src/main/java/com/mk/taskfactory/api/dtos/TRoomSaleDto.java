@@ -4,16 +4,18 @@ public class TRoomSaleDto {
     private Integer id;
     private Integer roomTypeId;
     private Integer oldRoomTypeId;
-    private String name;
+    private String roomNo;
     private String pms;
     private String createDate;
-    private String salePrice;
-    private String costPrice;
+    private Double salePrice;
+    private Double costPrice;
     private String startTime;
     private String endTime;
     private Integer roomId;
     private Integer configId;
     private String isBack;
+    private String saleName;
+    private Integer saleType;
 
     public Integer getId() {
         return id;
@@ -39,12 +41,12 @@ public class TRoomSaleDto {
         this.oldRoomTypeId = oldRoomTypeId;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomNo() {
+        return roomNo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
     }
 
     public String getPms() {
@@ -63,19 +65,19 @@ public class TRoomSaleDto {
         this.createDate = createDate;
     }
 
-    public String getSalePrice() {
+    public Double getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(String salePrice) {
+    public void setSalePrice(Double salePrice) {
         this.salePrice = salePrice;
     }
 
-    public String getCostPrice() {
+    public Double getCostPrice() {
         return costPrice;
     }
 
-    public void setCostPrice(String costPrice) {
+    public void setCostPrice(Double costPrice) {
         this.costPrice = costPrice;
     }
 
@@ -117,5 +119,21 @@ public class TRoomSaleDto {
 
     public void setIsBack(String isBack) {
         this.isBack = isBack;
+    }
+
+    public String getSaleName() {
+        return saleName;
+    }
+
+    public void setSaleName(String saleName) {
+        this.saleName = saleName;
+    }
+
+    public Integer getSaleType() {
+        return saleType;
+    }
+
+    public void setSaleType(Integer saleType) {
+        this.saleType = saleType;
     }
 }

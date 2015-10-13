@@ -14,10 +14,11 @@
         <result property="saleValue" column="saleValue" />
         <result property="num" column="num" />
         <result property="type" column="type" />
+        <result property="saleName" column="saleName" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type
+        id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName
     </sql>
 
     <sql id="Base_Query_List" >
@@ -49,6 +50,9 @@
             <if test="type != null">
                 AND type = #{type}
             </if>
+            <if test="saleName != null">
+                AND saleName = #{saleName}
+            </if>
         </where>
     </sql>
 
@@ -65,7 +69,7 @@
          VALUE
          (
             #{id},#{hotelId}, #{roomId},#{roomTypeId}, #{startTime}, #{endTime},
-            #{startDate}, #{endDate}, #{saleValue},#{num},#{type}
+            #{startDate}, #{endDate}, #{saleValue},#{num},#{type},#{saleName}
             )
     </insert>
 
@@ -87,6 +91,7 @@
          endDate =  #{endDate},
          saleValue  = #{saleValue},
          num  = #{num},
-         type =  #{type}
+         type =  #{type},
+         saleName =  #{saleName}
     </update>
 </mapper>
