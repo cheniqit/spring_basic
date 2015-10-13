@@ -109,8 +109,12 @@
     <select id="queryUnBackRoomSale" resultMap="tRoomSale">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM  t_room_sale
-        WHERE createDate > date_add(CURDATE() , interval -1 DAY)
+        FROM  t_room_sale WHERE isBack = 'F'
     </select>
 
+    <update id="updateRoomSaleBack" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto" >
+        update t_room_sale
+        set isBack =  #{isBack}
+        where id = #{id}
+    </update>
 </mapper>

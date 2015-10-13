@@ -7,6 +7,8 @@ import com.mk.taskfactory.model.TRoomSale;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.util.StringUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,9 +39,33 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     }
 
     @Override
+    public List<TRoomSaleDto> queryUnBackRoomSale() {
+        List<TRoomSale> roomSaleList = this.roomSaleMapper.queryUnBackRoomSale();
+
+        List<TRoomSaleDto> roomSaleDtoList = new ArrayList<TRoomSaleDto>();
+
+        for (TRoomSale roomSale : roomSaleList) {
+            TRoomSaleDto dto = new TRoomSaleDto();
+
+            //copy
+            BeanUtils.copyProperties(roomSale, dto);
+            roomSaleDtoList.add(dto);
+        }
+
+        return roomSaleDtoList;
+    }
+
+    @Override
     public void saveRoomSale(TRoomSaleDto roomSaleDto) {
         if (null != roomSaleDto) {
             this.roomSaleMapper.saveRoomSale(roomSaleDto);
+        }
+    }
+
+    @Override
+    public void updateRoomSaleBack(TRoomSaleDto roomSaleDto) {
+        if (null != roomSaleDto && null != roomSaleDto.getId() && StringUtil.isNotEmpty(roomSaleDto.getIsBack())) {
+            this.roomSaleMapper.updateRoomSaleBack(roomSaleDto);
         }
     }
 }

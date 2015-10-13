@@ -10,4 +10,8 @@ import java.util.List;
 public interface RoomSaleMapper {
     public List<TRoomSale> queryYesterdayRoomSale();
     public void saveRoomSale(TRoomSaleDto roomSaleDto);
+
+    public void updateRoomSaleBack(TRoomSaleDto roomSaleDto);
+    public List<TRoomSale> queryUnBackRoomSale();
+
 }

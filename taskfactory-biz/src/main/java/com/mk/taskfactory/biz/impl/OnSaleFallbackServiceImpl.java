@@ -33,7 +33,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
     public void onSaleFallback() {
         //需要回退的结果
-        List<TRoomSaleDto> roomSaleDtoList = this.roomSaleService.queryYesterdayRoomSale();
+        List<TRoomSaleDto> roomSaleDtoList = this.roomSaleService.queryUnBackRoomSale();
 
         for (TRoomSaleDto roomSaleDto : roomSaleDtoList) {
             Integer roomTypeId = roomSaleDto.getRoomTypeId();
@@ -70,6 +70,11 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
              */
             this.roomTypeFacilityService.deleteByRoomType(roomTypeId);
 
+            //设置更新完
+            TRoomSaleDto dto = new TRoomSaleDto();
+            dto.setId(roomSaleDto.getId());
+            dto.setIsBack("T");
+            this.roomSaleService.updateRoomSaleBack(dto);
         }
     }
 

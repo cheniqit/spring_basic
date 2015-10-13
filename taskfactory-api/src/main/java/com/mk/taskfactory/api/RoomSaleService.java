@@ -5,7 +5,8 @@ import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import java.util.List;
 
 public interface RoomSaleService {
-    List<TRoomSaleDto> queryYesterdayRoomSale();
-
+    public List<TRoomSaleDto> queryYesterdayRoomSale();
+    public List<TRoomSaleDto> queryUnBackRoomSale();
     public void saveRoomSale(TRoomSaleDto roomSaleDto);
+    public void updateRoomSaleBack(TRoomSaleDto roomSaleDto);
 }
