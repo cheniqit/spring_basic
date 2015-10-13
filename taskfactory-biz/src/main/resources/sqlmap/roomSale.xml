@@ -106,4 +106,11 @@
         WHERE createDate > date_add(CURDATE() , interval -1 DAY)
     </select>
 
+    <select id="queryUnBackRoomSale" resultMap="tRoomSale">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_room_sale
+        WHERE createDate > date_add(CURDATE() , interval -1 DAY)
+    </select>
+
 </mapper>
