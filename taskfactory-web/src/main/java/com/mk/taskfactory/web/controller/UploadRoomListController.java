@@ -3,12 +3,14 @@ package com.mk.taskfactory.web.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.taskfactory.api.OnSaleFallbackService;
+import com.mk.taskfactory.api.UploadRoomListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,10 +24,10 @@ import java.util.Map;
 public class UploadRoomListController {
 
     @Autowired
-    private OnSaleFallbackService onSaleFallbackService;
+    private UploadRoomListService uploadRoomListService;
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)
-    public void importBrandSort(MultipartFile file) throws Exception {
+    public void importRoomList(@RequestParam("file") MultipartFile file) throws Exception {
 
         if (file == null) {
             return;
@@ -38,6 +40,8 @@ public class UploadRoomListController {
         }
 
         InputStream in = file.getInputStream();
+
+        String returnStr = this.uploadRoomListService.saveRoomSaleConfigList(in);
 
         return;
     }

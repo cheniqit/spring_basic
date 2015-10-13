@@ -96,4 +96,11 @@
 		id=#{id}
 	</update>
 
+	<select id="findByName" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		t_roomtype
+		WHERE thotelid = #{thotelId} and NAME = #{name}
+	</select>
 </mapper>

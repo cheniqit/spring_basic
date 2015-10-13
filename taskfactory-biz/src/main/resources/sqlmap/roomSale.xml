@@ -36,7 +36,7 @@
             <if test="oldRoomTypeId != null">
                 AND oldRoomTypeId = #{oldRoomTypeId}
             </if>
-            <if test="roomNo != null">
+            <if test="nameNo != null">
                 AND roomNo = #{roomNo}
             </if>
             <if test="pms != null">
@@ -74,7 +74,7 @@
          (
             #{id},#{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
             #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},
-            #{isBack},#{saleName},#{saleType},
+            #{isBack},#{saleName},#{saleType}
          )
     </insert>
 

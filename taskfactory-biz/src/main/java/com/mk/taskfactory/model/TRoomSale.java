@@ -41,9 +41,6 @@ public class TRoomSale {
         this.oldRoomTypeId = oldRoomTypeId;
     }
 
-    public String getRoomNo() {
-        return roomNo;
-    }
 
     public void setRoomNo(String roomNo) {
         this.roomNo = roomNo;
