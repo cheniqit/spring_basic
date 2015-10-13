@@ -6,7 +6,7 @@
 	    <result property="id" column="id" />
 	    <result property="roomTypeId" column="roomTypeId" />
 	    <result property="oldRoomTypeId" column="oldRoomTypeId" />
-        <result property="name" column="name" />
+        <result property="roomNo" column="roomNo" />
         <result property="pms" column="pms" />
         <result property="createDate" column="createDate" />
         <result property="salePrice" column="salePrice" />
@@ -16,11 +16,13 @@
         <result property="roomId" column="roomId" />
         <result property="configId" column="configId" />
         <result property="isBack" column="isBack" />
+        <result property="saleName" column="saleName" />
+        <result property="saleType" column="saleType" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice,
-        startTime,endTime,roomId,configId,isBack
+        id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
+        startTime,endTime,roomId,configId,isBack,saleName,saleType
     </sql>
 
     <sql id="Base_Query_List" >
@@ -34,11 +36,17 @@
             <if test="oldRoomTypeId != null">
                 AND oldRoomTypeId = #{oldRoomTypeId}
             </if>
-            <if test="name != null">
-                AND name = #{name}
+            <if test="roomNo != null">
+                AND roomNo = #{roomNo}
             </if>
             <if test="pms != null">
-                AND pms = #{pms}
+            AND pms = #{pms}
+            </if>
+            <if test="saleName != null">
+                AND saleName = #{saleName}
+            </if>
+            <if test="saleType != null">
+                AND saleType = #{saleType}
             </if>
             <if test="createDate != null">
                 AND createDate = #{createDate}
@@ -64,8 +72,9 @@
         <include refid="Base_Column_List"/>
          VALUE
          (
-            #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},
-            #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},#{isBack}
+            #{id},#{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
+            #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},
+            #{isBack},#{saleName},#{saleType},
          )
     </insert>
 
@@ -78,7 +87,7 @@
         set
          roomTypeId = #{roomTypeId},
          oldRoomTypeId = #{oldRoomTypeId},
-         name =  #{name},
+         roomNo =  #{roomNo},
          pms =  #{pms},
          createDate  = #{createDate},
          salePrice =  #{salePrice},
@@ -86,18 +95,12 @@
          startTime =  #{startTime},
          endTime =  #{endTime},
          roomId =  #{roomId},
-         configId =  #{configId}
-         isBack =  #{isBack}
+         configId =  #{configId},
+         isBack =  #{isBack},
+         saleName =  #{saleName},
+         saleType =  #{saleType}
         where id = #{id}
     </update>
-
-    <select id="getRoomSale" resultMap="tRoomSale" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM  t_room_sale
-        <include refid="Base_Query_List"/>
-        ORDER BY id DESC
-    </select>
 
     <select id="queryYesterdayRoomSale" resultMap="tRoomSale">
         SELECT

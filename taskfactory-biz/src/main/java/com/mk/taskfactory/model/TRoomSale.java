@@ -4,7 +4,7 @@ public class TRoomSale {
     private Integer id;
     private Integer roomTypeId;
     private Integer oldRoomTypeId;
-    private String name;
+    private String roomNo;
     private String pms;
     private String createDate;
     private String salePrice;
@@ -14,6 +14,8 @@ public class TRoomSale {
     private Integer roomId;
     private Integer configId;
     private String isBack;
+    private String saleName;
+    private Integer saleType;
 
     public Integer getId() {
         return id;
@@ -39,12 +41,12 @@ public class TRoomSale {
         this.oldRoomTypeId = oldRoomTypeId;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomNo() {
+        return roomNo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
     }
 
     public String getPms() {
@@ -117,5 +119,21 @@ public class TRoomSale {
 
     public void setIsBack(String isBack) {
         this.isBack = isBack;
+    }
+
+    public String getSaleName() {
+        return saleName;
+    }
+
+    public void setSaleName(String saleName) {
+        this.saleName = saleName;
+    }
+
+    public Integer getSaleType() {
+        return saleType;
+    }
+
+    public void setSaleType(Integer saleType) {
+        this.saleType = saleType;
     }
 }
