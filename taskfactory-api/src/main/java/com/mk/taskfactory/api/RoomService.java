@@ -15,4 +15,6 @@ public interface RoomService {
     public List<TRoomDto> findRoomsByHotelId(Integer hotelId);
     public List<TRoomDto> findRoomsByRoomTypeId(Integer roomTypeId);
     public TRoomDto findRoomsById(Integer id);
+
+    public TRoomDto queryRoomByName(TRoomDto bean) throws Exception;
 }

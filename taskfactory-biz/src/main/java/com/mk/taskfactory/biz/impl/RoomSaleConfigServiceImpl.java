@@ -30,7 +30,7 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         return  roomDtos;
     }
     public Integer saveRoomSaleConfig(TRoomSaleConfigDto bean){
-        return  null;
+        return  this.roomSaleConfigMapper.saveRoomSaleConfig(bean);
     }
     public Integer deleteRoomSaleConfig(Integer id){
         return  null;

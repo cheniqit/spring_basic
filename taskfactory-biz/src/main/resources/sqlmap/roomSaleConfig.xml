@@ -31,6 +31,9 @@
             <if test="roomId != null">
                 AND roomId = #{roomId}
             </if>
+            <if test="roomId == null">
+                AND roomId is null
+            </if>
             <if test="roomTypeId != null">
                 AND roomTypeId = #{roomTypeId}
             </if>
@@ -61,7 +64,7 @@
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
         INSERT INTO t_room_sale_config
-        <include refid="Base_Column_List"/>
+        (<include refid="Base_Column_List"/>)
          VALUE
          (
             #{id},#{hotelId}, #{roomId},#{roomTypeId}, #{startTime}, #{endTime},

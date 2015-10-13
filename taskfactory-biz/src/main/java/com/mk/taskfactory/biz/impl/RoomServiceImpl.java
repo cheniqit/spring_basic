@@ -94,4 +94,17 @@ public class RoomServiceImpl implements RoomService {
         BeanUtils.copyProperties(bean, roomDto);
         return roomDto;
     }
+
+    public TRoomDto queryRoomByName(TRoomDto bean) throws Exception {
+        List<TRoom> roomList = this.roomMapper.queryRoomByParams(bean);
+        if (roomList.isEmpty()) {
+            throw new Exception("ÎÞ·¿¼ä");
+        }
+        TRoom room = roomList.get(0);
+
+        TRoomDto roomDto = new TRoomDto();
+        BeanUtils.copyProperties(room, roomDto);
+
+        return roomDto;
+    }
 }

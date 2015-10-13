@@ -7,6 +7,10 @@ import com.mk.taskfactory.model.TRoomType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.util.StringUtil;
+
+import java.util.List;
 
 @Service
 public class RoomTypeServiceImpl implements RoomTypeService {
@@ -44,6 +48,24 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         TRoomTypeDto roomTypeDto=new TRoomTypeDto();
         BeanUtils.copyProperties(bean, roomTypeDto);
+        return roomTypeDto;
+    }
+
+    public TRoomTypeDto findByName(TRoomTypeDto dto) throws Exception {
+        if (null == dto || null == dto.getThotelId() || StringUtil.isEmpty(dto.getName())) {
+            throw new Exception("参数错误");
+        }
+        List<TRoomType> beanList = this.roomTypeMapper.findByName(dto);
+
+        if (beanList.isEmpty()) {
+            throw new Exception("无房型");
+        }
+
+        //
+        TRoomType roomType = beanList.get(0);
+        TRoomTypeDto roomTypeDto = new TRoomTypeDto();
+        BeanUtils.copyProperties(roomType, roomTypeDto);
+
         return roomTypeDto;
     }
 }
