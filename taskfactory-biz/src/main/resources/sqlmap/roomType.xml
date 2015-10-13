@@ -79,7 +79,7 @@
 	<delete id="delTRoomTypeById" parameterType="java.lang.Integer">
 		delete from t_roomtype where id=#{id,jdbcType=BIGINT}
 	</delete>
-	<select id="findPriceById" resultMap="BaseResultMap"
+	<select id="findTRoomTypeById" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
 		SELECT
 		<include refid="Base_Column_List"/>

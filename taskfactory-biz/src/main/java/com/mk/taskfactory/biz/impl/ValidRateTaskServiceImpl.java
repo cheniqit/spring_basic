@@ -32,8 +32,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<String,Object> saleRoomMap=getSaleRoom(list);
         List<TRoomDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
+        Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
         for (TRoomTypeDto roomTypeDto:roomTypes){
-            roomTypeService.
+            TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
+            roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
+            roomTypeModel.setCost(roomTypeDto.getCost());
         }
         for (TRoomDto roomDto:saleRooms){
 

@@ -10,5 +10,5 @@ public interface RoomTypeMapper {
     public Integer saveTRoomType(TRoomTypeDto bean);
     public Integer deleteRoomSaleConfig(Integer id);
     public Integer updateTRoomType(TRoomTypeDto bean);
-    public TRoomType findPriceById(TRoomTypeDto bean);
+    public TRoomType findTRoomTypeById(Integer id);
 }
