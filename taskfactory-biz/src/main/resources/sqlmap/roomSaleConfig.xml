@@ -80,7 +80,6 @@
     <update id="updateRoomSaleConfig" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
         update t_room_sale_config
         set
-         id= #{id},
          hotelId = #{hotelId},
          roomId = #{roomId},
          roomTypeId =  #{roomTypeId},
@@ -91,5 +90,6 @@
          saleValue  = #{saleValue},
          num  = #{num},
          type =  #{type}
+         WHERE  id= #{id}
     </update>
 </mapper>

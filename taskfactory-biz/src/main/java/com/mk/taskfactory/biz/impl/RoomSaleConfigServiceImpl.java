@@ -36,7 +36,7 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         return  null;
     }
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean){
-        return null;
+        return this.roomSaleConfigMapper.updateRoomSaleConfig(bean);
     }
     private TRoomSaleConfigDto buildTRoomSaleConfigDto(TRoomSaleConfig bean) {
         if (bean==null){
