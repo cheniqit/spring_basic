@@ -4,7 +4,7 @@ public class TRoomSale {
     private Integer id;
     private Integer roomTypeId;
     private Integer oldRoomTypeId;
-    private String name;
+    private String roomNo;
     private String pms;
     private String createDate;
     private String salePrice;
@@ -39,12 +39,12 @@ public class TRoomSale {
         this.oldRoomTypeId = oldRoomTypeId;
     }
 
-    public String getName() {
-        return name;
+    public String geRoomNo() {
+        return roomNo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
     }
 
     public String getPms() {

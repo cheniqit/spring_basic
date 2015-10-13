@@ -6,7 +6,7 @@
 	    <result property="id" column="id" />
 	    <result property="roomTypeId" column="roomTypeId" />
 	    <result property="oldRoomTypeId" column="oldRoomTypeId" />
-        <result property="name" column="name" />
+        <result property="roomNo" column="roomNo" />
         <result property="pms" column="pms" />
         <result property="createDate" column="createDate" />
         <result property="salePrice" column="salePrice" />
@@ -19,7 +19,7 @@
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, roomTypeId,oldRoomTypeId,name,pms,createDate,salePrice,costPrice,
+        id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
         startTime,endTime,roomId,configId,isBack
     </sql>
 
@@ -34,8 +34,8 @@
             <if test="oldRoomTypeId != null">
                 AND oldRoomTypeId = #{oldRoomTypeId}
             </if>
-            <if test="name != null">
-                AND name = #{name}
+            <if test="nameNo != null">
+                AND roomNo = #{roomNo}
             </if>
             <if test="pms != null">
                 AND pms = #{pms}
@@ -64,7 +64,7 @@
         <include refid="Base_Column_List"/>
          VALUE
          (
-            #{id},#{roomTypeId}, #{oldRoomTypeId},#{name}, #{pms}, #{createDate},
+            #{id},#{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
             #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},#{isBack}
          )
     </insert>
@@ -78,7 +78,7 @@
         set
          roomTypeId = #{roomTypeId},
          oldRoomTypeId = #{oldRoomTypeId},
-         name =  #{name},
+         roomNo =  #{roomNo},
          pms =  #{pms},
          createDate  = #{createDate},
          salePrice =  #{salePrice},
