@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSaleMapper">
+<mapper namespace="com.mk.taskfactory.biz.mapper.roomsale.RoomSaleMapper">
 
 	<resultMap id="tRoomSale" type="com.mk.taskfactory.model.TRoomSale">
 	    <result property="id" column="id" />
@@ -18,11 +18,12 @@
         <result property="isBack" column="isBack" />
         <result property="saleName" column="saleName" />
         <result property="saleType" column="saleType" />
+        <result property="hotelId" column="hotelId" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
         id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
-        startTime,endTime,roomId,configId,isBack,saleName,saleType
+        startTime,endTime,roomId,configId,isBack,saleName,saleType,hotelId
     </sql>
 
     <sql id="Base_Query_List" >
@@ -36,7 +37,7 @@
             <if test="oldRoomTypeId != null">
                 AND oldRoomTypeId = #{oldRoomTypeId}
             </if>
-            <if test="nameNo != null">
+            <if test="roomNo != null">
                 AND roomNo = #{roomNo}
             </if>
             <if test="pms != null">
@@ -50,8 +51,15 @@
             </if>
             <if test="createDate != null">
                 AND createDate = #{createDate}
-            </if>  <if test="isBack != null">
+            </if>
+            <if test="isBack != null">
                 AND isBack = #{isBack}
+            </if>
+            <if test="hotelId != null">
+                AND hotelId = #{hotelId}
+            </if>
+            <if test="roomId != null">
+                AND roomId = #{roomId}
             </if>
         </where>
     </sql>

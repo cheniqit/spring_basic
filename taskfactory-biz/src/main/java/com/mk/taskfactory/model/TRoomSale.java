@@ -16,6 +16,7 @@ public class TRoomSale {
     private String isBack;
     private String saleName;
     private Integer saleType;
+    private Integer hotelId;
 
     public Integer getId() {
         return id;
@@ -132,5 +133,17 @@ public class TRoomSale {
 
     public void setSaleType(Integer saleType) {
         this.saleType = saleType;
+    }
+
+    public String getRoomNo() {
+        return roomNo;
+    }
+
+    public Integer getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(Integer hotelId) {
+        this.hotelId = hotelId;
     }
 }

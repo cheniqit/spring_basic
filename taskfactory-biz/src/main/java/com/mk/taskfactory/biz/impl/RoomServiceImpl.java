@@ -1,12 +1,9 @@
 package com.mk.taskfactory.biz.impl;
 
-import com.mk.taskfactory.api.RoomSaleService;
 import com.mk.taskfactory.api.RoomService;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleDto;
-import com.mk.taskfactory.biz.mapper.RoomMapper;
-import com.mk.taskfactory.biz.mapper.RoomSaleMapper;
+import com.mk.taskfactory.biz.mapper.roomsale.RoomMapper;
 import com.mk.taskfactory.model.TRoom;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
