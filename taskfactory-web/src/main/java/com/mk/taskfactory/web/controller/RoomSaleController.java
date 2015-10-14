@@ -26,5 +26,13 @@ public class RoomSaleController {
         List<RoomSaleToOtsDto>result=roomSaleService.querySaleRoom(bean);
         return new ResponseEntity<List<RoomSaleToOtsDto>>(result, HttpStatus.OK);
     }
-
+    @RequestMapping(value = "/gethotelsalebyhotelid", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<RoomSaleToOtsDto> getHotelSaleByHotelId(Integer hotelId) {
+        if (hotelId==null){
+            return new ResponseEntity(null, HttpStatus.OK);
+        }
+        RoomSaleToOtsDto result=roomSaleService.getHotelSaleByHotelId(hotelId);
+        return new ResponseEntity<RoomSaleToOtsDto>(result, HttpStatus.OK);
+    }
 }

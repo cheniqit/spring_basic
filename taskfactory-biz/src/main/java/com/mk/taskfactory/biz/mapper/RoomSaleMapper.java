@@ -13,5 +13,6 @@ public interface RoomSaleMapper {
     public void updateRoomSaleBack(TRoomSaleDto roomSaleDto);
     public List<TRoomSale> queryUnBackRoomSale();
     public List<TRoomSale> queryRoomSale(TRoomSaleDto bean);
+    public TRoomSale getHotelSaleByHotelId(Integer hotelId);
 
 }

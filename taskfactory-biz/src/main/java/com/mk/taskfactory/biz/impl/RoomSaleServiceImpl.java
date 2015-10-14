@@ -86,22 +86,41 @@ public class RoomSaleServiceImpl implements RoomSaleService {
             return null;
         }
         for (TRoomSale roomSale : roomSaleList) {
-            RoomSaleToOtsDto dto = new RoomSaleToOtsDto();
             TRoomSaleConfigInfo configInfo=configInfoMap.get(roomSale.getSaleType());
-            dto.setIsOnPromo("T");
-            dto.setPromoText(configInfo.getPromoName());
-            dto.setPromoTextColor(configInfo.getFontColor());
-            dto.setPromoStartTime(roomSale.getStartTime());
-            dto.setPromoEndTime(roomSale.getEndTime());
-            dto.setSaleType(roomSale.getSaleType());
-            dto.setSaleName(roomSale.getSaleName());
-            dto.setSalePrice(roomSale.getSalePrice());
-            dto.setRoomNo(roomSale.getRoomNo());
-            dto.setRoomtypeid(roomSale.getOldRoomTypeId());
-            dto.setUseDescribe(configInfo.getUseDescribe());
+            RoomSaleToOtsDto dto = buildTRoomSaleConfigDto(roomSale,configInfo);
             roomSaleToOtsDtoList.add(dto);
         }
 
         return roomSaleToOtsDtoList;
+    }
+    public RoomSaleToOtsDto getHotelSaleByHotelId(Integer hotelId) {
+        TRoomSale roomSale = roomSaleMapper.getHotelSaleByHotelId(hotelId);
+        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList();
+        Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
+        for (TRoomSaleConfigInfo configInfo:configInfos){
+            configInfoMap.put(configInfo.getSaleType(),configInfo);
+        }
+        if (roomSale==null){
+            return null;
+        }
+        TRoomSaleConfigInfo configInfo=configInfoMap.get(roomSale.getSaleType());
+        return buildTRoomSaleConfigDto(roomSale,configInfo);
+
+    }
+
+    private RoomSaleToOtsDto buildTRoomSaleConfigDto(TRoomSale roomSale,TRoomSaleConfigInfo configInfo) {
+        RoomSaleToOtsDto dto = new RoomSaleToOtsDto();
+        dto.setIsOnPromo("T");
+        dto.setPromoText(configInfo.getPromoName());
+        dto.setPromoTextColor(configInfo.getFontColor());
+        dto.setPromoStartTime(roomSale.getStartTime());
+        dto.setPromoEndTime(roomSale.getEndTime());
+        dto.setSaleType(roomSale.getSaleType());
+        dto.setSaleName(roomSale.getSaleName());
+        dto.setSalePrice(roomSale.getSalePrice());
+        dto.setRoomNo(roomSale.getRoomNo());
+        dto.setRoomtypeid(roomSale.getOldRoomTypeId());
+        dto.setUseDescribe(configInfo.getUseDescribe());
+        return dto;
     }
 }

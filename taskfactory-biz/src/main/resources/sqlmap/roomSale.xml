@@ -65,10 +65,18 @@
     </sql>
 
     <select id="queryRoomSale" resultMap="tRoomSale" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM  t_room_sale
+    <include refid="Base_Query_List"/>
+    </select>
+    <select id="getHotelSaleByHotelId" resultMap="tRoomSale" parameterType="java.lang.Integer">
         SELECT
         <include refid="Base_Column_List"/>
-         FROM  t_room_sale
-        <include refid="Base_Query_List"/>
+        FROM  t_room_sale
+           WHERE  isBack ='F'
+           AND hotelId = #{hotelId}
+           limit 1
     </select>
     <select id="countRoomSale" resultType="Integer" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto">
         select count(*) from count_agent_spread
