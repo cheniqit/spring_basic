@@ -3,7 +3,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleConfigService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
-import com.mk.taskfactory.biz.mapper.roomsale.RoomSaleConfigMapper;
+import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
 import com.mk.taskfactory.model.TRoomSaleConfig;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

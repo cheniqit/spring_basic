@@ -3,8 +3,8 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.RoomSaleService;
 import com.mk.taskfactory.api.dtos.RoomSaleToOtsDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
-import com.mk.taskfactory.biz.mapper.roomsale.RoomSaleConfigInfoMapper;
-import com.mk.taskfactory.biz.mapper.roomsale.RoomSaleMapper;
+import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
+import com.mk.taskfactory.biz.mapper.RoomSaleMapper;
 import com.mk.taskfactory.model.TRoomSale;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.springframework.beans.BeanUtils;
@@ -98,6 +98,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
             dto.setSalePrice(roomSale.getSalePrice());
             dto.setRoomNo(roomSale.getRoomNo());
             dto.setRoomtypeid(roomSale.getOldRoomTypeId());
+            dto.setUseDescribe(configInfo.getUseDescribe());
             roomSaleToOtsDtoList.add(dto);
         }
 

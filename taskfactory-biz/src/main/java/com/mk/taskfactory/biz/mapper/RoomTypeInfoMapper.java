@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.mapper.roomsale;
+package com.mk.taskfactory.biz.mapper;
 
 import com.mk.taskfactory.api.dtos.TRoomTypeInfoDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;

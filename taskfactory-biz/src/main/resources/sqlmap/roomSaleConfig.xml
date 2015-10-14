@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mk.taskfactory.biz.mapper.roomsale.RoomSaleConfigMapper">
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper">
 
 	<resultMap id="roomSaleConfig" type="com.mk.taskfactory.model.TRoomSaleConfig">
 	    <result property="id" column="id" />

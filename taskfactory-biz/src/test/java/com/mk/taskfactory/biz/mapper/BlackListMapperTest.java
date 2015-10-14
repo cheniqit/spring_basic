@@ -1,6 +1,5 @@
 package com.mk.taskfactory.biz.mapper;
 
-import com.mk.taskfactory.biz.mapper.roomsale.RoomSaleConfigMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

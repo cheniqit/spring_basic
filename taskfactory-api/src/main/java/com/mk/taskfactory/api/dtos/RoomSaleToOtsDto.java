@@ -11,6 +11,7 @@ public class RoomSaleToOtsDto {
     private Double salePrice;//促销价格
     private String roomNo;//房间号
     private Integer roomtypeid;//房型Id
+    private String useDescribe;//使用描述
 
     public String getIsOnPromo() {
         return isOnPromo;
@@ -90,5 +91,13 @@ public class RoomSaleToOtsDto {
 
     public void setRoomtypeid(Integer roomtypeid) {
         this.roomtypeid = roomtypeid;
+    }
+
+    public String getUseDescribe() {
+        return useDescribe;
+    }
+
+    public void setUseDescribe(String useDescribe) {
+        this.useDescribe = useDescribe;
     }
 }

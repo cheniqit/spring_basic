@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.mapper.roomsale;
+package com.mk.taskfactory.biz.mapper;
 
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSettingDto;

@@ -5,6 +5,7 @@ public class TRoomSaleConfigInfo {
     private String promoName;
     private String fontColor;
     private Integer saleType;
+    private String useDescribe;
 
     public Integer getId() {
         return id;
@@ -36,5 +37,13 @@ public class TRoomSaleConfigInfo {
 
     public void setSaleType(Integer saleType) {
         this.saleType = saleType;
+    }
+
+    public String getUseDescribe() {
+        return useDescribe;
+    }
+
+    public void setUseDescribe(String useDescribe) {
+        this.useDescribe = useDescribe;
     }
 }
