@@ -51,9 +51,9 @@ public class PromoCardServiceImpl implements PromoCardService {
         cardNo+=counts;
         return  cardNo;
     }
-    //1为优惠劵，2为充值卡
+    //1浼樻儬鍔碉紝2鍏呭�煎崱
     public void createPromoCard(){
-       BPromoCardType promoCardType= promoCardTypeMapper.findBPromoCardTypeByType(1);
+        BPromoCardType promoCardType= promoCardTypeMapper.findBPromoCardTypeByType(1);
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         String date= sdf.format(new Date());
         String batchNo=date+"01";

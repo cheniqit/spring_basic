@@ -2,26 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.taskfactory.biz.mapper.PromoCardTypeMapper" >
 <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.BPromoCardType" >
-    <result column="id" property="id" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="cardName" property="cardName" jdbcType="VARCHAR" />
-    <result column="createTime" property="createTime" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="VARCHAR" />
-    <result column="beginUseDate" property="beginUseDate" jdbcType="int" />
-    <result column="endUseDate" property="endUseDate" jdbcType="BIGINT" />
-    <result column="beginUseTime" property="beginUseTime" jdbcType="int" />
-    <result column="endUseTime" property="endUseTime" jdbcType="VARCHAR" />
-    <result column="useCityId" property="useCityId" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="DATETIME" />
-    <result column="cardType" property="cardType" jdbcType="DATETIME" />
-    <result column="description" property="description" jdbcType="TEXT" />
-    <result column="cost" property="cost" jdbcType="DATETIME" />
-    <result column="isValidity" property="isValidity" jdbcType="DATETIME" />
-    <result column="num" property="num" jdbcType="int" />
+    <id column="id" property="id" />
+    <result column="type" property="type"  />
+    <result column="cardName" property="cardName" />
+    <result column="createTime" property="createTime"  />
+    <result column="price" property="price"  />
+    <result column="beginUseDate" property="beginUseDate" />
+    <result column="endUseDate" property="endUseDate" />
+    <result column="beginUseTime" property="beginUseTime" />
+    <result column="endUseTime" property="endUseTime" />
+    <result column="useCityId" property="useCityId"  />
+    <result column="description" property="description"/>
+    <result column="cardType" property="cardType" />
+    <result column="description" property="description" />
+    <result column="cost" property="cost" />
+    <result column="isValidity" property="isValidity" />
+    <result column="num" property="num" />
   </resultMap>
 
     <sql id="Base_Column_List" >
-        type, mid, cardName, createTime,price,beginUseDate,endUseDate,beginUseTime,endUseTime,useCityId,
+        type, cardName, createTime,price,beginUseDate,endUseDate,beginUseTime,endUseTime,useCityId,
         description,cost,isValidity,num
     </sql>
   <select id="findBPromoCardTypeByType" resultMap="BaseResultMap"  parameterType="java.lang.Integer">

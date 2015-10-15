@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.ots.ticket.model.BPromo" >
-<resultMap id="BaseResultMap" type="com.mk.ots.ticket.model.BPromo" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.PromoMapper" >
+<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.BPromo" >
     <result column="id" property="id" jdbcType="BIGINT" />
     <result column="batch_no" property="batchNo" jdbcType="VARCHAR" />
     <result column="promo_name" property="promoName" jdbcType="VARCHAR" />
     <result column="promo_no" property="promoNo" jdbcType="VARCHAR" />
     <result column="promo_pwd" property="promoPwd" jdbcType="VARCHAR" />
-    <result column="promo_status" property="promoStatus" jdbcType="int" />
+    <result column="promo_status" property="promoStatus" jdbcType="BIGINT" />
     <result column="promo_city_id" property="promoCityId" jdbcType="BIGINT" />
-    <result column="promo_type" property="promoType" jdbcType="int" />
+    <result column="promo_type" property="promoType" jdbcType="BIGINT" />
     <result column="begin_time" property="beginTime" jdbcType="VARCHAR" />
     <result column="end_time" property="endTime" jdbcType="VARCHAR" />
-    <result column="begin_date" property="beginDate" jdbcType="DATETIME" />
-    <result column="end_date" property="endDate" jdbcType="DATETIME" />
-    <result column="description" property="description" jdbcType="TEXT" />
-    <result column="create_time" property="createTime" jdbcType="DATETIME" />
-    <result column="update_time" property="updateTime" jdbcType="DATETIME" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
   </resultMap>
 
 
-  <select id="findBPromoByPromo" resultMap="BaseResultMap"  parameterType="java.util.Map">
+  <select id="findBPromoByPromo" resultMap="BaseResultMap"  parameterType="com.mk.taskfactory.model.BPromo">
       select * from b_promo where promo_pwd=#{promoPwd,jdbcType=VARCHAR}
   </select>
 
-    <select id="findBPromoByPromoNoActiv" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    <select id="findBPromoByPromoNoActiv" resultMap="BaseResultMap"  parameterType="com.mk.taskfactory.model.BPromo">
         select  * from b_promo where promo_pwd=#{promoPwd,jdbcType=VARCHAR} and  promo_city_id =#{cityId,jdbcType=BIGINT}  and   status =  3
     </select>
 
-   <select id="findBPromoById" resultType="com.mk.ots.ticket.model.BPromo"  parameterType="java.util.Map">
+   <select id="findBPromoById" resultMap="BaseResultMap"  parameterType="com.mk.taskfactory.model.BPromo">
        select * from b_promo  where id=#{id,jdbcType=BIGINT}
    </select>
     <select id="checkBPromoByPwd" parameterType="java.lang.String" resultMap="java.lang.Integer">
@@ -39,7 +39,7 @@
         from b_promo
         where promo_pwd = #{promoPwd}
     </select>
-    <update id="updateBpromoForUse" parameterType="java.util.Map">
+    <update id="updateBpromoForUse" parameterType="com.mk.taskfactory.model.BPromo">
           update  b_promo
         <set >
             <if test="promoStatus != null" >
@@ -54,7 +54,7 @@
         </set>
         where promo_pwd = #{promoPwd,jdbcType=BIGINT}
     </update>
-    <insert id="insert" parameterType="com.mk.ots.ticket.model.BPromo" >
+    <insert id="insert" parameterType="com.mk.taskfactory.model.BPromo" >
         insert into b_promo(batch_no, promo_name,promo_no,promo_pwd,promo_status,promo_city_id,
         promo_type, begin_time, end_time,begin_date,end_date,description,create_time,update_time,
         create_by,update_by

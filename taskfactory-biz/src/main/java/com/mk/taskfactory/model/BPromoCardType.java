@@ -1,8 +1,8 @@
 package com.mk.taskfactory.model;
 
 public class BPromoCardType {
-    private Long id;
-    private String type;
+    private Integer id;
+    private Integer type;
     private String cardName;
     private String createTime;
     private Double price;
@@ -17,19 +17,19 @@ public class BPromoCardType {
     private String isValidity;
     private Integer num;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
