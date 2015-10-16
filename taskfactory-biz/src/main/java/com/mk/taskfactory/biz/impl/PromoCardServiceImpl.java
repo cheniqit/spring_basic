@@ -70,13 +70,14 @@ public class PromoCardServiceImpl implements PromoCardService {
             promo.setPromoPwd(pwd);
             promo.setPromoStatus(TypeEnum.TYPE_ACTIVE.getId());
             promo.setPromoCityId(promoCardType.getUseCityId());
-            promo.setPromoType(promoCardType.getCardType());
+            promo.setPromoType(1);
             promo.setBeginTime(promoCardType.getBeginUseTime());
             promo.setEndTime(promoCardType.getEndUseTime());
             promo.setBeginDate(promoCardType.getBeginUseDate());
             promo.setEndDate(promoCardType.getEndUseDate());
             promo.setDescription(promoCardType.getDescription());
             promo.setCreateTime(DateUtils.format_yMdHms(new Date()));
+            promoMapper.insert(promo);
         }
 
 
@@ -112,6 +113,7 @@ public class PromoCardServiceImpl implements PromoCardService {
             card.setEndDate(promoCardType.getEndUseDate());
             card.setDescription(promoCardType.getDescription());
             card.setCreateTime(DateUtils.format_yMdHms(new Date()));
+            cardMapper.insert(card);
         }
 
 

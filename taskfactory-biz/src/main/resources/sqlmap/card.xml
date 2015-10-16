@@ -29,14 +29,14 @@
         from b_card
         where password = #{password}
     </select>
-  <select id="checkBPromoByPwd" parameterType="java.lang.String" resultMap="java.lang.Integer">
+  <select id="checkBPromoByPwd" parameterType="java.lang.String" resultType="java.lang.Integer">
     select
     id
     from b_card
     where password = #{password}
   </select>
-  <insert id="insert" parameterType="com.mk.taskfactory.model.BCard" >
-    insert into b_promo(batch_no, name,no,password,status,price,
+  <insert id="insert" parameterType="com.mk.taskfactory.model.BCard" useGeneratedKeys="true" keyProperty="id" >
+    insert into b_card(batch_no,name,no,password,status,price,
     cost,begin_date,end_date,description,create_time,update_time,
     create_by,update_by
     )
