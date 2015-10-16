@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSettingMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomSetting" >
+    <id column="id" property="id"/>
+    <result column="hotelId" property="hotelId"/>
+    <result column="roomTypeId" property="roomTypeId"/>
+    <result column="roomNo" property="roomNo"/>
+    <result column="bedTypeName" property="bedTypeName"/>
+    <result column="roomDirection" property="roomDirection" />
+    <result column="roomFloor" property="roomFloor"/>
+    <result column="isWindow" property="isWindow"/>
+    <result column="isStair" property="isStair"/>
+    <result column="isElevator" property="isElevator"/>
+    <result column="isStreet" property="isStreet"/>
+    <result column="creteDate" property="creteDate"/>
+    <result column="updateDate" property="updateDate"/>
+    <result column="valid" property="valid"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotelId, roomTypeId, roomNo, bedTypeName, roomDirection,
+    roomFloor,isWindow,isStair,isElevator,isStreet,creteDate,updateDate,valid
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room_setting
+    where id = #{id}
+  </select>
+
+  <select id="selectByRoomTypeIdAndRoomNo" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomSettingDto" >
+    select
+    <include refid="Base_Column_List" />
+    from t_room_setting
+    where roomTypeId = #{roomTypeId} and roomNo = #{roomNo}
+  </select>
+
+  <insert id="saveTRoomSetting"  parameterType="com.mk.taskfactory.api.dtos.TRoomSettingDto" >
+    INSERT INTO t_room_setting
+   ( hotelId, roomTypeId, roomNo, bedTypeName, roomDirection,
+    roomFloor,isWindow,isStair,isElevator,isStreet,creteDate,updateDate,valid)
+    VALUE
+    (
+    #{hotelId}, #{roomTypeId},#{roomNo}, #{bedTypeName}, #{roomDirection},
+    #{roomFloor}, #{isWindow}, #{isStair}, #{isElevator}, #{isStreet}, #{creteDate},
+    #{updateDate}, #{valid}
+    )
+  </insert>
+
+  <select id="findList" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_room_setting
+    where hotelid = #{hotelid}
+  </select>
+
+  <delete id="deleteByRoomType" parameterType="java.lang.Integer">
+    delete from t_room_setting where roomTypeId = #{roomTypeId}
+  </delete>
+  <update id="updateTRoomSetting" parameterType="com.mk.taskfactory.api.dtos.TRoomSettingDto" >
+    update t_room_setting
+    <set >
+      <if test="hotelId != null" >
+        hotelId = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        roomTypeId = #{roomTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNo != null" >
+        roomNo = #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bedTypeName != null" >
+        bedTypeName = #{bedTypeName,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomDirection != null" >
+        roomDirection = #{roomDirection,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomFloor != null" >
+        roomFloor = #{roomFloor,jdbcType=BIGINT},
+      </if>
+      <if test="isWindow != null" >
+        isWindow = #{isWindow,jdbcType=BIGINT},
+      </if>
+      <if test="isStair != null" >
+        isStair = #{isStair,jdbcType=BIGINT},
+      </if>
+      <if test="isElevator != null" >
+        isElevator = #{isElevator,jdbcType=BIGINT},
+      </if>
+      <if test="isStreet != null" >
+        isStreet = #{isStreet,jdbcType=BIGINT},
+      </if>
+      <if test="creteDate != null" >
+        creteDate = #{creteDate,jdbcType=BIGINT},
+      </if> <if test="updateDate != null" >
+        updateDate = #{updateDate,jdbcType=BIGINT},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=BIGINT},
+      </if>
+    </set>
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelId != null">
+        AND hotelId = #{hotelId}
+      </if>
+      <if test="roomTypeId != null">
+        AND roomTypeId = #{roomTypeId}
+      </if>
+      <if test="roomNo != null">
+        AND roomNo = #{roomNo}
+      </if>
+    </where>
+  </update>
+  <update id="updateTRoomSettingByRoomTypeId" parameterType="com.mk.taskfactory.api.dtos.TRoomChangeTypeDto">
+    update t_room_setting set roomTypeId=#{oldRoomTypeId} where roomTypeId=#{roomTypeId}
+  </update>
+</mapper>

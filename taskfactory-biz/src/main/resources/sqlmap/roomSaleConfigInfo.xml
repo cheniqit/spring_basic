@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper">
+
+	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomSaleConfigInfo">
+	    <result property="id" column="id" />
+	    <result property="promoName" column="promoName" />
+	    <result property="fontColor" column="fontColor" />
+        <result property="saleType" column="saleType" />
+        <result property="useDescribe" column="useDescribe" />
+	</resultMap>
+
+    <sql id="Base_Column_List" >
+        id, promoName, fontColor, saleType,useDescribe
+    </sql>
+
+    <select id="queryRoomSaleConfigInfoList" resultMap="BaseResultMap" >
+        SELECT
+        <include refid="Base_Column_List"/>
+         FROM  t_room_sale_config_info
+    </select>
+
+
+</mapper>
