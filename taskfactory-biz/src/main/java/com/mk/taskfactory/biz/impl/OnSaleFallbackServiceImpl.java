@@ -4,6 +4,7 @@ import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
+import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,9 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
     @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
-
+    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
     public void onSaleFallback() {
+
         //需要回退的结果
         List<TRoomSaleDto> roomSaleDtoList = this.roomSaleService.queryUnBackRoomSale();
 
@@ -73,6 +75,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
              *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
              */
             this.roomTypeService.delTRoomTypeById(roomTypeId);
+            ServiceUtils.post_data(otsUrl + "/roomsale/saleBegin", "POST", "");
             //设置更新完
             TRoomSaleDto dto = new TRoomSaleDto();
             dto.setId(roomSaleDto.getId());

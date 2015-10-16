@@ -3,6 +3,7 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomSaleService roomSaleService;
+    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
     public void validRateTaskRun(){
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         //读取活动配置表数据
@@ -101,7 +103,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomDto.setIsBack("F");
             roomSaleService.saveRoomSale(roomDto);
         }
-
+        ServiceUtils.post_data(otsUrl+"/roomsale/saleBegin", "POST","");
 
     }
     public Map<String,Object> getSaleRoom(List<TRoomSaleConfigDto>  list){
