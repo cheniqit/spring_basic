@@ -29,7 +29,7 @@ public class HomeController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> test(HttpSession httpSession) {
         HashMap<String, Object> result = new HashMap<String, Object>();
-       // result.put("check", "123");
+        result.put("seccuss", "³É¹¦");
        // Cat.logEvent("CHECK_TEST", "123");
         validRateTaskService.validRateTaskRun();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
