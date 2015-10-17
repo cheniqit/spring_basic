@@ -155,7 +155,7 @@ public class RoomServiceImpl implements RoomService {
             result.setHotelName(hotelName);
 
             //roomType
-            JSONArray roomTypeListArray = hotelJson.getJSONArray("roomtype");
+             JSONArray roomTypeListArray = hotelJson.getJSONArray("roomtype");
             if (roomTypeListArray.isEmpty()) {
                 return result;
             }
