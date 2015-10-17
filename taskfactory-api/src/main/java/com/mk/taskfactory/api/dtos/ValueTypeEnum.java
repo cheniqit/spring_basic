@@ -1,6 +1,6 @@
-package com.mk.taskfactory.model;
+package com.mk.taskfactory.api.dtos;
 
-public enum TypeEnum {
+public enum ValueTypeEnum {
 
     //1-生成 2-入库3-激活4-使用5-注销
     DEFAULT(0,"默认错误"),
@@ -13,7 +13,7 @@ public enum TypeEnum {
     private int id;
     private String desc;
 
-    TypeEnum(int id, String desc) {
+    ValueTypeEnum(int id, String desc) {
         this.id = id;
         this.desc=desc;
     }
@@ -26,8 +26,8 @@ public enum TypeEnum {
         this.id = id;
     }
 
-    public static TypeEnum getById(int id) {
-        for (TypeEnum cashflowTypeEnum : TypeEnum.values()) {
+    public static ValueTypeEnum getById(int id) {
+        for (ValueTypeEnum cashflowTypeEnum : ValueTypeEnum.values()) {
             if (cashflowTypeEnum.getId() == id) {
                 return cashflowTypeEnum;
             }

@@ -1,18 +1,69 @@
 package com.mk.taskfactory.api.dtos;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
+
 public class TRoomSaleConfigDto {
     private Integer id;
     private Integer hotelId;
     private Integer roomId;
     private Integer roomTypeId;
-    private String startTime;
-    private String endTime;
-    private String startDate;
-    private String endDate;
-    private Double saleValue;
+    private Time startTime;
+    private Time endTime;
+    private Date startDate;
+    private Date endDate;
+    private BigDecimal saleValue;
     private Integer num;
-    private Integer type;
+    private ValueTypeEnum type;
     private String saleName;
+
+    private Integer saleRoomTypeId;
+    private BigDecimal settleValue;
+    private ValueTypeEnum settleType;
+    private String valid;
+    private Integer styleType;
+
+    public Integer getStyleType() {
+        return styleType;
+    }
+
+    public void setStyleType(Integer styleType) {
+        this.styleType = styleType;
+    }
+
+    public Integer getSaleRoomTypeId() {
+        return saleRoomTypeId;
+    }
+
+    public void setSaleRoomTypeId(Integer saleRoomTypeId) {
+        this.saleRoomTypeId = saleRoomTypeId;
+    }
+
+    public BigDecimal getSettleValue() {
+        return settleValue;
+    }
+
+    public void setSettleValue(BigDecimal settleValue) {
+        this.settleValue = settleValue;
+    }
+
+    public ValueTypeEnum getSettleType() {
+        return settleType;
+    }
+
+    public void setSettleType(ValueTypeEnum settleType) {
+        this.settleType = settleType;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
+    }
+
 
     public Integer getId() {
         return id;
@@ -46,51 +97,51 @@ public class TRoomSaleConfigDto {
         this.roomTypeId = roomTypeId;
     }
 
-    public String getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
 
-    public Double getSaleValue() {
+    public BigDecimal getSaleValue() {
         return saleValue;
     }
 
-    public void setSaleValue(Double saleValue) {
+    public void setSaleValue(BigDecimal saleValue) {
         this.saleValue = saleValue;
     }
 
-    public Integer getType() {
+    public ValueTypeEnum getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(ValueTypeEnum type) {
         this.type = type;
     }
 

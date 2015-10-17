@@ -1,5 +1,7 @@
 package com.mk.taskfactory.api.dtos;
 
+import java.math.BigDecimal;
+
 public class TRoomSaleDto {
     private Integer id;
     private Integer roomTypeId;
@@ -7,8 +9,8 @@ public class TRoomSaleDto {
     private String roomNo;
     private String pms;
     private String createDate;
-    private Double salePrice;
-    private Double costPrice;
+    private BigDecimal salePrice;
+    private BigDecimal costPrice;
     private String startTime;
     private String endTime;
     private Integer roomId;
@@ -17,6 +19,7 @@ public class TRoomSaleDto {
     private String saleName;
     private Integer saleType;
     private Integer hotelId;
+    private BigDecimal settleValue;
 
     public Integer getId() {
         return id;
@@ -66,19 +69,19 @@ public class TRoomSaleDto {
         this.createDate = createDate;
     }
 
-    public Double getSalePrice() {
+    public BigDecimal getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(Double salePrice) {
+    public void setSalePrice(BigDecimal salePrice) {
         this.salePrice = salePrice;
     }
 
-    public Double getCostPrice() {
+    public BigDecimal getCostPrice() {
         return costPrice;
     }
 
-    public void setCostPrice(Double costPrice) {
+    public void setCostPrice(BigDecimal costPrice) {
         this.costPrice = costPrice;
     }
 
@@ -144,5 +147,13 @@ public class TRoomSaleDto {
 
     public void setHotelId(Integer hotelId) {
         this.hotelId = hotelId;
+    }
+
+    public BigDecimal getSettleValue() {
+        return settleValue;
+    }
+
+    public void setSettleValue(BigDecimal settleValue) {
+        this.settleValue = settleValue;
     }
 }
