@@ -216,14 +216,42 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 Integer roomId = dto.getRoomId();
                 Integer num = dto.getNum();
 
+                //OTS房态
+                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+                List<Integer> roomVCList = roomStateDto.getRoomIdList();
+                int roomVCSize = roomVCList.size();
+
+                List<Integer> onSaleRoomList = new ArrayList<Integer>();
                 //若未指定房间，随机抽取
                 if (null == roomId) {
 
+                    if (num <= roomVCSize) {
+                        onSaleRoomList.addAll(roomVCList);
+                    } else {
+                        while (onSaleRoomList.size() < num) {
+                            //随机抽取
+                            Random random = new Random();
+                            int number = random.nextInt(roomVCList.size());
+                            //加入后，减去
+                            onSaleRoomList.add(roomVCList.get(number));
+                            roomVCList.remove(number);
+                        }
+                    }
+                } else {
+                    if (roomVCList.contains(roomId)){
+                        onSaleRoomList.add(roomId);
+                    }
                 }
-                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
-                System.out.print(roomStateDto);
 
                 //
+                for (Integer onSaleRoomId : onSaleRoomList) {
+                    TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
+                    TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+                    roomChangeTypeDto.setId(onSaleRoomId);
+                    roomChangeTypeDto.setRoomTypeId(saleRoomTypeId);
+                    this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+//                    this.roomSettingService.selectByRoomTypeIdAndRoomNo()
+                }
             }
         }
     }
@@ -232,7 +260,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
         roomChangeTypeDto.setRoomTypeId(roomTypeId);
         roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+//        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
     }
 
     private void updateRoomSetting(Integer roomTypeId, Integer oldRoomTypeId) {
