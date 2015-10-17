@@ -116,7 +116,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomDto.setIsBack("F");
             roomSaleService.saveRoomSale(roomDto);
         }
-        ServiceUtils.postData(otsUrl + "/roomsale/saleBegin", "POST", null);
+        try {
+            ServiceUtils.doPost(otsUrl + "/roomsale/saleBegin", null, 40);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -266,10 +270,31 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     public void updateOnline(Date runTime) {
         //查询指定期间内的CONFIG
-        List<TRoomSaleConfigDto> configDtoList = null;
+        TRoomSaleConfigDto roomSaleConfigDto = new TRoomSaleConfigDto();
+        roomSaleConfigDto.setValid("T");
+        List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
+
         //按开始时间更新
+        Time time = new Time(runTime.getTime());
+
         for (TRoomSaleConfigDto dto : configDtoList) {
             Time startTime = dto.getStartTime();
+            if (time.after(startTime)) {
+                int hotelId = dto.getHotelId();
+                int roomTypeId = dto.getRoomTypeId();
+                Integer saleRoomTypeId = dto.getSaleRoomTypeId();
+                Integer roomId = dto.getRoomId();
+                Integer num = dto.getNum();
+
+                //若未指定房间，随机抽取
+                if (null == roomId) {
+
+                }
+                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+                System.out.print(roomStateDto);
+
+                //
+            }
         }
     }
 
