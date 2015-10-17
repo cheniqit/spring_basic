@@ -71,7 +71,7 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
             wb = new HSSFWorkbook(fs);
 
             sheet = wb.getSheetAt(0);
-            // 得到总行数
+            // 得到总行�?
             int lastRowNum = sheet.getLastRowNum();
 
             //
@@ -131,13 +131,13 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
                 if (null != roomDto) {
                     configDto.setRoomId(roomDto.getId());
                 }
-                configDto.setStartTime(startTime);
-                configDto.setEndTime(endTime);
-                configDto.setStartDate(startDate);
-                configDto.setEndDate(endDate);
-                configDto.setSaleValue(saleValue.doubleValue());
-                configDto.setNum(num.intValue());
-                configDto.setType(type.intValue());
+//                configDto.setStartTime(startTime);
+//                configDto.setEndTime(endTime);
+//                configDto.setStartDate(startDate);
+//                configDto.setEndDate(endDate);
+//                configDto.setSaleValue(saleValue.doubleValue());
+//                configDto.setNum(num.intValue());
+//                configDto.setType(type.intValue());
 
                 if (null != resultList) {
                     resultList.add(configDto);

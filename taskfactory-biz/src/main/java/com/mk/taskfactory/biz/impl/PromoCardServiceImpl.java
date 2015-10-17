@@ -8,7 +8,7 @@ import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.model.BCard;
 import com.mk.taskfactory.model.BPromo;
 import com.mk.taskfactory.model.BPromoCardType;
-import com.mk.taskfactory.model.TypeEnum;
+import com.mk.taskfactory.api.dtos.ValueTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +68,7 @@ public class PromoCardServiceImpl implements PromoCardService {
             promo.setPromoName(promoCardType.getCardName());
             promo.setPromoNo(cardNo);
             promo.setPromoPwd(pwd);
-            promo.setPromoStatus(TypeEnum.TYPE_ACTIVE.getId());
+            promo.setPromoStatus(ValueTypeEnum.TYPE_ACTIVE.getId());
             promo.setPromoCityId(promoCardType.getUseCityId());
             promo.setPromoType(1);
             promo.setBeginTime(promoCardType.getBeginUseTime());
@@ -106,7 +106,7 @@ public class PromoCardServiceImpl implements PromoCardService {
             card.setName(promoCardType.getCardName());
             card.setNo(cardNo);
             card.setPassword(pwd);
-            card.setStatus(TypeEnum.TYPE_ACTIVE.getId());
+            card.setStatus(ValueTypeEnum.TYPE_ACTIVE.getId());
             card.setPrice(promoCardType.getPrice());
             card.setCost(promoCardType.getCost());
             card.setBeginDate(promoCardType.getBeginUseDate());

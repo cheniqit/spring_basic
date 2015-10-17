@@ -1,5 +1,7 @@
 package com.mk.taskfactory.api.dtos;
 
+import java.math.BigDecimal;
+
 public class RoomSaleToOtsDto {
     private String isOnPromo; //是否活动中
     private String  promoText ;//活动文字说明
@@ -8,7 +10,7 @@ public class RoomSaleToOtsDto {
     private String promoEndTime;//活动结束时间
     private Integer saleType;//促销类型
     private String saleName;//促销名称
-    private Double salePrice;//促销价格
+    private BigDecimal salePrice;//促销价格
     private String roomNo;//房间号
     private Integer roomtypeid;//房型Id
     private String useDescribe;//使用描述
@@ -69,11 +71,11 @@ public class RoomSaleToOtsDto {
         this.saleName = saleName;
     }
 
-    public Double getSalePrice() {
+    public BigDecimal getSalePrice() {
         return salePrice;
     }
 
-    public void setSalePrice(Double salePrice) {
+    public void setSalePrice(BigDecimal salePrice) {
         this.salePrice = salePrice;
     }
 

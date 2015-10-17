@@ -1,5 +1,7 @@
 package com.mk.taskfactory.model;
 
+import com.mk.taskfactory.api.dtos.ValueTypeEnum;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
@@ -21,6 +23,17 @@ public class TRoomSaleConfig {
     private BigDecimal settleValue;
     private ValueTypeEnum settleType;
     private String valid;
+    private Integer styleType;
+
+    public Integer getStyleType() {
+        return styleType;
+    }
+
+    public void setStyleType(Integer styleType) {
+        this.styleType = styleType;
+    }
+
+
 
     public Integer getSaleRoomTypeId() {
         return saleRoomTypeId;
