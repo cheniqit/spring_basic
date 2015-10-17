@@ -68,7 +68,7 @@ public class PromoCardServiceImpl implements PromoCardService {
             promo.setPromoName(promoCardType.getCardName());
             promo.setPromoNo(cardNo);
             promo.setPromoPwd(pwd);
-            promo.setPromoStatus(ValueTypeEnum.TYPE_ACTIVE.getId());
+            promo.setPromoStatus(3);
             promo.setPromoCityId(promoCardType.getUseCityId());
             promo.setPromoType(1);
             promo.setBeginTime(promoCardType.getBeginUseTime());
@@ -106,7 +106,7 @@ public class PromoCardServiceImpl implements PromoCardService {
             card.setName(promoCardType.getCardName());
             card.setNo(cardNo);
             card.setPassword(pwd);
-            card.setStatus(ValueTypeEnum.TYPE_ACTIVE.getId());
+            card.setStatus(3);
             card.setPrice(promoCardType.getPrice());
             card.setCost(promoCardType.getCost());
             card.setBeginDate(promoCardType.getBeginUseDate());
