@@ -6,7 +6,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

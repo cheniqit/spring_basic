@@ -5,8 +5,8 @@ public enum ValueTypeEnum {
     //
     DEFAULT(0,"默认错误"),
     TYPE_TO(1,"减至"),
-    TYPE_ADD(2,"补贴"),
-    TYPE_OFF(3,"折扣");
+    TYPE_ADD(2,"补贴"),//在房类价格上面减少多少价格
+    TYPE_OFF(3,"折扣");//
 
     private int id;
     private String desc;

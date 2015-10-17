@@ -30,6 +30,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomSaleService roomSaleService;
+    @Autowired
+    private BasePriceService basePriceService;
+
     private final String otsUrl="http://smlt-ots.imike.cn/ots/";
 
     public void validRateTaskRun(){
@@ -58,7 +61,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
-
+            TBasePriceDto tBasePriceDto = basePriceService.findTRoomTypeById(roomTypeDto.getId());
+            basePriceService.saveBasePriceService(tBasePriceDto);
             //将原价格存起�?
             roomTypePriceMap.put(roomTypeDto.getId(), roomTypeModel.getCost());
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
