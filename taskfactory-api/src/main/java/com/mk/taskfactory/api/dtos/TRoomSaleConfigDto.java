@@ -13,6 +13,10 @@ public class TRoomSaleConfigDto {
     private Integer num;
     private Integer type;
     private String saleName;
+    private  String  saleRoomTypeId;
+    private  String  settleValue;
+    private  String  settleType;
+    private  String  valid;
 
     public Integer getId() {
         return id;
@@ -108,5 +112,37 @@ public class TRoomSaleConfigDto {
 
     public void setSaleName(String saleName) {
         this.saleName = saleName;
+    }
+
+    public String getSaleRoomTypeId() {
+        return saleRoomTypeId;
+    }
+
+    public void setSaleRoomTypeId(String saleRoomTypeId) {
+        this.saleRoomTypeId = saleRoomTypeId;
+    }
+
+    public String getSettleValue() {
+        return settleValue;
+    }
+
+    public void setSettleValue(String settleValue) {
+        this.settleValue = settleValue;
+    }
+
+    public String getSettleType() {
+        return settleType;
+    }
+
+    public void setSettleType(String settleType) {
+        this.settleType = settleType;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
     }
 }
