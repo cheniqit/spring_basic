@@ -24,6 +24,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomSaleService roomSaleService;
+
     public void validRateTaskRun(){
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         //读取活动配置表数据
@@ -188,5 +189,40 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         rs.put("roomDtos",roomDtos);
         rs.put("roomTypeDtos",roomTypeDtos);
         return  rs;
+    }
+
+    public void updateStart(Date runTime) {
+        //TODO 加分布锁
+
+        //查询指定期间内的CONFIG
+
+        //按开始时间更新
+
+        //TODO 解分布锁
+    }
+
+    public void updateEnd() {
+        //TODO 加分布锁
+
+        //查询指定期间内的CONFIG
+
+        //按结束时间更新
+
+        //TODO 解分布锁
+    }
+
+    private void updateRoomType(Integer roomTypeId, Integer oldRoomTypeId) {
+        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+        roomChangeTypeDto.setRoomTypeId(roomTypeId);
+        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
+        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+    }
+
+    private void updateRoomSetting(Integer roomTypeId, Integer oldRoomTypeId) {
+        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+        roomChangeTypeDto.setRoomTypeId(roomTypeId);
+        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
+        this.roomSettingService.updateTRoomSettingByRoomTypeId(roomChangeTypeDto);
+
     }
 }

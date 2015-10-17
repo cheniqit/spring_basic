@@ -15,10 +15,16 @@
         <result property="num" column="num" />
         <result property="type" column="type" />
         <result property="saleName" column="saleName" />
+
+        <result property="saleRoomTypeId" column="saleRoomTypeId" />
+        <result property="settleValue" column="settleValue" />
+        <result property="settleType" column="settleType" />
+        <result property="valid" column="valid" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName
+        id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName,
+        saleRoomTypeId,settleValue,settleType,valid
     </sql>
 
     <sql id="Base_Query_List" >
