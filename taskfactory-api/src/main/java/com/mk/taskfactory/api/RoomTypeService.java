@@ -2,7 +2,7 @@ package com.mk.taskfactory.api;
 
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
 
-import java.util.List;
+import java.util.HashMap;
 
 public interface RoomTypeService {
     public void updatePlusRoomNum(TRoomTypeDto roomTypeDto);
@@ -10,6 +10,5 @@ public interface RoomTypeService {
     public Integer delTRoomTypeById(Integer id);
     public Integer updateTRoomType(TRoomTypeDto bean);
     public TRoomTypeDto findTRoomTypeById(Integer id);
-
     public TRoomTypeDto findByName(TRoomTypeDto bean) throws Exception;
 }

@@ -25,47 +25,6 @@ public class TRoomSaleConfigDto {
     private String valid;
     private Integer styleType;
 
-    public Integer getStyleType() {
-        return styleType;
-    }
-
-    public void setStyleType(Integer styleType) {
-        this.styleType = styleType;
-    }
-
-    public Integer getSaleRoomTypeId() {
-        return saleRoomTypeId;
-    }
-
-    public void setSaleRoomTypeId(Integer saleRoomTypeId) {
-        this.saleRoomTypeId = saleRoomTypeId;
-    }
-
-    public BigDecimal getSettleValue() {
-        return settleValue;
-    }
-
-    public void setSettleValue(BigDecimal settleValue) {
-        this.settleValue = settleValue;
-    }
-
-    public ValueTypeEnum getSettleType() {
-        return settleType;
-    }
-
-    public void setSettleType(ValueTypeEnum settleType) {
-        this.settleType = settleType;
-    }
-
-    public String getValid() {
-        return valid;
-    }
-
-    public void setValid(String valid) {
-        this.valid = valid;
-    }
-
-
     public Integer getId() {
         return id;
     }
@@ -138,14 +97,6 @@ public class TRoomSaleConfigDto {
         this.saleValue = saleValue;
     }
 
-    public ValueTypeEnum getType() {
-        return type;
-    }
-
-    public void setType(ValueTypeEnum type) {
-        this.type = type;
-    }
-
     public Integer getNum() {
         return num;
     }
@@ -154,12 +105,59 @@ public class TRoomSaleConfigDto {
         this.num = num;
     }
 
+    public ValueTypeEnum getType() {
+        return type;
+    }
+
+    public void setType(ValueTypeEnum type) {
+        this.type = type;
+    }
+
     public String getSaleName() {
         return saleName;
     }
 
     public void setSaleName(String saleName) {
         this.saleName = saleName;
+    }
+    public Integer getSaleRoomTypeId() {
+        return saleRoomTypeId;
+    }
+
+    public void setSaleRoomTypeId(Integer saleRoomTypeId) {
+        this.saleRoomTypeId = saleRoomTypeId;
+    }
+
+    public BigDecimal getSettleValue() {
+        return settleValue;
+    }
+
+    public void setSettleValue(BigDecimal settleValue) {
+        this.settleValue = settleValue;
+    }
+
+    public ValueTypeEnum getSettleType() {
+        return settleType;
+    }
+
+    public void setSettleType(ValueTypeEnum settleType) {
+        this.settleType = settleType;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
+    }
+
+    public Integer getStyleType() {
+        return styleType;
+    }
+
+    public void setStyleType(Integer styleType) {
+        this.styleType = styleType;
     }
 
     public String getMatchDate() {

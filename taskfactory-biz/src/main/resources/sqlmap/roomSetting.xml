@@ -117,4 +117,9 @@
   <update id="updateTRoomSettingByRoomTypeId" parameterType="com.mk.taskfactory.api.dtos.TRoomChangeTypeDto">
     update t_room_setting set roomTypeId=#{oldRoomTypeId} where roomTypeId=#{roomTypeId}
   </update>
+
+  <update id="updateRoomTypeByRoomNo"  parameterType="java.util.Map">
+      update t_room_setting set roomTypeId=#{oldRoomTypeId} where roomTypeId=#{roomTypeId}  and  roomNo = #{roomNo}
+  </update>
+
 </mapper>

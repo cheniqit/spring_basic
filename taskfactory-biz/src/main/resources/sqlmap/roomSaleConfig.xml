@@ -28,9 +28,10 @@
     </sql>
 
     <sql id="Base_Query_List" >
-        <where> 1=1
+        <where>
+              1 = 1
             <if test="id != null">
-                 and id = #{id}
+                AND id = #{id}
             </if>
             <if test="hotelId != null">
                 AND hotelId = #{hotelId}
@@ -119,5 +120,12 @@
          num  = #{num},
          type =  #{type}
          WHERE  id= #{id}
+    </update>
+
+    <update id="updateRoomSaleConfigValid" parameterType="java.util.Map" >
+        update t_room_sale_config
+        set
+        valid =  #{valid}
+        WHERE  id= #{id}
     </update>
 </mapper>

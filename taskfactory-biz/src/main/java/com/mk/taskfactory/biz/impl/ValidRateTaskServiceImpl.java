@@ -2,7 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
-import com.mk.taskfactory.biz.domain.ValidEnum;
+import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,13 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.Time;
+
+import java.sql.*;
+import java.text.ParseException;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 @Service
 public class ValidRateTaskServiceImpl implements ValidRateTaskService {
@@ -40,7 +46,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
         roomSaleConfigDto.setMatchDate(matchDate);
-        roomSaleConfigDto.setValid(ValidEnum.VALID.getCode());
+        roomSaleConfigDto.setValid(com.mk.taskfactory.biz.domain.ValidEnum.VALID.getCode());
+        roomSaleConfigDto.setValid(com.mk.taskfactory.biz.domain.ValidEnum.VALID.getCode());
         //读取活动配置表数�?
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (CollectionUtils.isEmpty(list)){
@@ -70,8 +77,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomTypeModel.setName(roomTypeDto.getName());
             //复制并创建活动房�?
             roomTypeService.saveTRoomType(roomTypeModel);
-            newRoomTypeId=roomTypeModel.getId();
-            if (newRoomTypeId==null){
+            newRoomTypeId = roomTypeModel.getId();
+            if (newRoomTypeId == null) {
                 continue;
             }
             roomTypeModel.setRoomNum(-roomTypeDto.getRoomNum());
@@ -80,13 +87,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
 
             //得到房型其他信息
-            TRoomTypeInfoDto roomTypeInfo=roomTypeInfoService.findByRoomTypeId(roomTypeDto.getId());
+            TRoomTypeInfoDto roomTypeInfo = roomTypeInfoService.findByRoomTypeId(roomTypeDto.getId());
             roomTypeInfo.setRoomTypeId(newRoomTypeId);
             //复制并创建房型其他信�?
             roomTypeInfoService.saveRoomTypeInfo(roomTypeInfo);
             //得到房价对应配置信息
-            List<TRoomTypeFacilityDto> roomTypeFacilityDtos=roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
-            for(TRoomTypeFacilityDto roomTypeFacilityDto:roomTypeFacilityDtos){
+            List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
+            for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
             }
@@ -95,22 +102,22 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             saveRoomSaleType(tRoomSaleConfigDtos, newRoomTypeId);
         }
         //循环创建活动房间
-        for (TRoomSaleDto roomDto:saleRooms){
-            Integer newRoomTypeId=roomTypeMap.get(roomDto.getOldRoomTypeId());
-            Integer oldRoomTypeId=roomDto.getOldRoomTypeId();
-            if (newRoomTypeId==null){
+        for (TRoomSaleDto roomDto : saleRooms) {
+            Integer newRoomTypeId = roomTypeMap.get(roomDto.getOldRoomTypeId());
+            Integer oldRoomTypeId = roomDto.getOldRoomTypeId();
+            if (newRoomTypeId == null) {
                 continue;
             }
-            TRoomSettingDto roomSettingBean=new TRoomSettingDto();
+            TRoomSettingDto roomSettingBean = new TRoomSettingDto();
             roomSettingBean.setRoomTypeId(oldRoomTypeId);
             roomSettingBean.setRoomNo(roomDto.getRoomNo());
             //取得房间配置信息
-            TRoomSettingDto roomSetting=roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
+            TRoomSettingDto roomSetting = roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
             roomSetting.setRoomTypeId(newRoomTypeId);
             //更新房间配置信息
             roomSettingService.updateTRoomSetting(roomSetting);
             //更新房间信息
-            TRoomDto room=roomService.findRoomsById(roomDto.getRoomId());
+            TRoomDto room = roomService.findRoomsById(roomDto.getRoomId());
             room.setRoomTypeId(newRoomTypeId);
             roomService.saveTRoom(room);
             //保存今日特价房间信息
@@ -125,7 +132,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void saveRoomSaleType(List<TRoomSaleConfigDto> tRoomSaleConfigDtos, Integer newRoomTypeId) {
@@ -137,6 +143,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomSaleConfigService.updateRoomSaleConfig(tRoomSaleConfigDto);
         }
     }
+
 
     @Transactional
     public void initRoomTypeDto(TRoomTypeDto roomTypeDto){
@@ -345,6 +352,105 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     }
 
+    //数据回复
+    public void dateReback() {
+        TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
+        troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
+        if (!CollectionUtils.isEmpty(list)) {
+            for (TRoomSaleConfigDto dto : list) {
+                java.sql.Date endDate = dto.getEndDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(endDate);
+                cal.add(Calendar.DATE, 1);
+                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime());
+                try {
+                    //比较活动结束日期和当前日期
+                    if (!DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd"), "yyyy-MM-dd")) {
+                        //比较活动结束时间和当前时间
+                        String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
+                        String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
+                        if (DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
+                            reBackRoom(dto);
+                        }
+                    }
+                } catch (ParseException e){
+                }
+            }
+        }
+    }
 
+    //数据回复
+    public void remove(){
+        TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
+        troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
+        if (!CollectionUtils.isEmpty(list)) {
+            for (TRoomSaleConfigDto dto : list) {
+                java.sql.Date endDate = dto.getEndDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(endDate);
+                cal.add(Calendar.DATE, 1);
+                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
+                try {
+                    //比较活动结束日期和当前日期
+                    if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
+                           //先确保数据已经回复
+                            reBackRoom(dto);
+                          //删除房型
+                            deleteRoomType(dto);
+                        this.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                    }
+                } catch (ParseException e){
+                }
+            }
+        }
+    }
 
+    public Boolean reBackRoom(TRoomSaleConfigDto dto) {
+        if (null == dto) {
+            return false;
+        }
+        //根据配置id查询当前没有回复的数据
+        List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", "F");
+        if (CollectionUtils.isEmpty(saleDtoList)) {
+            return false;
+        }
+        for (TRoomSaleDto saleTo : saleDtoList) {
+            //还原t_room表中的数据
+            this.updateRoom(saleTo);
+            //还原t_room_setting表中的数据
+            this.updateRoomSetting(saleTo);
+        }
+        return true;
+    }
+    public Boolean  updateRoom(TRoomSaleDto  roomSaleDto){
+          roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomNo(),roomSaleDto.getPms(),roomSaleDto.getOldRoomTypeId());
+          return true;
+    }
+
+    public Boolean  updateRoomSetting(TRoomSaleDto  roomSaleDto){
+        roomSettingService.updateRoomTypeByRoomNo(roomSaleDto.getRoomNo(), roomSaleDto.getOldRoomTypeId(), roomSaleDto.getRoomTypeId());
+        return true;
+    }
+
+    public Boolean  deleteRoomType(TRoomSaleConfigDto  troomSaleConfigDto){
+        if(null==troomSaleConfigDto){
+            return false;
+        }
+        //根据配置id查询当前没有回复的数据
+        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), "T");
+        if (CollectionUtils.isEmpty(newRoomTypeIdList)) {
+            return false;
+        }
+        for (Integer newRoomTypeId : newRoomTypeIdList) {
+            roomTypeService.delTRoomTypeById(newRoomTypeId);
+        }
+        return true;
+    }
+
+    public Boolean  updateRoomSaleConfigValid(Integer id,String  valid){
+        roomSaleConfigService.updateRoomSaleConfigValid(id,valid);
+        return  true;
+    }
 }

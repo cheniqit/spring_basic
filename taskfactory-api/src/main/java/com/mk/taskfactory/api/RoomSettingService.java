@@ -9,4 +9,6 @@ public interface RoomSettingService {
     public Integer saveTRoomSetting(TRoomSettingDto bean);
     public void updateTRoomSetting(TRoomSettingDto bean);
     public void updateTRoomSettingByRoomTypeId(TRoomChangeTypeDto bean);
+
+    public  int  updateRoomTypeByRoomNo(String  roomNo,Integer oldRoomTypeId,Integer  roomTypeId);
 }
