@@ -40,10 +40,10 @@ public class DateUtils {
     }
 
     /**
-     * ÅĞ¶Ï compareday  ÊÇ·ñÔÚÁ½¸öÈÕÆÚÖ®¼ä
-     * @param startdateStr   ÆğÊ¼Ê±¼ä
-     * @param compareday     ±»±È½ÏµÄÊ±¼ä
-     * @param enddateStr    ½áÊøÊ±¼ä
+     * åˆ¤æ–­ compareday  æ˜¯å¦åœ¨ä¸¤ä¸ªæ—¥æœŸä¹‹é—´
+     * @param startdateStr   èµ·å§‹æ—¶é—´
+     * @param compareday     è¢«æ¯”è¾ƒçš„æ—¶é—´
+     * @param enddateStr    ç»“æŸæ—¶é—´
      * @return    true /  false
      * @throws ParseException
      */
@@ -59,10 +59,10 @@ public class DateUtils {
 
 
     /**
-     * »ñÈ¡Á½¸öÈÕÆÚµÄ²îÖµ
+     * è·å–ä¸¤ä¸ªæ—¥æœŸçš„å·®å€¼
      * @param smdate
      * @param bdate
-     * @return  'bdate' - 'smdate'ÈÕÆÚ²î
+     * @return  'bdate' - 'smdate'æ—¥æœŸå·®
      * @throws ParseException
      */
     public static int daysBetween(String bdate,String smdate) throws ParseException {
@@ -78,7 +78,7 @@ public class DateUtils {
     }
 
     /**
-     * ±È½ÏÁ½¸öÈÕÆÚÀàĞÍµÄString´óĞ¡
+     * æ¯”è¾ƒä¸¤ä¸ªæ—¥æœŸç±»å‹çš„Stringå¤§å°
      * @param dataA
      * @param dataB
      * @return
@@ -96,9 +96,9 @@ public class DateUtils {
 
 
     /**
-     * Ê±¼äDateÀàĞÍ×ª»»ÎªÈÕÆÚÀàĞÍ
-     * @param date  Òª×ª»»µÄÊ±¼äÀàĞÍ
-     * @param example  ×ª»»ºóµÄ¸ñÊ½
+     * æ—¶é—´Dateç±»å‹è½¬æ¢ä¸ºæ—¥æœŸç±»å‹
+     * @param date  è¦è½¬æ¢çš„æ—¶é—´ç±»å‹
+     * @param example  è½¬æ¢åçš„æ ¼å¼
      */
     public static String dateToString(Date date,String  example){
         if (null == date) {
@@ -122,8 +122,8 @@ public class DateUtils {
     }
 
     /**
-     * µÃµ½ÈÕÆÚ×Ö·û´®
-     *  exmple ·µ»ØÈÕÆÚ¸ñÊ½
+     * å¾—åˆ°æ—¥æœŸå­—ç¬¦ä¸²
+     *  exmple è¿”å›æ—¥æœŸæ ¼å¼
      * @return
      */
     public static String getStringDate(String  exmple) {

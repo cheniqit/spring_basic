@@ -1,14 +1,13 @@
 package com.mk.taskfactory.biz.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -35,14 +34,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomSaleService roomSaleService;
+    @Autowired
+    private BasePriceService basePriceService;
 
     private final String otsUrl="http://smlt-ots.imike.cn/ots/";
 
     public void validRateTaskRun(){
+        //当前时间是否在config中
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
+        String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
+        roomSaleConfigDto.setMatchDate(matchDate);
+        roomSaleConfigDto.setValid(com.mk.taskfactory.biz.domain.ValidEnum.VALID.getCode());
         //读取活动配置表数�?
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
-        if (list==null){
+        if (CollectionUtils.isEmpty(list)){
             return;
         }
         //获取配置表中对应可以做活动的房间信息
@@ -51,15 +56,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
         //得到�?有符合做活动对应的房�?
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
+        //对应的roomtype信息
+        Map<String,List<TRoomSaleConfigDto>> roomSaleConfigDtoMap = ( Map<String,List<TRoomSaleConfigDto>>)saleRoomMap.get("roomSaleConfigDtoList");
         //将新roomTypeId和�?�roomTypeId对应起来
         Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
         //促销前价�?
         Map<Integer,BigDecimal> roomTypePriceMap=new HashMap<Integer, BigDecimal>();
-
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
-
+            TBasePriceDto tBasePriceDto = basePriceService.findTRoomTypeById(roomTypeDto.getId());
+            basePriceService.saveBasePriceService(tBasePriceDto);
             //将原价格存起�?
             roomTypePriceMap.put(roomTypeDto.getId(), roomTypeModel.getCost());
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
@@ -87,7 +94,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
             }
-
+            List<TRoomSaleConfigDto> tRoomSaleConfigDtos = roomSaleConfigDtoMap.get(roomTypeDto.getId().toString());
+            //回填
+            saveRoomSaleType(tRoomSaleConfigDtos, newRoomTypeId);
         }
         //循环创建活动房间
         for (TRoomSaleDto roomDto : saleRooms) {
@@ -115,13 +124,55 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomDto.setIsBack("F");
             roomSaleService.saveRoomSale(roomDto);
         }
-//        ServiceUtils.postData(otsUrl + "/roomsale/saleBegin", "POST", "");
+        try {
+            ServiceUtils.doPost(otsUrl + "/roomsale/saleBegin", null, 40);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    private void saveRoomSaleType(List<TRoomSaleConfigDto> tRoomSaleConfigDtos, Integer newRoomTypeId) {
+        if(CollectionUtils.isEmpty(tRoomSaleConfigDtos)){
+            return;
+        }
+        for(TRoomSaleConfigDto tRoomSaleConfigDto : tRoomSaleConfigDtos){
+            tRoomSaleConfigDto.setSaleRoomTypeId(newRoomTypeId);
+            roomSaleConfigService.updateRoomSaleConfig(tRoomSaleConfigDto);
+        }
+    }
+
+    @Transactional
+    public void initRoomTypeDto(TRoomTypeDto roomTypeDto){
+        try{
+
+        }catch (Exception e){
+            throw new RuntimeException("initSaleRoomSaleConfigDto error");
+        }
+    }
+
+    @Transactional
+    public void initRoomSaleDto(TRoomTypeDto roomTypeDto){
+        try{
+
+        }catch (Exception e){
+            throw new RuntimeException("initSaleRoomSaleConfigDto error");
+        }
+    }
+
+    @Transactional
+    public void initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig){
+        try{
+
+        }catch (Exception e){
+            throw new RuntimeException("initSaleRoomSaleConfigDto error");
+        }
     }
 
     public Map<String,Object> getSaleRoom(List<TRoomSaleConfigDto>  list){
         Map<Integer,TRoomSaleDto> saleRooms=new HashMap<Integer, TRoomSaleDto>();
         Map<Integer,TRoomTypeDto> roomTypeList=new HashMap<Integer, TRoomTypeDto>();
+        Map<String,List<TRoomSaleConfigDto>> roomSaleConfigDtoMap=new HashMap<String, List<TRoomSaleConfigDto>>();
         //循环配置表所有数�?
         for (TRoomSaleConfigDto roomSaleConfig:list){
             TRoomTypeDto roomTypeDto=new TRoomTypeDto();
@@ -131,17 +182,27 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 roomTypeDto.setCost(roomSaleConfig.getSaleValue());
                 roomTypeDto.setName(roomSaleConfig.getSaleName());
                 roomTypeDto.setRoomNum(0);
-                roomTypeList.put(roomSaleConfig.getRoomTypeId(), roomTypeDto);
-            } else {
-                roomTypeDto = roomTypeList.get(roomSaleConfig.getRoomTypeId());
+                roomTypeList.put(roomSaleConfig.getRoomTypeId(),roomTypeDto);
+                //处理 room sale type
+                List<TRoomSaleConfigDto> tRoomSaleConfigDtos = roomSaleConfigDtoMap.get(roomSaleConfig.getRoomTypeId().toString());
+                if(CollectionUtils.isEmpty(tRoomSaleConfigDtos)){
+                    tRoomSaleConfigDtos = new ArrayList<TRoomSaleConfigDto>();
+                    tRoomSaleConfigDtos.add(roomSaleConfig);
+                    roomSaleConfigDtoMap.put(roomSaleConfig.getRoomTypeId().toString(),tRoomSaleConfigDtos);
+                }else{
+                    tRoomSaleConfigDtos.add(roomSaleConfig);
+                    roomSaleConfigDtoMap.put(roomSaleConfig.getRoomTypeId().toString(),tRoomSaleConfigDtos);
+                }
+            }else{
+                roomTypeDto=roomTypeList.get(roomSaleConfig.getRoomTypeId());
             }
             //取得当前房型做活动的库存�?
             int saleNum=roomTypeDto.getRoomNum();
             //如果配置文件中roomId存在则直接将其加到活动列表中
-            if (roomSaleConfig.getRoomId() != null && roomSaleConfig.getRoomId() != 0) {
-                TRoomDto room = roomService.findRoomsById(roomSaleConfig.getRoomId());
-                if (room != null && "F".equals(room.getIsLock())) {//判断房间是否上锁
-                    TRoomSaleDto roomSale = new TRoomSaleDto();
+            if(roomSaleConfig.getRoomId()!=null&&roomSaleConfig.getRoomId()!=0){
+                TRoomDto room= roomService.findRoomsById(roomSaleConfig.getRoomId());
+                if (room!=null&&"F".equals(room.getIsLock())){//判断房间是否上锁
+                    TRoomSaleDto roomSale=new TRoomSaleDto();
                     roomSale.setOldRoomTypeId(room.getRoomTypeId());
                     roomSale.setRoomId(room.getId());
                     roomSale.setRoomNo(room.getName());
@@ -155,19 +216,19 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     saleRooms.put(room.getId(),roomSale);
                     saleNum++;
                 }
-                if (saleNum == roomSaleConfig.getNum()) {
+                if (saleNum==roomSaleConfig.getNum()){
                     break;
                 }
-            } else {
+            }else{
                 //按房型取得对应的房间信息
-                List<TRoomDto> rooms = roomService.findRoomsByRoomTypeId(roomSaleConfig.getRoomTypeId());
-                for (TRoomDto room : rooms) {
+                List<TRoomDto> rooms= roomService.findRoomsByRoomTypeId(roomSaleConfig.getRoomTypeId());
+                for (TRoomDto room:rooms){
                     //如果房间信息已经添加到活动房间列表则不继续添�?
-                    if (saleRooms.get(room.getId()) != null) {
+                    if(saleRooms.get(room.getId())!=null){
                         continue;
                     }
-                    if ("F".equals(room.getIsLock())) {
-                        TRoomSaleDto roomSale = new TRoomSaleDto();
+                    if ("F".equals(room.getIsLock())){
+                        TRoomSaleDto roomSale=new TRoomSaleDto();
                         roomSale.setOldRoomTypeId(room.getRoomTypeId());
                         roomSale.setRoomId(room.getId());
                         roomSale.setRoomNo(room.getName());
@@ -177,11 +238,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         roomSale.setEndTime(String.valueOf(roomSaleConfig.getEndDate()));
                         roomSale.setConfigId(roomSaleConfig.getId());
                         roomSale.setSaleName(roomSaleConfig.getSaleName());
-
                         roomSale.setSaleType(roomSaleConfig.getStyleType());
                         saleRooms.put(room.getId(),roomSale);
                         saleNum++;
-                        if (saleNum == roomSaleConfig.getNum()) {
+                        if (saleNum==roomSaleConfig.getNum()){
                             break;
                         }
                     }
@@ -190,20 +250,30 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomTypeDto.setRoomNum(saleNum);
             //更新做活动房型map
             roomTypeList.put(roomSaleConfig.getRoomTypeId(), roomTypeDto);
-
+            //处理 room sale type
+            List<TRoomSaleConfigDto> tRoomSaleConfigDtos = roomSaleConfigDtoMap.get(roomSaleConfig.getRoomTypeId().toString());
+            if(CollectionUtils.isEmpty(tRoomSaleConfigDtos)){
+                tRoomSaleConfigDtos = new ArrayList<TRoomSaleConfigDto>();
+                tRoomSaleConfigDtos.add(roomSaleConfig);
+                roomSaleConfigDtoMap.put(roomSaleConfig.getRoomTypeId().toString(),tRoomSaleConfigDtos);
+            }else{
+                tRoomSaleConfigDtos.add(roomSaleConfig);
+                roomSaleConfigDtoMap.put(roomSaleConfig.getRoomTypeId().toString(),tRoomSaleConfigDtos);
+            }
         }
-        List<TRoomSaleDto> roomDtos = new ArrayList<TRoomSaleDto>();
+        List<TRoomSaleDto> roomDtos=new ArrayList<TRoomSaleDto>();
         for (Integer key : saleRooms.keySet()) {
             roomDtos.add(saleRooms.get(key));
         }
-        List<TRoomTypeDto> roomTypeDtos = new ArrayList<TRoomTypeDto>();
+        List<TRoomTypeDto> roomTypeDtos=new ArrayList<TRoomTypeDto>();
         for (Integer key : roomTypeList.keySet()) {
             roomTypeDtos.add(roomTypeList.get(key));
         }
-        Map<String, Object> rs = new HashMap<String, Object>(2);
-        rs.put("roomDtos", roomDtos);
-        rs.put("roomTypeDtos", roomTypeDtos);
-        return rs;
+        Map<String,Object> rs=new HashMap<String, Object>(2);
+        rs.put("roomDtos",roomDtos);
+        rs.put("roomTypeDtos",roomTypeDtos);
+        rs.put("roomSaleConfigDtoMap", roomSaleConfigDtoMap);
+        return  rs;
     }
 
     public void updateOnline(Date runTime) {
@@ -224,14 +294,42 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 Integer roomId = dto.getRoomId();
                 Integer num = dto.getNum();
 
+                //OTS房态
+                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+                List<Integer> roomVCList = roomStateDto.getRoomIdList();
+                int roomVCSize = roomVCList.size();
+
+                List<Integer> onSaleRoomList = new ArrayList<Integer>();
                 //若未指定房间，随机抽取
                 if (null == roomId) {
 
+                    if (num <= roomVCSize) {
+                        onSaleRoomList.addAll(roomVCList);
+                    } else {
+                        while (onSaleRoomList.size() < num) {
+                            //随机抽取
+                            Random random = new Random();
+                            int number = random.nextInt(roomVCList.size());
+                            //加入后，减去
+                            onSaleRoomList.add(roomVCList.get(number));
+                            roomVCList.remove(number);
+                        }
+                    }
+                } else {
+                    if (roomVCList.contains(roomId)){
+                        onSaleRoomList.add(roomId);
+                    }
                 }
-                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
-                System.out.print(roomStateDto);
 
                 //
+                for (Integer onSaleRoomId : onSaleRoomList) {
+                    TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
+                    TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+                    roomChangeTypeDto.setId(onSaleRoomId);
+                    roomChangeTypeDto.setRoomTypeId(saleRoomTypeId);
+                    this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+//                    this.roomSettingService.selectByRoomTypeIdAndRoomNo()
+                }
             }
         }
     }
@@ -240,7 +338,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
         roomChangeTypeDto.setRoomTypeId(roomTypeId);
         roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+//        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
     }
 
     private void updateRoomSetting(Integer roomTypeId, Integer oldRoomTypeId) {

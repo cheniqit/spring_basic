@@ -93,7 +93,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
         TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
         roomChangeTypeDto.setRoomTypeId(roomTypeId);
         roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+//        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
     }
 
     /**
