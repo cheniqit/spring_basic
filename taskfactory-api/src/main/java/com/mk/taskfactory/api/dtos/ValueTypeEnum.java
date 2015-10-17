@@ -2,13 +2,11 @@ package com.mk.taskfactory.api.dtos;
 
 public enum ValueTypeEnum {
 
-    //1-生成 2-入库3-激活4-使用5-注销
+    //
     DEFAULT(0,"默认错误"),
-    TYPE_INIT(1,"生成"),           // 生成
-    TYPE_OUT(2,"入库"),            // 入库
-    TYPE_ACTIVE(3,"激活"),        //激活
-    TYPE_USED(4,"使用"),          //使用
-    TYPE_CANCEL(5,"注销");        //注销
+    TYPE_TO(1,"减至"),
+    TYPE_ADD(2,"补贴"),//在房类价格上面减少多少价格
+    TYPE_OFF(3,"折扣");//
 
     private int id;
     private String desc;
@@ -27,9 +25,9 @@ public enum ValueTypeEnum {
     }
 
     public static ValueTypeEnum getById(int id) {
-        for (ValueTypeEnum cashflowTypeEnum : ValueTypeEnum.values()) {
-            if (cashflowTypeEnum.getId() == id) {
-                return cashflowTypeEnum;
+        for (ValueTypeEnum valueTypeEnum : ValueTypeEnum.values()) {
+            if (valueTypeEnum.getId() == id) {
+                return valueTypeEnum;
             }
         }
         return DEFAULT;
