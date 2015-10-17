@@ -17,4 +17,5 @@ public interface RoomService {
     public TRoomDto findRoomsById(Integer id);
 
     public TRoomDto queryRoomByName(TRoomDto bean) throws Exception;
+    public  Integer  updateRoomTypeByRoomType(String name,String  pms,Integer  newRoomTypeId);
 }

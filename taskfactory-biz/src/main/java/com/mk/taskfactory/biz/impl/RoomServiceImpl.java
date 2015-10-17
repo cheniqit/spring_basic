@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -104,4 +105,13 @@ public class RoomServiceImpl implements RoomService {
 
         return roomDto;
     }
+
+    public  Integer  updateRoomTypeByRoomType(String name,String  pms,Integer  newRoomTypeId){
+        HashMap  hm = new  HashMap();
+        hm.put("name",name);
+        hm.put("pms",pms);
+        hm.put("newRoomTypeId",newRoomTypeId);
+        return  this.roomMapper.updateRoomTypeByRoomType(hm);
+    }
+
 }

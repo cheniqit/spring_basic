@@ -6,6 +6,7 @@ import com.mk.taskfactory.api.dtos.TRoomDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 import com.mk.taskfactory.model.TRoom;
 
+import java.util.HashMap;
 import java.util.List;
 
 @MyBatisRepository
@@ -21,4 +22,6 @@ public interface RoomMapper {
     public Integer countRoomByRoomType(Integer roomTypeId);
 
     public void updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
+
+    public   Integer updateRoomTypeByRoomType(HashMap parme);
 }

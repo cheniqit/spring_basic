@@ -12,4 +12,6 @@ public interface RoomSaleService {
     public void updateRoomSaleBack(TRoomSaleDto roomSaleDto);
     public List<RoomSaleToOtsDto> querySaleRoom(TRoomSaleDto bean);
     public RoomSaleToOtsDto getHotelSaleByHotelId(Integer hotelId);
+
+    public List<TRoomSaleDto>   queryByConfigAndBack(String  configId,String  isBack);
 }

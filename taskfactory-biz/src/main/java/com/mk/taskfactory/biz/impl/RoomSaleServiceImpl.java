@@ -123,4 +123,11 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         dto.setUseDescribe(configInfo.getUseDescribe());
         return dto;
     }
+
+    public List<TRoomSaleDto>   queryByConfigAndBack(String  configId,String  isBack){
+        HashMap  hm = new HashMap();
+        hm.put("configId",configId);
+        hm.put("isBack",isBack);
+       return  this.roomSaleMapper.queryByConfigAndBack(hm);
+    }
 }

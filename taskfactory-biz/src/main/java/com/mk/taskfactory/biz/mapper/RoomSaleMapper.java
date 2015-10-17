@@ -4,6 +4,7 @@ import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 import com.mk.taskfactory.model.TRoomSale;
 
+import java.util.HashMap;
 import java.util.List;
 
 @MyBatisRepository
@@ -15,4 +16,5 @@ public interface RoomSaleMapper {
     public List<TRoomSale> queryRoomSale(TRoomSaleDto bean);
     public TRoomSale getHotelSaleByHotelId(Integer hotelId);
 
+    public List<TRoomSaleDto>   queryByConfigAndBack(HashMap parme);
 }

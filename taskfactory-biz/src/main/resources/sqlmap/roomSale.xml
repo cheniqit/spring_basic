@@ -138,4 +138,10 @@
         set isBack =  #{isBack}
         where id = #{id}
     </update>
+
+    <select id="queryByConfigAndBack" resultMap="tRoomSale"  parameterType="java.util.Map" >
+       SELECT
+        <include refid="Base_Column_List"/>
+        from t_room_sale  where   configId =  #{configId}  and  isBack = #{isBack}
+    </select>
 </mapper>
