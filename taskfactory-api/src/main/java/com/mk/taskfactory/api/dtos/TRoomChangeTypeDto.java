@@ -1,6 +1,8 @@
 package com.mk.taskfactory.api.dtos;
 
 public class TRoomChangeTypeDto {
+
+    private Integer id;
     private Integer roomTypeId;
     private Integer oldRoomTypeId;
 
@@ -18,5 +20,12 @@ public class TRoomChangeTypeDto {
 
     public void setOldRoomTypeId(Integer oldRoomTypeId) {
         this.oldRoomTypeId = oldRoomTypeId;
+    }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
