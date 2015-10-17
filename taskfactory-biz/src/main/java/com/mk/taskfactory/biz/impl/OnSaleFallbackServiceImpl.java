@@ -4,6 +4,7 @@ import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
+import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +30,10 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
     @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
-
+    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
     public void onSaleFallback() {
-        //ĞèÒª»ØÍËµÄ½á¹û
+
+        //éœ€è¦å›é€€çš„ç»“æœ
         List<TRoomSaleDto> roomSaleDtoList = this.roomSaleService.queryUnBackRoomSale();
 
         for (TRoomSaleDto roomSaleDto : roomSaleDtoList) {
@@ -45,35 +47,36 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
             //TODO LOG roomTypeId oldRoomTypeId
             /*
-             *£¨1£©¸ù¾İt_room_sale roomtypeid,countºÍold_roomtypeid ½«t_roomtype ÖĞµÄroomNum»¹»ØÈ¥
+             *ï¼ˆ1ï¼‰æ ¹æ®t_room_sale roomtypeid,countå’Œold_roomtypeid å°†t_roomtype ä¸­çš„roomNumè¿˜å›å»
              */
             this.updatePlusRoomNum(roomTypeId, oldRoomTypeId);
 
             /*
-             *£¨2£©¸ù¾İt_room_sale roomtypeidºÍold_roomtypeid update t_roomÖĞµÄroomtypeidÎªold_roomtypeid
+             *ï¼ˆ2ï¼‰æ ¹æ®t_room_sale roomtypeidå’Œold_roomtypeid update t_roomä¸­çš„roomtypeidä¸ºold_roomtypeid
              */
             this.updateRoomType(roomTypeId, oldRoomTypeId);
 
             /*
-             *£¨3£©¸ù¾İt_room_sale roomtypeidÉ¾³ı±ít_roomtype_infoÖĞwhere roomtypeid=${roomtypeid}ÖĞÊı¾İ
+             *ï¼ˆ3ï¼‰æ ¹æ®t_room_sale roomtypeidåˆ é™¤è¡¨t_roomtype_infoä¸­where roomtypeid=${roomtypeid}ä¸­æ•°æ®
              */
             this.roomTypeInfoService.deleteByRoomType(roomTypeId);
 
             /*
-             *£¨4£©¸ù¾İt_room_sale roomtypeid roomNo  »¹Ô­t_room_settingÖĞwhere roomtypeid=${roomtypeid}ÖĞÊı¾İÎªoldRoomTypeId
+             *ï¼ˆ4ï¼‰æ ¹æ®t_room_sale roomtypeid roomNo  è¿˜åŸt_room_settingä¸­where roomtypeid=${roomtypeid}ä¸­æ•°æ®ä¸ºoldRoomTypeId
              */
             this.updateRoomSetting(roomTypeId, oldRoomTypeId);
 
             /*
-             *£¨5£©¸ù¾İt_room_sale roomtypeidÉ¾³ı±ít_roomtype_facilitÖĞwhere roomtypeid=${roomtypeid}ÖĞÊı¾İ
+             *ï¼ˆ5ï¼‰æ ¹æ®t_room_sale roomtypeidåˆ é™¤è¡¨t_roomtype_facilitä¸­where roomtypeid=${roomtypeid}ä¸­æ•°æ®
              */
             this.roomTypeFacilityService.deleteByRoomType(roomTypeId);
 
              /*
-             *£¨5£©¸ù¾İt_room_sale roomtypeidÉ¾³ı±ít_roomtype_facilitÖĞwhere roomtypeid=${roomtypeid}ÖĞÊı¾İ
+             *ï¼ˆ5ï¼‰æ ¹æ®t_room_sale roomtypeidåˆ é™¤è¡¨t_roomtype_facilitä¸­where roomtypeid=${roomtypeid}ä¸­æ•°æ®
              */
             this.roomTypeService.delTRoomTypeById(roomTypeId);
-            //ÉèÖÃ¸üĞÂÍê
+            ServiceUtils.post_data(otsUrl + "/roomsale/saleBegin", "POST", "");
+            //è®¾ç½®æ›´æ–°å®Œ
             TRoomSaleDto dto = new TRoomSaleDto();
             dto.setId(roomSaleDto.getId());
             dto.setIsBack("T");
@@ -82,7 +85,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
     }
 
     /**
-     * ¸ù¾İt_room_sale roomtypeidºÍold_roomtypeid update t_roomÖĞµÄroomtypeidÎªold_roomtypeid
+     * æ ¹æ®t_room_sale roomtypeidå’Œold_roomtypeid update t_roomä¸­çš„roomtypeidä¸ºold_roomtypeid
      * @param roomTypeId
      * @param oldRoomTypeId
      */
@@ -94,7 +97,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
     }
 
     /**
-     * ¸ù¾İt_room_sale roomtypeid,countºÍold_roomtypeid ½«t_roomtype ÖĞµÄroomNum»¹»ØÈ¥
+     * æ ¹æ®t_room_sale roomtypeid,countå’Œold_roomtypeid å°†t_roomtype ä¸­çš„roomNumè¿˜å›å»
      * @param roomTypeId
      * @param oldRoomTypeId
      */
@@ -109,7 +112,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
         }
     }
     /**
-     * ¸ù¾İt_room_sale roomtypeid,countºÍold_roomtypeid ½«t_roomtype ÖĞµÄroomNum»¹»ØÈ¥
+     * æ ¹æ®t_room_sale roomtypeid,countå’Œold_roomtypeid å°†t_roomtype ä¸­çš„roomNumè¿˜å›å»
      * @param roomTypeId
      * @param oldRoomTypeId
      */

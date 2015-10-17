@@ -52,12 +52,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public TRoomTypeDto findByName(TRoomTypeDto dto) throws Exception {
         if (null == dto || null == dto.getThotelId() || StringUtil.isEmpty(dto.getName())) {
-            throw new Exception("²ÎÊı´íÎó");
+            throw new Exception("å‚æ•°é”™è¯¯");
         }
         List<TRoomType> beanList = this.roomTypeMapper.findByName(dto);
 
         if (beanList.isEmpty()) {
-            throw new Exception("ÎŞ·¿ĞÍ");
+            throw new Exception("æ— æˆ¿å‹");
         }
 
         //

@@ -3,6 +3,7 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,35 +25,36 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomSaleService roomSaleService;
-
+    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
+    
     public void validRateTaskRun(){
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
-        //读取活动配置表数据
+        //璇诲彇娲诲姩閰嶇疆琛ㄦ暟鎹?
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (list==null){
             return;
         }
-        //获取配置表中对应可以做活动的房间信息
+        //鑾峰彇閰嶇疆琛ㄤ腑瀵瑰簲鍙互鍋氭椿鍔ㄧ殑鎴块棿淇℃伅
         Map<String,Object> saleRoomMap=getSaleRoom(list);
-        //得到所有符合做活动条件房间
+        //寰楀埌鎵?鏈夌鍚堝仛娲诲姩鏉′欢鎴块棿
         List<TRoomSaleDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
-        //得到所有符合做活动对应的房型
+        //寰楀埌鎵?鏈夌鍚堝仛娲诲姩瀵瑰簲鐨勬埧鍨?
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
-        //将新roomTypeId和老roomTypeId对应起来
+        //灏嗘柊roomTypeId鍜岃?乺oomTypeId瀵瑰簲璧锋潵
         Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
-        //促销前价格
+        //淇冮攢鍓嶄环鏍?
         Map<Integer,Double> roomTypePriceMap=new HashMap<Integer, Double>();
 
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
 
-            //将原价格存起来
+            //灏嗗師浠锋牸瀛樿捣鏉?
             roomTypePriceMap.put(roomTypeDto.getId(), roomTypeModel.getCost());
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
             roomTypeModel.setCost(roomTypeDto.getCost());
             roomTypeModel.setName(roomTypeDto.getName());
-            //复制并创建活动房型
+            //澶嶅埗骞跺垱寤烘椿鍔ㄦ埧鍨?
             roomTypeService.saveTRoomType(roomTypeModel);
             newRoomTypeId=roomTypeModel.getId();
             if (newRoomTypeId==null){
@@ -60,23 +62,23 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }
             roomTypeModel.setRoomNum(-roomTypeDto.getRoomNum());
             roomTypeService.updatePlusRoomNum(roomTypeModel);
-            //将新roomTypeId和老roomTypeId对应起来
+            //灏嗘柊roomTypeId鍜岃?乺oomTypeId瀵瑰簲璧锋潵
             roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
 
-            //得到房型其他信息
+            //寰楀埌鎴垮瀷鍏朵粬淇℃伅
             TRoomTypeInfoDto roomTypeInfo=roomTypeInfoService.findByRoomTypeId(roomTypeDto.getId());
             roomTypeInfo.setRoomTypeId(newRoomTypeId);
-            //复制并创建房型其他信息
+            //澶嶅埗骞跺垱寤烘埧鍨嬪叾浠栦俊鎭?
             roomTypeInfoService.saveRoomTypeInfo(roomTypeInfo);
-            //得到房价对应配置信息
+            //寰楀埌鎴夸环瀵瑰簲閰嶇疆淇℃伅
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos=roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
-           for(TRoomTypeFacilityDto roomTypeFacilityDto:roomTypeFacilityDtos){
-               roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
-               roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
-           }
+            for(TRoomTypeFacilityDto roomTypeFacilityDto:roomTypeFacilityDtos){
+                roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
+                roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
+            }
 
         }
-        //循环创建活动房间
+        //寰幆鍒涘缓娲诲姩鎴块棿
         for (TRoomSaleDto roomDto:saleRooms){
             Integer newRoomTypeId=roomTypeMap.get(roomDto.getOldRoomTypeId());
             Integer oldRoomTypeId=roomDto.getOldRoomTypeId();
@@ -86,32 +88,32 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSettingDto roomSettingBean=new TRoomSettingDto();
             roomSettingBean.setRoomTypeId(oldRoomTypeId);
             roomSettingBean.setRoomNo(roomDto.getRoomNo());
-            //取得房间配置信息
+            //鍙栧緱鎴块棿閰嶇疆淇℃伅
             TRoomSettingDto roomSetting=roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
             roomSetting.setRoomTypeId(newRoomTypeId);
-            //更新房间配置信息
+            //鏇存柊鎴块棿閰嶇疆淇℃伅
             roomSettingService.updateTRoomSetting(roomSetting);
-            //更新房间信息
+            //鏇存柊鎴块棿淇℃伅
             TRoomDto room=roomService.findRoomsById(roomDto.getRoomId());
             room.setRoomTypeId(newRoomTypeId);
             roomService.saveTRoom(room);
-            //保存今日特价房间信息
+            //淇濆瓨浠婃棩鐗逛环鎴块棿淇℃伅
             roomDto.setCreateDate(DateUtils.format_yMd(new Date()));
             roomDto.setCostPrice(roomTypePriceMap.get(oldRoomTypeId));
             roomDto.setRoomTypeId(newRoomTypeId);
             roomDto.setIsBack("F");
             roomSaleService.saveRoomSale(roomDto);
         }
-
+        ServiceUtils.post_data(otsUrl+"/roomsale/saleBegin", "POST","");
 
     }
     public Map<String,Object> getSaleRoom(List<TRoomSaleConfigDto>  list){
         Map<Integer,TRoomSaleDto> saleRooms=new HashMap<Integer, TRoomSaleDto>();
         Map<Integer,TRoomTypeDto> roomTypeList=new HashMap<Integer, TRoomTypeDto>();
-        //循环配置表所有数据
+        //寰幆閰嶇疆琛ㄦ墍鏈夋暟鎹?
         for (TRoomSaleConfigDto roomSaleConfig:list){
             TRoomTypeDto roomTypeDto=new TRoomTypeDto();
-            //如果房型不存在map中，则将房型put到map中
+            //濡傛灉鎴垮瀷涓嶅瓨鍦╩ap涓紝鍒欏皢鎴垮瀷put鍒癿ap涓?
             if (roomTypeList.get(roomSaleConfig.getRoomTypeId())==null){
                 roomTypeDto.setId(roomSaleConfig.getRoomTypeId());
                 roomTypeDto.setCost(roomSaleConfig.getSaleValue());
@@ -121,12 +123,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }else{
                 roomTypeDto=roomTypeList.get(roomSaleConfig.getRoomTypeId());
             }
-            //取得当前房型做活动的库存量
+            //鍙栧緱褰撳墠鎴垮瀷鍋氭椿鍔ㄧ殑搴撳瓨閲?
             int saleNum=roomTypeDto.getRoomNum();
-            //如果配置文件中roomId存在则直接将其加到活动列表中
+            //濡傛灉閰嶇疆鏂囦欢涓璻oomId瀛樺湪鍒欑洿鎺ュ皢鍏跺姞鍒版椿鍔ㄥ垪琛ㄤ腑
             if(roomSaleConfig.getRoomId()!=null&&roomSaleConfig.getRoomId()!=0){
                 TRoomDto room= roomService.findRoomsById(roomSaleConfig.getRoomId());
-                if (room!=null&&"F".equals(room.getIsLock())){//判断房间是否上锁
+                if (room!=null&&"F".equals(room.getIsLock())){//鍒ゆ柇鎴块棿鏄惁涓婇攣
                     TRoomSaleDto roomSale=new TRoomSaleDto();
                     roomSale.setOldRoomTypeId(room.getRoomTypeId());
                     roomSale.setRoomId(room.getId());
@@ -145,26 +147,26 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     break;
                 }
             }else{
-                //按房型取得对应的房间信息
+                //鎸夋埧鍨嬪彇寰楀搴旂殑鎴块棿淇℃伅
                 List<TRoomDto> rooms= roomService.findRoomsByRoomTypeId(roomSaleConfig.getRoomTypeId());
                 for (TRoomDto room:rooms){
-                    //如果房间信息已经添加到活动房间列表则不继续添加
+                    //濡傛灉鎴块棿淇℃伅宸茬粡娣诲姞鍒版椿鍔ㄦ埧闂村垪琛ㄥ垯涓嶇户缁坊鍔?
                     if(saleRooms.get(room.getId())!=null){
                         continue;
                     }
                     if ("F".equals(room.getIsLock())){
                         TRoomSaleDto roomSale=new TRoomSaleDto();
-                            roomSale.setOldRoomTypeId(room.getRoomTypeId());
-                            roomSale.setRoomId(room.getId());
-                            roomSale.setRoomNo(room.getName());
-                            roomSale.setPms(room.getPms());
-                            roomSale.setSalePrice(roomSaleConfig.getSaleValue());
-                            roomSale.setStartTime(roomSaleConfig.getStartTime());
-                            roomSale.setEndTime(roomSaleConfig.getEndDate());
-                            roomSale.setConfigId(roomSaleConfig.getId());
-                            roomSale.setSaleName(roomSaleConfig.getSaleName());
-                            roomSale.setSaleType(roomSaleConfig.getType());
-                            saleRooms.put(room.getId(),roomSale);
+                        roomSale.setOldRoomTypeId(room.getRoomTypeId());
+                        roomSale.setRoomId(room.getId());
+                        roomSale.setRoomNo(room.getName());
+                        roomSale.setPms(room.getPms());
+                        roomSale.setSalePrice(roomSaleConfig.getSaleValue());
+                        roomSale.setStartTime(roomSaleConfig.getStartTime());
+                        roomSale.setEndTime(roomSaleConfig.getEndDate());
+                        roomSale.setConfigId(roomSaleConfig.getId());
+                        roomSale.setSaleName(roomSaleConfig.getSaleName());
+                        roomSale.setSaleType(roomSaleConfig.getType());
+                        saleRooms.put(room.getId(),roomSale);
                         saleNum++;
                         if (saleNum==roomSaleConfig.getNum()){
                             break;
@@ -173,7 +175,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
             }
             roomTypeDto.setRoomNum(saleNum);
-            //更新做活动房型map
+            //鏇存柊鍋氭椿鍔ㄦ埧鍨媘ap
             roomTypeList.put(roomSaleConfig.getRoomTypeId(), roomTypeDto);
 
         }
