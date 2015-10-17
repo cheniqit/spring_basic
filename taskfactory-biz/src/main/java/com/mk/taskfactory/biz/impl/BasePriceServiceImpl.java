@@ -7,6 +7,7 @@ import com.mk.taskfactory.api.dtos.TBasepriceDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.mapper.BasePriceMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
+import com.mk.taskfactory.model.TBaseprice;
 import com.mk.taskfactory.model.TRoomSaleConfig;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,19 @@ public class BasePriceServiceImpl implements BasePriceService {
     private BasePriceMapper basePriceMapper;
     @Override
     public TBasepriceDto selectByPrimaryKey(Long id) {
-//        return basePriceMapper.selectByPrimaryKey(id);
-        return null;
+        TBaseprice basePrice = basePriceMapper.selectByPrimaryKey(id);
+
+        TBasepriceDto dto = new TBasepriceDto();
+        BeanUtils.copyProperties(basePrice, dto);
+        return dto;
     }
 
     @Override
     public TBasepriceDto findByRoomtypeId(Long roomTypeId) {
-//        return basePriceMapper.findByRoomtypeId(roomTypeId);
-        return null;
+        TBaseprice basePrice = basePriceMapper.findByRoomtypeId(roomTypeId);
+
+        TBasepriceDto dto = new TBasepriceDto();
+        BeanUtils.copyProperties(basePrice, dto);
+        return dto;
     }
 }
