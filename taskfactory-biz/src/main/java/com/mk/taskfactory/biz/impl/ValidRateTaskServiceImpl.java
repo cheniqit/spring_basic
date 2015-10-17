@@ -1,14 +1,17 @@
 package com.mk.taskfactory.biz.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -106,7 +109,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             roomDto.setIsBack("F");
             roomSaleService.saveRoomSale(roomDto);
         }
-        ServiceUtils.post_data(otsUrl + "/roomsale/saleBegin", "POST", "");
+//        ServiceUtils.postData(otsUrl + "/roomsale/saleBegin", "POST", "");
 
     }
     public Map<String,Object> getSaleRoom(List<TRoomSaleConfigDto>  list){
@@ -197,10 +200,31 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     public void updateOnline(Date runTime) {
         //查询指定期间内的CONFIG
-        List<TRoomSaleConfigDto> configDtoList = null;
+        TRoomSaleConfigDto roomSaleConfigDto = new TRoomSaleConfigDto();
+        roomSaleConfigDto.setValid("T");
+        List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
+
         //按开始时间更新
+        Time time = new Time(runTime.getTime());
+
         for (TRoomSaleConfigDto dto : configDtoList) {
             Time startTime = dto.getStartTime();
+            if (time.after(startTime)) {
+                int hotelId = dto.getHotelId();
+                int roomTypeId = dto.getRoomTypeId();
+                Integer saleRoomTypeId = dto.getSaleRoomTypeId();
+                Integer roomId = dto.getRoomId();
+                Integer num = dto.getNum();
+
+                //若未指定房间，随机抽取
+                if (null == roomId) {
+
+                }
+                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+                System.out.print(roomStateDto);
+
+                //
+            }
         }
     }
 

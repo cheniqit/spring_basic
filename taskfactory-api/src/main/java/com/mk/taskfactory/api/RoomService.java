@@ -1,8 +1,10 @@
 package com.mk.taskfactory.api;
 
+import com.mk.taskfactory.api.dtos.OtsRoomStateDto;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomDto;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RoomService {
@@ -17,4 +19,6 @@ public interface RoomService {
     public TRoomDto findRoomsById(Integer id);
 
     public TRoomDto queryRoomByName(TRoomDto bean) throws Exception;
+
+    public OtsRoomStateDto getOtsRoomState(Integer hotelId, Integer roomTypeId, Date startDate, Date endDate);
 }
