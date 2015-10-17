@@ -1,10 +1,9 @@
 package com.mk.taskfactory.api;
 
-/**
- * Created by admin on 2015/10/17.
- */
-public class BasePriceService {
-//    public TBaseprice selectByPrimaryKey(Long id);
-//
-//    public TBaseprice findByRoomtypeId(Long roomTypeId);
+import com.mk.taskfactory.api.dtos.TBasepriceDto;
+
+public interface BasePriceService {
+    public TBasepriceDto selectByPrimaryKey(Long id);
+
+    public TBasepriceDto findByRoomtypeId(Long roomTypeId);
 }
