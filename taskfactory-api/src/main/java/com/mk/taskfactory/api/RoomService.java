@@ -20,5 +20,8 @@ public interface RoomService {
 
     public TRoomDto queryRoomByName(TRoomDto bean) throws Exception;
 
+    public  Integer  updateRoomTypeByRoomType(String name,String  pms,Integer  newRoomTypeId);
+
     public OtsRoomStateDto getOtsRoomState(Integer hotelId, Integer roomTypeId, Date startDate, Date endDate);
+
 }

@@ -3,7 +3,11 @@ package com.mk.taskfactory.api.dtos;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TBasepriceDto {
+/**
+ * Created by admin on 2015/10/17.
+ */
+public class TBasePriceDto {
+
     private Long id;
 
     private Long roomtypeid;

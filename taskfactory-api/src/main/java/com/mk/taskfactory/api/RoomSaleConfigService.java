@@ -9,7 +9,12 @@ import java.util.List;
  */
 public interface RoomSaleConfigService {
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByParams(TRoomSaleConfigDto bean);
+
     public Integer saveRoomSaleConfig(TRoomSaleConfigDto bean);
+
     public Integer deleteRoomSaleConfig(Integer id);
+
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
+
+    public Integer updateRoomSaleConfigValid(Integer id, String valid);
 }

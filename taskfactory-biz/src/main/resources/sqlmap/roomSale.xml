@@ -22,6 +22,7 @@
         <result property="settleValue" column="settleValue" />
 	</resultMap>
 
+
     <sql id="Base_Column_List" >
         id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
         startTime,endTime,roomId,configId,isBack,saleName,saleType,hotelId
@@ -138,4 +139,15 @@
         set isBack =  #{isBack}
         where id = #{id}
     </update>
+
+    <select id="queryByConfigAndBack" resultMap="tRoomSale"  parameterType="java.util.Map" >
+       SELECT
+        <include refid="Base_Column_List"/>
+        from t_room_sale  where   configId =  #{configId}  and  isBack = #{isBack}
+    </select>
+
+    <select id="queryByConfigGroup" resultType="Integer"  parameterType="java.util.Map" >
+        SELECT  roomtypeId
+        from t_room_sale  where   configId =  #{configId} and  isBack =#{isBack}   group  by   roomtypeId
+    </select>
 </mapper>

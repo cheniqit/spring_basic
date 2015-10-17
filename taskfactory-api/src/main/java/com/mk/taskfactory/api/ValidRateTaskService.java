@@ -9,4 +9,9 @@ public interface ValidRateTaskService {
     public void validRateTaskRun();
 
     public void updateOnline(Date runTime);
+
+    public void dateReback();
+
+    public void remove();
+
 }

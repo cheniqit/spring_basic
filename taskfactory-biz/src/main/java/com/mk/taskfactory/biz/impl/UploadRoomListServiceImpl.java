@@ -55,7 +55,7 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
             }
         }
         if (StringUtil.isEmpty(result)) {
-            result = "上传成功";
+            result = "涓婁紶鎴愬姛";
         }
         return result;
     }
@@ -71,7 +71,7 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
             wb = new HSSFWorkbook(fs);
 
             sheet = wb.getSheetAt(0);
-            // 得到总行�?
+            // 寰楀埌鎬昏鏁?
             int lastRowNum = sheet.getLastRowNum();
 
             //
@@ -92,7 +92,7 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
 
                 //
                 if (null == hotelId) {
-                    strError.append(i + "行没有hotelId").append("/n");
+                    strError.append(i + "琛屾病鏈塰otelId").append("/n");
                     continue;
                 }
 
@@ -109,7 +109,7 @@ public class UploadRoomListServiceImpl implements UploadRoomListService {
                 }
 
                 if (null == roomTypeDto) {
-                    strError.append(i + "行roomType 填写错误").append("/n");
+                    strError.append(i + "琛宺oomType 濉啓閿欒").append("/n");
                     continue;
                 }
                 //room

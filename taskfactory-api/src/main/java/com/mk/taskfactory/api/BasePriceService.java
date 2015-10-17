@@ -1,9 +1,9 @@
 package com.mk.taskfactory.api;
-
-import com.mk.taskfactory.api.dtos.TBasepriceDto;
-
+import com.mk.taskfactory.api.dtos.TBasePriceDto;
 public interface BasePriceService {
-    public TBasepriceDto selectByPrimaryKey(Long id);
+    public TBasePriceDto selectByPrimaryKey(Long id);
 
-    public TBasepriceDto findByRoomtypeId(Long roomTypeId);
+    public TBasePriceDto findByRoomtypeId(Long roomTypeId);
+
+    public int saveBasePriceService(TBasePriceDto dto);
 }

@@ -40,7 +40,7 @@ public class RoomServiceImpl implements RoomService {
         this.roomMapper.updateRoomTypeByRoomType(roomChangeTypeDto);
     }
 
-    public  List<TRoomDto> queryRoomByParams(TRoomDto bean){
+    public List<TRoomDto> queryRoomByParams(TRoomDto bean){
         List<TRoom> list=roomMapper.queryRoomByParams(bean);
         if (list==null){
             return  null;
@@ -111,6 +111,14 @@ public class RoomServiceImpl implements RoomService {
         return roomDto;
     }
 
+    public  Integer  updateRoomTypeByRoomType(String name,String  pms,Integer  newRoomTypeId){
+        HashMap  hm = new HashMap();
+        hm.put("name",name);
+        hm.put("pms",pms);
+        hm.put("newRoomTypeId",newRoomTypeId);
+        return  this.roomMapper.updateRoomTypeByName(hm);
+    }
+
     @Override
     public OtsRoomStateDto getOtsRoomState(Integer hotelId, Integer roomTypeId, Date startDate, Date endDate) {
         OtsRoomStateDto result = new OtsRoomStateDto();
@@ -147,7 +155,7 @@ public class RoomServiceImpl implements RoomService {
             result.setHotelName(hotelName);
 
             //roomType
-            JSONArray roomTypeListArray = hotelJson.getJSONArray("roomtype");
+             JSONArray roomTypeListArray = hotelJson.getJSONArray("roomtype");
             if (roomTypeListArray.isEmpty()) {
                 return result;
             }

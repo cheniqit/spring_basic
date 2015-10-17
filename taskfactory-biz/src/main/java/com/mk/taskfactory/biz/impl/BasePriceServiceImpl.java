@@ -3,7 +3,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.BasePriceService;
 import com.mk.taskfactory.api.RoomSaleConfigService;
-import com.mk.taskfactory.api.dtos.TBasepriceDto;
+import com.mk.taskfactory.api.dtos.TBasePriceDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.mapper.BasePriceMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
@@ -22,20 +22,25 @@ public class BasePriceServiceImpl implements BasePriceService {
     @Autowired
     private BasePriceMapper basePriceMapper;
     @Override
-    public TBasepriceDto selectByPrimaryKey(Long id) {
+    public TBasePriceDto selectByPrimaryKey(Long id) {
         TBaseprice basePrice = basePriceMapper.selectByPrimaryKey(id);
 
-        TBasepriceDto dto = new TBasepriceDto();
+        TBasePriceDto dto = new TBasePriceDto();
         BeanUtils.copyProperties(basePrice, dto);
         return dto;
     }
 
     @Override
-    public TBasepriceDto findByRoomtypeId(Long roomTypeId) {
+    public TBasePriceDto findByRoomtypeId(Long roomTypeId) {
         TBaseprice basePrice = basePriceMapper.findByRoomtypeId(roomTypeId);
 
-        TBasepriceDto dto = new TBasepriceDto();
+        TBasePriceDto dto = new TBasePriceDto();
         BeanUtils.copyProperties(basePrice, dto);
         return dto;
+    }
+
+    @Override
+    public int saveBasePriceService(TBasePriceDto dto) {
+        return 0;
     }
 }
