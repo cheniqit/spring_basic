@@ -28,32 +28,32 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private final String otsUrl="http://smlt-ots.imike.cn/ots/";
     public void validRateTaskRun(){
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
-        //¶ÁÈ¡»î¶¯ÅäÖÃ±íÊı¾İ
+        //è¯»å–æ´»åŠ¨é…ç½®è¡¨æ•°æ®
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (list==null){
             return;
         }
-        //»ñÈ¡ÅäÖÃ±íÖĞ¶ÔÓ¦¿ÉÒÔ×ö»î¶¯µÄ·¿¼äĞÅÏ¢
+        //è·å–é…ç½®è¡¨ä¸­å¯¹åº”å¯ä»¥åšæ´»åŠ¨çš„æˆ¿é—´ä¿¡æ¯
         Map<String,Object> saleRoomMap=getSaleRoom(list);
-        //µÃµ½ËùÓĞ·ûºÏ×ö»î¶¯Ìõ¼ş·¿¼ä
+        //å¾—åˆ°æ‰€æœ‰ç¬¦åˆåšæ´»åŠ¨æ¡ä»¶æˆ¿é—´
         List<TRoomSaleDto>  saleRooms=(ArrayList)saleRoomMap.get("roomDtos");
-        //µÃµ½ËùÓĞ·ûºÏ×ö»î¶¯¶ÔÓ¦µÄ·¿ĞÍ
+        //å¾—åˆ°æ‰€æœ‰ç¬¦åˆåšæ´»åŠ¨å¯¹åº”çš„æˆ¿å‹
         List<TRoomTypeDto>  roomTypes=(ArrayList)saleRoomMap.get("roomTypeDtos");
-        //½«ĞÂroomTypeIdºÍÀÏroomTypeId¶ÔÓ¦ÆğÀ´
+        //å°†æ–°roomTypeIdå’Œè€roomTypeIdå¯¹åº”èµ·æ¥
         Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
-        //´ÙÏúÇ°¼Û¸ñ
+        //ä¿ƒé”€å‰ä»·æ ¼
         Map<Integer,Double> roomTypePriceMap=new HashMap<Integer, Double>();
 
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
 
-            //½«Ô­¼Û¸ñ´æÆğÀ´
+            //å°†åŸä»·æ ¼å­˜èµ·æ¥
             roomTypePriceMap.put(roomTypeDto.getId(), roomTypeModel.getCost());
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
             roomTypeModel.setCost(roomTypeDto.getCost());
             roomTypeModel.setName(roomTypeDto.getName());
-            //¸´ÖÆ²¢´´½¨»î¶¯·¿ĞÍ
+            //å¤åˆ¶å¹¶åˆ›å»ºæ´»åŠ¨æˆ¿å‹
             roomTypeService.saveTRoomType(roomTypeModel);
             newRoomTypeId=roomTypeModel.getId();
             if (newRoomTypeId==null){
@@ -61,23 +61,23 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }
             roomTypeModel.setRoomNum(-roomTypeDto.getRoomNum());
             roomTypeService.updatePlusRoomNum(roomTypeModel);
-            //½«ĞÂroomTypeIdºÍÀÏroomTypeId¶ÔÓ¦ÆğÀ´
+            //å°†æ–°roomTypeIdå’Œè€roomTypeIdå¯¹åº”èµ·æ¥
             roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
 
-            //µÃµ½·¿ĞÍÆäËûĞÅÏ¢
+            //å¾—åˆ°æˆ¿å‹å…¶ä»–ä¿¡æ¯
             TRoomTypeInfoDto roomTypeInfo=roomTypeInfoService.findByRoomTypeId(roomTypeDto.getId());
             roomTypeInfo.setRoomTypeId(newRoomTypeId);
-            //¸´ÖÆ²¢´´½¨·¿ĞÍÆäËûĞÅÏ¢
+            //å¤åˆ¶å¹¶åˆ›å»ºæˆ¿å‹å…¶ä»–ä¿¡æ¯
             roomTypeInfoService.saveRoomTypeInfo(roomTypeInfo);
-            //µÃµ½·¿¼Û¶ÔÓ¦ÅäÖÃĞÅÏ¢
+            //å¾—åˆ°æˆ¿ä»·å¯¹åº”é…ç½®ä¿¡æ¯
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos=roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
-           for(TRoomTypeFacilityDto roomTypeFacilityDto:roomTypeFacilityDtos){
-               roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
-               roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
-           }
+            for(TRoomTypeFacilityDto roomTypeFacilityDto:roomTypeFacilityDtos){
+                roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
+                roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
+            }
 
         }
-        //Ñ­»·´´½¨»î¶¯·¿¼ä
+        //å¾ªç¯åˆ›å»ºæ´»åŠ¨æˆ¿é—´
         for (TRoomSaleDto roomDto:saleRooms){
             Integer newRoomTypeId=roomTypeMap.get(roomDto.getOldRoomTypeId());
             Integer oldRoomTypeId=roomDto.getOldRoomTypeId();
@@ -87,16 +87,16 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSettingDto roomSettingBean=new TRoomSettingDto();
             roomSettingBean.setRoomTypeId(oldRoomTypeId);
             roomSettingBean.setRoomNo(roomDto.getRoomNo());
-            //È¡µÃ·¿¼äÅäÖÃĞÅÏ¢
+            //å–å¾—æˆ¿é—´é…ç½®ä¿¡æ¯
             TRoomSettingDto roomSetting=roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
             roomSetting.setRoomTypeId(newRoomTypeId);
-            //¸üĞÂ·¿¼äÅäÖÃĞÅÏ¢
+            //æ›´æ–°æˆ¿é—´é…ç½®ä¿¡æ¯
             roomSettingService.updateTRoomSetting(roomSetting);
-            //¸üĞÂ·¿¼äĞÅÏ¢
+            //æ›´æ–°æˆ¿é—´ä¿¡æ¯
             TRoomDto room=roomService.findRoomsById(roomDto.getRoomId());
             room.setRoomTypeId(newRoomTypeId);
             roomService.saveTRoom(room);
-            //±£´æ½ñÈÕÌØ¼Û·¿¼äĞÅÏ¢
+            //ä¿å­˜ä»Šæ—¥ç‰¹ä»·æˆ¿é—´ä¿¡æ¯
             roomDto.setCreateDate(DateUtils.format_yMd(new Date()));
             roomDto.setCostPrice(roomTypePriceMap.get(oldRoomTypeId));
             roomDto.setRoomTypeId(newRoomTypeId);
@@ -109,10 +109,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     public Map<String,Object> getSaleRoom(List<TRoomSaleConfigDto>  list){
         Map<Integer,TRoomSaleDto> saleRooms=new HashMap<Integer, TRoomSaleDto>();
         Map<Integer,TRoomTypeDto> roomTypeList=new HashMap<Integer, TRoomTypeDto>();
-        //Ñ­»·ÅäÖÃ±íËùÓĞÊı¾İ
+        //å¾ªç¯é…ç½®è¡¨æ‰€æœ‰æ•°æ®
         for (TRoomSaleConfigDto roomSaleConfig:list){
             TRoomTypeDto roomTypeDto=new TRoomTypeDto();
-            //Èç¹û·¿ĞÍ²»´æÔÚmapÖĞ£¬Ôò½«·¿ĞÍputµ½mapÖĞ
+            //å¦‚æœæˆ¿å‹ä¸å­˜åœ¨mapä¸­ï¼Œåˆ™å°†æˆ¿å‹putåˆ°mapä¸­
             if (roomTypeList.get(roomSaleConfig.getRoomTypeId())==null){
                 roomTypeDto.setId(roomSaleConfig.getRoomTypeId());
                 roomTypeDto.setCost(roomSaleConfig.getSaleValue());
@@ -122,12 +122,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }else{
                 roomTypeDto=roomTypeList.get(roomSaleConfig.getRoomTypeId());
             }
-            //È¡µÃµ±Ç°·¿ĞÍ×ö»î¶¯µÄ¿â´æÁ¿
+            //å–å¾—å½“å‰æˆ¿å‹åšæ´»åŠ¨çš„åº“å­˜é‡
             int saleNum=roomTypeDto.getRoomNum();
-            //Èç¹ûÅäÖÃÎÄ¼şÖĞroomId´æÔÚÔòÖ±½Ó½«Æä¼Óµ½»î¶¯ÁĞ±íÖĞ
+            //å¦‚æœé…ç½®æ–‡ä»¶ä¸­roomIdå­˜åœ¨åˆ™ç›´æ¥å°†å…¶åŠ åˆ°æ´»åŠ¨åˆ—è¡¨ä¸­
             if(roomSaleConfig.getRoomId()!=null&&roomSaleConfig.getRoomId()!=0){
                 TRoomDto room= roomService.findRoomsById(roomSaleConfig.getRoomId());
-                if (room!=null&&"F".equals(room.getIsLock())){//ÅĞ¶Ï·¿¼äÊÇ·ñÉÏËø
+                if (room!=null&&"F".equals(room.getIsLock())){//åˆ¤æ–­æˆ¿é—´æ˜¯å¦ä¸Šé”
                     TRoomSaleDto roomSale=new TRoomSaleDto();
                     roomSale.setOldRoomTypeId(room.getRoomTypeId());
                     roomSale.setRoomId(room.getId());
@@ -146,26 +146,26 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     break;
                 }
             }else{
-                //°´·¿ĞÍÈ¡µÃ¶ÔÓ¦µÄ·¿¼äĞÅÏ¢
+                //æŒ‰æˆ¿å‹å–å¾—å¯¹åº”çš„æˆ¿é—´ä¿¡æ¯
                 List<TRoomDto> rooms= roomService.findRoomsByRoomTypeId(roomSaleConfig.getRoomTypeId());
                 for (TRoomDto room:rooms){
-                    //Èç¹û·¿¼äĞÅÏ¢ÒÑ¾­Ìí¼Óµ½»î¶¯·¿¼äÁĞ±íÔò²»¼ÌĞøÌí¼Ó
+                    //å¦‚æœæˆ¿é—´ä¿¡æ¯å·²ç»æ·»åŠ åˆ°æ´»åŠ¨æˆ¿é—´åˆ—è¡¨åˆ™ä¸ç»§ç»­æ·»åŠ 
                     if(saleRooms.get(room.getId())!=null){
                         continue;
                     }
                     if ("F".equals(room.getIsLock())){
                         TRoomSaleDto roomSale=new TRoomSaleDto();
-                            roomSale.setOldRoomTypeId(room.getRoomTypeId());
-                            roomSale.setRoomId(room.getId());
-                            roomSale.setRoomNo(room.getName());
-                            roomSale.setPms(room.getPms());
-                            roomSale.setSalePrice(roomSaleConfig.getSaleValue());
-                            roomSale.setStartTime(roomSaleConfig.getStartTime());
-                            roomSale.setEndTime(roomSaleConfig.getEndDate());
-                            roomSale.setConfigId(roomSaleConfig.getId());
-                            roomSale.setSaleName(roomSaleConfig.getSaleName());
-                            roomSale.setSaleType(roomSaleConfig.getType());
-                            saleRooms.put(room.getId(),roomSale);
+                        roomSale.setOldRoomTypeId(room.getRoomTypeId());
+                        roomSale.setRoomId(room.getId());
+                        roomSale.setRoomNo(room.getName());
+                        roomSale.setPms(room.getPms());
+                        roomSale.setSalePrice(roomSaleConfig.getSaleValue());
+                        roomSale.setStartTime(roomSaleConfig.getStartTime());
+                        roomSale.setEndTime(roomSaleConfig.getEndDate());
+                        roomSale.setConfigId(roomSaleConfig.getId());
+                        roomSale.setSaleName(roomSaleConfig.getSaleName());
+                        roomSale.setSaleType(roomSaleConfig.getType());
+                        saleRooms.put(room.getId(),roomSale);
                         saleNum++;
                         if (saleNum==roomSaleConfig.getNum()){
                             break;
@@ -174,7 +174,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
             }
             roomTypeDto.setRoomNum(saleNum);
-            //¸üĞÂ×ö»î¶¯·¿ĞÍmap
+            //æ›´æ–°åšæ´»åŠ¨æˆ¿å‹map
             roomTypeList.put(roomSaleConfig.getRoomTypeId(), roomTypeDto);
 
         }

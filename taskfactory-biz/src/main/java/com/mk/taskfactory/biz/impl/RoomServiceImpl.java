@@ -95,7 +95,7 @@ public class RoomServiceImpl implements RoomService {
     public TRoomDto queryRoomByName(TRoomDto bean) throws Exception {
         List<TRoom> roomList = this.roomMapper.queryRoomByParams(bean);
         if (roomList.isEmpty()) {
-            throw new Exception("ÎÞ·¿¼ä");
+            throw new Exception("æ— æˆ¿é—´");
         }
         TRoom room = roomList.get(0);
 
