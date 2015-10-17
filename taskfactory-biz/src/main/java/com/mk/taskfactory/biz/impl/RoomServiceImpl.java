@@ -116,7 +116,7 @@ public class RoomServiceImpl implements RoomService {
         hm.put("name",name);
         hm.put("pms",pms);
         hm.put("newRoomTypeId",newRoomTypeId);
-        return  this.roomMapper.updateRoomTypeByRoomType(hm);
+        return  this.roomMapper.updateRoomTypeByName(hm);
     }
 
     @Override

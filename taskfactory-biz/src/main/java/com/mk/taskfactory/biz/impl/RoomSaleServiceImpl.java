@@ -124,7 +124,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         return dto;
     }
 
-    public List<TRoomSaleDto>   queryByConfigAndBack(String  configId,String  isBack){
+    public List<TRoomSaleDto> queryByConfigAndBack(String configId, String isBack){
         HashMap  hm = new HashMap();
         hm.put("configId", configId);
         hm.put("isBack", isBack);
