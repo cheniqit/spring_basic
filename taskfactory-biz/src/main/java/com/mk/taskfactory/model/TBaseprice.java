@@ -1,9 +1,9 @@
-package com.mk.taskfactory.api.dtos;
+package com.mk.taskfactory.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TBasepriceDto {
+public class TBaseprice {
     private Long id;
 
     private Long roomtypeid;

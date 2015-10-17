@@ -292,6 +292,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 int hotelId = dto.getHotelId();
                 int roomTypeId = dto.getRoomTypeId();
                 Integer saleRoomTypeId = dto.getSaleRoomTypeId();
+                if (null == saleRoomTypeId) {
+                    //数据错误，跳过
+                    continue;
+                }
                 Integer roomId = dto.getRoomId();
                 Integer num = dto.getNum();
 
@@ -323,15 +327,69 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
 
                 //
+                TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
+                //
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
                 for (Integer onSaleRoomId : onSaleRoomList) {
+                    //get roomDto
                     TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
+
+                    //updateRoomType to saleRoomTypeId
                     TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
                     roomChangeTypeDto.setId(onSaleRoomId);
                     roomChangeTypeDto.setRoomTypeId(saleRoomTypeId);
                     this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
-//                    this.roomSettingService.selectByRoomTypeIdAndRoomNo()
+
+                    //update roomSetting to saleRoomTypeId
+                    TRoomSettingDto roomSettingParam = new TRoomSettingDto();
+                    roomSettingParam.setRoomTypeId(roomTypeId);
+                    roomSettingParam.setRoomNo(roomDto.getName());
+                    TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
+
+                    roomSettingDto.setRoomTypeId(saleRoomTypeId);
+                    this.roomSettingService.saveTRoomSetting(roomSettingDto);
+
+                    //log roomSale
+                    TRoomSaleDto roomSaleDto = new TRoomSaleDto();
+                    roomSaleDto.setRoomTypeId(saleRoomTypeId);
+                    roomSaleDto.setOldRoomTypeId(roomTypeId);
+                    roomSaleDto.setRoomNo(roomDto.getName());
+                    roomSaleDto.setPms(roomDto.getPms());
+                    roomSaleDto.setCreateDate(dateFormat.format(new Date()));
+//                    roomSaleDto.setSalePrice();
+                    roomSaleDto.setCostPrice(roomTypeDto.getCost());
+
+                    roomSaleDto.setStartTime(timeFormat.format(dto.getStartDate()));
+                    roomSaleDto.setEndTime(timeFormat.format(dto.getEndDate()));
+                    roomSaleDto.setRoomId(roomId);
+                    roomSaleDto.setConfigId(dto.getId());
+                    roomSaleDto.setIsBack("F");
+                    roomSaleDto.setSaleName(dto.getSaleName());
+                    roomSaleDto.setSaleType(dto.getStyleType());
+                    roomSaleDto.setHotelId(hotelId);
+
+                    BigDecimal settleValue = this.calaValue(null, dto.getSettleValue(), dto.getSettleType());
+                    roomSaleDto.setSettleValue(settleValue);
+                    this.roomSaleService.saveRoomSale(roomSaleDto);
                 }
             }
+        }
+    }
+
+    private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
+        if (null == baseValue || null == value || null == valueTypeEnum) {
+            return value;
+        }
+
+        if (ValueTypeEnum.TYPE_TO == valueTypeEnum) {
+            return value;
+        } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
+            return baseValue.subtract(value);
+        } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
+            return baseValue.multiply(value).divide(new BigDecimal(100));
+        } else {
+            return baseValue;
         }
     }
 
