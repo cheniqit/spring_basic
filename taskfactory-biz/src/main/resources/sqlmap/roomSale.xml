@@ -22,25 +22,6 @@
         <result property="settleValue" column="settleValue" />
 	</resultMap>
 
-    <resultMap id="troomSaleDto" type="com.mk.taskfactory.api.dtos.TRoomSaleDto">
-        <result property="id" column="id" />
-        <result property="roomTypeId" column="roomTypeId" />
-        <result property="oldRoomTypeId" column="oldRoomTypeId" />
-        <result property="roomNo" column="roomNo" />
-        <result property="pms" column="pms" />
-        <result property="createDate" column="createDate" />
-        <result property="salePrice" column="salePrice" />
-        <result property="costPrice" column="costPrice" />
-        <result property="startTime" column="startTime" />
-        <result property="endTime" column="endTime" />
-        <result property="roomId" column="roomId" />
-        <result property="configId" column="configId" />
-        <result property="isBack" column="isBack" />
-        <result property="saleName" column="saleName" />
-        <result property="saleType" column="saleType" />
-        <result property="hotelId" column="hotelId" />
-        <result property="settleValue" column="settleValue" />
-    </resultMap>
 
     <sql id="Base_Column_List" >
         id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
@@ -159,7 +140,7 @@
         where id = #{id}
     </update>
 
-    <select id="queryByConfigAndBack" resultMap="troomSaleDto"  parameterType="java.util.Map" >
+    <select id="queryByConfigAndBack" resultMap="tRoomSale"  parameterType="java.util.Map" >
        SELECT
         <include refid="Base_Column_List"/>
         from t_room_sale  where   configId =  #{configId}  and  isBack = #{isBack}

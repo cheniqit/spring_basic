@@ -1,10 +1,9 @@
 package com.mk.taskfactory.api;
 
+import java.util.List;
+
 import com.mk.taskfactory.api.dtos.RoomSaleToOtsDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
-import com.mk.taskfactory.model.TRoomSale;
-
-import java.util.List;
 
 public interface RoomSaleService {
     public List<TRoomSaleDto> queryYesterdayRoomSale();
