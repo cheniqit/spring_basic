@@ -91,7 +91,7 @@
     update t_room set roomTypeId=#{roomTypeId} where id = #{id}
   </update>
 
-    <update id="updateRoomTypeByRoomType"  parameterType="java.util.Map">
+    <update id="updateRoomTypeByName"  parameterType="java.util.Map">
         update t_room
         <set>
             <if test="roomTypeId != null">

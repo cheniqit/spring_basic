@@ -122,7 +122,7 @@
          WHERE  id= #{id}
     </update>
 
-    <update id="updateRoomSaleConfig" parameterType="java.util.Map" >
+    <update id="updateRoomSaleConfigValid" parameterType="java.util.Map" >
         update t_room_sale_config
         set
         valid =  #{valid}
