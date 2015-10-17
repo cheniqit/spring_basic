@@ -103,4 +103,11 @@
          type =  #{type}
          WHERE  id= #{id}
     </update>
+
+    <update id="updateRoomSaleConfig" parameterType="java.util.Map" >
+        update t_room_sale_config
+        set
+        valid =  #{valid}
+        WHERE  id= #{id}
+    </update>
 </mapper>

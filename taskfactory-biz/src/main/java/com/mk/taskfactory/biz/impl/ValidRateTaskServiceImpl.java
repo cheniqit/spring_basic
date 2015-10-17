@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.sql.Time;
+import java.sql.*;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 @Service
 public class ValidRateTaskServiceImpl implements ValidRateTaskService {
@@ -225,20 +227,56 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     }
 
-    public void dateBack() {
+    //数据回复
+    public void dateReback() {
         TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
         troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                String endDate = dto.getEndDate() + " " + dto.getEndTime();
+                java.sql.Date endDate = dto.getEndDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(endDate);
+                cal.add(Calendar.DATE, 1);
+                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime());
                 try {
-                    //比较活动结束时间和当前时间
-                    Boolean bl = DateUtils.getCompareResult(endDate, DateUtils.getStringDate(null), "yyyy-MM-dd HH:mm:ss");
-                    if (!bl) {
-
+                    //比较活动结束日期和当前日期
+                    if (!DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd"), "yyyy-MM-dd")) {
+                        //比较活动结束时间和当前时间
+                        String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
+                        String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
+                        if (DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
+                            reBackRoom(dto);
+                        }
                     }
-                } catch (ParseException pe) {
+                } catch (ParseException e){
+                }
+            }
+        }
+    }
+
+    //数据回复
+    public void remove(){
+        TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
+        troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
+        if (!CollectionUtils.isEmpty(list)) {
+            for (TRoomSaleConfigDto dto : list) {
+                java.sql.Date endDate = dto.getEndDate();
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(endDate);
+                cal.add(Calendar.DATE, 1);
+                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
+                try {
+                    //比较活动结束日期和当前日期
+                    if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
+                           //先确保数据已经回复
+                            reBackRoom(dto);
+                          //删除房型
+                            deleteRoomType(dto);
+                        this.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                    }
+                } catch (ParseException e){
                 }
             }
         }
@@ -256,6 +294,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         for (TRoomSaleDto saleTo : saleDtoList) {
             //还原t_room表中的数据
             this.updateRoom(saleTo);
+            //还原t_room_setting表中的数据
+            this.updateRoomSetting(saleTo);
         }
         return true;
     }
@@ -263,4 +303,30 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
           roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomNo(),roomSaleDto.getPms(),roomSaleDto.getOldRoomTypeId());
           return true;
     }
+
+    public Boolean  updateRoomSetting(TRoomSaleDto  roomSaleDto){
+        roomSettingService.updateRoomTypeByRoomNo(roomSaleDto.getRoomNo(), roomSaleDto.getOldRoomTypeId(), roomSaleDto.getRoomTypeId());
+        return true;
+    }
+
+    public Boolean  deleteRoomType(TRoomSaleConfigDto  troomSaleConfigDto){
+        if(null==troomSaleConfigDto){
+            return false;
+        }
+        //根据配置id查询当前没有回复的数据
+        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), "T");
+        if (CollectionUtils.isEmpty(newRoomTypeIdList)) {
+            return false;
+        }
+        for (Integer newRoomTypeId : newRoomTypeIdList) {
+            roomTypeService.delTRoomTypeById(newRoomTypeId);
+        }
+        return true;
+    }
+
+    public Boolean  updateRoomSaleConfigValid(Integer id,String  valid){
+        roomSaleConfigService.updateRoomSaleConfigValid(id,valid);
+        return  true;
+    }
+
 }

@@ -5,6 +5,7 @@ import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 import com.mk.taskfactory.model.TRoomSaleConfig;
 
+import java.util.HashMap;
 import java.util.List;
 
 @MyBatisRepository
@@ -14,5 +15,5 @@ public interface RoomSaleConfigMapper {
     public Integer saveRoomSaleConfig(TRoomSaleConfigDto bean);
     public Integer delTRoomTypeById(Integer id);
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
-
+    public  Integer  updateRoomSaleConfigValid(HashMap mp);
 }

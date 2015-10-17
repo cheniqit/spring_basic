@@ -14,4 +14,5 @@ public interface RoomTypeMapper {
     public Integer updateTRoomType(TRoomTypeDto bean);
     public TRoomType findTRoomTypeById(Integer id);
     public List<TRoomType> findByName(TRoomTypeDto bean);
+
 }

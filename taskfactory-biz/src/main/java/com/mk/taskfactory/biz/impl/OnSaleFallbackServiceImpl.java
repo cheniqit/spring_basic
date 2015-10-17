@@ -75,7 +75,7 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
              *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
              */
             this.roomTypeService.delTRoomTypeById(roomTypeId);
-            ServiceUtils.post_data(otsUrl + "/roomsale/saleBegin", "POST", "");
+            ServiceUtils.postData(otsUrl + "/roomsale/saleBegin", "POST", "");
             //设置更新完
             TRoomSaleDto dto = new TRoomSaleDto();
             dto.setId(roomSaleDto.getId());

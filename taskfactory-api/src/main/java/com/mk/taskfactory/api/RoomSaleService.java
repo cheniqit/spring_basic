@@ -14,4 +14,6 @@ public interface RoomSaleService {
     public RoomSaleToOtsDto getHotelSaleByHotelId(Integer hotelId);
 
     public List<TRoomSaleDto>   queryByConfigAndBack(String  configId,String  isBack);
+
+    public List<Integer>   queryByConfigGroup(Integer  configId,String  isBack);
 }

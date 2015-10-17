@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class RoomSettingServiceImpl implements RoomSettingService {
 
@@ -40,4 +42,13 @@ public class RoomSettingServiceImpl implements RoomSettingService {
         BeanUtils.copyProperties(bean, roomSettingDto);
         return roomSettingDto;
     }
+
+    public  int  updateRoomTypeByRoomNo(String  roomNo,Integer oldRoomTypeId,Integer  roomTypeId){
+        HashMap  hm = new HashMap();
+        hm.put("roomNo",roomNo);
+        hm.put("oldRoomTypeId",oldRoomTypeId);
+        hm.put("roomTypeId",roomTypeId);
+        return  this.roomTypeSettingMapper.updateRoomTypeByRoomNo(hm);
+    }
+
 }

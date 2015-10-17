@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -46,4 +47,13 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         BeanUtils.copyProperties(bean, roomSaleConfigDto);
         return roomSaleConfigDto;
     }
+
+    public  Integer  updateRoomSaleConfigValid(Integer id,String  valid){
+        HashMap  hm = new HashMap();
+        hm.put("id",id);
+        hm.put("valid",valid);
+        return   roomSaleConfigMapper.updateRoomSaleConfigValid(hm);
+    }
+
+
 }
