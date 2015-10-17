@@ -6,6 +6,7 @@ import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -30,10 +31,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private final String otsUrl="http://smlt-ots.imike.cn/ots/";
 
     public void validRateTaskRun(){
+        //当前时间是否在config中
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
+        String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
+        roomSaleConfigDto.setMatchDate(matchDate);
         //读取活动配置表数�?
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
-        if (list==null){
+        if (CollectionUtils.isEmpty(list)){
             return;
         }
         //获取配置表中对应可以做活动的房间信息
@@ -46,7 +50,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
         //促销前价�?
         Map<Integer,BigDecimal> roomTypePriceMap=new HashMap<Integer, BigDecimal>();
-
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());

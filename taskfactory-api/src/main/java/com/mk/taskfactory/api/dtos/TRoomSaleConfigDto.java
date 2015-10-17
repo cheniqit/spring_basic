@@ -17,6 +17,7 @@ public class TRoomSaleConfigDto {
     private Integer num;
     private ValueTypeEnum type;
     private String saleName;
+    private String matchDate;
 
     private Integer saleRoomTypeId;
     private BigDecimal settleValue;
@@ -159,5 +160,13 @@ public class TRoomSaleConfigDto {
 
     public void setSaleName(String saleName) {
         this.saleName = saleName;
+    }
+
+    public String getMatchDate() {
+        return matchDate;
+    }
+
+    public void setMatchDate(String matchDate) {
+        this.matchDate = matchDate;
     }
 }
