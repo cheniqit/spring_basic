@@ -13,7 +13,7 @@
         <result property="endDate" column="endDate" />
         <result property="saleValue" column="saleValue" />
         <result property="num" column="num" />
-        <result property="type" column="type" />
+        <result property="type" column="type"/>
         <result property="saleName" column="saleName" />
 
         <result property="saleRoomTypeId" column="saleRoomTypeId" />
@@ -39,9 +39,6 @@
             <if test="roomId != null">
                 AND roomId = #{roomId}
             </if>
-            <if test="roomId == null">
-                AND roomId is null
-            </if>
             <if test="roomTypeId != null">
                 AND roomTypeId = #{roomTypeId}
             </if>
@@ -49,7 +46,7 @@
                 AND startTime = #{startTime}
             </if>
             <if test="endTime != null">
-            AND endTime = #{endTime}
+                AND endTime = #{endTime}
             </if>
             <if test="startDate != null">
                 AND startDate = #{startDate}
@@ -62,6 +59,19 @@
             </if>
             <if test="saleName != null">
                 AND saleName = #{saleName}
+            </if>
+
+            <if test="saleRoomTypeId != null">
+                AND saleRoomTypeId = #{saleRoomTypeId}
+            </if>
+            <if test="settleValue != null">
+                AND settleValue = #{settleValue}
+            </if>
+            <if test="settleType != null">
+                AND settleType = #{settleType}
+            </if>
+            <if test="valid != null">
+                AND valid = #{valid}
             </if>
         </where>
     </sql>
