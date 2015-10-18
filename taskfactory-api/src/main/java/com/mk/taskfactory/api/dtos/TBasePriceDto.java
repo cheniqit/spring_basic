@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Created by admin on 2015/10/17.
+ * Created by Thinkpad on 2015/10/18.
  */
 public class TBasePriceDto {
-
     private Long id;
 
     private Long roomtypeid;
@@ -67,4 +66,5 @@ public class TBasePriceDto {
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
     }
+
 }
