@@ -140,7 +140,6 @@ public class ValidRateTaskLogicServiceImpl {
             tBasePriceDto.setPrice(price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price);
         }else if(ValueTypeEnum.TYPE_OFF.getId() == tRoomSaleConfigDto.getType()) {
             //得到房型价格
-            //得到房型价格
             OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(),new Date(), new Date());
             BigDecimal roomTypePrice = otsRoomStateDto.getPmsPrice();
             if(roomTypePrice == null){
@@ -148,7 +147,6 @@ public class ValidRateTaskLogicServiceImpl {
             }
             BigDecimal price = roomTypePrice.multiply(tRoomSaleConfigDto.getSaleValue().divide(new BigDecimal(100)));
             tBasePriceDto.setPrice(price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price);
-            tBasePriceDto.setPrice(tRoomSaleConfigDto.getSaleValue());
         }
         if(isUpdate){
             basePriceService.updateBasePriceService(tBasePriceDto);

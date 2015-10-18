@@ -57,4 +57,10 @@
         <task:scheduled ref="validRateTask" method="run" cron="0 40 18 * * ?"/>
     </task:scheduled-tasks>
 
+    <bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
+
+    <task:scheduled-tasks>
+        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 18 * * ?"/>
+    </task:scheduled-tasks>
+
 </beans>
