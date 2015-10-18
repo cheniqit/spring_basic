@@ -38,7 +38,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomSaleService roomSaleService;
     @Autowired
     private BasePriceService basePriceService;
-
     private final String otsUrl="http://smlt-ots.imike.cn/ots/";
 
     public void validRateTaskRun(){
@@ -68,7 +67,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         for (TRoomTypeDto roomTypeDto:roomTypes){
             Integer newRoomTypeId=0;
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
-            TBasePriceDto tBasePriceDto = basePriceService.findTRoomTypeById(roomTypeDto.getId());
+            TBasePriceDto tBasePriceDto = basePriceService.findByRoomtypeId(new Long(roomTypeDto.getId()));
             basePriceService.saveBasePriceService(tBasePriceDto);
             //将原价格存起�?
             roomTypePriceMap.put(roomTypeDto.getId(), roomTypeModel.getCost());
@@ -359,7 +358,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     roomSaleDto.setRoomNo(roomDto.getName());
                     roomSaleDto.setPms(roomDto.getPms());
                     roomSaleDto.setCreateDate(dateFormat.format(new Date()));
-//                    roomSaleDto.setSalePrice();
+
+                    TBasePriceDto basepriceDto = this.basePriceService.findByRoomtypeId(new Long(saleRoomTypeId));
+                    roomSaleDto.setSalePrice(basepriceDto.getPrice());
                     roomSaleDto.setCostPrice(roomTypeDto.getCost());
 
                     roomSaleDto.setStartTime(timeFormat.format(dto.getStartDate()));
@@ -371,7 +372,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     roomSaleDto.setSaleType(dto.getStyleType());
                     roomSaleDto.setHotelId(hotelId);
 
-                    BigDecimal settleValue = this.calaValue(null, dto.getSettleValue(), dto.getSettleType());
+                    BigDecimal settleValue = this.calaValue(basepriceDto.getPrice(), dto.getSettleValue(), dto.getSettleType());
                     roomSaleDto.setSettleValue(settleValue);
                     this.roomSaleService.saveRoomSale(roomSaleDto);
                 }

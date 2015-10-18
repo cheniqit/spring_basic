@@ -7,7 +7,7 @@ import com.mk.taskfactory.model.TBaseprice;
 @MyBatisRepository
 public interface BasePriceMapper {
 
-    TBaseprice selectByPrimaryKey(Long id);
+    public TBaseprice selectByPrimaryKey(Long id);
 
-    TBaseprice findByRoomtypeId(Long roomTypeId);
+    public TBaseprice findByRoomtypeId(Long roomTypeId);
 }
