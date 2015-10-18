@@ -37,11 +37,14 @@ public class ValidRateTaskLogicServiceImpl {
     private RoomSaleService roomSaleService;
     @Autowired
     private BasePriceService basePriceService;
+    @Autowired
+    private HotelRemoteService hotelRemoteService;
 
     @Transactional
-    public void initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig){
+    public  HashMap<String,Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String,Map> executeRecordMap){
         //将新roomTypeId和老的roomTypeId对应起来
-        Map<Integer,Integer> roomTypeMap=new HashMap<Integer, Integer>();
+        Map<Integer,Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
+        Map<Integer,Integer> hotelMap = executeRecordMap.get("hotelMap");
         logger.info(String.format("====================init sales config job >> find data begin===================="));
         try{
             TRoomTypeDto roomTypeDto=new TRoomTypeDto();
@@ -93,13 +96,30 @@ public class ValidRateTaskLogicServiceImpl {
                 }
             }
             roomTypeDto.setRoomNum(saleNum);
+
             logger.info(String.format("====================init sales config job >> find data end===================="));
             int newRoomTypeId = initRoomTypeDto(roomSaleConfig, roomTypeDto);
             roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
+            executeRecordMap.put("roomTypeMap", roomTypeMap);
+
             initRoomSaleDto(roomSaleConfig,roomTypeDto, tRoomSaleDtoList, roomTypeMap);
+            //刷新索引 如果刷过索引就不再刷了
+            if(hotelMap.get(roomSaleConfig.getHotelId()) == null){
+                logger.info(String.format("====================init sales config job >> updateMikePriceCache begin===================="));
+                boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(roomSaleConfig.getHotelId().toString());
+                if(updateCacheSuccessFlag){
+                    hotelMap.put(roomSaleConfig.getHotelId(),roomSaleConfig.getHotelId());
+                    executeRecordMap.put("hotelMap", hotelMap);
+                }else {
+                    throw new RuntimeException("updateMikePriceCache error");
+                }
+                logger.info(String.format("====================init sales config job >> updateMikePriceCache end updateCacheSuccessFlag[%s]==========",String.valueOf(updateCacheSuccessFlag)));
+        }
+
         }catch (Exception e){
             throw new RuntimeException("initSaleRoomSaleConfigDto error");
         }
+        return executeRecordMap;
     }
 
 
@@ -135,7 +155,9 @@ public class ValidRateTaskLogicServiceImpl {
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
             TBasePriceDto tBasePriceDto = basePriceService.findByRoomtypeId(new Long(roomTypeDto.getId()));
             //根据配置文件的价格规则算出价格设置到baseprice表中
-            saveBasePriceService(tRoomSaleConfigDto, tBasePriceDto);
+            if(tBasePriceDto != null){
+                saveBasePriceService(tRoomSaleConfigDto, tBasePriceDto);
+            }
             //将原价格存起�?
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
             roomTypeModel.setCost(roomTypeDto.getCost());

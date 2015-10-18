@@ -50,8 +50,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         if (CollectionUtils.isEmpty(list)){
             return;
         }
+        //初始化数据
+        HashMap<String,Map> executeRecordMap = new HashMap<String, Map>();
+        executeRecordMap.put("roomTypeMap", new HashMap<Integer, Integer>());
+        executeRecordMap.put("hotleMap", new HashMap<Integer, Integer>());
         for(TRoomSaleConfigDto tRoomSaleConfigDto : list){
-            validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto);
+            try{
+                executeRecordMap = validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto, executeRecordMap);
+            }catch (Exception e){
+                e.printStackTrace();
+                logger.info(String.format("====================init sales config job >>  initSaleRoomSaleConfigDto erroe ===================="));
+            }
         }
         try {
             logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin begin ===================="));
