@@ -6,4 +6,6 @@ public interface BasePriceService {
     public TBasePriceDto findByRoomtypeId(Long roomTypeId);
 
     public int saveBasePriceService(TBasePriceDto dto);
+
+    public int updateBasePriceService(TBasePriceDto dto);
 }

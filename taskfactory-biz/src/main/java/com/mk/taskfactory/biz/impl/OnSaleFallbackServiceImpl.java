@@ -30,7 +30,6 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
     @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
-    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
     public void onSaleFallback() {
 
         //需要回退的结果

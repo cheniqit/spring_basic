@@ -15,7 +15,7 @@ public class TRoomSaleConfigDto {
     private Date endDate;
     private BigDecimal saleValue;
     private Integer num;
-    private ValueTypeEnum type;
+    private Integer type;
     private String saleName;
     private String matchDate;
 
@@ -24,6 +24,7 @@ public class TRoomSaleConfigDto {
     private ValueTypeEnum settleType;
     private String valid;
     private Integer styleType;
+    private boolean saleRoomTypeIdIsNull;
 
     public Integer getId() {
         return id;
@@ -105,11 +106,11 @@ public class TRoomSaleConfigDto {
         this.num = num;
     }
 
-    public ValueTypeEnum getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(ValueTypeEnum type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -166,5 +167,13 @@ public class TRoomSaleConfigDto {
 
     public void setMatchDate(String matchDate) {
         this.matchDate = matchDate;
+    }
+
+    public boolean isSaleRoomTypeIdIsNull() {
+        return saleRoomTypeIdIsNull;
+    }
+
+    public void setSaleRoomTypeIdIsNull(boolean saleRoomTypeIdIsNull) {
+        this.saleRoomTypeIdIsNull = saleRoomTypeIdIsNull;
     }
 }

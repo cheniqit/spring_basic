@@ -9,6 +9,7 @@ import com.mk.taskfactory.api.dtos.TRoomDto;
 import com.mk.taskfactory.biz.mapper.RoomMapper;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
+import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.TRoom;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,7 +145,7 @@ public class RoomServiceImpl implements RoomService {
         }
 
         try {
-            String jsonString = ServiceUtils.doPost("http://smlt-ots.imike.cn/ots/roomstate/querylist ", paramMap, 60);
+            String jsonString = ServiceUtils.doPost(Constants.OTS_URL+"/roomstate/querylist ", paramMap, 60);
             JSONObject jsonObject = JsonUtils.parseObject(jsonString);
             JSONArray hotelListArray = jsonObject.getJSONArray("hotel");
             if (hotelListArray.isEmpty()) {

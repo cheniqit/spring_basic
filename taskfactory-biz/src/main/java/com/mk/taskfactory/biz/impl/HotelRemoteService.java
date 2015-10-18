@@ -4,6 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
+import com.mk.taskfactory.common.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,23 +16,27 @@ import java.util.HashMap;
  */
 @Service
 public class HotelRemoteService {
-    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
+    private static Logger logger = LoggerFactory.getLogger(ValidRateTaskLogicServiceImpl.class);
+
     private final static String UPDATE_MIKE_PRICE_CACHE = "/hotel/updatemikepricecache";
 
-    private final static String ROOM_STATUS_QUERY_LIST = "/roomstate/querylist";
-
     public boolean updateMikePriceCache(String hotelid){
+        logger.info(String.format("remote url [%s] begin params hotelid[%s]", this.UPDATE_MIKE_PRICE_CACHE, hotelid));
         HashMap params = new HashMap();
         params.put("hotelid", hotelid);
         String jsonStr = "";
         try {
-            jsonStr = ServiceUtils.doPost(otsUrl + this.UPDATE_MIKE_PRICE_CACHE, params , 60);
+            jsonStr = ServiceUtils.doPost(Constants.OTS_URL + this.UPDATE_MIKE_PRICE_CACHE, params , 60);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        logger.info(String.format("remote url [%s] end params result[%s]", this.UPDATE_MIKE_PRICE_CACHE, jsonStr));
         JSONObject jsonObject = JsonUtils.parseObject(jsonStr);
-        boolean successFlag = jsonObject.getBoolean("success");
+        boolean successFlag = true;
+        if(jsonObject.getBoolean("success") == null){
+            successFlag = false;
+        }
         return successFlag;
     }
 

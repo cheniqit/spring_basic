@@ -23,24 +23,21 @@ public class BasePriceServiceImpl implements BasePriceService {
     private BasePriceMapper basePriceMapper;
     @Override
     public TBasePriceDto selectByPrimaryKey(Long id) {
-        TBaseprice basePrice = basePriceMapper.selectByPrimaryKey(id);
-
-        TBasePriceDto dto = new TBasePriceDto();
-        BeanUtils.copyProperties(basePrice, dto);
-        return dto;
+        return basePriceMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public TBasePriceDto findByRoomtypeId(Long roomTypeId) {
-        TBaseprice basePrice = basePriceMapper.findByRoomtypeId(roomTypeId);
-
-        TBasePriceDto dto = new TBasePriceDto();
-        BeanUtils.copyProperties(basePrice, dto);
-        return dto;
+        return basePriceMapper.findByRoomtypeId(roomTypeId);
     }
 
     @Override
     public int saveBasePriceService(TBasePriceDto dto) {
         return basePriceMapper.saveBasePriceDto(dto);
+    }
+
+    @Override
+    public int updateBasePriceService(TBasePriceDto dto) {
+        return basePriceMapper.updateBasePriceDto(dto);
     }
 }

@@ -43,8 +43,10 @@ public class ServiceUtils {
             method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(1, false));
             method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
             method.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, timeout * 1000);
-            for (String key : params.keySet()) {
-                method.setParameter(key, params.get(key));
+            if(params != null && params.size() > 0){
+                for (String key : params.keySet()) {
+                    method.setParameter(key, params.get(key));
+                }
             }
             int status = client.executeMethod(method);
             if (status == HttpStatus.SC_OK) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.ots.mapper.TBasepriceMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TBaseprice" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.BasePriceMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.api.dtos.TBasePriceDto" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="roomTypeId" property="roomtypeid" jdbcType="BIGINT" />
     <result column="price" property="price" jdbcType="DECIMAL" />
@@ -10,7 +10,7 @@
     <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, roomTypeId, price, subprice, subper, updateTime
+    id, roomtypeid, price, subprice, subper, updateTime
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -22,14 +22,18 @@
     select
     <include refid="Base_Column_List" />
       from t_baseprice
-        where roomtypeid = #{roomTypeId}
+        where roomtypeid = #{roomtypeid}
   </select>
   <insert id="saveBasePriceDto" parameterType="com.mk.taskfactory.api.dtos.TBasePriceDto" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO t_baseprice
     (roomTypeId, price,subprice,subper,updateTime)
     VALUE
     (
-      #{roomTypeId},#{price}, #{subprice}, #{subper},#{updateTime}
+      #{roomtypeid},#{price}, #{subprice}, #{subper},#{updatetime}
     )
   </insert>
+  <update id="updateBasePriceDto" parameterType="com.mk.taskfactory.api.dtos.TBasePriceDto">
+    update t_baseprice set roomtypeid=#{roomtypeid},price=#{price}, subprice=#{subprice}, subper=#{subper}, updateTime = SYSDATE() where
+    id=#{id}
+  </update>
 </mapper>

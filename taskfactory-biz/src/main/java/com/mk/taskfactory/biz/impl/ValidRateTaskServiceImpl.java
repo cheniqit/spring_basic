@@ -5,6 +5,7 @@ import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
+import com.mk.taskfactory.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     @Autowired
     private ValidRateTaskLogicServiceImpl validRateTaskLogicService;
 
-    private final String otsUrl="http://smlt-ots.imike.cn/ots/";
 
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
@@ -44,16 +44,18 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
         roomSaleConfigDto.setMatchDate(matchDate);
-        roomSaleConfigDto.setValid(com.mk.taskfactory.biz.domain.ValidEnum.VALID.getCode());
+        roomSaleConfigDto.setValid(ValidEnum.VALID.getId());
+        roomSaleConfigDto.setSaleRoomTypeIdIsNull(true);
         //读取活动配置表数
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (CollectionUtils.isEmpty(list)){
+            logger.info(String.format("====================init sales config job >> validRateTaskRun method list isEmpty end===================="));
             return;
         }
         //初始化数据
         HashMap<String,Map> executeRecordMap = new HashMap<String, Map>();
         executeRecordMap.put("roomTypeMap", new HashMap<Integer, Integer>());
-        executeRecordMap.put("hotleMap", new HashMap<Integer, Integer>());
+        executeRecordMap.put("hotelMap", new HashMap<Integer, Integer>());
         for(TRoomSaleConfigDto tRoomSaleConfigDto : list){
             try{
                 executeRecordMap = validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto, executeRecordMap);
@@ -64,12 +66,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
         try {
             logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin begin ===================="));
-            ServiceUtils.doPost(otsUrl + "/roomsale/saleBegin", null, 40);
+            ServiceUtils.doPost(Constants.OTS_URL + "/roomsale/saleBegin", null, 40);
             logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin end ===================="));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
+        logger.info(String.format("====================init sales config job >> validRateTaskRun method end===================="));
     }
 
 
