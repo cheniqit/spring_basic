@@ -199,9 +199,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     //数据回复
     public void dateReback() {
-        TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
-        troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
-        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
                 java.sql.Date endDate = dto.getEndDate();
@@ -227,9 +225,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     //数据回复
     public void remove(){
-        TRoomSaleConfigDto troomSaleConfigDto = new TRoomSaleConfigDto();
-        troomSaleConfigDto.setValid(ValidEnum.VALID.getId());
-        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByParams(troomSaleConfigDto);
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
                 java.sql.Date endDate = dto.getEndDate();
@@ -267,6 +263,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             //还原t_room_setting表中的数据
             this.updateRoomSetting(saleTo);
         }
+
         return true;
     }
     public Boolean  updateRoom(TRoomSaleDto  roomSaleDto){
@@ -284,7 +281,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return false;
         }
         //根据配置id查询当前没有回复的数据
-        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), "T");
+        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), "F");
         if (CollectionUtils.isEmpty(newRoomTypeIdList)) {
             return false;
         }

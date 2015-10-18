@@ -17,4 +17,6 @@ public interface RoomSaleConfigService {
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
 
     public Integer updateRoomSaleConfigValid(Integer id, String valid);
+
+    public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid);
 }

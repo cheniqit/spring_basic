@@ -90,6 +90,13 @@
          FROM  t_room_sale_config
         <include refid="Base_Query_List"/>
     </select>
+    <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="String">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  t_room_sale_config
+        where   valid = #{valid}
+    </select>
+
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
         INSERT INTO t_room_sale_config

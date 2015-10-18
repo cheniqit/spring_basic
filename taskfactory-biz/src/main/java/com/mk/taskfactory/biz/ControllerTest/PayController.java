@@ -24,14 +24,15 @@ public class PayController  extends DispatcherServlet {
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		rtnMap.put("code", "111");
 		return new ResponseEntity<Map<String, Object>>(rtnMap, org.springframework.http.HttpStatus.OK);
+
 	}
 
 	@RequestMapping(value = "/testDelete", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> testBB( ) {
+	public ResponseEntity<String> testBB( ) {
 		validRateTaskService.remove();
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		rtnMap.put("code", "111");
-		return new ResponseEntity<Map<String, Object>>(rtnMap, org.springframework.http.HttpStatus.OK);
+		return new ResponseEntity<String>("111", org.springframework.http.HttpStatus.OK);
 	}
 }
