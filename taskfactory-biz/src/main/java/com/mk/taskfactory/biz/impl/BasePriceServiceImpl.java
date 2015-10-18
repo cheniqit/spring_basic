@@ -41,6 +41,6 @@ public class BasePriceServiceImpl implements BasePriceService {
 
     @Override
     public int saveBasePriceService(TBasePriceDto dto) {
-        return 0;
+        return basePriceMapper.saveBasePriceDto(dto);
     }
 }

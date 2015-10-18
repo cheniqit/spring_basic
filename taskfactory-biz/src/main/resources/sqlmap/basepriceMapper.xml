@@ -24,4 +24,12 @@
       from t_baseprice
         where roomtypeid = #{roomTypeId}
   </select>
+  <insert id="saveBasePriceDto" parameterType="com.mk.taskfactory.api.dtos.TBasePriceDto" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO t_baseprice
+    (roomTypeId, price,subprice,subper,updateTime)
+    VALUE
+    (
+      #{roomTypeId},#{price}, #{subprice}, #{subper},#{updateTime}
+    )
+  </insert>
 </mapper>
