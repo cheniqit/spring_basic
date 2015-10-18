@@ -16,4 +16,6 @@ public interface RoomSaleConfigMapper {
     public Integer delTRoomTypeById(Integer id);
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
     public  Integer  updateRoomSaleConfigValid(HashMap mp);
+    public List<TRoomSaleConfig> queryRoomSaleConfigByValid(String  valid);
+
 }

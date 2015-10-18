@@ -1,6 +1,5 @@
 package com.mk.taskfactory.biz.ControllerTest;
 
-import com.google.common.collect.Maps;
 import com.mk.taskfactory.api.ValidRateTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,19 +19,15 @@ public class PayController  extends DispatcherServlet {
 	private ValidRateTaskService validRateTaskService;
 	@RequestMapping(value = "/testback", method = RequestMethod.POST)
 	@ResponseBody
-	public  ResponseEntity<Map<String, Object>> testAA( ) {
-		validRateTaskService.remove();
-		Map<String, Object> rtnMap = Maps.newHashMap();
-		rtnMap.put("code", "111");
-		return new ResponseEntity<Map<String, Object>>(rtnMap, org.springframework.http.HttpStatus.OK);
+	public  ResponseEntity<String> testAA( ) {
+		validRateTaskService.dateReback();
+		return new ResponseEntity<String>("111", org.springframework.http.HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/testDelete", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> testBB( ) {
+	public ResponseEntity<String> testBB( ) {
 		validRateTaskService.remove();
-		Map<String, Object> rtnMap = Maps.newHashMap();
-		rtnMap.put("code", "111");
-		return new ResponseEntity<Map<String, Object>>(rtnMap, org.springframework.http.HttpStatus.OK);
+		return new ResponseEntity<String>("111", org.springframework.http.HttpStatus.OK);
 	}
 }

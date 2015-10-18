@@ -15,6 +15,6 @@ public interface RoomSaleMapper {
     public List<TRoomSale> queryUnBackRoomSale();
     public List<TRoomSale> queryRoomSale(TRoomSaleDto bean);
     public TRoomSale getHotelSaleByHotelId(Integer hotelId);
-    public List<TRoomSaleDto>   queryByConfigAndBack(HashMap parme);
+    public List<TRoomSale>   queryByConfigAndBack(HashMap parme);
     public List<Integer>   queryByConfigGroup(HashMap parme);
 }

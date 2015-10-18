@@ -5,6 +5,7 @@ import com.mk.taskfactory.api.RoomSaleConfigService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
 import com.mk.taskfactory.model.TRoomSaleConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,9 +52,22 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
     public  Integer  updateRoomSaleConfigValid(Integer id,String  valid){
         HashMap  hm = new HashMap();
         hm.put("id",id);
-        hm.put("valid",valid);
+        hm.put("valid", valid);
         return   roomSaleConfigMapper.updateRoomSaleConfigValid(hm);
     }
-
+    public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid){
+        if(StringUtils.isEmpty(valid)){
+            return  null;
+        }
+        List<TRoomSaleConfig> list=roomSaleConfigMapper.queryRoomSaleConfigByValid(valid);
+        if (list==null){
+            return  null;
+        }
+        List<TRoomSaleConfigDto> roomDtos=new ArrayList<TRoomSaleConfigDto>();
+        for (TRoomSaleConfig roomSaleConfig :list) {
+            roomDtos.add(buildTRoomSaleConfigDto(roomSaleConfig));
+        }
+        return  roomDtos;
+    }
 
 }

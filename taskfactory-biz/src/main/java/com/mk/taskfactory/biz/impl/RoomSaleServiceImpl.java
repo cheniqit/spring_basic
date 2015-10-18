@@ -10,12 +10,10 @@ import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RoomSaleServiceImpl implements RoomSaleService {
@@ -128,7 +126,20 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         HashMap  hm = new HashMap();
         hm.put("configId", configId);
         hm.put("isBack", isBack);
-       return  this.roomSaleMapper.queryByConfigAndBack(hm);
+        List<TRoomSale>  roomSaleList = this.roomSaleMapper.queryByConfigAndBack(hm);
+        if(CollectionUtils.isEmpty(roomSaleList)){
+            return null;
+        }
+        List<TRoomSaleDto> roomSaleDtoList = new ArrayList<TRoomSaleDto>();
+        for (TRoomSale roomSale : roomSaleList) {
+            TRoomSaleDto dto = new TRoomSaleDto();
+
+            //copy
+            BeanUtils.copyProperties(roomSale, dto);
+            roomSaleDtoList.add(dto);
+        }
+
+       return  roomSaleDtoList;
     }
 
     public List<Integer>   queryByConfigGroup(Integer  configId,String  isBack){
