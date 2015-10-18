@@ -79,17 +79,40 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     @Transactional
     public void updateOnline(Date runTime) {
         logger.info("============sales online job >> validRateTaskRun method start===============");
+
         //查询指定期间内的CONFIG
-        TRoomSaleConfigDto roomSaleConfigDto = new TRoomSaleConfigDto();
-        roomSaleConfigDto.setValid(ValidEnum.VALID.getId());
-        List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
+        List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
 
         logger.info("============sales online job >> find configDtoList=======" + configDtoList.size());
         //按开始时间更新
-        Time time = new Time(runTime.getTime());
+        Time time = getTime(runTime);
         for (TRoomSaleConfigDto configDto : configDtoList) {
             updateConfigOnline(time, configDto);
         }
+    }
+
+    private Time getTime(Date runTime) {
+        //
+        Date formatTime = null;
+        if (null == runTime) {
+            formatTime = new Date();
+        } else {
+            formatTime = runTime;
+        }
+
+        //
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+        String strTime = timeFormat.format(formatTime);
+
+        //
+        Time time = null;
+        try {
+            Date onlyTime = timeFormat.parse(strTime);
+            time = new Time(onlyTime.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return time;
     }
 
     private void updateConfigOnline(Time time, TRoomSaleConfigDto configDto) {
@@ -101,7 +124,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //检查是否完成任务
-        if (ValidEnum.VALID.getId().equals(configDto.getStarted())) {
+        if (ValidEnum.DISVALID.getId().equals(configDto.getStarted())) {
             logger.info("============sales online job >> configDto.id:" + configDto.getId() + " is started, continue");
         }
 
@@ -165,12 +188,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
 
         roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
-        this.roomSettingService.saveTRoomSetting(roomSettingDto);
+        this.roomSettingService.updateTRoomSetting(roomSettingDto);
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
 
         //saveRoomSale
-        saveRoomSale(configDto, configDto.getRoomId(), roomTypeDto, roomDto);
+        saveRoomSale(configDto, onSaleRoomId, roomTypeDto, roomDto);
     }
 
     private List<Integer> buildOnSaleRoomList(Integer roomId, Integer num, List<Integer> roomVCList, int roomVCSize) {
@@ -178,22 +201,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //若未指定房间，随机抽取
         if (null == roomId) {
 
-            if (num <= roomVCSize) {
+            if (num >= roomVCSize) {
                 onSaleRoomList.addAll(roomVCList);
             } else {
+                //随机抽取
+                Random random = new Random();
+                Set<Integer> randomSet = new HashSet<Integer>();
                 while (onSaleRoomList.size() < num) {
-                    //随机抽取
-                    Random random = new Random();
-                    Set<Integer> randomSet = new HashSet<Integer>();
-                    while (onSaleRoomList.size() < num) {
-                        int number = random.nextInt(roomVCList.size());
-                        if (randomSet.contains(number)) {
-                            continue;
-                        }
-                        //加入
-                        onSaleRoomList.add(roomVCList.get(number));
-                        randomSet.add(number);
+                    int number = random.nextInt(roomVCList.size());
+                    if (randomSet.contains(number)) {
+                        continue;
                     }
+                    //加入
+                    onSaleRoomList.add(roomVCList.get(number));
+                    randomSet.add(number);
                 }
             }
         } else {
@@ -243,10 +264,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
     private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
-        if (null == baseValue || null == value || null == valueTypeEnum) {
-            return value;
+        if (null == baseValue || null == valueTypeEnum) {
+            return baseValue;
         }
 
+        if (null == value) {
+            return baseValue;
+        }
         if (ValueTypeEnum.TYPE_TO == valueTypeEnum) {
             return value;
         } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {

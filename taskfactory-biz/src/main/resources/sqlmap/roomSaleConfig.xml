@@ -140,7 +140,7 @@
          settleValue=#{settleValue},
          settleType=#{settleType},
          valid=#{valid},
-         styleType=#{styleType}，
+         styleType=#{styleType},
          started = #{started}
          WHERE  id= #{id}
     </update>

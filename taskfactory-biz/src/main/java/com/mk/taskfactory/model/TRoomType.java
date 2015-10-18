@@ -1,5 +1,7 @@
 package com.mk.taskfactory.model;
 
+import java.math.BigDecimal;
+
 public class TRoomType {
     private Integer id;
     private Integer thotelId;
@@ -8,7 +10,7 @@ public class TRoomType {
     private String pms;
     private Integer bedNum;
     private Integer roomNum;
-    private Double cost;
+    private BigDecimal cost;
 
     public Integer getId() {
         return id;
@@ -66,11 +68,11 @@ public class TRoomType {
         this.roomNum = roomNum;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 }

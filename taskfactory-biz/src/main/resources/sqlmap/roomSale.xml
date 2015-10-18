@@ -25,7 +25,7 @@
 
     <sql id="Base_Column_List" >
         id, roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
-        startTime,endTime,roomId,configId,isBack,saleName,saleType,hotelId
+        startTime,endTime,roomId,configId,isBack,saleName,saleType,hotelId,settleValue
     </sql>
 
     <sql id="Base_Query_List" >
@@ -87,13 +87,12 @@
 
     <insert id="saveRoomSale"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleDto" >
         INSERT INTO t_room_sale
-       (roomTypeId,oldRoomTypeId,roomNo,pms,createDate,salePrice,costPrice,
-        startTime,endTime,roomId,configId,isBack,saleName,saleType)
+       (<include refid="Base_Column_List"/>)
          VALUE
          (
-            #{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
+            #{id}, #{roomTypeId}, #{oldRoomTypeId},#{roomNo}, #{pms}, #{createDate},
             #{salePrice}, #{costPrice},#{startTime},#{endTime},#{roomId},#{configId},
-            #{isBack},#{saleName},#{saleType}
+            #{isBack},#{saleName},#{saleType},#{hotelId},#{settleValue}
          )
     </insert>
 
