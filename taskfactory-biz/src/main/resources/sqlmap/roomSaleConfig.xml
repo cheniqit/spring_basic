@@ -20,11 +20,15 @@
         <result property="settleValue" column="settleValue" />
         <result property="settleType" column="settleType" />
         <result property="valid" column="valid" />
+        <result property="styleType" column="styleType" />
+
+        <result property="started" column="started" />
+
 	</resultMap>
 
     <sql id="Base_Column_List" >
         id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName,
-        saleRoomTypeId,settleValue,settleType,valid
+        saleRoomTypeId,settleValue,settleType,valid,styleType,started
     </sql>
 
     <sql id="Base_Query_List" >
@@ -103,11 +107,13 @@
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
         INSERT INTO t_room_sale_config
-        ( hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName)
+        ( hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName,
+        saleRoomTypeId,settleValue,settleType,valid,styleType,started)
          VALUE
          (
             #{hotelId}, #{roomId},#{roomTypeId}, #{startTime}, #{endTime},
-            #{startDate}, #{endDate}, #{saleValue},#{num},#{type},#{saleName}
+            #{startDate}, #{endDate}, #{saleValue},#{num},#{type},#{saleName},
+            #{saleRoomTypeId},#{settleValue},#{settleType},#{valid},#{styleType},#{started}
             )
     </insert>
 
@@ -128,12 +134,14 @@
          endDate =  #{endDate},
          saleValue  = #{saleValue},
          num  = #{num},
+         type =  #{type},
+         saleName = #{saleName},
          saleRoomTypeId=#{saleRoomTypeId},
          settleValue=#{settleValue},
          settleType=#{settleType},
          valid=#{valid},
-         styleType=#{styleType},
-         type =  #{type}
+         styleType=#{styleType}，
+         started = #{started}
          WHERE  id= #{id}
     </update>
 

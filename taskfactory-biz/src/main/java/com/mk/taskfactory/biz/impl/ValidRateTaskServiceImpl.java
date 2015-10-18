@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.sql.Time;
@@ -75,106 +76,170 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
 
+    @Transactional
     public void updateOnline(Date runTime) {
+        logger.info("============sales online job >> validRateTaskRun method start===============");
         //查询指定期间内的CONFIG
         TRoomSaleConfigDto roomSaleConfigDto = new TRoomSaleConfigDto();
-        roomSaleConfigDto.setValid("T");
+        roomSaleConfigDto.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
 
+        logger.info("============sales online job >> find configDtoList=======" + configDtoList.size());
         //按开始时间更新
         Time time = new Time(runTime.getTime());
+        for (TRoomSaleConfigDto configDto : configDtoList) {
+            updateConfigOnline(time, configDto);
+        }
+    }
 
-        for (TRoomSaleConfigDto dto : configDtoList) {
-            Time startTime = dto.getStartTime();
-            if (time.after(startTime)) {
-                int hotelId = dto.getHotelId();
-                int roomTypeId = dto.getRoomTypeId();
-                Integer saleRoomTypeId = dto.getSaleRoomTypeId();
-                if (null == saleRoomTypeId) {
-                    //数据错误，跳过
-                    continue;
-                }
-                Integer roomId = dto.getRoomId();
-                Integer num = dto.getNum();
+    private void updateConfigOnline(Time time, TRoomSaleConfigDto configDto) {
+        logger.info("============sales online job >> for configDto.id======" + configDto.getId());
+        Integer saleRoomTypeId = configDto.getSaleRoomTypeId();
+        if (null == saleRoomTypeId) {
+            logger.info("============sales online job >> configDto.id:" + configDto.getId() + " not init, continue");
+            return;
+        }
 
-                //OTS房态
-                OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
-                List<Integer> roomVCList = roomStateDto.getRoomIdList();
-                int roomVCSize = roomVCList.size();
+        //检查是否完成任务
+        if (ValidEnum.VALID.getId().equals(configDto.getStarted())) {
+            logger.info("============sales online job >> configDto.id:" + configDto.getId() + " is started, continue");
+        }
 
-                List<Integer> onSaleRoomList = new ArrayList<Integer>();
-                //若未指定房间，随机抽取
-                if (null == roomId) {
+        //检查是否开始
+        Time startTime = configDto.getStartTime();
+        if (time.after(startTime)) {
+            logger.info("============sales online job >> configDto.id:" + configDto.getId() + " after startTime");
+            int hotelId = configDto.getHotelId();
+            int roomTypeId = configDto.getRoomTypeId();
+            Integer roomId = configDto.getRoomId();
+            Integer num = configDto.getNum();
 
-                    if (num <= roomVCSize) {
-                        onSaleRoomList.addAll(roomVCList);
-                    } else {
-                        while (onSaleRoomList.size() < num) {
-                            //随机抽取
-                            Random random = new Random();
-                            int number = random.nextInt(roomVCList.size());
-                            //加入后，减去
-                            onSaleRoomList.add(roomVCList.get(number));
-                            roomVCList.remove(number);
+            //OTS房态
+            OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+            List<Integer> roomVCList = roomStateDto.getRoomIdList();
+            int roomVCSize = roomVCList.size();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get roomVCSize:"+roomVCSize);
+
+            //按num数量抽取房间
+            List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get onSaleRoomList:" + onSaleRoomList.size());
+
+            //更新房间上线
+            TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
+            for (Integer onSaleRoomId : onSaleRoomList) {
+                updateRoomOnline(configDto, roomTypeDto, onSaleRoomId);
+            }
+            //更新config started
+            configDto.setStarted(ValidEnum.VALID.getId());
+            this.roomSaleConfigService.updateRoomSaleConfig(configDto);
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " to started");
+        } else {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " not after startTime, continue");
+        }
+    }
+
+    private void updateRoomOnline(TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto, Integer onSaleRoomId) {
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " for onSaleRoomId:" + onSaleRoomId);
+        //get roomDto
+        TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " get onSaleRoomId:" + onSaleRoomId);
+
+        //updateRoomType to saleRoomTypeId
+        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
+        roomChangeTypeDto.setId(onSaleRoomId);
+        roomChangeTypeDto.setRoomTypeId(configDto.getSaleRoomTypeId());
+        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " update room id:" + onSaleRoomId + " online");
+
+        //update roomSetting to saleRoomTypeId
+        TRoomSettingDto roomSettingParam = new TRoomSettingDto();
+        roomSettingParam.setRoomTypeId(configDto.getRoomTypeId());
+        roomSettingParam.setRoomNo(roomDto.getName());
+        TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
+
+        roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
+        this.roomSettingService.saveTRoomSetting(roomSettingDto);
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
+
+        //saveRoomSale
+        saveRoomSale(configDto, configDto.getRoomId(), roomTypeDto, roomDto);
+    }
+
+    private List<Integer> buildOnSaleRoomList(Integer roomId, Integer num, List<Integer> roomVCList, int roomVCSize) {
+        List<Integer> onSaleRoomList = new ArrayList<Integer>();
+        //若未指定房间，随机抽取
+        if (null == roomId) {
+
+            if (num <= roomVCSize) {
+                onSaleRoomList.addAll(roomVCList);
+            } else {
+                while (onSaleRoomList.size() < num) {
+                    //随机抽取
+                    Random random = new Random();
+                    Set<Integer> randomSet = new HashSet<Integer>();
+                    while (onSaleRoomList.size() < num) {
+                        int number = random.nextInt(roomVCList.size());
+                        if (randomSet.contains(number)) {
+                            continue;
                         }
+                        //加入
+                        onSaleRoomList.add(roomVCList.get(number));
+                        randomSet.add(number);
                     }
-                } else {
-                    if (roomVCList.contains(roomId)){
-                        onSaleRoomList.add(roomId);
-                    }
-                }
-
-                //
-                TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
-                //
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-                for (Integer onSaleRoomId : onSaleRoomList) {
-                    //get roomDto
-                    TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
-
-                    //updateRoomType to saleRoomTypeId
-                    TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
-                    roomChangeTypeDto.setId(onSaleRoomId);
-                    roomChangeTypeDto.setRoomTypeId(saleRoomTypeId);
-                    this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
-
-                    //update roomSetting to saleRoomTypeId
-                    TRoomSettingDto roomSettingParam = new TRoomSettingDto();
-                    roomSettingParam.setRoomTypeId(roomTypeId);
-                    roomSettingParam.setRoomNo(roomDto.getName());
-                    TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
-
-                    roomSettingDto.setRoomTypeId(saleRoomTypeId);
-                    this.roomSettingService.saveTRoomSetting(roomSettingDto);
-
-                    //log roomSale
-                    TRoomSaleDto roomSaleDto = new TRoomSaleDto();
-                    roomSaleDto.setRoomTypeId(saleRoomTypeId);
-                    roomSaleDto.setOldRoomTypeId(roomTypeId);
-                    roomSaleDto.setRoomNo(roomDto.getName());
-                    roomSaleDto.setPms(roomDto.getPms());
-                    roomSaleDto.setCreateDate(dateFormat.format(new Date()));
-
-                    TBasePriceDto basepriceDto = this.basePriceService.findByRoomtypeId(new Long(saleRoomTypeId));
-                    roomSaleDto.setSalePrice(basepriceDto.getPrice());
-                    roomSaleDto.setCostPrice(roomTypeDto.getCost());
-
-                    roomSaleDto.setStartTime(timeFormat.format(dto.getStartDate()));
-                    roomSaleDto.setEndTime(timeFormat.format(dto.getEndDate()));
-                    roomSaleDto.setRoomId(roomId);
-                    roomSaleDto.setConfigId(dto.getId());
-                    roomSaleDto.setIsBack("F");
-                    roomSaleDto.setSaleName(dto.getSaleName());
-                    roomSaleDto.setSaleType(dto.getStyleType());
-                    roomSaleDto.setHotelId(hotelId);
-
-                    BigDecimal settleValue = this.calaValue(basepriceDto.getPrice(), dto.getSettleValue(), dto.getSettleType());
-                    roomSaleDto.setSettleValue(settleValue);
-                    this.roomSaleService.saveRoomSale(roomSaleDto);
                 }
             }
+        } else {
+            if (roomVCList.contains(roomId)){
+                onSaleRoomList.add(roomId);
+            }
         }
+        return onSaleRoomList;
+    }
+
+    private void saveRoomSale(TRoomSaleConfigDto configDto, Integer roomId, TRoomTypeDto roomTypeDto, TRoomDto roomDto) {
+
+        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
+
+        BigDecimal settleValue =
+                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " settleValue:" + settleValue.toString());
+
+        //
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+        //log roomSale
+        TRoomSaleDto roomSaleDto = new TRoomSaleDto();
+        roomSaleDto.setRoomTypeId(configDto.getSaleRoomTypeId());
+        roomSaleDto.setOldRoomTypeId(configDto.getRoomTypeId());
+        roomSaleDto.setRoomNo(roomDto.getName());
+        roomSaleDto.setPms(roomDto.getPms());
+        roomSaleDto.setCreateDate(dateFormat.format(new Date()));
+
+        roomSaleDto.setSalePrice(basePriceDto.getPrice());
+        roomSaleDto.setCostPrice(roomTypeDto.getCost());
+
+        roomSaleDto.setStartTime(timeFormat.format(configDto.getStartDate()));
+        roomSaleDto.setEndTime(timeFormat.format(configDto.getEndDate()));
+        roomSaleDto.setRoomId(roomId);
+        roomSaleDto.setConfigId(configDto.getId());
+        roomSaleDto.setIsBack(ValidEnum.DISVALID.getId());
+        roomSaleDto.setSaleName(configDto.getSaleName());
+        roomSaleDto.setSaleType(configDto.getStyleType());
+        roomSaleDto.setHotelId(configDto.getHotelId());
+
+        roomSaleDto.setSettleValue(settleValue);
+        this.roomSaleService.saveRoomSale(roomSaleDto);
     }
 
     private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {

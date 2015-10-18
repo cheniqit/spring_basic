@@ -25,6 +25,15 @@ public class TRoomSaleConfigDto {
     private String valid;
     private Integer styleType;
     private boolean saleRoomTypeIdIsNull;
+    private String started;
+
+    public String getStarted() {
+        return started;
+    }
+
+    public void setStarted(String started) {
+        this.started = started;
+    }
 
     public Integer getId() {
         return id;

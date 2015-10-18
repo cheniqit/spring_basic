@@ -22,6 +22,16 @@ public class TRoomSaleConfig {
     private Integer settleType;
     private String valid;
     private Integer styleType;
+    private String started;
+
+    public String getStarted() {
+        return started;
+    }
+
+    public void setStarted(String started) {
+        this.started = started;
+    }
+
 
     public Integer getStyleType() {
         return styleType;
