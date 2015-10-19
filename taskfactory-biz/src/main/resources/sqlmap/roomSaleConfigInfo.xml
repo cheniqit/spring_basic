@@ -4,14 +4,24 @@
 
 	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomSaleConfigInfo">
 	    <result property="id" column="id" />
-	    <result property="promoName" column="promoName" />
-	    <result property="fontColor" column="fontColor" />
-        <result property="saleType" column="saleType" />
-        <result property="useDescribe" column="useDescribe" />
+	    <result property="saleTypeId" column="saleTypeId" />
+	    <result property="startDate" column="startDate" />
+        <result property="endDate" column="endDate" />
+        <result property="startTime" column="startTime" />
+        <result property="endTime" column="endTime" />
+        <result property="saleValue" column="saleValue" />
+        <result property="saleLabel" column="saleLabel" />
+        <result property="description" column="description" />
+        <result property="fontColor" column="fontColor" />
+        <result property="valid" column="valid" />
+        <result property="createTime" column="createTime" />
+        <result property="createBy" column="createBy" />
+        <result property="updateTime" column="updateTime" />
+        <result property="updateBy" column="updateBy" />
+
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, promoName, fontColor, saleType,useDescribe
     </sql>
 
     <select id="queryRoomSaleConfigInfoList" resultMap="BaseResultMap" >
