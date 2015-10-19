@@ -89,6 +89,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         for (TRoomSaleConfigDto configDto : configDtoList) {
             updateConfigOnline(time, configDto);
         }
+        logger.info("============sales online job >> validRateTaskRun method end===============");
     }
 
     private Time getTime(Date runTime) {
@@ -281,22 +282,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return baseValue;
         }
     }
-
-    private void updateRoomType(Integer roomTypeId, Integer oldRoomTypeId) {
-        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
-        roomChangeTypeDto.setRoomTypeId(roomTypeId);
-        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-//        this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
-    }
-
-    private void updateRoomSetting(Integer roomTypeId, Integer oldRoomTypeId) {
-        TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
-        roomChangeTypeDto.setRoomTypeId(roomTypeId);
-        roomChangeTypeDto.setOldRoomTypeId(oldRoomTypeId);
-        this.roomSettingService.updateTRoomSettingByRoomTypeId(roomChangeTypeDto);
-
-    }
-
     //数据回复
     public void dateReback() {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
