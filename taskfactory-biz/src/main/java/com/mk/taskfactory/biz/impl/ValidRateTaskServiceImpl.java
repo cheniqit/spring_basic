@@ -125,8 +125,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //检查是否完成任务
-        if (ValidEnum.DISVALID.getId().equals(configDto.getStarted())) {
+        if (ValidEnum.VALID.getId().equals(configDto.getStarted())) {
             logger.info("============sales online job >> configDto.id:" + configDto.getId() + " is started, continue");
+            return;
         }
 
         //检查是否开始
@@ -137,6 +138,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             int roomTypeId = configDto.getRoomTypeId();
             Integer roomId = configDto.getRoomId();
             Integer num = configDto.getNum();
+            logger.info("============sales online job >> configDto.id:" + configDto.getId()
+                    + " roomTypeId:" + roomTypeId + " saleRoomTypeId:" + saleRoomTypeId);
 
             //OTS房态
             OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);

@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.utils;
 
 
+import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,17 +56,45 @@ public class ServiceUtils {
         }
     }
 
+    public static String doPost(String url, Map<String, String> params, int timeout) throws Exception {
+        String back = "";
+        HttpClient client = new HttpClient();
+        client.getHttpConnectionManager().getParams().setConnectionTimeout(timeout * 1000);
+        PostMethod method = new PostMethod(url);
+        try {
+            method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(1, false));
+            method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+            method.getParams().setParameter(HttpMethodParams.SO_TIMEOUT, timeout * 1000);
+            if(params != null && params.size() > 0){
+                for (String key : params.keySet()) {
+                    method.setParameter(key, params.get(key));
+                }
+            }
+            int status = client.executeMethod(method);
+            if (status == HttpStatus.SC_OK) {
+                back = method.getResponseBodyAsString();
+            } else {
+                throw new Exception("异常：" + status);
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            method.releaseConnection();
+        }
+        return back;
+    }
+
     /**
      * @param address
      * @param params
      * @return
      * @throws java.io.IOException
      */
-    public static String doPost(String address, Map<String, String> params, int timeout) throws IOException {
+    public static String dopost(String address, Map<String, String> params, int timeout) throws IOException {
         // 创建默认的httpClient实例.
         CloseableHttpClient httpclient = HttpClients.createDefault();
         // 创建httppost
-        HttpPost httpPost = new HttpPost(address);
+        HttpPost httpPost = new HttpPost(URLEncoder.encode(address));
         // 设置超时
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout*1000).setConnectTimeout(timeout*1000).build();
         httpPost.setConfig(requestConfig);
