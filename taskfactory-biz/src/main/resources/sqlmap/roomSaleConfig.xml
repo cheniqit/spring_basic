@@ -151,4 +151,11 @@
         valid =  #{valid}
         WHERE  id= #{id}
     </update>
+
+    <update id="updateRoomSaleConfigStarted" parameterType="java.util.Map" >
+        update t_room_sale_config
+        set
+        started =  #{isStart}
+        WHERE  id= #{id}
+    </update>
 </mapper>

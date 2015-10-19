@@ -55,6 +55,14 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         hm.put("valid", valid);
         return   roomSaleConfigMapper.updateRoomSaleConfigValid(hm);
     }
+
+    public Integer updateRoomSaleConfigStarted(Integer id, String isStart){
+        HashMap  hm = new HashMap();
+        hm.put("id",id);
+        hm.put("isStart", isStart);
+        return   roomSaleConfigMapper.updateRoomSaleConfigStarted(hm);
+    }
+
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid){
         if(StringUtils.isEmpty(valid)){
             return  null;

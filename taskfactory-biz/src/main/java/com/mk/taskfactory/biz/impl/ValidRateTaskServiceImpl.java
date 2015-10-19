@@ -298,8 +298,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         //比较活动结束时间和当前时间
                         String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        if (DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
-                            reBackRoom(dto);
+                        if (!DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
+                            boolean   bl = reBackRoom(dto);
+                            if(bl){
+                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(),ValidEnum.DISVALID.getId());
+                            }
                         }
                     }
                 } catch (ParseException e){
@@ -308,7 +311,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
     }
 
-    //数据回复
+    //数据清除
     public void remove(){
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
@@ -321,10 +324,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 try {
                     //比较活动结束日期和当前日期
                     if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
-                           //先确保数据已经回复
-                            reBackRoom(dto);
-                          //删除房型
+                        //先确保数据已经回复
+                        boolean   bl =    reBackRoom(dto);
+                        if(bl){
+                            //删除房型
                             deleteRoomType(dto);
+                        }
                         this.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
                     }
                 } catch (ParseException e){
@@ -338,7 +343,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return false;
         }
         //根据配置id查询当前没有回复的数据
-        List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", "F");
+        List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", ValidEnum.DISVALID.getId());
         if (CollectionUtils.isEmpty(saleDtoList)) {
             return false;
         }
@@ -366,7 +371,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return false;
         }
         //根据配置id查询当前没有回复的数据
-        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), "F");
+        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), ValidEnum.DISVALID.getId());
         if (CollectionUtils.isEmpty(newRoomTypeIdList)) {
             return false;
         }
