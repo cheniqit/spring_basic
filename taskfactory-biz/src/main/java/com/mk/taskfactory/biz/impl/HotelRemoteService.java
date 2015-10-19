@@ -1,6 +1,5 @@
 package com.mk.taskfactory.biz.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;

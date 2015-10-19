@@ -28,8 +28,6 @@ public class ValidRateTaskLogicServiceImpl {
     @Autowired
     private RoomTypeService roomTypeService;
     @Autowired
-    private RoomTypeInfoService roomTypeInfoService;
-    @Autowired
     private RoomSettingService roomSettingService;
     @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
@@ -41,89 +39,53 @@ public class ValidRateTaskLogicServiceImpl {
     private HotelRemoteService hotelRemoteService;
 
     @Transactional
-    public  HashMap<String,Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String,Map> executeRecordMap){
+    public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
         //将新roomTypeId和老的roomTypeId对应起来
-        Map<Integer,Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
-        Map<Integer,Integer> hotelMap = executeRecordMap.get("hotelMap");
+        Map<Integer, Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
+        Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data begin===================="));
-        try{
-            TRoomTypeDto roomTypeDto=new TRoomTypeDto();
-            List<TRoomSaleDto> tRoomSaleDtoList = new ArrayList<TRoomSaleDto>();
+        try {
+            TRoomTypeDto roomTypeDto = new TRoomTypeDto();
             //如果房型不存在map中，则将房型put到map�?
             roomTypeDto.setId(roomSaleConfig.getRoomTypeId());
             roomTypeDto.setCost(roomSaleConfig.getSaleValue());
             roomTypeDto.setName(roomSaleConfig.getSaleName());
-            //取得当前房型做活动的库存�?
-            int saleNum= 0;
-            //如果配置文件中roomId存在则直接将其加到活动列表中
-            if(roomSaleConfig.getRoomId()!=null&&roomSaleConfig.getRoomId()!=0){
-                TRoomDto room= roomService.findRoomsById(roomSaleConfig.getRoomId());
-                if (room!=null&&"F".equals(room.getIsLock())){//判断房间是否上锁
-                    TRoomSaleDto roomSale=new TRoomSaleDto();
-                    roomSale.setOldRoomTypeId(room.getRoomTypeId());
-                    roomSale.setRoomId(room.getId());
-                    roomSale.setRoomNo(room.getName());
-                    roomSale.setPms(room.getPms());
-                    roomSale.setSalePrice(roomSaleConfig.getSaleValue());
-                    roomSale.setStartTime(String.valueOf(roomSaleConfig.getStartTime()));
-                    roomSale.setEndTime(String.valueOf(roomSaleConfig.getEndDate()));
-                    roomSale.setConfigId(roomSaleConfig.getId());
-                    roomSale.setSaleName(roomSaleConfig.getSaleName());
-                    roomSale.setSaleType(roomSaleConfig.getStyleType());
-                    tRoomSaleDtoList.add(roomSale);
-                    saleNum++;
-                }
-            }else{
-                //按房型取得对应的房间信息
-                List<TRoomDto> rooms= roomService.findRoomsByRoomTypeId(roomSaleConfig.getRoomTypeId());
-                for (TRoomDto room:rooms){
-                    //如果房间信息已经添加到活动房间列表则不继续添�?
-                    if ("F".equals(room.getIsLock())){
-                        TRoomSaleDto roomSale=new TRoomSaleDto();
-                        roomSale.setOldRoomTypeId(room.getRoomTypeId());
-                        roomSale.setRoomId(room.getId());
-                        roomSale.setRoomNo(room.getName());
-                        roomSale.setPms(room.getPms());
-                        roomSale.setSalePrice(roomSaleConfig.getSaleValue());
-                        roomSale.setStartTime(String.valueOf(roomSaleConfig.getStartTime()));
-                        roomSale.setEndTime(String.valueOf(roomSaleConfig.getEndDate()));
-                        roomSale.setConfigId(roomSaleConfig.getId());
-                        roomSale.setSaleName(roomSaleConfig.getSaleName());
-                        roomSale.setSaleType(roomSaleConfig.getStyleType());
-                        tRoomSaleDtoList.add(roomSale);
-                        saleNum++;
-                    }
-                }
-            }
-            roomTypeDto.setRoomNum(saleNum);
-
+            roomTypeDto.setRoomNum(0);
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data end===================="));
-            int newRoomTypeId = initRoomTypeDto(roomSaleConfig, roomTypeDto);
-            roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
-            executeRecordMap.put("roomTypeMap", roomTypeMap);
-
-            initRoomSaleDto(roomSaleConfig,roomTypeDto, tRoomSaleDtoList, roomTypeMap);
-            //刷新索引 如果刷过索引就不再刷了
-            if(hotelMap.get(roomSaleConfig.getHotelId()) == null){
+            if(roomTypeMap.get(roomTypeDto.getId()) == null){
+                int newRoomTypeId = initRoomTypeDto(roomSaleConfig, roomTypeDto);
+                roomTypeMap.put(roomTypeDto.getId(), newRoomTypeId);
+                executeRecordMap.put("roomTypeMap", roomTypeMap);
+            }
+            //刷新价格
+            if (hotelMap.get(roomSaleConfig.getHotelId()) == null) {
                 logger.info(String.format("====================initSaleRoomSaleConfigDto >> updateMikePriceCache begin===================="));
                 boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(roomSaleConfig.getHotelId().toString());
-                if(updateCacheSuccessFlag){
-                    hotelMap.put(roomSaleConfig.getHotelId(),roomSaleConfig.getHotelId());
+                if (updateCacheSuccessFlag) {
+                    hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
                     executeRecordMap.put("hotelMap", hotelMap);
-                }else {
+                } else {
                     throw new RuntimeException("updateMikePriceCache error");
                 }
-                logger.info(String.format("====================initSaleRoomSaleConfigDto >> updateMikePriceCache end updateCacheSuccessFlag[%s]==========",String.valueOf(updateCacheSuccessFlag)));
-        }
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> updateMikePriceCache end updateCacheSuccessFlag[%s]==========", String.valueOf(updateCacheSuccessFlag)));
+            }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("initSaleRoomSaleConfigDto error");
         }
         return executeRecordMap;
     }
 
-    private void saveBaseOrUpdatePriceService(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto, boolean isUpdate) {
+    private void saveBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto){
+        saveOrUpdateBasePrice(tRoomSaleConfigDto, tBasePriceDto, false);
+    }
+
+    private void updateBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto){
+        saveOrUpdateBasePrice(tRoomSaleConfigDto,tBasePriceDto, true);
+    }
+
+    private void saveOrUpdateBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto, boolean isUpdate) {
         if(tRoomSaleConfigDto == null){
             return;
         }
@@ -169,13 +131,6 @@ public class ValidRateTaskLogicServiceImpl {
             //复制并创建活动房�?
             roomTypeService.saveTRoomType(roomTypeModel);
             newRoomTypeId = roomTypeModel.getId();
-            roomTypeModel.setRoomNum(-roomTypeDto.getRoomNum());
-            roomTypeService.updatePlusRoomNum(roomTypeModel);
-            //得到房型其他信息
-            TRoomTypeInfoDto roomTypeInfo = roomTypeInfoService.findByRoomTypeId(roomTypeDto.getId());
-            roomTypeInfo.setRoomTypeId(newRoomTypeId);
-            //复制并创建房型其他信�?
-            roomTypeInfoService.saveRoomTypeInfo(roomTypeInfo);
             //得到房价对应配置信息
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
             for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
@@ -183,18 +138,18 @@ public class ValidRateTaskLogicServiceImpl {
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
             }
             //处理价格
-            //先查找新房间类型的价格是否有，如果有则只想要更新
+            //先查找新房间类型的价格是否有，如果有则只需要更新
             TBasePriceDto newBasePriceDto = basePriceService.findByRoomtypeId(newRoomTypeId.longValue());
             if(newBasePriceDto == null){
                 TBasePriceDto oldBasePriceDto = basePriceService.findByRoomtypeId(new Long(roomTypeDto.getId()));
-                oldBasePriceDto.setRoomtypeid(newRoomTypeId.longValue());
                 //根据配置文件的价格规则算出价格设置到baseprice表中
                 if(oldBasePriceDto == null || oldBasePriceDto.getId() == null){
                     throw new RuntimeException(String.format("saveBasePriceService tBasePriceDto id is null >> tRoomSaleConfigDto roomTypeId[%s]", tRoomSaleConfigDto.getRoomTypeId()));
                 }
-                saveBaseOrUpdatePriceService(tRoomSaleConfigDto, oldBasePriceDto, false);
+                oldBasePriceDto.setRoomtypeid(newRoomTypeId.longValue());
+                saveBasePrice(tRoomSaleConfigDto, oldBasePriceDto);
             }else {
-                saveBaseOrUpdatePriceService(tRoomSaleConfigDto, newBasePriceDto, true);
+                updateBasePrice(tRoomSaleConfigDto, newBasePriceDto);
             }
 
             //回填
@@ -227,6 +182,9 @@ public class ValidRateTaskLogicServiceImpl {
                 roomSettingBean.setRoomNo(roomDto.getRoomNo());
                 //取得房间配置信息
                 TRoomSettingDto roomSetting = roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
+                if(roomSetting == null || roomSetting.getId() == null){
+                    throw new RuntimeException(String.format("find roomSetting si null oldRoomTypeId[%s] roomNo[%s]", oldRoomTypeId, roomDto.getRoomNo()));
+                }
                 roomSetting.setRoomTypeId(newRoomTypeId);
                 //更新房间配置信息
                 roomSettingService.updateTRoomSetting(roomSetting);
@@ -248,5 +206,4 @@ public class ValidRateTaskLogicServiceImpl {
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomSaleDto method end===================="));
     }
-
 }
