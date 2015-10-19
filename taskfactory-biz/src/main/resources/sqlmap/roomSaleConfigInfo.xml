@@ -59,33 +59,29 @@
     </sql>
 
     <sql id="Base_Column_List" >
-       id,saleTypeId,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,
+       saleTypeId,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,
        fontColor,valid,createTime,createBy,updateTime,updateBy
-    </sql>
-    <sql id="Insert_Base_Column_List" >
-        id,saleTypeId,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,
-        fontColor,valid,createTime,createBy,updateTime,updateBy
     </sql>
     <insert id="saveRoomSale"  useGeneratedKeys="true" keyProperty="id" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         INSERT INTO t_room_sale_config_info
-        (<include refid="Insert_Base_Column_List"/>)
+        (<include refid="Base_Column_List"/>)
         VALUE
         (
-        #{saleTypeId}, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{saleValue}, #{saleLabel}, #{description}, #{
-        fontColor}, #{valid}, #{createTime}, #{createBy}, #{updateTime}, #{updateBy
+        #{saleTypeId}, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{saleValue}, #{saleLabel}, #{description},
+        #{fontColor}, #{valid}, #{createTime}, #{createBy}, #{updateTime}, #{updateBy}
         )
     </insert>
 
     <select id="queryRoomSaleConfigInfoList" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         SELECT
-        <include refid="BaseResultMap"/>
+        id,<include refid="BaseResultMap"/>
          FROM  t_room_sale_config_info
         <include refid="Base_Query_List"/>
     </select>
 
     <update id="updateTRoomSaleConfigInfo" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         update t_room_sale_config_info
-        set
+        <set>
         <if test="saleTypeId != null">
              saleTypeId = #{saleTypeId},
         </if>
@@ -113,7 +109,10 @@
         <if test="createBy != null">
             createBy = #{createBy},
         </if>
-        updateBy = #{updateBy}
+        <if test="updateBy != null">
+            updateBy = #{updateBy},
+        </if>
+        </set>
         <include refid="Base_Query_List"/>
     </update>
 
