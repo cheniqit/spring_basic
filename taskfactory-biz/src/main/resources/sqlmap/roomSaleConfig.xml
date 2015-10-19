@@ -26,7 +26,7 @@
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
+        hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
         styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId
     </sql>
 
@@ -34,7 +34,6 @@
         <where>
               1 = 1
             <if test="id != null">
-                AND id = #{id}
                 AND id = #{id}
             </if>
             <if test="hotelId != null">
@@ -81,7 +80,7 @@
 
     <select id="queryRoomSaleConfigByParams" resultMap="roomSaleConfig" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto">
         SELECT
-        <include refid="Base_Column_List"/>
+        id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config
         <include refid="Base_Query_List"/>
     </select>
@@ -93,10 +92,10 @@
     </select>
 
 
-    <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
+    <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto"
+            useGeneratedKeys="true" keyProperty="id" >
         INSERT INTO t_room_sale_config
-        ( hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
-          styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId)
+        (<include refid="Base_Column_List"/>)
          VALUE
          (
             #{hotelId}, #{roomId},#{roomTypeId},#{saleType}, #{saleValue},#{costPrice},#{num},#{saleName},#{settleValue},
