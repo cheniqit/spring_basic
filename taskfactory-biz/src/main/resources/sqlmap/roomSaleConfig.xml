@@ -7,28 +7,27 @@
 	    <result property="hotelId" column="hotelId" />
 	    <result property="roomId" column="roomId" />
         <result property="roomTypeId" column="roomTypeId" />
-        <result property="startTime" column="startTime" />
-        <result property="endTime" column="endTime" />
-        <result property="startDate" column="startDate" />
-        <result property="endDate" column="endDate" />
-        <result property="saleValue" column="saleValue" />
+        <result property="saleType" column="saleType"/>
+          <result property="saleValue" column="saleValue" />
+          <result property="costPrice" column="costPrice" />
         <result property="num" column="num" />
-        <result property="type" column="type"/>
         <result property="saleName" column="saleName" />
-
-        <result property="saleRoomTypeId" column="saleRoomTypeId" />
         <result property="settleValue" column="settleValue" />
         <result property="settleType" column="settleType" />
         <result property="valid" column="valid" />
         <result property="styleType" column="styleType" />
-
         <result property="started" column="started" />
-
+        <result property="saleConfigInfoId" column="saleConfigInfoId" />
+        <result property="createTime" column="createTime" />
+        <result property="createBy" column="createBy" />
+        <result property="updateTime" column="updateTime" />
+        <result property="updateBy" column="updateBy" />
+        <result property="saleRoomTypeId" column="saleRoomTypeId" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName,
-        saleRoomTypeId,settleValue,settleType,valid,styleType,started
+        id, hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
+        ,settleType,styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId
     </sql>
 
     <sql id="Base_Query_List" >
@@ -107,13 +106,13 @@
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto" >
         INSERT INTO t_room_sale_config
-        ( hotelId, roomId, roomTypeId, startTime, endTime, startDate, endDate, saleValue,num,type,saleName,
-        saleRoomTypeId,settleValue,settleType,valid,styleType,started)
+        ( hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
+        ,settleType,styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId)
          VALUE
          (
-            #{hotelId}, #{roomId},#{roomTypeId}, #{startTime}, #{endTime},
-            #{startDate}, #{endDate}, #{saleValue},#{num},#{type},#{saleName},
-            #{saleRoomTypeId},#{settleValue},#{settleType},#{valid},#{styleType},#{started}
+            #{hotelId}, #{roomId},#{roomTypeId},#{saleType}, #{saleValue},#{costPrice},,#{saleName},#{settleValue},
+            ,#{settleType},#{valid},#{styleType},#{started},#{saleConfigInfoId},#{createTime},#{createBy},#{updateTime},
+            ,#{updateBy},#{saleRoomTypeId}
             )
     </insert>
 
