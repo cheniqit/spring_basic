@@ -232,20 +232,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " get roomVCSize:"+roomVCSize);
 
-        //mok
-        if (roomTypeId == 352) {
-            roomVCList = new ArrayList<Integer>();
-            roomVCList.add(3433);
-            roomVCList.add(3434);
-            roomVCList.add(3435);
-            roomVCSize = 3;
-        }
-        if (roomTypeId == 234) {
-            roomVCList = new ArrayList<Integer>();
-            roomVCList.add(17592);
-            roomVCList.add(17593);
-            roomVCSize = 2;
-        }
         if (roomVCSize > 0) {
             //按num数量抽取房间
             List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
