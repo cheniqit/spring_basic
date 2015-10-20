@@ -28,11 +28,7 @@ public class ValidRateTaskLogicServiceImpl {
     @Autowired
     private RoomTypeService roomTypeService;
     @Autowired
-    private RoomSettingService roomSettingService;
-    @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
-    @Autowired
-    private RoomSaleService roomSaleService;
     @Autowired
     private BasePriceService basePriceService;
     @Autowired
@@ -125,11 +121,10 @@ public class ValidRateTaskLogicServiceImpl {
         Integer newRoomTypeId = null;
         try{
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
-            //将原价格存起�?
+            //将原价格存起
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
             roomTypeModel.setCost(roomTypeDto.getCost());
             roomTypeModel.setName(roomTypeDto.getName());
-            //复制并创建活动房�?
             roomTypeService.saveTRoomType(roomTypeModel);
             newRoomTypeId = roomTypeModel.getId();
             //得到房价对应配置信息
@@ -143,7 +138,7 @@ public class ValidRateTaskLogicServiceImpl {
             TBasePriceDto newBasePriceDto = basePriceService.findByRoomtypeId(newRoomTypeId.longValue());
             if(newBasePriceDto == null){
                 TBasePriceDto oldBasePriceDto = basePriceService.findByRoomtypeId(new Long(roomTypeDto.getId()));
-                //根据配置文件的价格规则算出价格设置到baseprice表中
+                //根据配置文件的价格规则算出价格设置到base Price表中
                 if(oldBasePriceDto == null || oldBasePriceDto.getId() == null){
                     throw new RuntimeException(String.format("saveBasePriceService tBasePriceDto id is null >> tRoomSaleConfigDto roomTypeId[%s]", tRoomSaleConfigDto.getRoomTypeId()));
                 }
