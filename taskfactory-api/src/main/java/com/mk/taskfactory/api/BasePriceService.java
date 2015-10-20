@@ -8,4 +8,6 @@ public interface BasePriceService {
     public int saveBasePriceService(TBasePriceDto dto);
 
     public int updateBasePriceService(TBasePriceDto dto);
+    public int deleteBasePriceByRoomType(Integer roomTypeId);
+
 }

@@ -18,8 +18,8 @@ public class RoomSaleConfigInfoServiceImpl implements RoomSaleConfigInfoService 
     private RoomSaleConfigInfoMapper roomSaleConfigInfoMapper;
 
     public TRoomSaleConfigInfoDto queryRoomSaleConfigInfoById(Integer id){
-        TRoomSaleConfigInfo roomSaleConfig=roomSaleConfigInfoMapper.queryRoomSaleConfigById(id);
-        return buildTRoomSaleConfigInfoDto(roomSaleConfig);
+        TRoomSaleConfigInfo roomSaleConfigInfo=roomSaleConfigInfoMapper.queryRoomSaleConfigById(id);
+        return buildTRoomSaleConfigInfoDto(roomSaleConfigInfo);
     }
     private TRoomSaleConfigInfoDto buildTRoomSaleConfigInfoDto(TRoomSaleConfigInfo bean) {
         if (bean==null){

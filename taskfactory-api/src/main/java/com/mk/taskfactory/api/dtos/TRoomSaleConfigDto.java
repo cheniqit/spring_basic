@@ -1,6 +1,8 @@
 package com.mk.taskfactory.api.dtos;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
 
 public class TRoomSaleConfigDto {
     private Integer id;
@@ -23,8 +25,16 @@ public class TRoomSaleConfigDto {
     private String updateTime;
     private String updateBy;
     private Integer saleRoomTypeId;
+    private Integer saleTypeId;
+    private Date startDate;
+    private Date endDate;
+    private Time startTime;
+    private Time endTime;
+    private String saleValue;
+    private String saleLabel;
+    private String description;
+    private String fontColor;
     private boolean saleRoomTypeIdIsNull;
-
 
     public Integer getId() {
         return id;
@@ -186,6 +196,77 @@ public class TRoomSaleConfigDto {
         this.saleRoomTypeId = saleRoomTypeId;
     }
 
+    public Integer getSaleTypeId() {
+        return saleTypeId;
+    }
+
+    public void setSaleTypeId(Integer saleTypeId) {
+        this.saleTypeId = saleTypeId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getSaleValue() {
+        return saleValue;
+    }
+
+    public void setSaleValue(String saleValue) {
+        this.saleValue = saleValue;
+    }
+
+    public String getSaleLabel() {
+        return saleLabel;
+    }
+
+    public void setSaleLabel(String saleLabel) {
+        this.saleLabel = saleLabel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFontColor() {
+        return fontColor;
+    }
+
+    public void setFontColor(String fontColor) {
+        this.fontColor = fontColor;
+    }
     public boolean isSaleRoomTypeIdIsNull() {
         return saleRoomTypeIdIsNull;
     }
