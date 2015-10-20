@@ -78,7 +78,7 @@
         )
     </insert>
 
-    <select id="queryRoomSaleConfigInfoList" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
+    <select id="queryRoomSaleConfigInfoList" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         SELECT
         id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config_info

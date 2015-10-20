@@ -19,6 +19,7 @@ public class TRoomSaleConfigInfoDto {
     private String createBy;
     private Date updateTime;
     private String updateBy;
+    private String matchDate;
 
     public Integer getId() {
         return id;
@@ -138,5 +139,13 @@ public class TRoomSaleConfigInfoDto {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public String getMatchDate() {
+        return matchDate;
+    }
+
+    public void setMatchDate(String matchDate) {
+        this.matchDate = matchDate;
     }
 }

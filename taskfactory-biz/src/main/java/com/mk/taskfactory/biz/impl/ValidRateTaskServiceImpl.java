@@ -51,7 +51,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
         //当前时间是否在config中
-        TRoomSaleConfigInfo tRoomSaleConfigInfo = new TRoomSaleConfigInfo();
+        TRoomSaleConfigInfoDto tRoomSaleConfigInfo = new TRoomSaleConfigInfoDto();
         String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
         tRoomSaleConfigInfo.setMatchDate(matchDate);
         tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
@@ -328,7 +328,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = dto.getEndDate();
+                java.sql.Date endDate = null;
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(endDate);
                 cal.add(Calendar.DATE, 1);
@@ -337,7 +337,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     //比较活动结束日期和当前日期
                     if (!DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd"), "yyyy-MM-dd")) {
                         //比较活动结束时间和当前时间
-                        String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
+                        String endTimeComp = null;//DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
                         if (!DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
@@ -357,11 +357,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = dto.getEndDate();
+                java.sql.Date endDate = null;//dto.getEndDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(endDate);
                 cal.add(Calendar.DATE, 1);
-                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
+                String endDateComp = null;//(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
                 try {
                     //比较活动结束日期和当前日期
                     if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
