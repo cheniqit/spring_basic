@@ -34,7 +34,7 @@ public class TRoomSaleConfigDto {
     private String saleLabel;
     private String description;
     private String fontColor;
-    private boolean saleRoomTypeIdIsNull;
+    private Boolean saleRoomTypeIdIsNull;
 
     public Integer getId() {
         return id;
@@ -267,11 +267,11 @@ public class TRoomSaleConfigDto {
     public void setFontColor(String fontColor) {
         this.fontColor = fontColor;
     }
-    public boolean isSaleRoomTypeIdIsNull() {
+    public Boolean isSaleRoomTypeIdIsNull() {
         return saleRoomTypeIdIsNull;
     }
 
-    public void setSaleRoomTypeIdIsNull(boolean saleRoomTypeIdIsNull) {
+    public void setSaleRoomTypeIdIsNull(Boolean saleRoomTypeIdIsNull) {
         this.saleRoomTypeIdIsNull = saleRoomTypeIdIsNull;
     }
 }

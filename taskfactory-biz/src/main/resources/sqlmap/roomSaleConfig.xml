@@ -38,7 +38,6 @@
         hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
         styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId
     </sql>
-
     <sql id="Base_Query_List" >
         <where>
               1 = 1
@@ -63,6 +62,12 @@
             <if test="valid != null">
                 AND valid = #{valid}
             </if>
+            <if test="saleConfigInfoId != null">
+                AND saleConfigInfoId = #{saleConfigInfoId}
+            </if>
+            <if test="saleRoomTypeId != null">
+                AND saleRoomTypeId = #{saleRoomTypeId}
+            </if>
             <if test="saleRoomTypeIdIsNull != null">
                 AND saleRoomTypeId is null
             </if>
@@ -75,8 +80,8 @@
             <if test="settleType != null">
                 AND settleType = #{settleType}
             </if>
-            <if test="valid != null">
-                AND valid = #{valid}
+            <if test="styleType != null">
+                AND styleType = #{styleType}
             </if>
             <if test="saleRoomTypeIdIsNull != null">
                 AND saleRoomTypeId is null
