@@ -232,16 +232,33 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " get roomVCSize:"+roomVCSize);
 
-        //按num数量抽取房间
-        List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " get onSaleRoomList:" + onSaleRoomList.size());
-
-        //更新房间上线
-        TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
-        for (Integer onSaleRoomId : onSaleRoomList) {
-            updateRoomOnline(configInfoDto, configDto, roomTypeDto, onSaleRoomId);
+        //mok
+        if (roomTypeId == 352) {
+            roomVCList = new ArrayList<Integer>();
+            roomVCList.add(3433);
+            roomVCList.add(3434);
+            roomVCList.add(3435);
+            roomVCSize = 3;
         }
+        if (roomTypeId == 234) {
+            roomVCList = new ArrayList<Integer>();
+            roomVCList.add(17592);
+            roomVCList.add(17593);
+            roomVCSize = 2;
+        }
+        if (roomVCSize > 0) {
+            //按num数量抽取房间
+            List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get onSaleRoomList:" + onSaleRoomList.size());
+
+            //更新房间上线
+            TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
+            for (Integer onSaleRoomId : onSaleRoomList) {
+                updateRoomOnline(configInfoDto, configDto, roomTypeDto, onSaleRoomId);
+            }
+        }
+
         //更新config started
         configDto.setStarted(ValidEnum.VALID.getId());
         this.roomSaleConfigService.updateRoomSaleConfig(configDto);
@@ -323,8 +340,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         //
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date startDate = getDateTime(configInfoDto.getStartDate(),configInfoDto.getStartTime());
-        Date endDate = getDateTime(configInfoDto.getEndDate(),configInfoDto.getEndTime());
+        Date startDate = getDateTime(new Date(),configInfoDto.getStartTime());
+        Date endDate = getDateTime(new Date(),configInfoDto.getEndTime());
 
         //log roomSale
         TRoomSaleDto roomSaleDto = new TRoomSaleDto();

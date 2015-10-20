@@ -21,7 +21,7 @@ public interface RoomMapper {
 
     public Integer countRoomByRoomType(Integer roomTypeId);
 
-    public void updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
+    public int updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
 
     public   Integer updateRoomTypeByName(HashMap parme);
 }

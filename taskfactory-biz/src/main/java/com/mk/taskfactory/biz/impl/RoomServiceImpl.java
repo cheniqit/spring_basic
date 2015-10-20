@@ -31,14 +31,14 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto) {
+    public int updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto) {
         if (null == roomChangeTypeDto
-                || null == roomChangeTypeDto.getOldRoomTypeId()
+                || null == roomChangeTypeDto.getId()
                 || null == roomChangeTypeDto.getRoomTypeId()) {
             //TODO LOG
-            return;
+            return 0;
         }
-        this.roomMapper.updateRoomTypeByRoomType(roomChangeTypeDto);
+        return this.roomMapper.updateRoomTypeByRoomType(roomChangeTypeDto);
     }
 
     public List<TRoomDto> queryRoomByParams(TRoomDto bean){
