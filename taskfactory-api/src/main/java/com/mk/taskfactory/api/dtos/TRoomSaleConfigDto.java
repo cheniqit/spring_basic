@@ -23,6 +23,8 @@ public class TRoomSaleConfigDto {
     private String updateTime;
     private String updateBy;
     private Integer saleRoomTypeId;
+    private boolean saleRoomTypeIdIsNull;
+
 
     public Integer getId() {
         return id;
@@ -182,5 +184,13 @@ public class TRoomSaleConfigDto {
 
     public void setSaleRoomTypeId(Integer saleRoomTypeId) {
         this.saleRoomTypeId = saleRoomTypeId;
+    }
+
+    public boolean isSaleRoomTypeIdIsNull() {
+        return saleRoomTypeIdIsNull;
+    }
+
+    public void setSaleRoomTypeIdIsNull(boolean saleRoomTypeIdIsNull) {
+        this.saleRoomTypeIdIsNull = saleRoomTypeIdIsNull;
     }
 }

@@ -3,9 +3,11 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
+import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import com.mk.taskfactory.common.Constants;
+import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     @Autowired
     private RoomService roomService;
     @Autowired
+    private RoomSaleConfigInfoMapper roomSaleConfigInfoMapper;
+    @Autowired
     private RoomSaleConfigService roomSaleConfigService;
     @Autowired
     private RoomTypeService roomTypeService;
@@ -42,11 +46,29 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
         //当前时间是否在config中
-        TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
+        TRoomSaleConfigInfo tRoomSaleConfigInfo = new TRoomSaleConfigInfo();
         String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
-        roomSaleConfigDto.setMatchDate(matchDate);
-        roomSaleConfigDto.setValid(ValidEnum.VALID.getId());
+        tRoomSaleConfigInfo.setMatchDate(matchDate);
+        tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigInfo> tRoomSaleConfigInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfo);
+        for(TRoomSaleConfigInfo configInfo : tRoomSaleConfigInfos){
+            initTRoomSaleConfigDtoList(configInfo);
+        }
+        try {
+            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin begin ===================="));
+            ServiceUtils.doPost(Constants.OTS_URL + "/roomsale/saleBegin", null, 40);
+            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin end ===================="));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logger.info(String.format("====================init sales config job >> validRateTaskRun method end===================="));
+    }
+
+    public void initTRoomSaleConfigDtoList(TRoomSaleConfigInfo configInfo){
+        TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         roomSaleConfigDto.setSaleRoomTypeIdIsNull(true);
+        roomSaleConfigDto.setSaleConfigInfoId(configInfo.getId());
+        roomSaleConfigDto.setValid(ValidEnum.VALID.getId());
         //读取活动配置表数
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (CollectionUtils.isEmpty(list)){
@@ -65,14 +87,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 logger.info(String.format("====================init sales config job >>  initSaleRoomSaleConfigDto erroe ===================="));
             }
         }
-        try {
-            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin begin ===================="));
-            ServiceUtils.doPost(Constants.OTS_URL + "/roomsale/saleBegin", null, 40);
-            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin end ===================="));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        logger.info(String.format("====================init sales config job >> validRateTaskRun method end===================="));
     }
 
 

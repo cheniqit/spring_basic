@@ -55,6 +55,12 @@
             <if test="updateBy != null">
                 AND updateBy = #{updateBy}
             </if>
+            <if test="matchDate != null">
+                <![CDATA[  AND startDate < #{matchDate}]]>
+            </if>
+            <if test="matchDate != null">
+                <![CDATA[  AND endDate > #{matchDate} ]]>
+            </if>
         </where>
     </sql>
 
@@ -72,7 +78,7 @@
         )
     </insert>
 
-    <select id="queryRoomSaleConfigInfoList" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
+    <select id="queryRoomSaleConfigInfoList" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         SELECT
         id,<include refid="BaseResultMap"/>
          FROM  t_room_sale_config_info

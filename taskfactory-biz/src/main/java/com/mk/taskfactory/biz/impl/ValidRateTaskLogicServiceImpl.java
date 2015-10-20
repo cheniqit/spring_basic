@@ -48,7 +48,7 @@ public class ValidRateTaskLogicServiceImpl {
             TRoomTypeDto roomTypeDto = new TRoomTypeDto();
             //如果房型不存在map中，则将房型put到map�?
             roomTypeDto.setId(roomSaleConfig.getRoomTypeId());
-            roomTypeDto.setCost(roomSaleConfig.getSaleValue());
+            roomTypeDto.setCost(roomSaleConfig.getCostPrice());
             roomTypeDto.setName(roomSaleConfig.getSaleName());
             roomTypeDto.setRoomNum(0);
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data end===================="));
@@ -78,45 +78,46 @@ public class ValidRateTaskLogicServiceImpl {
     }
 
     private void saveBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto){
-        saveOrUpdateBasePrice(tRoomSaleConfigDto, tBasePriceDto, false);
+        BigDecimal price = figureBasePrice(tRoomSaleConfigDto);
+        tBasePriceDto.setPrice(price);
+        basePriceService.saveBasePriceService(tBasePriceDto);
     }
 
     private void updateBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto){
-        saveOrUpdateBasePrice(tRoomSaleConfigDto,tBasePriceDto, true);
+        BigDecimal price = figureBasePrice(tRoomSaleConfigDto);
+        tBasePriceDto.setPrice(price);
+        basePriceService.updateBasePriceService(tBasePriceDto);
     }
 
-    private void saveOrUpdateBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto, TBasePriceDto tBasePriceDto, boolean isUpdate) {
+    private BigDecimal figureBasePrice(TRoomSaleConfigDto tRoomSaleConfigDto){
+        BigDecimal price = new BigDecimal(0);
         if(tRoomSaleConfigDto == null){
-            return;
+            return price;
         }
-        if(ValueTypeEnum.TYPE_TO.getId() == tRoomSaleConfigDto.getType()){
-            tBasePriceDto.setPrice(tRoomSaleConfigDto.getSaleValue());
-        }else if(ValueTypeEnum.TYPE_ADD.getId() == tRoomSaleConfigDto.getType()) {
+        if(ValueTypeEnum.TYPE_TO.getId() == tRoomSaleConfigDto.getSaleType()){
+            price = tRoomSaleConfigDto.getSalePrice();
+        }else if(ValueTypeEnum.TYPE_ADD.getId() == tRoomSaleConfigDto.getSaleType()) {
             //得到房型价格
             OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(),new Date(), new Date());
             BigDecimal roomTypePrice = otsRoomStateDto.getPmsPrice();
             if(roomTypePrice == null){
                 throw new RuntimeException(String.format("saveBasePriceService roomTypePrice id is null >> tRoomSaleConfigDto HotelId[%s]", tRoomSaleConfigDto.getHotelId()));
             }
-            BigDecimal price = roomTypePrice.subtract(tRoomSaleConfigDto.getSaleValue());
-            tBasePriceDto.setPrice(price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price);
-        }else if(ValueTypeEnum.TYPE_OFF.getId() == tRoomSaleConfigDto.getType()) {
+            price = roomTypePrice.subtract(tRoomSaleConfigDto.getSalePrice());
+            price = price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price;
+        }else if(ValueTypeEnum.TYPE_OFF.getId() == tRoomSaleConfigDto.getSaleType()) {
             //得到房型价格
             OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(),new Date(), new Date());
             BigDecimal roomTypePrice = otsRoomStateDto.getPmsPrice();
             if(roomTypePrice == null){
                 throw new RuntimeException(String.format("saveBasePriceService roomTypePrice id is null >> tRoomSaleConfigDto HotelId[%s]", tRoomSaleConfigDto.getHotelId()));
             }
-            BigDecimal price = roomTypePrice.multiply(tRoomSaleConfigDto.getSaleValue().divide(new BigDecimal(100)));
-            tBasePriceDto.setPrice(price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price);
+            price = roomTypePrice.multiply(tRoomSaleConfigDto.getSalePrice().divide(new BigDecimal(100)));
+            price = price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price;
         }
-        if(isUpdate){
-            basePriceService.updateBasePriceService(tBasePriceDto);
-        }else{
-            basePriceService.saveBasePriceService(tBasePriceDto);
-        }
-
+        return price;
     }
+
 
     @Transactional
     public int initRoomTypeDto(TRoomSaleConfigDto tRoomSaleConfigDto, TRoomTypeDto roomTypeDto){
@@ -161,49 +162,5 @@ public class ValidRateTaskLogicServiceImpl {
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method end===================="));
         return newRoomTypeId;
-    }
-
-    @Transactional
-    public void initRoomSaleDto(TRoomSaleConfigDto roomSaleConfig,TRoomTypeDto roomTypeDto , List<TRoomSaleDto> tRoomDtoList, Map<Integer,Integer>  roomTypeMap){
-        logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomSaleDto method begin===================="));
-        if(CollectionUtils.isEmpty(tRoomDtoList)){
-            return;
-        }
-        for(TRoomSaleDto roomDto : tRoomDtoList){
-            try{
-                Integer newRoomTypeId = roomTypeMap.get(roomDto.getOldRoomTypeId());
-                Integer oldRoomTypeId = roomDto.getOldRoomTypeId();
-                if (newRoomTypeId == null) {
-                    logger.info(String.format("initRoomSaleDto ----没有生成新房间类型---- oldRoomTypeID[%s]", oldRoomTypeId));
-                    continue;
-                }
-                TRoomSettingDto roomSettingBean = new TRoomSettingDto();
-                roomSettingBean.setRoomTypeId(oldRoomTypeId);
-                roomSettingBean.setRoomNo(roomDto.getRoomNo());
-                //取得房间配置信息
-                TRoomSettingDto roomSetting = roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingBean);
-                if(roomSetting == null || roomSetting.getId() == null){
-                    throw new RuntimeException(String.format("find roomSetting si null oldRoomTypeId[%s] roomNo[%s]", oldRoomTypeId, roomDto.getRoomNo()));
-                }
-                roomSetting.setRoomTypeId(newRoomTypeId);
-                //更新房间配置信息
-                roomSettingService.updateTRoomSetting(roomSetting);
-                //更新房间信息
-                TRoomDto room = roomService.findRoomsById(roomDto.getRoomId());
-                room.setRoomTypeId(newRoomTypeId);
-                roomService.saveTRoom(room);
-                //保存今日特价房间信息
-                roomDto.setCreateDate(DateUtils.format_yMd(new Date()));
-                roomDto.setCostPrice(roomTypeDto.getCost());
-                roomDto.setRoomTypeId(newRoomTypeId);
-                roomDto.setSalePrice(roomSaleConfig.getSaleValue());
-                roomDto.setIsBack("F");
-                roomSaleService.saveRoomSale(roomDto);
-            }catch (Exception e){
-                e.printStackTrace();
-                throw new RuntimeException("initSaleRoomSaleConfigDto error");
-            }
-        }
-        logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomSaleDto method end===================="));
     }
 }
