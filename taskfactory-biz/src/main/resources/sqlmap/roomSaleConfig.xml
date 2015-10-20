@@ -54,17 +54,11 @@
             <if test="roomTypeId != null">
                 AND roomTypeId = #{roomTypeId}
             </if>
-            <if test="type != null">
-                AND type = #{type}
+            <if test="saleType != null">
+                AND saleType = #{saleType}
             </if>
             <if test="saleName != null">
                 AND saleName = #{saleName}
-            </if>
-            <if test="matchDate != null">
-                <![CDATA[  AND startDate < #{matchDate}]]>
-            </if>
-            <if test="matchDate != null">
-                <![CDATA[  AND endDate > #{matchDate} ]]>
             </if>
             <if test="valid != null">
                 AND valid = #{valid}
