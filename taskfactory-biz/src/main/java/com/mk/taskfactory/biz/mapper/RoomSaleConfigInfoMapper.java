@@ -9,7 +9,7 @@ import java.util.List;
 @MyBatisRepository
 public interface RoomSaleConfigInfoMapper {
 
-    public List<TRoomSaleConfigInfo> queryRoomSaleConfigInfoList();
+    public List<TRoomSaleConfigInfo> queryRoomSaleConfigInfoList(TRoomSaleConfigInfo tRoomSaleConfigInfo);
 
     public TRoomSaleConfigInfo saveRoomSale(TRoomSaleConfigInfo tRoomSaleConfigInfo);
 

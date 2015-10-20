@@ -33,6 +33,7 @@ public class TRoomSaleConfigDto {
     private String saleLabel;
     private String description;
     private String fontColor;
+    private boolean saleRoomTypeIdIsNull;
 
     public Integer getId() {
         return id;
@@ -264,5 +265,12 @@ public class TRoomSaleConfigDto {
 
     public void setFontColor(String fontColor) {
         this.fontColor = fontColor;
+    }
+    public boolean isSaleRoomTypeIdIsNull() {
+        return saleRoomTypeIdIsNull;
+    }
+
+    public void setSaleRoomTypeIdIsNull(boolean saleRoomTypeIdIsNull) {
+        this.saleRoomTypeIdIsNull = saleRoomTypeIdIsNull;
     }
 }

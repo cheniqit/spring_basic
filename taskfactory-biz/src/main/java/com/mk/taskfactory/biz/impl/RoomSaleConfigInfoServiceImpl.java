@@ -4,6 +4,7 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.RoomSaleConfigInfoService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
+import com.mk.taskfactory.model.TRoomSaleConfig;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,5 @@ public class RoomSaleConfigInfoServiceImpl implements RoomSaleConfigInfoService 
         BeanUtils.copyProperties(bean, roomSaleConfigInfoDto);
         return roomSaleConfigInfoDto;
     }
-
 
 }

@@ -84,6 +84,9 @@
             <if test="valid != null">
                 AND valid = #{valid}
             </if>
+            <if test="saleRoomTypeIdIsNull != null">
+                AND saleRoomTypeId is null
+            </if>
         </where>
     </sql>
 
