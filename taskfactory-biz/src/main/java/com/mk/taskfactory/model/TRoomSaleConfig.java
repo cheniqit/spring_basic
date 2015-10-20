@@ -9,7 +9,7 @@ public class TRoomSaleConfig {
     private Integer roomId;
     private Integer roomTypeId;
     private Integer saleType;
-    private BigDecimal salePrice;
+    private BigDecimal saleValue;
     private BigDecimal costPrice;
     private Integer num;
     private String saleName;
@@ -23,13 +23,13 @@ public class TRoomSaleConfig {
     private String createBy;
     private Date updateTime;
     private String updateBy;
+
     private Integer saleRoomTypeId;
     private Integer saleTypeId;
     private Date startDate;
     private Date endDate;
     private String startTime;
     private String endTime;
-    private String saleValue;
     private String saleLabel;
     private String description;
     private String fontColor;
@@ -74,12 +74,8 @@ public class TRoomSaleConfig {
         this.saleType = saleType;
     }
 
-    public BigDecimal getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(BigDecimal salePrice) {
-        this.salePrice = salePrice;
+    public void setSaleValue(BigDecimal saleValue) {
+        this.saleValue = saleValue;
     }
 
     public BigDecimal getCostPrice() {
@@ -232,14 +228,6 @@ public class TRoomSaleConfig {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getSaleValue() {
-        return saleValue;
-    }
-
-    public void setSaleValue(String saleValue) {
-        this.saleValue = saleValue;
     }
 
     public String getSaleLabel() {

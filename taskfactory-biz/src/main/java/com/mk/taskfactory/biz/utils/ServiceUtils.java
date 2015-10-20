@@ -314,7 +314,7 @@ public class ServiceUtils {
             in = httpURLConnection.getInputStream();
             byte[] byteDatas = new byte[in.available()];
             in.read(byteDatas);
-            return new String(byteDatas) + "`" + httpStatusCode;
+            return new String(byteDatas);
         }catch(Exception e){
             log.error(e.getMessage());
             return "Failed`" + httpStatusCode;

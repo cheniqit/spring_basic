@@ -147,8 +147,8 @@
             <if test="saleName != null" >
                 saleName = #{saleName},
             </if>
-            <if test="updatetime != null" >
-                settleValue=#{settleValue},
+            <if test="saleRoomTypeId != null" >
+                saleRoomTypeId=#{saleRoomTypeId},
             </if>
             <if test="settleType != null" >
                 settleType=#{settleType},
@@ -176,12 +176,6 @@
             </if>
             <if test="updateBy != null" >
                 updateBy = #{updateBy},
-            </if>
-            <if test="updateTime != null" >
-                updateTime = #{updateTime},
-            </if>
-            <if test="saleRoomTypeId != null" >
-                saleRoomTypeId=#{saleRoomTypeId},
             </if>
         </set>
 
