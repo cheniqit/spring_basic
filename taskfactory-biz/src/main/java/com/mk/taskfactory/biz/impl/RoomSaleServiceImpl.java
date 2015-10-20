@@ -77,7 +77,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList();
         Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
         for (TRoomSaleConfigInfo configInfo:configInfos){
-            configInfoMap.put(configInfo.getSaleType(),configInfo);
+            configInfoMap.put(configInfo.getSaleTypeId(),configInfo);
         }
         List<RoomSaleToOtsDto> roomSaleToOtsDtoList = new ArrayList<RoomSaleToOtsDto>();
         if (roomSaleList.isEmpty()){
@@ -96,7 +96,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList();
         Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
         for (TRoomSaleConfigInfo configInfo:configInfos){
-            configInfoMap.put(configInfo.getSaleType(),configInfo);
+            configInfoMap.put(configInfo.getSaleTypeId(),configInfo);
         }
         if (roomSale==null){
             return null;
@@ -109,7 +109,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     private RoomSaleToOtsDto buildTRoomSaleConfigDto(TRoomSale roomSale,TRoomSaleConfigInfo configInfo) {
         RoomSaleToOtsDto dto = new RoomSaleToOtsDto();
         dto.setIsOnPromo("T");
-        dto.setPromoText(configInfo.getPromoName());
+        dto.setPromoText(configInfo.getSaleLabel());
         dto.setPromoTextColor(configInfo.getFontColor());
         dto.setPromoStartTime(roomSale.getStartTime());
         dto.setPromoEndTime(roomSale.getEndTime());
@@ -118,7 +118,7 @@ public class RoomSaleServiceImpl implements RoomSaleService {
         dto.setSalePrice(roomSale.getSalePrice());
         dto.setRoomNo(roomSale.getRoomNo());
         dto.setRoomtypeid(roomSale.getOldRoomTypeId());
-        dto.setUseDescribe(configInfo.getUseDescribe());
+        dto.setUseDescribe(configInfo.getDescription());
         return dto;
     }
 

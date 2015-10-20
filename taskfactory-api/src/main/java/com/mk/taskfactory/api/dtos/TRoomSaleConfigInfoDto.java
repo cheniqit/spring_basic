@@ -1,23 +1,20 @@
-package com.mk.taskfactory.model;
+package com.mk.taskfactory.api.dtos;
 
-import java.sql.Time;
-import java.util.Date;
-
-public class TRoomSaleConfigInfo {
+public class TRoomSaleConfigInfoDto {
     private Integer id;
     private Integer saleTypeId;
-    private Date startDate;
-    private Date endDate;
-    private Time startTime;
-    private Time endTime;
+    private String startDate;
+    private String endDate;
+    private String startTime;
+    private String endTime;
     private String saleValue;
     private String saleLabel;
     private String description;
     private String fontColor;
     private String valid;
-    private Date createTime;
+    private String createTime;
     private String createBy;
-    private Date updateTime;
+    private String updateTime;
     private String updateBy;
 
     public Integer getId() {
@@ -36,35 +33,35 @@ public class TRoomSaleConfigInfo {
         this.saleTypeId = saleTypeId;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public Time getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -108,11 +105,11 @@ public class TRoomSaleConfigInfo {
         this.valid = valid;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -124,11 +121,11 @@ public class TRoomSaleConfigInfo {
         this.createBy = createBy;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 

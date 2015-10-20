@@ -11,4 +11,8 @@ public interface RoomSaleConfigInfoMapper {
 
     public List<TRoomSaleConfigInfo> queryRoomSaleConfigInfoList();
 
+    public TRoomSaleConfigInfo saveRoomSale(TRoomSaleConfigInfo tRoomSaleConfigInfo);
+
+    public int updateRoomSale(TRoomSaleConfigInfo tRoomSaleConfigInfo);
+
 }

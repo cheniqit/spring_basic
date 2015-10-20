@@ -45,7 +45,6 @@ public class ServiceUtils {
         return sendGetRequest(reqURL, charset);
     }
 
-
     public static String doPost(String reqURL, Map<String, String> params, int timeout){
         return sendPostRequestByJava(reqURL, params, timeout);
     }
