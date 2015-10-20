@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 
 public class ServiceUtils {
     private static Logger log = LogUtils.get();
-    private static final int timeout = 3000;
+    private static final int timeout = 30 * 1000;
     private static final String charset = "UTF-8";
 
     public static String doGet(String reqURL){
@@ -46,7 +46,7 @@ public class ServiceUtils {
     }
 
     public static String doPost(String reqURL, Map<String, String> params, int timeout){
-        return sendPostRequestByJava(reqURL, params, timeout);
+        return sendPostRequestByJava(reqURL, params, timeout * 1000);
     }
 
     public static String doPost(String reqURL, Map<String, String> params){
