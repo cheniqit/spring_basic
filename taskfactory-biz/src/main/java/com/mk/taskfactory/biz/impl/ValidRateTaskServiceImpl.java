@@ -98,22 +98,38 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     @Transactional
     public void updateOnline(Date runTime) {
         logger.info("============sales online job >> validRateTaskRun method start===============");
-        //
+
+        //find valid roomSaleType
         TRoomSaleTypeDto typeParam = new TRoomSaleTypeDto();
         typeParam.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleTypeDto> saleTypeDtoList = this.roomSaleTypeService.queryRoomSaleType(typeParam);
         logger.info("============sales online job >> find saleTypeDtoList:" + saleTypeDtoList.size());
 
         //按开始时间更新
-        Date date = null;
-        if (null == runTime) {
-            date = new Date();
-        } else {
-            date = runTime;
-        }
+        Date date = getDate(runTime);
         Time time = getTime(runTime);
 
         //查询指定期间内的CONFIG Info
+        List<TRoomSaleConfigInfoDto> configInfoDtoStartList = getStartedRoomSaleConfigInfo(saleTypeDtoList, date, time);
+
+        //查询指定的CONFIG
+        for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoStartList) {
+            logger.info("============sales online job >> while configInfoDto.id:"
+                    + configInfoDto.getId() + " start");
+            TRoomSaleConfigDto configParam = new TRoomSaleConfigDto();
+            configParam.setValid(ValidEnum.VALID.getId());
+            configParam.setSaleConfigInfoId(configInfoDto.getId());
+            List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(configParam);
+            logger.info("============sales online job >> find RoomSaleConfigList:" + configDtoList.size());
+            for (TRoomSaleConfigDto configDto : configDtoList) {
+                updateConfigOnline(configInfoDto, configDto);
+            }
+        }
+
+        logger.info("============sales online job >> validRateTaskRun method end===============");
+    }
+
+    private List<TRoomSaleConfigInfoDto> getStartedRoomSaleConfigInfo(List<TRoomSaleTypeDto> saleTypeDtoList, Date date, Time time) {
         List<TRoomSaleConfigInfoDto> configInfoDtoStartList = new ArrayList<TRoomSaleConfigInfoDto>();
         for (TRoomSaleTypeDto typeDto : saleTypeDtoList) {
             logger.info("============sales online job >> while TRoomSaleTypeDto.id:" + typeDto.getId());
@@ -131,7 +147,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 Date startDate = configInfoDto.getStartDate();
                 Time startTime = configInfoDto.getStartTime();
 
-                if (time.after(startTime) && runTime.after(startDate)) {
+                if (time.after(startTime) && date.after(startDate)) {
                     logger.info("============sales online job >> while configInfoDto.id:"
                             + configInfoDto.getId() + " start");
                     configInfoDtoStartList.add(configInfoDto);
@@ -141,22 +157,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
             }
         }
+        return configInfoDtoStartList;
+    }
 
-        //查询指定的CONFIG
-        for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoStartList) {
-            logger.info("============sales online job >> while configInfoDto.id:"
-                    + configInfoDto.getId() + " start");
-            TRoomSaleConfigDto configParam = new TRoomSaleConfigDto();
-            configParam.setValid(ValidEnum.VALID.getId());
-            configParam.setSaleConfigInfoId(configInfoDto.getId());
-            List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(configParam);
-            logger.info("============sales online job >> find RoomSaleConfigList:" + configDtoList.size());
-            for (TRoomSaleConfigDto configDto : configDtoList) {
-                updateConfigOnline(configInfoDto, configDto);
-            }
+    private Date getDate(Date runTime) {
+        Date date = null;
+        if (null == runTime) {
+            date = new Date();
+        } else {
+            date = runTime;
         }
-
-        logger.info("============sales online job >> validRateTaskRun method end===============");
+        return date;
     }
 
     private Time getTime(Date runTime) {
