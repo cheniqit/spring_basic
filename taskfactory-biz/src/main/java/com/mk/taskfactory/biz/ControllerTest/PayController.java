@@ -19,11 +19,11 @@ public class PayController  extends DispatcherServlet {
 	private ValidRateTaskService validRateTaskService;
 	@RequestMapping(value = "/testback", method = RequestMethod.POST)
 	@ResponseBody
-	public  ResponseEntity<Map<String, Object>> testAA( ) {
-		validRateTaskService.remove();
+	public  ResponseEntity<String>  testAA( ) {
+		validRateTaskService.dateReback();
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
-		rtnMap.put("code", "111");
-		return new ResponseEntity<Map<String, Object>>(rtnMap, org.springframework.http.HttpStatus.OK);
+		rtnMap.put("code", "222");
+		return new ResponseEntity<String>("123", org.springframework.http.HttpStatus.OK);
 
 	}
 
@@ -31,8 +31,6 @@ public class PayController  extends DispatcherServlet {
 	@ResponseBody
 	public ResponseEntity<String> testBB( ) {
 		validRateTaskService.remove();
-		Map<String, Object> rtnMap = new HashMap<String, Object>();
-		rtnMap.put("code", "111");
 		return new ResponseEntity<String>("111", org.springframework.http.HttpStatus.OK);
 	}
 }
