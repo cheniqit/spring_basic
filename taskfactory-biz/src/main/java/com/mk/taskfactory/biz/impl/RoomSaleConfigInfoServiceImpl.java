@@ -6,6 +6,7 @@ import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.model.TRoomSaleConfig;
+import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,11 @@ public class RoomSaleConfigInfoServiceImpl implements RoomSaleConfigInfoService 
     @Autowired
     private RoomSaleConfigInfoMapper roomSaleConfigInfoMapper;
 
-    public TRoomSaleConfigInfoDto queryRoomSaleConfigById(Integer id){
-        TRoomSaleConfig roomSaleConfig=roomSaleConfigInfoMapper.queryRoomSaleConfigById(id);
+    public TRoomSaleConfigInfoDto queryRoomSaleConfigInfoById(Integer id){
+        TRoomSaleConfigInfo roomSaleConfig=roomSaleConfigInfoMapper.queryRoomSaleConfigById(id);
         return buildTRoomSaleConfigInfoDto(roomSaleConfig);
     }
-    private TRoomSaleConfigInfoDto buildTRoomSaleConfigInfoDto(TRoomSaleConfig bean) {
+    private TRoomSaleConfigInfoDto buildTRoomSaleConfigInfoDto(TRoomSaleConfigInfo bean) {
         if (bean==null){
             return new TRoomSaleConfigInfoDto();
         }
@@ -28,6 +29,5 @@ public class RoomSaleConfigInfoServiceImpl implements RoomSaleConfigInfoService 
         BeanUtils.copyProperties(bean, roomSaleConfigInfoDto);
         return roomSaleConfigInfoDto;
     }
-
 
 }
