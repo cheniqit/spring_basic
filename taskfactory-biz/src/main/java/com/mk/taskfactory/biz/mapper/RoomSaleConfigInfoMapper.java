@@ -14,6 +14,8 @@ public interface RoomSaleConfigInfoMapper {
 
     public int saveRoomSaleConfigInfo(TRoomSaleConfigInfoDto dto);
 
+    public TRoomSaleConfigInfo queryRoomSaleConfigById(Integer Id);
+
     public int updateTRoomSaleConfigInfo(TRoomSaleConfigInfoDto dto);
 
 }

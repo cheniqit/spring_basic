@@ -17,6 +17,19 @@ public class RoomSaleConfigInfoServiceImpl implements RoomSaleConfigInfoService 
     @Autowired
     private RoomSaleConfigInfoMapper roomSaleConfigInfoMapper;
 
+    public TRoomSaleConfigInfoDto queryRoomSaleConfigInfoById(Integer id){
+        TRoomSaleConfigInfo roomSaleConfig=roomSaleConfigInfoMapper.queryRoomSaleConfigById(id);
+        return buildTRoomSaleConfigInfoDto(roomSaleConfig);
+    }
+    private TRoomSaleConfigInfoDto buildTRoomSaleConfigInfoDto(TRoomSaleConfigInfo bean) {
+        if (bean==null){
+            return new TRoomSaleConfigInfoDto();
+        }
+        TRoomSaleConfigInfoDto roomSaleConfigInfoDto=new TRoomSaleConfigInfoDto();
+        BeanUtils.copyProperties(bean, roomSaleConfigInfoDto);
+        return roomSaleConfigInfoDto;
+    }
+
     public List<TRoomSaleConfigInfoDto> queryRoomSaleConfigInfoList(TRoomSaleConfigInfoDto dto) {
         List<TRoomSaleConfigInfo> configInfoList = this.roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(dto);
         List<TRoomSaleConfigInfoDto> resultList = new ArrayList<TRoomSaleConfigInfoDto>();

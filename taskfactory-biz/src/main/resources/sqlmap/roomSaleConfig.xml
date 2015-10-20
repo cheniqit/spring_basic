@@ -186,4 +186,17 @@
         valid =  #{valid}
         WHERE  id= #{id}
     </update>
+
+    <update id="updateRoomSaleConfigStarted" parameterType="java.util.Map" >
+        update t_room_sale_config
+        set
+        started =  #{isStart}
+        WHERE  id= #{id}
+    </update>
+    <select id="queryRoomSaleConfigById" resultMap="roomSaleConfig" parameterType="java.lang.Integer">
+        SELECT
+        id,<include refid="Base_Column_List"/>
+        FROM  t_room_sale_config
+        where   id = #{id}
+    </select>
 </mapper>

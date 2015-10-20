@@ -2,7 +2,9 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
+import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.model.TRoomTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ public class ValidRateTaskLogicServiceImpl {
     private BasePriceService basePriceService;
     @Autowired
     private HotelRemoteService hotelRemoteService;
+    @Autowired
+    private RoomTypeInfoMapper roomTypeInfoMapper;
 
     @Transactional
     public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
@@ -121,34 +125,45 @@ public class ValidRateTaskLogicServiceImpl {
         Integer newRoomTypeId = null;
         try{
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(roomTypeDto.getId());
-            //将原价格存起
+            if(roomTypeModel == null || roomTypeModel.getId() == null){
+                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find TRoomTypeDto is null params roomTypeId[%s]===============", roomTypeDto.getId()));
+            }
+            //初始化t_roomtype
             roomTypeModel.setRoomNum(roomTypeDto.getRoomNum());
             roomTypeModel.setCost(roomTypeDto.getCost());
             roomTypeModel.setName(roomTypeDto.getName());
-            roomTypeService.saveTRoomType(roomTypeModel);
-            newRoomTypeId = roomTypeModel.getId();
-            //得到房价对应配置信息
+            newRoomTypeId = roomTypeService.saveTRoomType(roomTypeModel);
+            //初始化t_roomtype_info
+            TRoomTypeInfoDto findRoomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(roomTypeDto.getId());
+            if(findRoomTypeInfo == null || findRoomTypeInfo.getId() == null){
+                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", roomTypeDto.getId()));
+            }
+            findRoomTypeInfo.setRoomTypeId(newRoomTypeId);
+            roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
+            //初始化t_roomtype_facility
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(roomTypeDto.getId());
+            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
+                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", roomTypeDto.getId()));
+            }
             for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
             }
-            //处理价格
+            //初始化t_baseprice
             //先查找新房间类型的价格是否有，如果有则只需要更新
             TBasePriceDto newBasePriceDto = basePriceService.findByRoomtypeId(newRoomTypeId.longValue());
             if(newBasePriceDto == null){
                 TBasePriceDto oldBasePriceDto = basePriceService.findByRoomtypeId(new Long(roomTypeDto.getId()));
                 //根据配置文件的价格规则算出价格设置到base Price表中
                 if(oldBasePriceDto == null || oldBasePriceDto.getId() == null){
-                    throw new RuntimeException(String.format("saveBasePriceService tBasePriceDto id is null >> tRoomSaleConfigDto roomTypeId[%s]", tRoomSaleConfigDto.getRoomTypeId()));
+                    throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto  >> find tBasePriceDto id is null roomTypeId[%s]", roomTypeDto.getId()));
                 }
                 oldBasePriceDto.setRoomtypeid(newRoomTypeId.longValue());
                 saveBasePrice(tRoomSaleConfigDto, oldBasePriceDto);
             }else {
                 updateBasePrice(tRoomSaleConfigDto, newBasePriceDto);
             }
-
-            //回填
+            //回填config信息
             tRoomSaleConfigDto.setSaleRoomTypeId(newRoomTypeId);
             roomSaleConfigService.updateRoomSaleConfig(tRoomSaleConfigDto);
         }catch (Exception e){

@@ -2,6 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleService;
 import com.mk.taskfactory.api.dtos.RoomSaleToOtsDto;
+import com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleMapper;
@@ -74,7 +75,8 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     public List<RoomSaleToOtsDto> querySaleRoom(TRoomSaleDto bean) {
         bean.setIsBack("F");
         List<TRoomSale> roomSaleList = this.roomSaleMapper.queryRoomSale(bean);
-        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList();
+        TRoomSaleConfigInfoDto tRoomSaleConfigInfoDto = new TRoomSaleConfigInfoDto();
+        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfoDto);
         Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
         for (TRoomSaleConfigInfo configInfo:configInfos){
             configInfoMap.put(configInfo.getSaleTypeId(),configInfo);
@@ -93,7 +95,8 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     }
     public RoomSaleToOtsDto getHotelSaleByHotelId(Integer hotelId) {
         TRoomSale roomSale = roomSaleMapper.getHotelSaleByHotelId(hotelId);
-        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList();
+        TRoomSaleConfigInfoDto dto = new TRoomSaleConfigInfoDto();
+        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(dto);
         Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
         for (TRoomSaleConfigInfo configInfo:configInfos){
             configInfoMap.put(configInfo.getSaleTypeId(),configInfo);

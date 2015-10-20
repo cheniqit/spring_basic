@@ -18,5 +18,8 @@ public interface RoomSaleConfigService {
 
     public Integer updateRoomSaleConfigValid(Integer id, String valid);
 
+    public Integer updateRoomSaleConfigStarted(Integer id, String isStart);
+
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid);
+    public TRoomSaleConfigDto  queryRoomSaleConfigById(Integer id);
 }

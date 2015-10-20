@@ -7,7 +7,7 @@ import com.mk.taskfactory.model.TRoomTypeInfo;
 @MyBatisRepository
 public interface RoomTypeInfoMapper {
     public void deleteByRoomType(Integer roomTypeId);
-    public TRoomTypeInfo findByRoomTypeId(Integer roomTypeId);
+    public TRoomTypeInfoDto findByRoomTypeId(Integer roomTypeId);
     public Integer saveRoomTypeInfo(TRoomTypeInfoDto bean);
 
 }

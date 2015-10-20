@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface RoomSaleConfigInfoService {
 
+    public TRoomSaleConfigInfoDto queryRoomSaleConfigInfoById(Integer id);
+
     public List<TRoomSaleConfigInfoDto> queryRoomSaleConfigInfoList(TRoomSaleConfigInfoDto dto);
 
     public int saveRoomSaleConfigInfo(TRoomSaleConfigInfoDto dto);
