@@ -290,7 +290,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = dto.getEndDate();
+                java.sql.Date endDate = dto.get;
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(endDate);
                 cal.add(Calendar.DATE, 1);
