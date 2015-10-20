@@ -125,8 +125,6 @@ public class ValidRateTaskLogicServiceImpl {
             }
             int configRoomTypeId = tRoomSaleConfigDto.getRoomTypeId();
             //初始化t_roomtype
-            TRoomTypeDto roomTypeDto = new TRoomTypeDto();
-            //如果房型不存在map中
             roomTypeModel.setCost(tRoomSaleConfigDto.getCostPrice());
             roomTypeModel.setName(tRoomSaleConfigDto.getSaleName());
             roomTypeModel.setRoomNum(tRoomSaleConfigDto.getNum());
