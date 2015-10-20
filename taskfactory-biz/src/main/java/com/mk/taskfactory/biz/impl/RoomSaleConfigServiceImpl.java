@@ -3,6 +3,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleConfigService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
+import com.mk.taskfactory.api.dtos.ValueTypeEnum;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper;
 import com.mk.taskfactory.model.TRoomSaleConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,7 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         }
         TRoomSaleConfigDto roomSaleConfigDto=new TRoomSaleConfigDto();
         BeanUtils.copyProperties(bean, roomSaleConfigDto);
+        roomSaleConfigDto.setSettleType(ValueTypeEnum.getById(bean.getSettleType()));
         return roomSaleConfigDto;
     }
 
