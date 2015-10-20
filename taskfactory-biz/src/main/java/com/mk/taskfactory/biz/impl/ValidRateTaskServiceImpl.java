@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -386,9 +387,14 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         if (ValueTypeEnum.TYPE_TO == valueTypeEnum) {
             return value;
         } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
-            return baseValue.subtract(value);
+            BigDecimal result = baseValue.subtract(value);
+            if (result.compareTo(BigDecimal.ZERO) > 0 ) {
+                return result;
+            }else {
+                return BigDecimal.ZERO;
+            }
         } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
-            return baseValue.multiply(value).divide(new BigDecimal(100));
+            return baseValue.multiply(value).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         } else {
             return baseValue;
         }
