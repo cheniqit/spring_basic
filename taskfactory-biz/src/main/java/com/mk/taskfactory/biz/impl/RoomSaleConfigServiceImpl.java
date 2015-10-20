@@ -62,6 +62,10 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         hm.put("isStart", isStart);
         return   roomSaleConfigMapper.updateRoomSaleConfigStarted(hm);
     }
+    public TRoomSaleConfigDto queryRoomSaleConfigById(Integer id){
+        TRoomSaleConfig roomSaleConfig=roomSaleConfigMapper.queryRoomSaleConfigById(id);
+        return buildTRoomSaleConfigDto(roomSaleConfig);
+    }
 
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid){
         if(StringUtils.isEmpty(valid)){

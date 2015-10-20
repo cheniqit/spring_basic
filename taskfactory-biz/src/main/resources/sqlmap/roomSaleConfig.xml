@@ -190,4 +190,10 @@
         started =  #{isStart}
         WHERE  id= #{id}
     </update>
+    <select id="queryRoomSaleConfigById" resultMap="roomSaleConfig" parameterType="java.lang.Integer">
+        SELECT
+        id,<include refid="Base_Column_List"/>
+        FROM  t_room_sale_config
+        where   id = #{id}
+    </select>
 </mapper>
