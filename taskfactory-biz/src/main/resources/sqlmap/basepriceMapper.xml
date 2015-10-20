@@ -36,4 +36,7 @@
     update t_baseprice set roomtypeid=#{roomtypeid},price=#{price}, subprice=#{subprice}, subper=#{subper}, updateTime = SYSDATE() where
     id=#{id}
   </update>
+  <delete id="deleteBasePriceByRoomType" parameterType="java.lang.Integer">
+    delete from t_baseprice where roomTypeId = #{roomTypeId}
+  </delete>
 </mapper>

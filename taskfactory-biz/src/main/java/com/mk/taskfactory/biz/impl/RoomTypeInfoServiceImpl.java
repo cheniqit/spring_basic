@@ -19,7 +19,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
         this.roomTypeInfoMapper.deleteByRoomType(roomTypeId);
     }
     public TRoomTypeInfoDto findByRoomTypeId(Integer roomTypeId){
-        TRoomTypeInfo roomTypeInfo=roomTypeInfoMapper.findByRoomTypeId(roomTypeId);
+        TRoomTypeInfoDto roomTypeInfo=roomTypeInfoMapper.findByRoomTypeId(roomTypeId);
         if (roomTypeInfo==null){
             return  null;
         }
@@ -28,7 +28,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
     public Integer saveRoomTypeInfo(TRoomTypeInfoDto bean){
         return  roomTypeInfoMapper.saveRoomTypeInfo(bean);
     }
-    private TRoomTypeInfoDto buildTRoomTypeInfoDto(TRoomTypeInfo bean) {
+    private TRoomTypeInfoDto buildTRoomTypeInfoDto(TRoomTypeInfoDto bean) {
         if (bean==null){
             return new TRoomTypeInfoDto();
         }

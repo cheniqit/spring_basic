@@ -1,7 +1,8 @@
 package com.mk.taskfactory.api.dtos;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
 
 public class TRoomSaleConfigDto {
     private Integer id;
@@ -27,8 +28,8 @@ public class TRoomSaleConfigDto {
     private Integer saleTypeId;
     private Date startDate;
     private Date endDate;
-    private String startTime;
-    private String endTime;
+    private Time startTime;
+    private Time endTime;
     private String saleValue;
     private String saleLabel;
     private String description;
@@ -219,19 +220,19 @@ public class TRoomSaleConfigDto {
         this.endDate = endDate;
     }
 
-    public String getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 

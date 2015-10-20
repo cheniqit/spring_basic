@@ -40,8 +40,6 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
         for (TRoomSaleDto roomSaleDto : roomSaleDtoList) {
             Integer roomTypeId = roomSaleDto.getRoomTypeId();
             Integer oldRoomTypeId = roomSaleDto.getOldRoomTypeId();
-            TRoomSaleConfigDto roomSaleConfigDto=roomSaleConfigService.queryRoomSaleConfigById(roomSaleDto.getConfigId());
-            TRoomSaleConfigInfoDto roomSaleConfigInfoDto=roomSaleConfigInfoService.queryRoomSaleConfigInfoById(roomSaleConfigDto.getSaleConfigInfoId());
             if (null == roomTypeId || null == oldRoomTypeId) {
                 //TODO log
                 continue;

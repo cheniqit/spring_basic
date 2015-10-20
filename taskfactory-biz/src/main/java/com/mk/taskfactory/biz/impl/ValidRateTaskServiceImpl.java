@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,14 +40,23 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomSaleService roomSaleService;
     @Autowired
     private BasePriceService basePriceService;
+
+    @Autowired
+    private RoomSaleTypeService roomSaleTypeService;
+    @Autowired
+    private RoomSaleConfigInfoService roomSaleConfigInfoService;
     @Autowired
     private ValidRateTaskLogicServiceImpl validRateTaskLogicService;
+    @Autowired
+    private RoomTypeInfoService roomTypeInfoService;
+    @Autowired
+    private RoomTypeFacilityService roomTypeFacilityService;
 
 
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
         //当前时间是否在config中
-        TRoomSaleConfigInfo tRoomSaleConfigInfo = new TRoomSaleConfigInfo();
+        TRoomSaleConfigInfoDto tRoomSaleConfigInfo = new TRoomSaleConfigInfoDto();
         String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
         tRoomSaleConfigInfo.setMatchDate(matchDate);
         tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
@@ -93,13 +103,32 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     @Transactional
     public void updateOnline(Date runTime) {
         logger.info("============sales online job >> validRateTaskRun method start===============");
+        //
+        TRoomSaleTypeDto typeParam = new TRoomSaleTypeDto();
+        typeParam.setValid(ValidEnum.VALID.getId());
+        List<TRoomSaleTypeDto> saleTypeDtoList = this.roomSaleTypeService.queryRoomSaleType(typeParam);
+
+        //按开始时间更新
+        Time time = getTime(runTime);
+        List<TRoomSaleConfigInfoDto> configInfoDtoStartList = new ArrayList<TRoomSaleConfigInfoDto>();
+        for (TRoomSaleTypeDto typeDto : saleTypeDtoList) {
+            Integer typeId = typeDto.getId();
+            TRoomSaleConfigInfoDto configInfoParam = new TRoomSaleConfigInfoDto();
+            configInfoParam.setSaleTypeId(typeId);
+            configInfoParam.setValid(ValidEnum.VALID.getId());
+
+            List<TRoomSaleConfigInfoDto> configInfoDtoList = roomSaleConfigInfoService.queryRoomSaleConfigInfoList(configInfoParam);
+
+            for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoList) {
+                Time startTime = configInfoDto.getStartTime();
+            }
+            configInfoDtoStartList.addAll(configInfoDtoList);
+        }
 
         //查询指定期间内的CONFIG
         List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
 
         logger.info("============sales online job >> find configDtoList=======" + configDtoList.size());
-        //按开始时间更新
-        Time time = getTime(runTime);
         for (TRoomSaleConfigDto configDto : configDtoList) {
             updateConfigOnline(time, configDto);
         }
@@ -145,42 +174,42 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //检查是否开始
-        Time startTime = configDto.getStartTime();
-        if (time.after(startTime)) {
-            logger.info("============sales online job >> configDto.id:" + configDto.getId() + " after startTime");
-            int hotelId = configDto.getHotelId();
-            int roomTypeId = configDto.getRoomTypeId();
-            Integer roomId = configDto.getRoomId();
-            Integer num = configDto.getNum();
-            logger.info("============sales online job >> configDto.id:" + configDto.getId()
-                    + " roomTypeId:" + roomTypeId + " saleRoomTypeId:" + saleRoomTypeId);
-
-            //OTS房态
-            OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
-            List<Integer> roomVCList = roomStateDto.getRoomIdList();
-            int roomVCSize = roomVCList.size();
-            logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " get roomVCSize:"+roomVCSize);
-
-            //按num数量抽取房间
-            List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
-            logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " get onSaleRoomList:" + onSaleRoomList.size());
-
-            //更新房间上线
-            TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
-            for (Integer onSaleRoomId : onSaleRoomList) {
-                updateRoomOnline(configDto, roomTypeDto, onSaleRoomId);
-            }
-            //更新config started
-            configDto.setStarted(ValidEnum.VALID.getId());
-            this.roomSaleConfigService.updateRoomSaleConfig(configDto);
-            logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " to started");
-        } else {
-            logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " not after startTime, continue");
-        }
+//        Time startTime = configDto.getStartTime();
+//        if (time.after(startTime)) {
+//            logger.info("============sales online job >> configDto.id:" + configDto.getId() + " after startTime");
+//            int hotelId = configDto.getHotelId();
+//            int roomTypeId = configDto.getRoomTypeId();
+//            Integer roomId = configDto.getRoomId();
+//            Integer num = configDto.getNum();
+//            logger.info("============sales online job >> configDto.id:" + configDto.getId()
+//                    + " roomTypeId:" + roomTypeId + " saleRoomTypeId:" + saleRoomTypeId);
+//
+//            //OTS房态
+//            OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
+//            List<Integer> roomVCList = roomStateDto.getRoomIdList();
+//            int roomVCSize = roomVCList.size();
+//            logger.info("============sales online job >> configDto.id:"
+//                    + configDto.getId() + " get roomVCSize:"+roomVCSize);
+//
+//            //按num数量抽取房间
+//            List<Integer> onSaleRoomList = buildOnSaleRoomList(roomId, num, roomVCList, roomVCSize);
+//            logger.info("============sales online job >> configDto.id:"
+//                    + configDto.getId() + " get onSaleRoomList:" + onSaleRoomList.size());
+//
+//            //更新房间上线
+//            TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
+//            for (Integer onSaleRoomId : onSaleRoomList) {
+//                updateRoomOnline(configDto, roomTypeDto, onSaleRoomId);
+//            }
+//            //更新config started
+//            configDto.setStarted(ValidEnum.VALID.getId());
+//            this.roomSaleConfigService.updateRoomSaleConfig(configDto);
+//            logger.info("============sales online job >> configDto.id:"
+//                    + configDto.getId() + " to started");
+//        } else {
+//            logger.info("============sales online job >> configDto.id:"
+//                    + configDto.getId() + " not after startTime, continue");
+//        }
     }
 
     private void updateRoomOnline(TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto, Integer onSaleRoomId) {
@@ -249,10 +278,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
 
-        BigDecimal settleValue =
-                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " settleValue:" + settleValue.toString());
+//        BigDecimal settleValue =
+//                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+//        logger.info("============sales online job >> configDto.id:"
+//                + configDto.getId() + " settleValue:" + settleValue.toString());
 
         //
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -268,8 +297,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setSalePrice(basePriceDto.getPrice());
         roomSaleDto.setCostPrice(roomTypeDto.getCost());
 
-        roomSaleDto.setStartTime(timeFormat.format(configDto.getStartDate()));
-        roomSaleDto.setEndTime(timeFormat.format(configDto.getEndDate()));
+//        roomSaleDto.setStartTime(timeFormat.format(configDto.getStartDate()));
+//        roomSaleDto.setEndTime(timeFormat.format(configDto.getEndDate()));
         roomSaleDto.setRoomId(roomId);
         roomSaleDto.setConfigId(configDto.getId());
         roomSaleDto.setIsBack(ValidEnum.DISVALID.getId());
@@ -277,7 +306,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setSaleType(configDto.getStyleType());
         roomSaleDto.setHotelId(configDto.getHotelId());
 
-        roomSaleDto.setSettleValue(settleValue);
+//        roomSaleDto.setSettleValue(settleValue);
         this.roomSaleService.saveRoomSale(roomSaleDto);
     }
 
@@ -304,24 +333,41 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = dto.get;
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(endDate);
-                cal.add(Calendar.DATE, 1);
-                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime());
+
                 try {
+
                     //比较活动结束日期和当前日期
-                    if (!DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd"), "yyyy-MM-dd")) {
+
                         //比较活动结束时间和当前时间
                         String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        if (!DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
+                        if (!DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
                             if(bl){
-                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(),ValidEnum.DISVALID.getId());
+                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
+                                java.sql.Date endDate = dto.getEndDate();
+                                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(endDate);
+                                String nowDate =DateUtils.getStringDate("yyyy-MM-dd");
+                                DateFormat dafShort=new SimpleDateFormat("yyyy-MM-dd");
+                                Date a=dafShort.parse(nowDate);
+                                Date b=dafShort.parse(endDateComp);
+                                if (!a.before(b)) {
+                                    roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
+                                /*
+                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                                 */
+                                    roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
+
+                                 /*
+                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                                 */
+                                    roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
+                                    basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+                                }
                             }
+
                         }
-                    }
+
                 } catch (ParseException e){
                 }
             }
@@ -333,11 +379,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = dto.getEndDate();
+                java.sql.Date endDate = null;//dto.getEndDate();
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(endDate);
                 cal.add(Calendar.DATE, 1);
-                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
+                String endDateComp = null;//(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
                 try {
                     //比较活动结束日期和当前日期
                     if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
