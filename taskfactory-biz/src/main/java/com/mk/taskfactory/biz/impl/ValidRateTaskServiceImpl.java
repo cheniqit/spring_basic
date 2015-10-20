@@ -56,6 +56,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         tRoomSaleConfigInfo.setMatchDate(matchDate);
         tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleConfigInfo> tRoomSaleConfigInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfo);
+        if(CollectionUtils.isEmpty(tRoomSaleConfigInfos)){
+            logger.info(String.format("====================init sales config job >> validRateTaskRun method config info list isEmpty end===================="));
+            return;
+        }
         for(TRoomSaleConfigInfo configInfo : tRoomSaleConfigInfos){
             initTRoomSaleConfigDtoList(configInfo);
         }
@@ -77,7 +81,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //读取活动配置表数
         List<TRoomSaleConfigDto> list=roomSaleConfigService.queryRoomSaleConfigByParams(roomSaleConfigDto);
         if (CollectionUtils.isEmpty(list)){
-            logger.info(String.format("====================init sales config job >> validRateTaskRun method list isEmpty end===================="));
+            logger.info(String.format("====================init sales config job >> validRateTaskRun method config list isEmpty end===================="));
             return;
         }
         //初始化数据
