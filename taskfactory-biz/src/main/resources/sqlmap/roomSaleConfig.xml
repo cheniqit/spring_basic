@@ -99,44 +99,15 @@
     <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="String">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
-        <where>
-            <if test="hotelId != null">
-                AND b.hotelId = #{hotelId}
-            </if>
-            <if test="roomId != null">
-                AND b.roomId = #{roomId}
-            </if>
-            <if test="roomTypeId != null">
-                AND b.roomTypeId = #{roomTypeId}
-            </if>
-            <if test="startDate != null">
-                <![CDATA[  AND startDate >= #{startDate}]]>
-            </if>
-            <if test="endDate != null">
-                <![CDATA[  AND endDate <= #{endDate} ]]>
-            </if>
-            <if test="startDate != null">
-                <![CDATA[  AND startDate >= #{startDate}]]>
-            </if>
-            <if test="endTime != null">
-                <![CDATA[  AND endTime <= #{endTime} ]]>
-            </if>
-            <if test="valid != null">
-                AND valid = #{valid}
-            </if>
-            <if test="saleRoomTypeId != null">
-                AND saleRoomTypeId = #{saleRoomTypeId}
-            </if>
-            <if test="settleValue != null">
-                AND settleValue = #{settleValue}
-            </if>
-            <if test="settleType != null">
-                AND settleType = #{settleType}
-            </if>
-        </where>
+        FROM  t_room_sale_config_info
+           WHERE valid = #{valid}
     </select>
-
+    <select id="queryRoomSaleConfigByStarted" resultMap="roomSaleConfig" parameterType="String">
+        SELECT
+        a.id,<include refid="Base_Column_List"/>,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,fontColor
+        FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
+        WHERE b.Started = #{started}
+    </select>
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto"
             useGeneratedKeys="true" keyProperty="id" >

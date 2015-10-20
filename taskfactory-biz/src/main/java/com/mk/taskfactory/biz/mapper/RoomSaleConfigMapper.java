@@ -18,6 +18,7 @@ public interface RoomSaleConfigMapper {
     public  Integer  updateRoomSaleConfigValid(HashMap mp);
     public  Integer  updateRoomSaleConfigStarted(HashMap hm);
     public List<TRoomSaleConfig> queryRoomSaleConfigByValid(String  valid);
+    public List<TRoomSaleConfig> queryRoomSaleConfigByStarted(String  started);
     public TRoomSaleConfig queryRoomSaleConfigById(Integer id);
 
 }

@@ -330,7 +330,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
     //数据回复
     public void dateReback() {
-        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByStarted(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
 
