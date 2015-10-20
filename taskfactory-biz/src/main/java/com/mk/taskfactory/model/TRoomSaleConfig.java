@@ -9,8 +9,8 @@ public class TRoomSaleConfig {
     private Integer roomId;
     private Integer roomTypeId;
     private Integer saleType;
-    private BigDecimal salePrice;
-    private BigDecimal costPrice;
+    private BigDecimal saleValue;
+    private BigDecimal costValue;
     private Integer num;
     private String saleName;
     private BigDecimal settleValue;

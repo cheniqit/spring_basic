@@ -180,7 +180,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         String strTime = timeFormat.format(formatTime);
 
         //
@@ -313,7 +313,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
         //
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = getDateTime(configInfoDto.getStartDate(),configInfoDto.getStartTime());
         Date endDate = getDateTime(configInfoDto.getEndDate(),configInfoDto.getEndTime());
 
@@ -347,8 +347,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return  new Date();
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         String strDate = dateFormat.format(date);
         String strTime = timeFormat.format(time);
