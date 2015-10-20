@@ -1,6 +1,7 @@
 package com.mk.taskfactory.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class TRoomSaleConfig {
     private Integer id;
@@ -18,9 +19,9 @@ public class TRoomSaleConfig {
     private Integer styleType;
     private String started;
     private Integer saleConfigInfoId;
-    private String createTime;
+    private Date createTime;
     private String createBy;
-    private String updateTime;
+    private Date updateTime;
     private String updateBy;
     private Integer saleRoomTypeId;
 
@@ -144,11 +145,11 @@ public class TRoomSaleConfig {
         this.saleConfigInfoId = saleConfigInfoId;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
@@ -160,11 +161,11 @@ public class TRoomSaleConfig {
         this.createBy = createBy;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 

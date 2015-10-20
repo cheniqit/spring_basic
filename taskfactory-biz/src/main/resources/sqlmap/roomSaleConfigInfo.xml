@@ -56,10 +56,10 @@
                 AND updateBy = #{updateBy}
             </if>
             <if test="matchDate != null">
-                <![CDATA[  AND startDate < #{matchDate}]]>
+                <![CDATA[  AND startDate <= #{matchDate}]]>
             </if>
             <if test="matchDate != null">
-                <![CDATA[  AND endDate > #{matchDate} ]]>
+                <![CDATA[  AND endDate >= #{matchDate} ]]>
             </if>
         </where>
     </sql>
@@ -68,7 +68,7 @@
        saleTypeId,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,
        fontColor,valid,createTime,createBy,updateTime,updateBy
     </sql>
-    <insert id="saveRoomSale"  useGeneratedKeys="true" keyProperty="id" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
+    <insert id="saveRoomSaleConfigInfo"  useGeneratedKeys="true" keyProperty="id" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         INSERT INTO t_room_sale_config_info
         (<include refid="Base_Column_List"/>)
         VALUE
@@ -80,7 +80,7 @@
 
     <select id="queryRoomSaleConfigInfoList" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         SELECT
-        id,<include refid="BaseResultMap"/>
+        id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config_info
         <include refid="Base_Query_List"/>
     </select>
