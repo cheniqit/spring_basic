@@ -184,7 +184,7 @@
                 saleRoomTypeId=#{saleRoomTypeId},
             </if>
             <if test="settleType != null" >
-                settleType=#{settleType},
+                settleType=#{settleType.id},
             </if>
             <if test="valid != null" >
                 valid=#{valid},
