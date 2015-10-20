@@ -8,8 +8,8 @@
 	    <result property="roomId" column="roomId" />
         <result property="roomTypeId" column="roomTypeId" />
         <result property="saleType" column="saleType"/>
-          <result property="saleValue" column="saleValue" />
-          <result property="costPrice" column="costPrice" />
+        <result property="saleValue" column="saleValue" />
+        <result property="costPrice" column="costPrice" />
         <result property="num" column="num" />
         <result property="saleName" column="saleName" />
         <result property="settleValue" column="settleValue" />
@@ -28,7 +28,6 @@
         <result property="endDate" column="endDate" />
         <result property="startTime" column="startTime" />
         <result property="endTime" column="endTime" />
-        <result property="saleValue" column="saleValue" />
         <result property="saleLabel" column="saleLabel" />
         <result property="description" column="description" />
         <result property="fontColor" column="fontColor" />
