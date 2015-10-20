@@ -35,6 +35,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
+import org.springframework.util.CollectionUtils;
 
 public class ServiceUtils {
     private static Logger log = LogUtils.get();
@@ -252,9 +253,12 @@ public class ServiceUtils {
      */
     public static String sendPostRequestByJava(String reqURL, Map<String, String> params, int timeout){
         StringBuilder sendData = new StringBuilder();
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            sendData.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+        if(!CollectionUtils.isEmpty(params)){
+            for(Map.Entry<String, String> entry : params.entrySet()){
+                sendData.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+            }
         }
+
         if(sendData.length() > 0){
             sendData.setLength(sendData.length() - 1); //删除最后一个&符号
         }

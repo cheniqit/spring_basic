@@ -78,7 +78,7 @@
         )
     </insert>
 
-    <select id="queryRoomSaleConfigInfoList" parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto" resultMap="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
+    <select id="queryRoomSaleConfigInfoList"  resultMap="BaseResultMap"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto">
         SELECT
         id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config_info
@@ -121,9 +121,9 @@
         </set>
         <include refid="Base_Query_List"/>
     </update>
-    <select id="queryRoomSaleConfigInfoList"  resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <select id="queryRoomSaleConfigById"  resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         SELECT
-        id,<include refid="BaseResultMap"/>
+        id,<include refid="Base_Column_List"/>
         FROM  t_room_sale_config_info
         WHERE  id=#{id}
     </select>
