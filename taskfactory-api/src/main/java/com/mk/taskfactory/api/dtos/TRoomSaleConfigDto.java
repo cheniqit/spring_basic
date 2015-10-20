@@ -15,7 +15,7 @@ public class TRoomSaleConfigDto {
     private Integer num;
     private String saleName;
     private BigDecimal settleValue;
-    private Integer settleType;
+    private ValueTypeEnum settleType;
     private String valid;
     private Integer styleType;
     private String started;
@@ -116,11 +116,11 @@ public class TRoomSaleConfigDto {
         this.settleValue = settleValue;
     }
 
-    public Integer getSettleType() {
+    public ValueTypeEnum getSettleType() {
         return settleType;
     }
 
-    public void setSettleType(Integer settleType) {
+    public void setSettleType(ValueTypeEnum settleType) {
         this.settleType = settleType;
     }
 

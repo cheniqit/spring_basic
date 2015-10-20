@@ -63,7 +63,6 @@
             </if>
         </where>
     </sql>
-
     <sql id="Base_Column_List" >
        saleTypeId,startDate,endDate,startTime,endTime,saleValue,saleLabel,description,
        fontColor,valid,createTime,createBy,updateTime,updateBy
@@ -84,7 +83,6 @@
          FROM  t_room_sale_config_info
         <include refid="Base_Query_List"/>
     </select>
-
     <update id="updateTRoomSaleConfigInfo" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         update t_room_sale_config_info
         <set>
@@ -97,6 +95,14 @@
         <if test="endDate != null">
             endDate = #{endDate},
         </if>
+
+        <if test="startTime != null">
+            startTime = #{startTime},
+        </if>
+        <if test="endTime != null">
+            endTime = #{endTime},
+        </if>
+
         <if test="saleValue != null">
             saleValue = #{saleValue},
         </if>
@@ -115,9 +121,15 @@
         <if test="createBy != null">
             createBy = #{createBy},
         </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
         <if test="updateBy != null">
             updateBy = #{updateBy},
         </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
         </set>
         <include refid="Base_Query_List"/>
     </update>

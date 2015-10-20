@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.Date;
 
 public class TRoomSaleConfigInfo {
+
     private Integer id;
     private Integer saleTypeId;
     private Date startDate;
@@ -19,7 +20,6 @@ public class TRoomSaleConfigInfo {
     private String createBy;
     private Date updateTime;
     private String updateBy;
-    private String matchDate;
 
     public Integer getId() {
         return id;
@@ -139,13 +139,5 @@ public class TRoomSaleConfigInfo {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
-    }
-
-    public String getMatchDate() {
-        return matchDate;
-    }
-
-    public void setMatchDate(String matchDate) {
-        this.matchDate = matchDate;
     }
 }
