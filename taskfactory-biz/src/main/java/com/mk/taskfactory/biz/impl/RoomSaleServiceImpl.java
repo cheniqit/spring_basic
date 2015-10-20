@@ -75,8 +75,8 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     public List<RoomSaleToOtsDto> querySaleRoom(TRoomSaleDto bean) {
         bean.setIsBack("F");
         List<TRoomSale> roomSaleList = this.roomSaleMapper.queryRoomSale(bean);
-        TRoomSaleConfigInfoDto dto = new TRoomSaleConfigInfoDto();
-        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(dto);
+        TRoomSaleConfigInfoDto tRoomSaleConfigInfoDto = new TRoomSaleConfigInfoDto();
+        List<TRoomSaleConfigInfo> configInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfoDto);
         Map<Integer,TRoomSaleConfigInfo> configInfoMap=new HashMap<Integer, TRoomSaleConfigInfo>();
         for (TRoomSaleConfigInfo configInfo:configInfos){
             configInfoMap.put(configInfo.getSaleTypeId(),configInfo);
