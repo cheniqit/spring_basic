@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,6 +47,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomSaleConfigInfoService roomSaleConfigInfoService;
     @Autowired
     private ValidRateTaskLogicServiceImpl validRateTaskLogicService;
+    @Autowired
+    private RoomTypeInfoService roomTypeInfoService;
+    @Autowired
+    private RoomTypeFacilityService roomTypeFacilityService;
 
 
     public void validRateTaskRun(){
@@ -332,24 +337,41 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = null;
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(endDate);
-                cal.add(Calendar.DATE, 1);
-                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime());
+
                 try {
+
                     //比较活动结束日期和当前日期
-                    if (!DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd"), "yyyy-MM-dd")) {
+
                         //比较活动结束时间和当前时间
-                        String endTimeComp = null;//DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
+                        String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        if (!DateUtils.getCompareResult(nowTimeComp, endTimeComp, "yyyy-MM-dd HH:mm")) {
+                        if (!DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
                             if(bl){
-                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(),ValidEnum.DISVALID.getId());
+                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
+                                java.sql.Date endDate = dto.getEndDate();
+                                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(endDate);
+                                String nowDate =DateUtils.getStringDate("yyyy-MM-dd");
+                                DateFormat dafShort=new SimpleDateFormat("yyyy-MM-dd");
+                                Date a=dafShort.parse(nowDate);
+                                Date b=dafShort.parse(endDateComp);
+                                if (!a.before(b)) {
+                                    roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
+                                /*
+                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                                 */
+                                    roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
+
+                                 /*
+                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                                 */
+                                    roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
+                                    basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+                                }
                             }
+
                         }
-                    }
+
                 } catch (ParseException e){
                 }
             }

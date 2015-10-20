@@ -1,10 +1,7 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.*;
-import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleDto;
-import com.mk.taskfactory.api.dtos.TRoomTypeDto;
+import com.mk.taskfactory.api.dtos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +30,9 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
 
     @Autowired
     private RoomSaleConfigService roomSaleConfigService;
+
+    @Autowired
+    private RoomSaleConfigInfoService roomSaleConfigInfoService;
     public void onSaleFallback() {
 
         //需要回退的结果
@@ -40,8 +40,6 @@ public class OnSaleFallbackServiceImpl implements OnSaleFallbackService {
         for (TRoomSaleDto roomSaleDto : roomSaleDtoList) {
             Integer roomTypeId = roomSaleDto.getRoomTypeId();
             Integer oldRoomTypeId = roomSaleDto.getOldRoomTypeId();
-            TRoomSaleConfigDto roomSaleConfigDto=roomSaleConfigService.queryRoomSaleConfigById(roomSaleDto.getConfigId());
-
             if (null == roomTypeId || null == oldRoomTypeId) {
                 //TODO log
                 continue;
