@@ -442,7 +442,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         //比较活动结束时间和当前时间
                         String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
+                        SimpleDateFormat daf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                        java.util.Date nowTime=daf.parse(nowTimeComp);
+                        java.util.Date endTime = daf.parse(endTimeComp);
+                        if ( nowTime.compareTo(endTime)>= 0) {
+                        //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
                             if(bl){
                                 roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
@@ -464,6 +469,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                     roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
                                     basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
                                 }
+
                             }
 
                         }
@@ -516,6 +522,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             this.updateRoom(saleTo);
             //还原t_room_setting表中的数据
             this.updateRoomSetting(saleTo);
+            //还原roomSaleDto数据
+            TRoomSaleDto roomSaleDto = new TRoomSaleDto();
+            roomSaleDto.setId(saleTo.getId());
+            roomSaleDto.setIsBack("T");
+            this.roomSaleService.updateRoomSaleBack(roomSaleDto);
         }
 
         return true;
