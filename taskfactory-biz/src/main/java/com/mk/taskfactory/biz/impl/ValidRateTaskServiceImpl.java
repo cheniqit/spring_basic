@@ -179,7 +179,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
                 //若是开始结束时间跨日，只考虑在开始时间后
                 else {
-                    if (time.after(startTime) && date.after(startDate) && date.before(endDate)) {
+                    if (time.after(startTime) && time.before(endTime)  && date.after(startDate) && date.before(endDate)) {
                         logger.info("============sales online job >> while configInfoDto.id:"
                                 + configInfoDto.getId() + " start");
                         configInfoDtoStartList.add(configInfoDto);
@@ -194,6 +194,46 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         return configInfoDtoStartList;
     }
 
+    private void t (Date runTime, Date startTime, Date endTime) {
+        if (null == runTime || null == startTime || null == endTime) {
+            return;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            String strMidTime = dateFormat.format(new Date());
+            Date midTime = dateFormat.parse(strMidTime + " 12:00:00");
+
+            Date startDate = null;
+            Date endDate = null;
+            //若当前时间晚于中午12点,住房时间为今日到明日。若早于12点，住房时间为昨日到今日
+            if (new Date().after(midTime)) {
+                startDate = new Date();
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startDate);
+                calendar.add(calendar.DATE,1);
+                endDate = calendar.getTime();
+            } else {
+                endDate = new Date();
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.add(calendar.DATE,-1);
+                startDate = calendar.getTime();
+            }
+
+            //若开始时间早于endTime，当日时间，
+            if (startTime.before(endTime)) {
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
     private Date getDate(Date runTime) {
         Date date = null;
         if (null == runTime) {
@@ -353,7 +393,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
-        //
+        //TODO
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startDate = getDateTime(new Date(),configInfoDto.getStartTime());
         Date endDate = getDateTime(new Date(),configInfoDto.getEndTime());
