@@ -22,33 +22,25 @@ import java.util.Map;
 public class HomeController {
 
     @Autowired
-    private OnSaleFallbackService onSaleFallbackService;
-    @Autowired
     private ValidRateTaskService validRateTaskService;
 
-    @RequestMapping(value = "/roomSaleBegin", method = RequestMethod.GET)
+    @RequestMapping(value = "/validRateTaskRun", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> test(HttpSession httpSession) {
-        HashMap<String, Object> result = new HashMap<String, Object>();
-        result.put("seccuss", "³É¹¦");
-       // Cat.logEvent("CHECK_TEST", "123");
-        validRateTaskService.validRateTaskRun();
-        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    public void validRateTaskRun() {
+        this.validRateTaskService.validRateTaskRun();
+        return;
     }
-
-    @RequestMapping(value = "/roomSaleBack", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateOnline", method = RequestMethod.GET)
     @ResponseBody
-    public void testRoomSale(HttpSession httpSession) {
-
-        this.onSaleFallbackService.onSaleFallback();
+    public void updateOnline() {
+        this.validRateTaskService.updateOnline(new Date());
         return;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/dateReback", method = RequestMethod.GET)
     @ResponseBody
-    public void test() {
-
-        this.validRateTaskService.updateOnline(new Date());
+    public void dateReback() {
+        this.validRateTaskService.dateReback();
         return;
     }
 

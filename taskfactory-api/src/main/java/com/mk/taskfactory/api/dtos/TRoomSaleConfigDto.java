@@ -15,7 +15,7 @@ public class TRoomSaleConfigDto {
     private Integer num;
     private String saleName;
     private BigDecimal settleValue;
-    private Integer settleType;
+    private ValueTypeEnum settleType;
     private String valid;
     private Integer styleType;
     private String started;
@@ -33,7 +33,7 @@ public class TRoomSaleConfigDto {
     private String saleLabel;
     private String description;
     private String fontColor;
-    private boolean saleRoomTypeIdIsNull;
+    private Boolean saleRoomTypeIdIsNull;
 
     public Integer getId() {
         return id;
@@ -108,11 +108,11 @@ public class TRoomSaleConfigDto {
         this.settleValue = settleValue;
     }
 
-    public Integer getSettleType() {
+    public ValueTypeEnum getSettleType() {
         return settleType;
     }
 
-    public void setSettleType(Integer settleType) {
+    public void setSettleType(ValueTypeEnum settleType) {
         this.settleType = settleType;
     }
 
@@ -251,11 +251,11 @@ public class TRoomSaleConfigDto {
     public void setFontColor(String fontColor) {
         this.fontColor = fontColor;
     }
-    public boolean isSaleRoomTypeIdIsNull() {
+    public Boolean isSaleRoomTypeIdIsNull() {
         return saleRoomTypeIdIsNull;
     }
 
-    public void setSaleRoomTypeIdIsNull(boolean saleRoomTypeIdIsNull) {
+    public void setSaleRoomTypeIdIsNull(Boolean saleRoomTypeIdIsNull) {
         this.saleRoomTypeIdIsNull = saleRoomTypeIdIsNull;
     }
 

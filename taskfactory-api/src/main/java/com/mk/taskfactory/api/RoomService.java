@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface RoomService {
     public int countRoomByRoomType(int roomTypeId);
-    public void updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
+    public int updateRoomTypeByRoomType(TRoomChangeTypeDto roomChangeTypeDto);
     public List<TRoomDto> queryRoomByParams(TRoomDto bean);
     public Integer saveTRoom(TRoomDto bean);
     public Integer deleteTRoomByRoomTypeId(Integer roomTypeId);

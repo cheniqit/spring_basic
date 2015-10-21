@@ -1,6 +1,7 @@
 package com.mk.taskfactory.api.dtos;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ public class OtsRoomStateDto {
     private String hotelName;
     private BigDecimal price;
     private BigDecimal pmsPrice;
-    private List<Integer> roomIdList;
+    private List<Integer> roomIdList = new ArrayList<Integer>();
 
     public Integer getHotelId() {
         return hotelId;
