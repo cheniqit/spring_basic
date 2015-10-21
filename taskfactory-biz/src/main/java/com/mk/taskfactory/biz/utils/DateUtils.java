@@ -13,6 +13,7 @@ import java.util.Date;
 public class DateUtils {
 
     static String DATE_NULL = "0000-00-00";
+    public static String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static String format_yMd(Date date) {
         if (date == null) {
@@ -32,6 +33,16 @@ public class DateUtils {
 
     public static Date parse(String strDate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return sdf.parse(strDate);
+        } catch (Exception e) {
+            //log
+        }
+        return null;
+    }
+
+    public static Date parse(String strDate, String formatStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
         try {
             return sdf.parse(strDate);
         } catch (Exception e) {

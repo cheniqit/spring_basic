@@ -254,4 +254,8 @@ public class TRoomSaleConfig {
     public void setFontColor(String fontColor) {
         this.fontColor = fontColor;
     }
+
+    public BigDecimal getSaleValue() {
+        return saleValue;
+    }
 }

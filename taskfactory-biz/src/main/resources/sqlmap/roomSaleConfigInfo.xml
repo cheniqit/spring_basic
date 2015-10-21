@@ -56,10 +56,7 @@
                 AND updateBy = #{updateBy}
             </if>
             <if test="matchDate != null">
-                <![CDATA[  AND startDate <= #{matchDate}]]>
-            </if>
-            <if test="matchDate != null">
-                <![CDATA[  AND endDate >= #{matchDate} ]]>
+                <![CDATA[  AND startDate = #{matchDate}]]>
             </if>
         </where>
     </sql>
