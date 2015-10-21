@@ -93,8 +93,8 @@ public class ValidRateTaskLogicServiceImpl {
             price = tRoomSaleConfigDto.getSaleValue();
         }else if(ValueTypeEnum.TYPE_ADD.getId() == tRoomSaleConfigDto.getSaleType()) {
             //得到房型价格
-            OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(),new Date(), new Date());
-            BigDecimal roomTypePrice = otsRoomStateDto.getPmsPrice();
+            OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(), new Date(), new Date());
+            BigDecimal roomTypePrice = otsRoomStateDto.getPrice();
             if(roomTypePrice == null){
                 throw new RuntimeException(String.format("saveBasePriceService roomTypePrice id is null >> tRoomSaleConfigDto HotelId[%s]", tRoomSaleConfigDto.getHotelId()));
             }
@@ -103,7 +103,7 @@ public class ValidRateTaskLogicServiceImpl {
         }else if(ValueTypeEnum.TYPE_OFF.getId() == tRoomSaleConfigDto.getSaleType()) {
             //得到房型价格
             OtsRoomStateDto otsRoomStateDto = roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(), tRoomSaleConfigDto.getRoomTypeId(),new Date(), new Date());
-            BigDecimal roomTypePrice = otsRoomStateDto.getPmsPrice();
+            BigDecimal roomTypePrice = otsRoomStateDto.getPrice();
             if(roomTypePrice == null){
                 throw new RuntimeException(String.format("saveBasePriceService roomTypePrice id is null >> tRoomSaleConfigDto HotelId[%s]", tRoomSaleConfigDto.getHotelId()));
             }
