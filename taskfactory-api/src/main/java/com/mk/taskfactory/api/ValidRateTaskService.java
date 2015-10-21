@@ -12,6 +12,4 @@ public interface ValidRateTaskService {
 
     public void dateReback();
 
-    public void remove();
-
 }
