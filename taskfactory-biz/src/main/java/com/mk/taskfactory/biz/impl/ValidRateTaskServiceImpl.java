@@ -255,7 +255,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<Integer> roomVCList = roomStateDto.getRoomIdList();
         int roomVCSize = roomVCList.size();
         logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " get roomVCSize:"+roomVCSize);
+                + configDto.getId() + " get roomVCSize:" + roomVCSize);
 
         if (roomVCSize > 0) {
             //按num数量抽取房间
@@ -440,13 +440,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     //比较活动结束日期和当前日期
 
                         //比较活动结束时间和当前时间
-                        String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
-                        String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        SimpleDateFormat daf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-                        java.util.Date nowTime=daf.parse(nowTimeComp);
-                        java.util.Date endTime = daf.parse(endTimeComp);
-                        if ( nowTime.compareTo(endTime)>= 0) {
+                        if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
                         //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
                             if(bl){
@@ -480,33 +475,27 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
         logger.info("============sales dateReback job >> end============");
     }
-
-    //数据清除
-    public void remove(){
-        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
-        if (!CollectionUtils.isEmpty(list)) {
-            for (TRoomSaleConfigDto dto : list) {
-                java.sql.Date endDate = null;//dto.getEndDate();
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(endDate);
-                cal.add(Calendar.DATE, 1);
-                String endDateComp = null;//(new SimpleDateFormat("yyyy-MM-dd")).format(cal.getTime())+ " "+ dto.getEndTime();
-                try {
-                    //比较活动结束日期和当前日期
-                    if (DateUtils.getCompareResult(endDateComp, DateUtils.getStringDate("yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm")) {
-                        //先确保数据已经回复
-                        boolean   bl =    reBackRoom(dto);
-                        if(bl){
-                            //删除房型
-                            deleteRoomType(dto);
-                        }
-                        this.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
-                    }
-                } catch (ParseException e){
-                }
+    public Boolean checkCanDown(Time startTime,Time endTime){
+        String nowTimeComp=DateUtils.getStringDate("HH:mm:ss");
+        Time nowTime = Time.valueOf(nowTimeComp) ;
+        if (startTime.compareTo(endTime)==-1){
+            if (nowTime.compareTo(endTime)>0){
+                return true;
+            }else{
+                return  false;
+            }
+        }else{
+            if (nowTime.compareTo(startTime)>0){
+                return false;
+            }else if (nowTime.compareTo(endTime)==-1){
+                return  false;
+            }else{
+                return true;
             }
         }
+
     }
+
 
     public Boolean reBackRoom(TRoomSaleConfigDto dto) {
         if (null == dto) {
