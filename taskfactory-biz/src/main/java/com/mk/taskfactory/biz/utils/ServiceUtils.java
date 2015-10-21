@@ -330,6 +330,10 @@ public class ServiceUtils {
             if(out != null){
                 try{
                     out.close();
+                }catch (Exception e){
+                    log.error("关闭输出流时发生异常,堆栈信息如下", e);
+                }
+                try{
                     sr.close();
                 }catch (Exception e){
                     log.error("关闭输出流时发生异常,堆栈信息如下", e);
@@ -338,7 +342,6 @@ public class ServiceUtils {
             if(in != null){
                 try{
                     in.close();
-
                 }catch(Exception e){
                     log.error("关闭输入流时发生异常,堆栈信息如下", e);
                 }
