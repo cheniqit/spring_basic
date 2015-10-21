@@ -34,7 +34,7 @@
 	</resultMap>
 
     <sql id="Base_Column_List" >
-        hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,valid,
+         hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
         styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId
     </sql>
     <sql id="Base_Query_List" >
