@@ -1,7 +1,8 @@
 package com.mk.taskfactory.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Time;
+import java.sql.Date;
 
 public class TRoomSaleConfig {
     private Integer id;
@@ -28,8 +29,8 @@ public class TRoomSaleConfig {
     private Integer saleTypeId;
     private Date startDate;
     private Date endDate;
-    private String startTime;
-    private String endTime;
+    private Time startTime;
+    private Time endTime;
     private String saleLabel;
     private String description;
     private String fontColor;
@@ -214,19 +215,19 @@ public class TRoomSaleConfig {
         this.endDate = endDate;
     }
 
-    public String getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 

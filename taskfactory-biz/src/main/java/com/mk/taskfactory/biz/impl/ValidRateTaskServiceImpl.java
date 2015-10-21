@@ -14,13 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
 import java.math.BigDecimal;
 import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
 
 @Service
 public class ValidRateTaskServiceImpl implements ValidRateTaskService {
@@ -345,17 +344,16 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         //比较活动结束时间和当前时间
                         String endTimeComp = DateUtils.getStringDate("yyyy-MM-dd") + " " + dto.getEndTime();
                         String nowTimeComp = DateUtils.getStringDate("yyyy-MM-dd HH:mm");
-                        if (!DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
+                        if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                             boolean   bl = reBackRoom(dto);
                             if(bl){
                                 roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
-                                java.sql.Date endDate = dto.getEndDate();
-                                String endDateComp =(new SimpleDateFormat("yyyy-MM-dd")).format(endDate);
-                                String nowDate =DateUtils.getStringDate("yyyy-MM-dd");
-                                DateFormat dafShort=new SimpleDateFormat("yyyy-MM-dd");
-                                Date a=dafShort.parse(nowDate);
-                                Date b=dafShort.parse(endDateComp);
-                                if (!a.before(b)) {
+                                String nowDate = DateUtils.getStringDate("yyyy-MM-dd");
+                                SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd");
+
+                                java.util.Date now=dafShort.parse(nowDate);
+                                java.util.Date endDate = dafShort.parse(DateUtils.format_yMd(dto.getEndDate()));
+                                if ( now.compareTo(endDate)>= 0) {
                                     roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                                 /*
                                  *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据

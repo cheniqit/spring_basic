@@ -1,7 +1,8 @@
 package com.mk.taskfactory.biz.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Seconds;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -135,4 +136,12 @@ public class DateUtils {
         String result = matter1.format(dt);
         return result;
     }
+    // < -1 = 0 > 1
+    public static int compareDate(Date day1, Date day2) {
+        LocalDateTime sysExTime = LocalDateTime.fromDateFields(day1);
+        LocalDateTime startExTime = LocalDateTime.fromDateFields(day2);
+        int st = Seconds.secondsBetween(sysExTime, startExTime).getSeconds();
+        return st;
+    }
+
 }

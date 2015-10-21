@@ -51,4 +51,5 @@ public class HomeController {
         this.validRateTaskService.updateOnline(new Date());
         return;
     }
+
 }

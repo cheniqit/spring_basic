@@ -2,6 +2,7 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.RoomSaleService;
+import com.mk.taskfactory.api.ValidRateTaskService;
 import com.mk.taskfactory.api.dtos.RoomSaleToOtsDto;
 import com.mk.taskfactory.api.dtos.TRoomSaleDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import java.util.List;
 public class RoomSaleController {
     @Autowired
     private RoomSaleService roomSaleService;
+    @Autowired
+    private ValidRateTaskService validRateTaskService;
+
     @RequestMapping(value = "/querysaleroom", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<List<RoomSaleToOtsDto>> querySaleRoom(TRoomSaleDto bean) {
@@ -35,4 +39,11 @@ public class RoomSaleController {
         RoomSaleToOtsDto result=roomSaleService.getHotelSaleByHotelId(hotelId);
         return new ResponseEntity<RoomSaleToOtsDto>(result, HttpStatus.OK);
     }
+    @RequestMapping(value = "/dateReback", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity dateReback() {
+        validRateTaskService.dateReback();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }
