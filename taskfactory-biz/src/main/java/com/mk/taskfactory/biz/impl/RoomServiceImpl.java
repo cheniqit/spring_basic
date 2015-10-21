@@ -11,6 +11,8 @@ import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.TRoom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.*;
 @Service
 public class RoomServiceImpl implements RoomService {
 
+    private static Logger logger = LoggerFactory.getLogger(RoomServiceImpl.class);
     @Autowired
     private RoomMapper roomMapper;
 
@@ -130,6 +133,7 @@ public class RoomServiceImpl implements RoomService {
         //调用房态接口
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         Map<String, String> paramMap = new HashMap<String, String>();
+        paramMap.put("isShowAllRoom","T");
         paramMap.put("hotelid", String.valueOf(hotelId));
         paramMap.put("roomtypeid", String.valueOf(roomTypeId));
         if (null != startDate) {
@@ -146,6 +150,7 @@ public class RoomServiceImpl implements RoomService {
 
         try {
             String jsonString = ServiceUtils.doPost(Constants.OTS_URL+"/roomstate/querylist ", paramMap, 60);
+            logger.info("====================init sales config job >> roomstate querylist:" + jsonString);
             JSONObject jsonObject = JsonUtils.parseObject(jsonString);
             JSONArray hotelListArray = jsonObject.getJSONArray("hotel");
             if (hotelListArray.isEmpty()) {
@@ -175,7 +180,10 @@ public class RoomServiceImpl implements RoomService {
             for (int i = 0 ; i < size; i++) {
                 JSONObject roomJson = roomArray.getJSONObject(i);
                 Integer roomId = roomJson.getInteger("roomid");
-                roomIdList.add(roomId);
+                String roomStatus = roomJson.getString("roomstatus");
+                if ("vc".equals(roomStatus)) {
+                    roomIdList.add(roomId);
+                }
             }
             result.setRoomIdList(roomIdList);
             return result;

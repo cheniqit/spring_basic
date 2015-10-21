@@ -140,6 +140,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     private List<TRoomSaleConfigInfoDto> getStartedRoomSaleConfigInfo(List<TRoomSaleTypeDto> saleTypeDtoList, Date date, Time time) {
         List<TRoomSaleConfigInfoDto> configInfoDtoStartList = new ArrayList<TRoomSaleConfigInfoDto>();
+        if (null == saleTypeDtoList || null == date || null == time) {
+            return configInfoDtoStartList;
+        }
         for (TRoomSaleTypeDto typeDto : saleTypeDtoList) {
             logger.info("============sales online job >> while TRoomSaleTypeDto.id:" + typeDto.getId());
 
@@ -154,16 +157,38 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
             for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoList) {
                 Date startDate = configInfoDto.getStartDate();
-                Time startTime = configInfoDto.getStartTime();
+                Date endDate = configInfoDto.getEndDate();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.add(calendar.DATE,1);
+                endDate = calendar.getTime();
 
-                if (time.after(startTime) && date.after(startDate)) {
-                    logger.info("============sales online job >> while configInfoDto.id:"
-                            + configInfoDto.getId() + " start");
-                    configInfoDtoStartList.add(configInfoDto);
-                } else {
-                    logger.info("============sales online job >> while configInfoDto.id:"
-                            + configInfoDto.getId() + " not start");
+                Time startTime = configInfoDto.getStartTime();
+                Time endTime = configInfoDto.getEndTime();
+
+                //若是开始结束时间未跨日，活动必须在开始结束时间范围内
+                if (startTime.before(endTime)) {
+                    if (time.after(startTime) && time.before(endTime) && date.after(startDate) && date.before(endDate)) {
+                        logger.info("============sales online job >> while configInfoDto.id:"
+                                + configInfoDto.getId() + " start");
+                        configInfoDtoStartList.add(configInfoDto);
+                    } else {
+                        logger.info("============sales online job >> while configInfoDto.id:"
+                                + configInfoDto.getId() + " not start");
+                    }
                 }
+                //若是开始结束时间跨日，只考虑在开始时间后
+                else {
+                    if (time.after(startTime) && date.after(startDate) && date.before(endDate)) {
+                        logger.info("============sales online job >> while configInfoDto.id:"
+                                + configInfoDto.getId() + " start");
+                        configInfoDtoStartList.add(configInfoDto);
+                    } else {
+                        logger.info("============sales online job >> while configInfoDto.id:"
+                                + configInfoDto.getId() + " not start");
+                    }
+                }
+
             }
         }
         return configInfoDtoStartList;
@@ -319,6 +344,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
 
+        TBasePriceDto oldBasePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getRoomTypeId()));
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " oldBasePriceDto:" + oldBasePriceDto.getPrice());
+
         BigDecimal settleValue =
                 this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
@@ -338,7 +367,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
         roomSaleDto.setSalePrice(basePriceDto.getPrice());
-        roomSaleDto.setCostPrice(roomTypeDto.getCost());
+        roomSaleDto.setCostPrice(oldBasePriceDto.getPrice());
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
         roomSaleDto.setEndTime(dateFormat.format(endDate));
