@@ -114,12 +114,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<TRoomSaleTypeDto> saleTypeDtoList = this.roomSaleTypeService.queryRoomSaleType(typeParam);
         logger.info("============sales online job >> find saleTypeDtoList:" + saleTypeDtoList.size());
 
-        //按开始时间更新
-        Date date = getDate(runTime);
-        Time time = getTime(runTime);
-
         //查询指定期间内的CONFIG Info
-        List<TRoomSaleConfigInfoDto> configInfoDtoStartList = getStartedRoomSaleConfigInfo(saleTypeDtoList, date, time);
+        List<TRoomSaleConfigInfoDto> configInfoDtoStartList = getStartedRoomSaleConfigInfo(saleTypeDtoList, runTime);
 
         //查询指定的CONFIG
         for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoStartList) {
@@ -131,16 +127,16 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(configParam);
             logger.info("============sales online job >> find RoomSaleConfigList:" + configDtoList.size());
             for (TRoomSaleConfigDto configDto : configDtoList) {
-                updateConfigOnline(configInfoDto, configDto);
+                updateConfigOnline(configInfoDto, configDto, runTime);
             }
         }
 
         logger.info("============sales online job >> validRateTaskRun method end===============");
     }
 
-    private List<TRoomSaleConfigInfoDto> getStartedRoomSaleConfigInfo(List<TRoomSaleTypeDto> saleTypeDtoList, Date date, Time time) {
+    private List<TRoomSaleConfigInfoDto> getStartedRoomSaleConfigInfo(List<TRoomSaleTypeDto> saleTypeDtoList, Date runTime) {
         List<TRoomSaleConfigInfoDto> configInfoDtoStartList = new ArrayList<TRoomSaleConfigInfoDto>();
-        if (null == saleTypeDtoList || null == date || null == time) {
+        if (null == saleTypeDtoList || null == runTime) {
             return configInfoDtoStartList;
         }
         for (TRoomSaleTypeDto typeDto : saleTypeDtoList) {
@@ -156,37 +152,22 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             logger.info("============sales online job >> find configInfoDtoList:" + configInfoDtoList.size());
 
             for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoList) {
-                Date startDate = configInfoDto.getStartDate();
-                Date endDate = configInfoDto.getEndDate();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(endDate);
-                calendar.add(calendar.DATE,1);
-                endDate = calendar.getTime();
 
                 Time startTime = configInfoDto.getStartTime();
                 Time endTime = configInfoDto.getEndTime();
 
+                Date[] startEndDate = this.getStartEndDate(runTime, startTime, endTime);
+                Date startDate = startEndDate[0];
+                Date endDate = startEndDate[1];
+
                 //若是开始结束时间未跨日，活动必须在开始结束时间范围内
-                if (startTime.before(endTime)) {
-                    if (time.after(startTime) && time.before(endTime) && date.after(startDate) && date.before(endDate)) {
-                        logger.info("============sales online job >> while configInfoDto.id:"
-                                + configInfoDto.getId() + " start");
-                        configInfoDtoStartList.add(configInfoDto);
-                    } else {
-                        logger.info("============sales online job >> while configInfoDto.id:"
-                                + configInfoDto.getId() + " not start");
-                    }
-                }
-                //若是开始结束时间跨日，只考虑在开始时间后
-                else {
-                    if (time.after(startTime) && time.before(endTime)  && date.after(startDate) && date.before(endDate)) {
-                        logger.info("============sales online job >> while configInfoDto.id:"
-                                + configInfoDto.getId() + " start");
-                        configInfoDtoStartList.add(configInfoDto);
-                    } else {
-                        logger.info("============sales online job >> while configInfoDto.id:"
-                                + configInfoDto.getId() + " not start");
-                    }
+                if (runTime.after(startDate) && runTime.before(endDate)) {
+                    logger.info("============sales online job >> while configInfoDto.id:"
+                            + configInfoDto.getId() + " start");
+                    configInfoDtoStartList.add(configInfoDto);
+                } else {
+                    logger.info("============sales online job >> while configInfoDto.id:"
+                            + configInfoDto.getId() + " not start");
                 }
 
             }
@@ -194,30 +175,30 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         return configInfoDtoStartList;
     }
 
-    private void t (Date runTime, Date startTime, Date endTime) {
+    private Date[] getStartEndDate (Date runTime, Date startTime, Date endTime) {
         if (null == runTime || null == startTime || null == endTime) {
-            return;
+            return new Date[]{new Date(),new Date()};
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
-            String strMidTime = dateFormat.format(new Date());
+            String strMidTime = dateFormat.format(runTime);
             Date midTime = dateFormat.parse(strMidTime + " 12:00:00");
 
             Date startDate = null;
             Date endDate = null;
             //若当前时间晚于中午12点,住房时间为今日到明日。若早于12点，住房时间为昨日到今日
-            if (new Date().after(midTime)) {
-                startDate = new Date();
+            if (runTime.after(midTime)) {
+                startDate = runTime;
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(startDate);
                 calendar.add(calendar.DATE,1);
                 endDate = calendar.getTime();
             } else {
-                endDate = new Date();
+                endDate = runTime;
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(endDate);
@@ -228,47 +209,36 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             //若开始时间早于endTime，当日时间，
             if (startTime.before(endTime)) {
 
+                //若是晚于中午12点，
+                if (midTime.after(startTime)) {
+                    String strStartDate = dateFormat.format(startDate) + " " + timeFormat.format(startTime);
+                    startDate = datetimeFormat.parse(strStartDate);
+
+                    String strEndDate = dateFormat.format(startDate) +  " " + timeFormat.format(endTime);
+                    endDate = datetimeFormat.parse(strEndDate);
+                } else {
+                    String strStartDate = dateFormat.format(endDate) +  " " + timeFormat.format(startTime);
+                    startDate = datetimeFormat.parse(strStartDate);
+
+                    String strEndDate = dateFormat.format(endDate) +  " " + timeFormat.format(endTime);
+                    endDate = datetimeFormat.parse(strEndDate);
+                }
+            } else {
+                String strStartDate = dateFormat.format(startDate) +  " " + timeFormat.format(startTime);
+                startDate = datetimeFormat.parse(strStartDate);
+
+                String strEndDate = dateFormat.format(endDate) +  " " + timeFormat.format(endTime);
+                endDate = datetimeFormat.parse(strEndDate);
             }
+            return new Date[]{startDate,endDate};
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-    }
-    private Date getDate(Date runTime) {
-        Date date = null;
-        if (null == runTime) {
-            date = new Date();
-        } else {
-            date = runTime;
-        }
-        return date;
+        return new Date[]{runTime,runTime};
     }
 
-    private Time getTime(Date runTime) {
-        //
-        Date formatTime = null;
-        if (null == runTime) {
-            formatTime = new Date();
-        } else {
-            formatTime = runTime;
-        }
-
-        //
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        String strTime = timeFormat.format(formatTime);
-
-        //
-        Time time = null;
-        try {
-            Date onlyTime = timeFormat.parse(strTime);
-            time = new Time(onlyTime.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return time;
-    }
-
-    private void updateConfigOnline(TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto) {
+    private void updateConfigOnline(TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, Date runTime) {
         logger.info("============sales online job >> for configDto.id======" + configDto.getId());
         Integer saleRoomTypeId = configDto.getSaleRoomTypeId();
         if (null == saleRoomTypeId) {
@@ -306,7 +276,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             //更新房间上线
             TRoomTypeDto roomTypeDto = this.roomTypeService.findTRoomTypeById(roomTypeId);
             for (Integer onSaleRoomId : onSaleRoomList) {
-                updateRoomOnline(configInfoDto, configDto, roomTypeDto, onSaleRoomId);
+                updateRoomOnline(configInfoDto, configDto, roomTypeDto, onSaleRoomId, runTime);
             }
         }
 
@@ -318,7 +288,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
     private void updateRoomOnline(
-            TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto, Integer onSaleRoomId) {
+            TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto,
+            Integer onSaleRoomId, Date runTime) {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " for onSaleRoomId:" + onSaleRoomId);
         //get roomDto
@@ -346,7 +317,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
 
         //saveRoomSale
-        saveRoomSale(configInfoDto, configDto, roomTypeDto, roomDto);
+        saveRoomSale(configInfoDto, configDto, roomTypeDto, roomDto, runTime);
     }
 
     private List<Integer> buildOnSaleRoomList(Integer roomId, Integer num, List<Integer> roomVCList, int roomVCSize) {
@@ -378,7 +349,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
     private void saveRoomSale(
-            TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto, TRoomDto roomDto) {
+            TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, TRoomTypeDto roomTypeDto,
+            TRoomDto roomDto, Date runTime) {
 
         TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
         logger.info("============sales online job >> configDto.id:"
@@ -393,10 +365,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
-        //TODO
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date startDate = getDateTime(new Date(),configInfoDto.getStartTime());
-        Date endDate = getDateTime(new Date(),configInfoDto.getEndTime());
+        //
+        Date[] startEndDate = this.getStartEndDate(runTime, configInfoDto.getStartTime(), configInfoDto.getEndTime());
+        Date startDate = startEndDate[0];
+        Date endDate = startEndDate[1];
 
         //log roomSale
         TRoomSaleDto roomSaleDto = new TRoomSaleDto();
@@ -421,27 +394,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         roomSaleDto.setSettleValue(settleValue);
         this.roomSaleService.saveRoomSale(roomSaleDto);
-    }
-
-    private Date getDateTime(Date date, Time time) {
-        if (null == date || null == time) {
-            return  new Date();
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-        String strDate = dateFormat.format(date);
-        String strTime = timeFormat.format(time);
-        String strDateTime = strDate + " " + strTime;
-        Date dateTime = new Date();
-        try {
-            dateTime = dateTimeFormat.parse(strDateTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return dateTime;
     }
 
     private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
