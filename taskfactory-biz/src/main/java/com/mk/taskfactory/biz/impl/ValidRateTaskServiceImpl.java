@@ -401,6 +401,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
     //数据回复
     public void dateReback() {
+        logger.info("============sales dateReback job >> start============");
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
@@ -443,6 +444,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 }
             }
         }
+        logger.info("============sales dateReback job >> end============");
     }
 
     //数据清除
