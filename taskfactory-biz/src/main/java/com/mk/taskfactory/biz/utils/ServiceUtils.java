@@ -4,6 +4,7 @@ package com.mk.taskfactory.biz.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -279,6 +280,7 @@ public class ServiceUtils {
         HttpURLConnection httpURLConnection = null;
         OutputStream out = null; //写
         InputStream in = null;   //读
+        InputStreamReader sr = null;
         int httpStatusCode = 0;  //远程主机响应的HTTP状态码
         try{
             URL sendUrl = new URL(reqURL);
@@ -311,10 +313,16 @@ public class ServiceUtils {
 //          }
 //          br.close();
 
+
             in = httpURLConnection.getInputStream();
-            byte[] byteDatas = new byte[in.available()];
-            in.read(byteDatas);
-            return new String(byteDatas);
+            sr = new InputStreamReader(in, charset);
+            char[] byteDatas = new char[1024];
+            StringBuffer sb = new StringBuffer();
+            int len = 0 ;
+            while ((len = sr.read(byteDatas)) != -1) {
+                sb.append(new String(byteDatas,0,len));
+            }
+            return sb.toString();
         }catch(Exception e){
             log.error(e.getMessage());
             return "Failed`" + httpStatusCode;
@@ -322,6 +330,7 @@ public class ServiceUtils {
             if(out != null){
                 try{
                     out.close();
+                    sr.close();
                 }catch (Exception e){
                     log.error("关闭输出流时发生异常,堆栈信息如下", e);
                 }
@@ -329,6 +338,7 @@ public class ServiceUtils {
             if(in != null){
                 try{
                     in.close();
+
                 }catch(Exception e){
                     log.error("关闭输入流时发生异常,堆栈信息如下", e);
                 }

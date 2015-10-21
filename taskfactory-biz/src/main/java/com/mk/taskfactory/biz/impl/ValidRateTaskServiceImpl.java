@@ -319,6 +319,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
 
+        TBasePriceDto oldBasePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getRoomTypeId()));
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " oldBasePriceDto:" + oldBasePriceDto.getPrice());
+
         BigDecimal settleValue =
                 this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
@@ -338,7 +342,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
         roomSaleDto.setSalePrice(basePriceDto.getPrice());
-        roomSaleDto.setCostPrice(roomTypeDto.getCost());
+        roomSaleDto.setCostPrice(oldBasePriceDto.getPrice());
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
         roomSaleDto.setEndTime(dateFormat.format(endDate));
