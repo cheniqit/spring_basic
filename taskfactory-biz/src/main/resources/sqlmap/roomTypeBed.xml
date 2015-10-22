@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.RoomTypeBedMapper">
+    <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomTypeBed">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT"/>
+        <result column="num" property="num" jdbcType="INTEGER"/>
+        <result column="bedType" property="bedType" jdbcType="BIGINT"/>
+        <result column="otherInfo" property="otherInfo" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+      id, roomTypeId, num, bedType, otherInfo
+    </sql>
+    <sql id="Base_Query_List">
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="roomTypeId != null">
+                AND roomTypeId = #{roomTypeId}
+            </if>
+            <if test="bedType != null">
+                AND bedType = #{bedType}
+            </if>
+        </where>
+    </sql>
+    <select id="queryParams" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeBedDto">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_roomtype_bed
+        <include refid="Base_Query_List"/>
+        ORDER BY id DESC
+    </select>
+
+    <insert id="saveRoomTypeBed" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeBedDto"
+            useGeneratedKeys="true" keyProperty="id">
+   		insert into t_roomtype_bed(<include refid="Base_Column_List" />)
+        values (
+          #{id}, #{roomTypeId}, #{num},#{bedType},#{otherInfo}
+        )
+   </insert>
+    <update id="createByRoomTypeId" parameterType="java.util.Map">
+        insert into t_roomtype_bed (<include refid="Base_Column_List" />)
+        SELECT null, #{newRoomTypeId}, num,bedType,otherInfo
+        from t_roomtype_bed where roomTypeId = #{roomTypeId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+   		delete from t_roomtype_bed where id=#{id,jdbcType=BIGINT}
+   </delete>
+
+    <delete id="deleteByRoomTypeId" parameterType="java.lang.Long">
+        delete from t_roomtype_bed where roomTypeId=#{roomTypeId,jdbcType=BIGINT}
+    </delete>
+
+    <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeBedDto">
+   		update t_roomtype_bed set name=#{name} where id=#{id}
+   </update>
+
+</mapper>

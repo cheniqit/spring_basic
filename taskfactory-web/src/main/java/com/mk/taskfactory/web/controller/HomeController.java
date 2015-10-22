@@ -2,7 +2,9 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.OnSaleFallbackService;
+import com.mk.taskfactory.api.RoomTypeBedService;
 import com.mk.taskfactory.api.ValidRateTaskService;
+import com.mk.taskfactory.api.dtos.TRoomTypeBedDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,9 @@ public class HomeController {
     @Autowired
     private ValidRateTaskService validRateTaskService;
 
+    @Autowired
+    private RoomTypeBedService roomTypeBedService;
+
     @RequestMapping(value = "/validRateTaskRun", method = RequestMethod.GET)
     @ResponseBody
     public void validRateTaskRun() {
@@ -43,5 +48,11 @@ public class HomeController {
         this.validRateTaskService.dateReback();
         return;
     }
-
+//
+//    @RequestMapping(value = "/test", method = RequestMethod.GET)
+//    @ResponseBody
+//    public void test() {
+////        this.roomTypeBedService.createByRoomTypeId(314l,1l);
+//        this.roomTypeBedService.deleteByRoomTypeId(1L);
+//    }
 }
