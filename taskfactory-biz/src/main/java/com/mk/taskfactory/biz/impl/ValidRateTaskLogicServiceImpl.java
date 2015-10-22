@@ -103,9 +103,10 @@ public class ValidRateTaskLogicServiceImpl {
             price = roomTypePrice.multiply(tRoomSaleConfigDto.getSaleValue().divide(new BigDecimal(100)));
             price = price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price;
         }
+        //四舍五入处理
+        price = price.setScale(0,BigDecimal.ROUND_HALF_UP);
         return price;
     }
-
 
     @Transactional
     public int initRoomTypeDto(TRoomSaleConfigDto tRoomSaleConfigDto){
