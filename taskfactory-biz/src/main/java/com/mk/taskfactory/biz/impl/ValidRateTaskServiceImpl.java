@@ -53,7 +53,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeInfoService roomTypeInfoService;
     @Autowired
     private RoomTypeFacilityService roomTypeFacilityService;
-
+    @Autowired
+    private RoomTypeBedService roomTypeBedService;
 
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
@@ -451,7 +452,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                          */
                             roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
                             basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
-
+                            roomTypeBedService.deleteByRoomTypeId(dto.getSaleRoomTypeId().longValue());
                             if (dto.getHotelId()==null){
                                 continue;
                             }
