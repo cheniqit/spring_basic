@@ -1,14 +1,15 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
-import com.mk.taskfactory.biz.utils.ServiceUtils;
 import com.mk.taskfactory.common.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Thinkpad on 2015/10/17.
@@ -25,7 +26,7 @@ public class HotelRemoteService {
         params.put("hotelid", hotelid);
         String jsonStr = "";
         try {
-            jsonStr = ServiceUtils.doPost(Constants.OTS_URL + this.UPDATE_MIKE_PRICE_CACHE, params , 60);
+            jsonStr = HttpUtils.doPost(Constants.OTS_URL + this.UPDATE_MIKE_PRICE_CACHE, params);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -37,6 +38,15 @@ public class HotelRemoteService {
             successFlag = false;
         }
         return successFlag;
+    }
+
+    public String hotelInit(String token, String cityId, String hotelId){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", token);
+        params.put("cityid", cityId);
+        params.put("hotelid", hotelId);
+        String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
+        return postResult;
     }
 
 

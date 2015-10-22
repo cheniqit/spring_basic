@@ -34,9 +34,9 @@ public class ValidRateTaskLogicServiceImpl {
     @Autowired
     private BasePriceService basePriceService;
     @Autowired
-    private HotelRemoteService hotelRemoteService;
-    @Autowired
     private RoomTypeInfoMapper roomTypeInfoMapper;
+    @Autowired
+    private RoomTypeBedServiceImpl roomTypeBedService;
 
     @Transactional
     public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
@@ -54,15 +54,8 @@ public class ValidRateTaskLogicServiceImpl {
             }
             //刷新价格
             if (hotelMap.get(roomSaleConfig.getHotelId()) == null) {
-                logger.info(String.format("====================initSaleRoomSaleConfigDto >> updateMikePriceCache begin===================="));
-                boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(roomSaleConfig.getHotelId().toString());
-                if (updateCacheSuccessFlag) {
-                    hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
-                    executeRecordMap.put("hotelMap", hotelMap);
-                } else {
-                    throw new RuntimeException("updateMikePriceCache error");
-                }
-                logger.info(String.format("====================initSaleRoomSaleConfigDto >> updateMikePriceCache end updateCacheSuccessFlag[%s]==========", String.valueOf(updateCacheSuccessFlag)));
+                hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
+                executeRecordMap.put("hotelMap", hotelMap);
             }
 
         } catch (Exception e) {
@@ -146,6 +139,8 @@ public class ValidRateTaskLogicServiceImpl {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
             }
+            //初始化t_roomtype_bed
+            roomTypeBedService.createByRoomTypeId(Long.valueOf(configRoomTypeId), Long.valueOf(newRoomTypeId));
             //初始化t_baseprice
             //先查找新房间类型的价格是否有，如果有则只需要更新
             TBasePriceDto newBasePriceDto = basePriceService.findByRoomtypeId(newRoomTypeId.longValue());
@@ -167,7 +162,7 @@ public class ValidRateTaskLogicServiceImpl {
             e.printStackTrace();
             throw new RuntimeException("initSaleRoomSaleConfigDto error");
         }
-        logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method end===================="));
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method end===================="));
         return newRoomTypeId;
     }
 }
