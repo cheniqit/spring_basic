@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class ReFreshChannelTask {
     public static Logger log = org.slf4j.LoggerFactory.getLogger(ReFreshChannelTask.class);
@@ -17,7 +19,7 @@ public class ReFreshChannelTask {
     }
 
     public void reFlashBlackListData() {
-        //validRateTaskService.updateOnline(new Date());
-        //this.validRateTaskService.dateReback();
+        validRateTaskService.updateOnline(new Date());
+        this.validRateTaskService.dateReback();
     }
 }
