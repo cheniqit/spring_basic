@@ -54,6 +54,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomTypeBedService roomTypeBedService;
+    @Autowired
     private HotelRemoteService hotelRemoteService;
 
 
