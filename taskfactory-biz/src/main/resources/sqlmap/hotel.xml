@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.HotelMapper">
+    <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.THotel">
+        <id column="id" property="id" />
+        <result column="cityCode" property="cityCode" />
+        <result column="cityId" property="cityId" />
+    </resultMap>
+
+    <select id="getCityIdByHotelId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT a.id,a.cityCode,b.cityId
+        FROM  t_hotel a
+         LEFT  JOIN t_city b  on a.cityCode=b.code
+        WHERE a.id=#{id}
+    </select>
+
+</mapper>

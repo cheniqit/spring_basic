@@ -30,7 +30,10 @@ public class PayController  extends DispatcherServlet {
 	@RequestMapping(value = "/testDelete", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<String> testBB( ) {
+<<<<<<< HEAD
+=======
 //		validRateTaskService.remove();
+>>>>>>> 37377fa524534396cd97e0b889a461ebc5451cc1
 		return new ResponseEntity<String>("111", org.springframework.http.HttpStatus.OK);
 	}
 }
