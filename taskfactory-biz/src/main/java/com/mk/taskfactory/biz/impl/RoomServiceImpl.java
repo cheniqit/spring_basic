@@ -115,10 +115,9 @@ public class RoomServiceImpl implements RoomService {
         return roomDto;
     }
 
-    public  Integer  updateRoomTypeByRoomType(String name,String  pms,Integer  roomTypeId){
+    public  Integer  updateRoomTypeByRoomType(Integer id,Integer  roomTypeId){
         HashMap  hm = new HashMap();
-        hm.put("name",name);
-        hm.put("pms",pms);
+        hm.put("id",id);
         hm.put("roomTypeId",roomTypeId);
         return  this.roomMapper.updateRoomTypeByName(hm);
     }

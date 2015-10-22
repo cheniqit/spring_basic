@@ -3,10 +3,12 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
+import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.ServiceUtils;
 import com.mk.taskfactory.common.Constants;
+import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -427,47 +429,62 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return baseValue;
         }
     }
+    @Autowired
+    private HotelMapper hotelMapper;
+
     //数据回复
     public void dateReback() {
         logger.info("============sales dateReback job >> start============");
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByStarted(ValidEnum.VALID.getId());
-
+        Map<Integer,Integer> hotelMap=new HashMap<Integer, Integer>();
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-
                 try {
-
                     //比较活动结束日期和当前日期
+                    //比较活动结束时间和当前时间
+                    if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
+                    //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
+                         reBackRoom(dto);
+                        roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
+                        String nowDate = DateUtils.getStringDate("yyyy-MM-dd");
+                        SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd");
 
-                        //比较活动结束时间和当前时间
+                        java.util.Date now=dafShort.parse(nowDate);
+                        java.util.Date endDate = dafShort.parse(DateUtils.format_yMd(dto.getEndDate()));
+                        if ( now.compareTo(endDate)>= 0) {
+                            roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
+                        /*
+                         *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                         */
+                            roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
 
-                        if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
-                        //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
-                            boolean   bl = reBackRoom(dto);
-                            if(bl){
-                                roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
-                                String nowDate = DateUtils.getStringDate("yyyy-MM-dd");
-                                SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd");
-
-                                java.util.Date now=dafShort.parse(nowDate);
-                                java.util.Date endDate = dafShort.parse(DateUtils.format_yMd(dto.getEndDate()));
-                                if ( now.compareTo(endDate)>= 0) {
-                                    roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
-                                /*
-                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
-                                 */
-                                    roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
-
-                                 /*
-                                 *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
-                                 */
-                                    roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
-                                    basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+                         /*
+                         *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
+                         */
+                            roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
+                            basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+                            if (dto.getHotelId()==null){
+                                continue;
+                            }
+                            if (hotelMap.get(dto.getHotelId())==null){
+                                logger.info(String.format("==================== ots/hotel/init begin ===================="));
+                               THotel hotel= hotelMapper.getCityIdByHotelId(dto.getHotelId());
+                                if (hotel==null){
+                                    continue;
                                 }
-
+                                Map<String, String> params=new HashMap<String, String>();
+                                params.put("token","1qaz2wsx");
+                                params.put("cityid", hotel.getCityId().toString());
+                                params.put("hotelid", hotel.getId().toString());
+                                String postResult=ServiceUtils.doPost(Constants.OTS_URL + "/hotel/init", params, 40);
+                                logger.info(String.format("====================ots/hotel/init end  result:" + postResult + " ===================="));
+                                hotelMap.put(hotel.getId(),hotel.getCityId());
                             }
 
                         }
+
+
+                    }
 
                 } catch (ParseException e){
                 }
@@ -497,14 +514,14 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
 
-    public Boolean reBackRoom(TRoomSaleConfigDto dto) {
+    public void reBackRoom(TRoomSaleConfigDto dto) {
         if (null == dto) {
-            return false;
+            return;
         }
         //根据配置id查询当前没有回复的数据
         List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", ValidEnum.DISVALID.getId());
         if (CollectionUtils.isEmpty(saleDtoList)) {
-            return false;
+            return;
         }
         for (TRoomSaleDto saleTo : saleDtoList) {
             //还原t_room表中的数据
@@ -518,10 +535,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             this.roomSaleService.updateRoomSaleBack(roomSaleDto);
         }
 
-        return true;
     }
     public Boolean  updateRoom(TRoomSaleDto  roomSaleDto){
-          roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomNo(),roomSaleDto.getPms(),roomSaleDto.getOldRoomTypeId());
+          roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomId(),roomSaleDto.getOldRoomTypeId());
           return true;
     }
 

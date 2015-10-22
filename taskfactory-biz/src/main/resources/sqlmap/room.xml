@@ -94,6 +94,6 @@
                 roomtypeid=#{roomTypeId},
             </if>
         </set>
-        where name = #{name} and pms = #{pms}
+        where id = #{id}
     </update>
 </mapper>
