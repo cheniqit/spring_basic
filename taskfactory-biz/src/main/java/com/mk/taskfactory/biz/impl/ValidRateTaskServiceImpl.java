@@ -6,7 +6,7 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.ServiceUtils;
+import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
@@ -42,7 +42,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomSaleService roomSaleService;
     @Autowired
     private BasePriceService basePriceService;
-
     @Autowired
     private RoomSaleTypeService roomSaleTypeService;
     @Autowired
@@ -55,6 +54,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomTypeBedService roomTypeBedService;
+    private HotelRemoteService hotelRemoteService;
+
 
     public void validRateTaskRun(){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
@@ -70,13 +71,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
         for(TRoomSaleConfigInfo configInfo : tRoomSaleConfigInfos){
             initTRoomSaleConfigDtoList(configInfo);
-        }
-        try {
-            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin begin ===================="));
-            ServiceUtils.doPost(Constants.OTS_URL + "/roomsale/saleBegin", null, 40);
-            logger.info(String.format("====================init sales config job >> validRateTaskRun method call remote saleBegin end ===================="));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         logger.info(String.format("====================init sales config job >> validRateTaskRun method end===================="));
     }
@@ -104,6 +98,23 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 logger.info(String.format("====================init sales config job >>  initSaleRoomSaleConfigDto erroe ===================="));
             }
         }
+        logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote begin===================="));
+        Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
+        for(Map.Entry<Integer, Integer> entry : hotelMap.entrySet()){
+            String hotelId = entry.getKey().toString();
+            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
+            if (!updateCacheSuccessFlag) {
+                logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
+            }
+            THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
+            if (hotel==null){
+                logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
+                continue;
+            }
+            String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
+            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
+        }
+        logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }
 
 
@@ -462,11 +473,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                 if (hotel==null){
                                     continue;
                                 }
-                                Map<String, String> params=new HashMap<String, String>();
-                                params.put("token","1qaz2wsx");
-                                params.put("cityid", hotel.getCityId().toString());
-                                params.put("hotelid", hotel.getId().toString());
-                                String postResult=ServiceUtils.doPost(Constants.OTS_URL + "/hotel/init", params, 40);
+                                String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
                                 logger.info(String.format("====================ots/hotel/init end  result:" + postResult + " ===================="));
                                 hotelMap.put(hotel.getId(),hotel.getCityId());
                             }

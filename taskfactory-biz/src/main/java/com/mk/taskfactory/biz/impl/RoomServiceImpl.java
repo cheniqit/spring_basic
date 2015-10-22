@@ -7,10 +7,11 @@ import com.mk.taskfactory.api.dtos.OtsRoomStateDto;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomDto;
 import com.mk.taskfactory.biz.mapper.RoomMapper;
+import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
-import com.mk.taskfactory.biz.utils.ServiceUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.TRoom;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -148,7 +149,10 @@ public class RoomServiceImpl implements RoomService {
         }
 
         try {
-            String jsonString = ServiceUtils.doPost(Constants.OTS_URL+"/roomstate/querylist ", paramMap, 60);
+            String jsonString = HttpUtils.doPost(Constants.OTS_URL + "/roomstate/querylist", paramMap);
+            if(StringUtils.isEmpty(jsonString)){
+                return new OtsRoomStateDto();
+            }
             logger.info("====================init sales config job >> roomstate querylist:" + jsonString);
             JSONObject jsonObject = JsonUtils.parseObject(jsonString);
             JSONArray hotelListArray = jsonObject.getJSONArray("hotel");
