@@ -451,6 +451,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                          */
                             roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
                             basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+
                             if (dto.getHotelId()==null){
                                 continue;
                             }
