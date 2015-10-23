@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 public class HttpUtils {
 
     private static Logger log = LogUtils.get();
-    public static final int timeout = 10 * 1000;
+    public static final int timeout = 30 * 1000;
     private static final String charset = "UTF-8";
 
 
@@ -31,15 +31,16 @@ public class HttpUtils {
     //用apache接口实现http的post提交数据
     public static String sendHttpClientPost(String path,
                                             Map<String, String> params,int timeout, String encode) {
-        log.info(String.format("=========remote path[%s]==========", path));
         List<NameValuePair> list = new ArrayList<NameValuePair>();
+        StringBuffer paramsStr = new StringBuffer();
         if (params != null && !params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 list.add(new BasicNameValuePair(entry.getKey(), entry
                         .getValue()));
+                paramsStr.append(entry.getKey()).append("[").append(entry.getValue()).append("]");
             }
         }
-
+        log.info(String.format("=========remote path[%s]====params[%s]======", path, paramsStr.toString()));
         try {
             // 实现将请求的参数封装到表单中，即请求体中
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list, encode);
