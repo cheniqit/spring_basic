@@ -35,6 +35,14 @@ public class HomeController {
         this.validRateTaskService.validRateTaskRun();
         return;
     }
+
+    @RequestMapping(value = "/validRateTaskRunToday", method = RequestMethod.GET)
+    @ResponseBody
+    public void validRateTaskRunToday() {
+        this.validRateTaskService.validRateTaskRunToday();
+        return;
+    }
+
     @RequestMapping(value = "/updateOnline", method = RequestMethod.GET)
     @ResponseBody
     public void updateOnline() {

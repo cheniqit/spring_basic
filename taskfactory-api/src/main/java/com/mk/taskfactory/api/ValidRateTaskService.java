@@ -8,6 +8,8 @@ import java.util.Date;
 public interface ValidRateTaskService {
     public void validRateTaskRun();
 
+    public void validRateTaskRunToday();
+
     public void updateOnline(Date runTime);
 
     public void dateReback();
