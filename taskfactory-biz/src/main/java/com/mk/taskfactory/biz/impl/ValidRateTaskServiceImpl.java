@@ -6,8 +6,6 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.HttpUtils;
-import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
@@ -59,10 +57,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
 
     public void validRateTaskRun(){
+        Date startDate = org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1);
+        validRateTaskRun(startDate);
+    }
+
+    public void validRateTaskRunToday(){
+        Date startDate = new Date();
+        validRateTaskRun(startDate);
+    }
+
+    public void validRateTaskRun(Date startDate){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
         //当前时间是否在config中
         TRoomSaleConfigInfoDto tRoomSaleConfigInfo = new TRoomSaleConfigInfoDto();
-        String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
+        String matchDate = DateUtils.format_yMd(startDate);
         tRoomSaleConfigInfo.setMatchDate(matchDate);
         tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleConfigInfo> tRoomSaleConfigInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfo);
