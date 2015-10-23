@@ -143,9 +143,15 @@ public class RoomServiceImpl implements RoomService {
         }
 
         if (null != endDate) {
-            paramMap.put("enddateday",format.format(endDate));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(endDate);
+            calendar.add(calendar.DATE,1);
+            paramMap.put("enddateday",format.format(calendar.getTime()));
         } else {
-            paramMap.put("enddateday",format.format(new Date()));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(calendar.DATE,1);
+            paramMap.put("enddateday",format.format(calendar.getTime()));
         }
 
         try {
