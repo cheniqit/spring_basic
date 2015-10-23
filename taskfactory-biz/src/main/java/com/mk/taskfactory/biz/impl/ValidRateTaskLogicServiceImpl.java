@@ -119,7 +119,7 @@ public class ValidRateTaskLogicServiceImpl {
             }
             int configRoomTypeId = tRoomSaleConfigDto.getRoomTypeId();
             //初始化t_roomtype
-            roomTypeModel.setCost(tRoomSaleConfigDto.getCostPrice());
+            roomTypeModel.setCost(roomTypeModel.getCost());
             roomTypeModel.setName(tRoomSaleConfigDto.getSaleName());
             roomTypeModel.setRoomNum(tRoomSaleConfigDto.getNum());
             roomTypeService.saveTRoomType(roomTypeModel);
