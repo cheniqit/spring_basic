@@ -34,6 +34,7 @@ public class TRoomSaleConfig {
     private String saleLabel;
     private String description;
     private String fontColor;
+    private String dealCount;
 
     public Integer getId() {
         return id;
@@ -257,5 +258,13 @@ public class TRoomSaleConfig {
 
     public BigDecimal getSaleValue() {
         return saleValue;
+    }
+
+    public String getDealCount() {
+        return dealCount;
+    }
+
+    public void setDealCount(String dealCount) {
+        this.dealCount = dealCount;
     }
 }
