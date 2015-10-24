@@ -379,12 +379,21 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto,
             TRoomDto roomDto, Date runTime,OtsRoomStateDto roomStateDto) {
 
-        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
+        BigDecimal basePrice = BigDecimal.ZERO;
 
+        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
+
+        if (null == basePriceDto) {
+            basePrice = roomStateDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice: null");
+        } else {
+            basePrice = basePriceDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice:" + basePrice);
+        }
         BigDecimal settleValue =
-                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+                this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
@@ -402,7 +411,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setPms(roomDto.getPms());
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
-        roomSaleDto.setSalePrice(basePriceDto.getPrice());
+        roomSaleDto.setSalePrice(basePrice);
         roomSaleDto.setCostPrice(roomStateDto.getPrice());
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
@@ -436,7 +445,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }else {
                 return BigDecimal.ZERO;
             }
-        } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
+        } else if (ValueTypeEnum.TYPE_OFF == valueTypeEnum) {
             return baseValue.multiply(value).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         } else {
             return baseValue;
