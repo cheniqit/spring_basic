@@ -136,6 +136,10 @@ public class RoomServiceImpl implements RoomService {
         paramMap.put("isShowAllRoom","T");
         paramMap.put("hotelid", String.valueOf(hotelId));
         paramMap.put("roomtypeid", String.valueOf(roomTypeId));
+
+        paramMap.put("callentry", "2");
+        paramMap.put("callversion", "3.1");
+
         if (null != startDate) {
             paramMap.put("startdateday", format.format(startDate));
         } else {
