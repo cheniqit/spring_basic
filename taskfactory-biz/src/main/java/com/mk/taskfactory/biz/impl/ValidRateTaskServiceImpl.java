@@ -408,7 +408,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setConfigId(configDto.getId());
         roomSaleDto.setIsBack(ValidEnum.DISVALID.getId());
         roomSaleDto.setSaleName(configDto.getSaleName());
-        roomSaleDto.setSaleType(configDto.getStyleType());
+        roomSaleDto.setSaleType(configDto.getSaleType());
         roomSaleDto.setHotelId(configDto.getHotelId());
 
         roomSaleDto.setSettleValue(settleValue);
