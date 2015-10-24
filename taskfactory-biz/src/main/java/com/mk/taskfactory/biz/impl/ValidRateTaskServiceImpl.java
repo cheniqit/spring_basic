@@ -388,7 +388,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " basePrice:" + basePrice);
         }
-
         BigDecimal settleValue =
                 this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
@@ -442,7 +441,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }else {
                 return BigDecimal.ZERO;
             }
-        } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
+        } else if (ValueTypeEnum.TYPE_OFF == valueTypeEnum) {
             return baseValue.multiply(value).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         } else {
             return baseValue;
