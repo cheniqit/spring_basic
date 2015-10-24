@@ -5,5 +5,6 @@ package com.mk.taskfactory.common;
  */
 public class Constants {
     public static final String OTS_URL = "http://smlt-ots.imike.cn/ots";
+    //public static final String OTS_URL = "http://ota2test.imike.cn/ots";
     //public static final String OTS_URL = "http://localhost:9010/ots";
 }

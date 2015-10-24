@@ -6,8 +6,6 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.HttpUtils;
-import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
@@ -59,10 +57,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
 
     public void validRateTaskRun(){
+        Date startDate = org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1);
+        validRateTaskRun(startDate);
+    }
+
+    public void validRateTaskRunToday(){
+        Date startDate = new Date();
+        validRateTaskRun(startDate);
+    }
+
+    public void validRateTaskRun(Date startDate){
         logger.info(String.format("====================init sales config job >> validRateTaskRun method begin===================="));
         //当前时间是否在config中
         TRoomSaleConfigInfoDto tRoomSaleConfigInfo = new TRoomSaleConfigInfoDto();
-        String matchDate = DateUtils.format_yMd(org.apache.commons.lang3.time.DateUtils.addDays(new Date(), 1));
+        String matchDate = DateUtils.format_yMd(startDate);
         tRoomSaleConfigInfo.setMatchDate(matchDate);
         tRoomSaleConfigInfo.setValid(ValidEnum.VALID.getId());
         List<TRoomSaleConfigInfo> tRoomSaleConfigInfos = roomSaleConfigInfoMapper.queryRoomSaleConfigInfoList(tRoomSaleConfigInfo);
@@ -457,12 +465,15 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                          reBackRoom(dto);
                         roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
-                        String nowDate = DateUtils.getStringDate("yyyy-MM-dd");
-                        SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd");
+                        String nowDate = DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                         java.util.Date now=dafShort.parse(nowDate);
-                        java.util.Date endDate = dafShort.parse(DateUtils.format_yMd(dto.getEndDate()));
+                        java.util.Date endDate = dafShort.parse(dto.getEndDate()+" "+dto.getEndTime());
                         if ( now.compareTo(endDate)>= 0) {
+                            if (dto.getSaleRoomTypeId()==null){
+                                continue;
+                            }
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                         /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
@@ -504,7 +515,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         String nowTimeComp=DateUtils.getStringDate("HH:mm:ss");
         Time nowTime = Time.valueOf(nowTimeComp) ;
         if (startTime.compareTo(endTime)==-1){
-            if (nowTime.compareTo(endTime)>0){
+            if (nowTime.compareTo(endTime)>=0||nowTime.compareTo(startTime)<1){
                 return true;
             }else{
                 return  false;

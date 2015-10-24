@@ -18,7 +18,10 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
     private RoomTypeFacilityMapper roomTypeFacilityMapper;
 
     @Override
-    public void deleteByRoomType(int roomTypeId) {
+    public void deleteByRoomType(Integer roomTypeId) {
+        if (roomTypeId==null){
+            return;
+        }
         this.roomTypeFacilityMapper.deleteByRoomType(roomTypeId);
     }
     public List<TRoomTypeFacilityDto> findByRoomTypeId(Integer roomTypeId){

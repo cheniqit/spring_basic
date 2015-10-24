@@ -51,9 +51,10 @@
         <property name="maxUploadSize" value="10485760" />
     </bean>
 
-    <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
+
 
     <!--
+     <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
     <task:scheduled-tasks>
         <task:scheduled ref="validRateTask" method="run" cron="0 0/5 * * * ?"/>
     </task:scheduled-tasks>
@@ -65,4 +66,10 @@
         <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 0/30 * * ?"/>
     </task:scheduled-tasks>
     -->
+    <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="validRateTask" method="run" cron="0 1 9 ? * *"/>
+    </task:scheduled-tasks>
+
+
 </beans>

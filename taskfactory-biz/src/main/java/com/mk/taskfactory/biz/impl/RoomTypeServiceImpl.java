@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.util.StringUtil;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -30,6 +29,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return roomTypeMapper.saveTRoomType(bean);
     }
     public Integer delTRoomTypeById(Integer id){
+        if(id==null){
+            return null;
+        }
         return  roomTypeMapper.deleteTRoomType(id);
     }
     public Integer updateTRoomType(TRoomTypeDto bean){
