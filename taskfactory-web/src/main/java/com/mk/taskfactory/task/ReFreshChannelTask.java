@@ -20,6 +20,6 @@ public class ReFreshChannelTask {
 
     public void reFlashBlackListData() {
         validRateTaskService.updateOnline(new Date());
-        this.validRateTaskService.dateReback();
+        //this.validRateTaskService.dateReback();
     }
 }

@@ -105,7 +105,7 @@
         b.id,b.hotelId, b.roomId, b.roomTypeId,b.saleType,b.costPrice,b.num,b.saleName,b.settleValue,b.settleType,
         b.styleType,b.started,b.saleConfigInfoId,b.saleRoomTypeId,a.startDate,a.endDate,a.startTime,a.endTime,b.saleValue,a.saleLabel,a.description,a.fontColor
         FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
-        WHERE b.Started = #{started}
+        WHERE b.Started = #{started} and a.valid='T' and b.valid='T'
     </select>
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto"

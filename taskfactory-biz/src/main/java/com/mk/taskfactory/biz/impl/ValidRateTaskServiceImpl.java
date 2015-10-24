@@ -6,6 +6,7 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
@@ -111,17 +112,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
         for(Map.Entry<Integer, Integer> entry : hotelMap.entrySet()){
             String hotelId = entry.getKey().toString();
-            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
-            if (!updateCacheSuccessFlag) {
-                logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
-            }
+            //boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
+            //if (!updateCacheSuccessFlag) {
+            //    logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
+            //}
             THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
             if (hotel==null){
                 logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
                 continue;
             }
-            String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
+            String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+
             logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
+            String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId);
+            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }
@@ -375,12 +379,21 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto,
             TRoomDto roomDto, Date runTime,OtsRoomStateDto roomStateDto) {
 
-        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
+        BigDecimal basePrice = BigDecimal.ZERO;
 
+        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
+
+        if (null == basePriceDto) {
+            basePrice = roomStateDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice: null");
+        } else {
+            basePrice = basePriceDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice:" + basePrice);
+        }
         BigDecimal settleValue =
-                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+                this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
@@ -398,7 +411,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setPms(roomDto.getPms());
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
-        roomSaleDto.setSalePrice(basePriceDto.getPrice());
+        roomSaleDto.setSalePrice(basePrice);
         roomSaleDto.setCostPrice(roomStateDto.getPrice());
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
@@ -432,7 +445,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }else {
                 return BigDecimal.ZERO;
             }
-        } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
+        } else if (ValueTypeEnum.TYPE_OFF == valueTypeEnum) {
             return baseValue.multiply(value).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         } else {
             return baseValue;
@@ -455,12 +468,15 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                          reBackRoom(dto);
                         roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
-                        String nowDate = DateUtils.getStringDate("yyyy-MM-dd");
-                        SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd");
+                        String nowDate = DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss");
+                        SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                         java.util.Date now=dafShort.parse(nowDate);
-                        java.util.Date endDate = dafShort.parse(DateUtils.format_yMd(dto.getEndDate()));
+                        java.util.Date endDate = dafShort.parse(dto.getEndDate()+" "+dto.getEndTime());
                         if ( now.compareTo(endDate)>= 0) {
+                            if (dto.getSaleRoomTypeId()==null){
+                                continue;
+                            }
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                         /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
@@ -482,10 +498,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                 if (hotel==null){
                                     continue;
                                 }
-                                String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
+                                String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
                                 logger.info(String.format("====================ots/hotel/init end  result:" + postResult + " ===================="));
                                 hotelMap.put(hotel.getId(),hotel.getCityId());
                             }
+                            logger.info(String.format("==================== updatemikepricesbegin ===================="));
+                             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, dto.getHotelId().toString());
+                            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
 
                         }
 
@@ -502,7 +521,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         String nowTimeComp=DateUtils.getStringDate("HH:mm:ss");
         Time nowTime = Time.valueOf(nowTimeComp) ;
         if (startTime.compareTo(endTime)==-1){
-            if (nowTime.compareTo(endTime)>0){
+            if (nowTime.compareTo(endTime)>=0||nowTime.compareTo(startTime)<1){
                 return true;
             }else{
                 return  false;

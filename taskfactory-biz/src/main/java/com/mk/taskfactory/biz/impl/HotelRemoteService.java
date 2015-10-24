@@ -48,6 +48,12 @@ public class HotelRemoteService {
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
         return postResult;
     }
-
+    public String updatemikeprices(String token, String hotelId){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", token);
+        params.put("hotelid", hotelId);
+        String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/updatemikeprices", params);
+        return postResult;
+    }
 
 }
