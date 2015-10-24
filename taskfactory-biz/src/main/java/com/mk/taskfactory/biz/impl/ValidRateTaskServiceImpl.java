@@ -367,12 +367,22 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto,
             TRoomDto roomDto, Date runTime,OtsRoomStateDto roomStateDto) {
 
+        BigDecimal basePrice = BigDecimal.ZERO;
+
         TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " basePrice:" + basePriceDto.getPrice());
+
+        if (null == basePriceDto) {
+            basePrice = roomStateDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice: null");
+        } else {
+            basePrice = basePriceDto.getPrice();
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " basePrice:" + basePrice);
+        }
 
         BigDecimal settleValue =
-                this.calaValue(basePriceDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+                this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
@@ -390,7 +400,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setPms(roomDto.getPms());
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
-        roomSaleDto.setSalePrice(basePriceDto.getPrice());
+        roomSaleDto.setSalePrice(basePrice);
         roomSaleDto.setCostPrice(roomStateDto.getPrice());
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
