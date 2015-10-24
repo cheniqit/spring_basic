@@ -6,6 +6,7 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
@@ -111,17 +112,20 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
         for(Map.Entry<Integer, Integer> entry : hotelMap.entrySet()){
             String hotelId = entry.getKey().toString();
-            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
-            if (!updateCacheSuccessFlag) {
-                logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
-            }
+            //boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
+            //if (!updateCacheSuccessFlag) {
+            //    logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
+            //}
             THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
             if (hotel==null){
                 logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
                 continue;
             }
-            String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
+            String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+
             logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
+            String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId);
+            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }
@@ -485,10 +489,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                 if (hotel==null){
                                     continue;
                                 }
-                                String postResult= hotelRemoteService.hotelInit("1qaz2wsx", hotel.getCityId().toString(), hotel.getId().toString());
+                                String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
                                 logger.info(String.format("====================ots/hotel/init end  result:" + postResult + " ===================="));
                                 hotelMap.put(hotel.getId(),hotel.getCityId());
                             }
+                            logger.info(String.format("==================== updatemikepricesbegin ===================="));
+                             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, dto.getHotelId().toString());
+                            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
 
                         }
 
