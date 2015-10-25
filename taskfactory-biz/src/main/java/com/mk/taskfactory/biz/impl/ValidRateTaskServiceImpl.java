@@ -131,7 +131,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
 
-    @Transactional
     public void updateOnline(Date runTime) {
         logger.info("============sales online job >> validRateTaskRun method start===============");
 
@@ -265,6 +264,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         return new Date[]{runTime,runTime};
     }
 
+    @Transactional
     private void updateConfigOnline(TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, Date runTime) {
         logger.info("============sales online job >> for configDto.id======" + configDto.getId());
         Integer saleRoomTypeId = configDto.getSaleRoomTypeId();
