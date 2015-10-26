@@ -201,6 +201,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         return configInfoDtoStartList;
     }
 
+//    public static void main(String[] arg ) {
+//        ValidRateTaskServiceImpl t = new ValidRateTaskServiceImpl();
+//        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+//        try {
+//            Date[] d= t.getStartEndDate(new Date(), timeFormat.parse("09:00:00"), timeFormat.parse("02:00:00"));
+//            System.out.println(d);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     private Date[] getStartEndDate (Date runTime, Date startTime, Date endTime) {
         if (null == runTime || null == startTime || null == endTime) {
             return new Date[]{new Date(),new Date()};
@@ -210,8 +221,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
-            String strMidTime = dateFormat.format(runTime);
-            Date midTime = dateFormat.parse(strMidTime + " 12:00:00");
+            String strMidTime = dateFormat.format(runTime) + " 12:00:00";
+            Date midTime = datetimeFormat.parse(strMidTime);
 
             Date startDate = null;
             Date endDate = null;
