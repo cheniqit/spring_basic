@@ -393,7 +393,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     + configDto.getId() + " basePrice:" + basePrice);
         }
         BigDecimal settleValue =
-                this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
+                this.calaValue(roomStateDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
