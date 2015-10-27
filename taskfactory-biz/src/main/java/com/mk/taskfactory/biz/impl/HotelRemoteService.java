@@ -49,6 +49,10 @@ public class HotelRemoteService {
         return postResult;
     }
     public String updatemikeprices(String token, String hotelId){
+        try {
+            Thread.sleep(1200);
+        } catch (InterruptedException e) {
+        }
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);
         params.put("hotelid", hotelId);
