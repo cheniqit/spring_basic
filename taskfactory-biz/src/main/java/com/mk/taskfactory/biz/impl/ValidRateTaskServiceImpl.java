@@ -132,6 +132,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
 
     public void updateOnline(Date runTime) {
+        String s = Constants.OTS_URL;
         logger.info("============sales online job >> validRateTaskRun method start===============");
 
         //find valid roomSaleType
@@ -187,7 +188,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 Date endDate = startEndDate[1];
 
                 //若是开始结束时间未跨日，活动必须在开始结束时间范围内
-                if (runTime.after(startDate) && runTime.before(endDate)) {
+                if (!runTime.before(startDate) && !runTime.after(endDate)) {
                     logger.info("============sales online job >> while configInfoDto.id:"
                             + configInfoDto.getId() + " start");
                     configInfoDtoStartList.add(configInfoDto);
@@ -199,80 +200,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }
         }
         return configInfoDtoStartList;
-    }
-
-//    public static void main(String[] arg ) {
-//        ValidRateTaskServiceImpl t = new ValidRateTaskServiceImpl();
-//        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-//        try {
-//            Date[] d= t.getStartEndDate(new Date(), timeFormat.parse("09:00:00"), timeFormat.parse("02:00:00"));
-//            System.out.println(d);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    private Date[] getStartEndDate (Date runTime, Date startTime, Date endTime) {
-        if (null == runTime || null == startTime || null == endTime) {
-            return new Date[]{new Date(),new Date()};
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        try {
-            String strMidTime = dateFormat.format(runTime) + " 12:00:00";
-            Date midTime = datetimeFormat.parse(strMidTime);
-
-            Date startDate = null;
-            Date endDate = null;
-            //若当前时间晚于中午12点,住房时间为今日到明日。若早于12点，住房时间为昨日到今日
-            if (runTime.after(midTime)) {
-                startDate = runTime;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(startDate);
-                calendar.add(calendar.DATE,1);
-                endDate = calendar.getTime();
-            } else {
-                endDate = runTime;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(endDate);
-                calendar.add(calendar.DATE,-1);
-                startDate = calendar.getTime();
-            }
-
-            //若开始时间早于endTime，当日时间，
-            if (startTime.before(endTime)) {
-
-                //若是晚于中午12点，
-                if (midTime.after(startTime)) {
-                    String strStartDate = dateFormat.format(startDate) + " " + timeFormat.format(startTime);
-                    startDate = datetimeFormat.parse(strStartDate);
-
-                    String strEndDate = dateFormat.format(startDate) +  " " + timeFormat.format(endTime);
-                    endDate = datetimeFormat.parse(strEndDate);
-                } else {
-                    String strStartDate = dateFormat.format(endDate) +  " " + timeFormat.format(startTime);
-                    startDate = datetimeFormat.parse(strStartDate);
-
-                    String strEndDate = dateFormat.format(endDate) +  " " + timeFormat.format(endTime);
-                    endDate = datetimeFormat.parse(strEndDate);
-                }
-            } else {
-                String strStartDate = dateFormat.format(startDate) +  " " + timeFormat.format(startTime);
-                startDate = datetimeFormat.parse(strStartDate);
-
-                String strEndDate = dateFormat.format(endDate) +  " " + timeFormat.format(endTime);
-                endDate = datetimeFormat.parse(strEndDate);
-            }
-            return new Date[]{startDate,endDate};
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return new Date[]{runTime,runTime};
     }
 
     @Transactional
@@ -439,6 +366,69 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         this.roomSaleService.saveRoomSale(roomSaleDto);
     }
 
+    public static void main(String[] arg ) {
+        ValidRateTaskServiceImpl t = new ValidRateTaskServiceImpl();
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        try {
+            Date[] d= t.getStartEndDate(new Date(), timeFormat.parse("8:00:00"), timeFormat.parse("20:00:00"));
+            System.out.println(d);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Date[] getStartEndDate (Date runTime, Date startTime, Date endTime) {
+        if (null == runTime || null == startTime || null == endTime) {
+            return new Date[]{new Date(),new Date()};
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            String strMidTime = dateFormat.format(runTime);
+            Date midTime = datetimeFormat.parse(strMidTime + " 12:00:00");
+
+            Date startDate = null;
+            Date endDate = null;
+            //若当前时间晚于中午12点,住房时间为今日到明日。若早于12点，住房时间为昨日到今日
+            if (runTime.before(midTime)) {
+                endDate = runTime;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.add(calendar.DATE,-1);
+                startDate = calendar.getTime();
+            } else {
+                startDate = runTime;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startDate);
+                calendar.add(calendar.DATE,1);
+                endDate = calendar.getTime();
+            }
+
+            //若开始时间早于endTime，当日时间
+            if (startTime.before(endTime)) {
+                String strStartDate = dateFormat.format(runTime) + " " + timeFormat.format(startTime);
+                startDate = datetimeFormat.parse(strStartDate);
+
+                String strEndDate = dateFormat.format(runTime) +  " " + timeFormat.format(endTime);
+                endDate = datetimeFormat.parse(strEndDate);
+            } else {
+                String strStartDate = dateFormat.format(startDate) +  " " + timeFormat.format(startTime);
+                startDate = datetimeFormat.parse(strStartDate);
+
+                String strEndDate = dateFormat.format(endDate) +  " " + timeFormat.format(endTime);
+                endDate = datetimeFormat.parse(strEndDate);
+            }
+            return new Date[]{startDate,endDate};
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date[]{runTime,runTime};
+    }
     private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
         if (null == baseValue || null == valueTypeEnum) {
             return baseValue;
