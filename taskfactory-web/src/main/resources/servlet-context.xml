@@ -51,25 +51,22 @@
         <property name="maxUploadSize" value="10485760" />
     </bean>
 
-
-
-    <!--
-     <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTask" method="run" cron="0 0/5 * * * ?"/>
-    </task:scheduled-tasks>
-
-
-    <bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
-
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 0/30 * * ?"/>
-    </task:scheduled-tasks>
-    -->
+    <!--上线任务-->
     <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
     <task:scheduled-tasks>
-        <task:scheduled ref="validRateTask" method="run" cron="0 1 9 ? * *"/>
+        <task:scheduled ref="validRateTask" method="run" cron="1 0 22 * * ?"/>
     </task:scheduled-tasks>
 
+    <!--初始化线任务-->
+    <bean id="dateReback" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="validRateTaskService" method="dateReback" cron="0 0 0 * * ?"/>
+    </task:scheduled-tasks>
+
+    <!--初始化线任务-->
+    <bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 23 * * ?"/>
+    </task:scheduled-tasks>
 
 </beans>

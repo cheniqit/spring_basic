@@ -132,9 +132,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
 
     public void updateOnline(Date runTime) {
-        String s = Constants.OTS_URL;
         logger.info("============sales online job >> validRateTaskRun method start===============");
-
         //find valid roomSaleType
         TRoomSaleTypeDto typeParam = new TRoomSaleTypeDto();
         typeParam.setValid(ValidEnum.VALID.getId());
