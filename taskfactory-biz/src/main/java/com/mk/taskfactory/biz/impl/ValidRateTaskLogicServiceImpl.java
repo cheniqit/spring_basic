@@ -124,6 +124,7 @@ public class ValidRateTaskLogicServiceImpl {
             TRoomSaleConfigDto param = new TRoomSaleConfigDto();
             param.setValid(ValidEnum.VALID.getId());
             param.setRoomTypeId(configRoomTypeId);
+            param.setSaleRoomTypeIdIsNotNull(true);
             List<TRoomSaleConfigDto> existsList =  this.roomSaleConfigService.queryRoomSaleConfigByParams(param);
 
             if (existsList.isEmpty()){
