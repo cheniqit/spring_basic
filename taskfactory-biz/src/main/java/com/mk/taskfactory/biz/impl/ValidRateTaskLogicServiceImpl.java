@@ -2,6 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
+import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.model.TRoomTypeInfo;
@@ -47,11 +48,11 @@ public class ValidRateTaskLogicServiceImpl {
         try {
 
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data end===================="));
-            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
+//            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
                 int newRoomTypeId = initRoomTypeDto(roomSaleConfig);
                 roomTypeMap.put(roomSaleConfig.getRoomTypeId(), newRoomTypeId);
                 executeRecordMap.put("roomTypeMap", roomTypeMap);
-            }
+//            }
             //刷新价格
             if (hotelMap.get(roomSaleConfig.getHotelId()) == null) {
                 hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
@@ -112,43 +113,55 @@ public class ValidRateTaskLogicServiceImpl {
     public int initRoomTypeDto(TRoomSaleConfigDto tRoomSaleConfigDto){
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method begin===================="));
         Integer newRoomTypeId = null;
+
         try{
             TRoomTypeDto roomTypeModel=roomTypeService.findTRoomTypeById(tRoomSaleConfigDto.getRoomTypeId());
             if(roomTypeModel == null || roomTypeModel.getId() == null){
                 throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find TRoomTypeDto is null params roomTypeId[%s]===============", tRoomSaleConfigDto.getRoomTypeId()));
             }
             int configRoomTypeId = tRoomSaleConfigDto.getRoomTypeId();
-            //初始化t_roomtype
-            roomTypeModel.setCost(roomTypeModel.getCost());
-            roomTypeModel.setName(tRoomSaleConfigDto.getSaleName());
-            roomTypeModel.setRoomNum(tRoomSaleConfigDto.getNum());
-            roomTypeService.saveTRoomType(roomTypeModel);
-            newRoomTypeId = roomTypeModel.getId();
-            //初始化t_roomtype_info
-            TRoomTypeInfoDto findRoomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(configRoomTypeId);
-            if(findRoomTypeInfo == null || findRoomTypeInfo.getId() == null){
-                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
-            }
-            findRoomTypeInfo.setRoomTypeId(newRoomTypeId);
-            roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
-            //初始化t_roomtype_facility
-            List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(configRoomTypeId);
+
+            TRoomSaleConfigDto param = new TRoomSaleConfigDto();
+            param.setValid(ValidEnum.VALID.getId());
+            param.setRoomTypeId(configRoomTypeId);
+            List<TRoomSaleConfigDto> existsList =  this.roomSaleConfigService.queryRoomSaleConfigByParams(param);
+
+            if (existsList.isEmpty()){
+                //初始化t_roomtype
+                roomTypeModel.setCost(roomTypeModel.getCost());
+                roomTypeModel.setName(tRoomSaleConfigDto.getSaleName());
+                roomTypeModel.setRoomNum(tRoomSaleConfigDto.getNum());
+                roomTypeService.saveTRoomType(roomTypeModel);
+                newRoomTypeId = roomTypeModel.getId();
+                //初始化t_roomtype_info
+                TRoomTypeInfoDto findRoomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(configRoomTypeId);
+                if(findRoomTypeInfo == null || findRoomTypeInfo.getId() == null){
+                    throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
+                }
+                findRoomTypeInfo.setRoomTypeId(newRoomTypeId);
+                roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
+                //初始化t_roomtype_facility
+                List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(configRoomTypeId);
 //            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
 //                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
 //            }
-            for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
-                roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
-                roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
+                for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
+                    roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
+                    roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
+                }
+                //初始化t_roomtype_bed
+                roomTypeBedService.createByRoomTypeId(Long.valueOf(configRoomTypeId), Long.valueOf(newRoomTypeId));
+                //初始化t_baseprice
+                TBasePriceDto basePriceDto = new TBasePriceDto();
+                basePriceDto.setUpdatetime(new Date());
+                basePriceDto.setRoomtypeid(newRoomTypeId.longValue());
+                BigDecimal price = figureBasePrice(tRoomSaleConfigDto,roomTypeModel.getCost());
+                basePriceDto.setPrice(price);
+                basePriceService.saveBasePriceService(basePriceDto);
+            } else {
+                TRoomSaleConfigDto dto = existsList.get(0);
+                newRoomTypeId = dto.getSaleRoomTypeId();
             }
-            //初始化t_roomtype_bed
-            roomTypeBedService.createByRoomTypeId(Long.valueOf(configRoomTypeId), Long.valueOf(newRoomTypeId));
-            //初始化t_baseprice
-            TBasePriceDto basePriceDto = new TBasePriceDto();
-            basePriceDto.setUpdatetime(new Date());
-            basePriceDto.setRoomtypeid(newRoomTypeId.longValue());
-            BigDecimal price = figureBasePrice(tRoomSaleConfigDto,roomTypeModel.getCost());
-            basePriceDto.setPrice(price);
-            basePriceService.saveBasePriceService(basePriceDto);
 
             //回填config信息
             tRoomSaleConfigDto.setSaleRoomTypeId(newRoomTypeId);
