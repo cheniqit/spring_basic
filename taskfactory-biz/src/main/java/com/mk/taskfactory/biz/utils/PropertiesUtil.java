@@ -1,5 +1,4 @@
 package com.mk.taskfactory.biz.utils;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,8 +17,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+public  class PropertiesUtil {
 
-public class PropertiesUtil {
+
 
     private Properties properties;
 

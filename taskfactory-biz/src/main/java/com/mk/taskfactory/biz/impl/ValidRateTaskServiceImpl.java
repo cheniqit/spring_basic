@@ -116,7 +116,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             if (!updateCacheSuccessFlag) {
                 logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
             }
-
             THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
             if (hotel==null){
                 logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
@@ -319,7 +318,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         BigDecimal basePrice = BigDecimal.ZERO;
 
-        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getSaleRoomTypeId()));
+        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getRoomTypeId()));
 
         if (null == basePriceDto) {
             basePrice = roomStateDto.getPrice();
@@ -331,7 +330,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     + configDto.getId() + " basePrice:" + basePrice);
         }
         BigDecimal settleValue =
-                this.calaValue(roomStateDto.getPrice(), configDto.getSettleValue(), configDto.getSettleType());
+                this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " settleValue:" + settleValue.toString());
 
@@ -349,8 +348,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setPms(roomDto.getPms());
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
-        roomSaleDto.setSalePrice(basePrice);
-        roomSaleDto.setCostPrice(roomStateDto.getPrice());
+        roomSaleDto.setSalePrice(configDto.getSaleValue());
+        roomSaleDto.setCostPrice(basePrice);
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
         roomSaleDto.setEndTime(dateFormat.format(endDate));
@@ -513,6 +512,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     }
 
                 } catch (ParseException e){
+                    e.printStackTrace();
+                    logger.info("==================== 返回异常 ====================");
                 }
             }
         }
