@@ -112,15 +112,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
         for(Map.Entry<Integer, Integer> entry : hotelMap.entrySet()){
             String hotelId = entry.getKey().toString();
-            //boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
-            //if (!updateCacheSuccessFlag) {
-            //    logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
-            //}
+            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
+            if (!updateCacheSuccessFlag) {
+                logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
+            }
+
             THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
             if (hotel==null){
                 logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
                 continue;
             }
+
             String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
 
             logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
