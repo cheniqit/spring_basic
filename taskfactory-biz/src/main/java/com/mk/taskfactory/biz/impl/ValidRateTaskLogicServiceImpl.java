@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -134,9 +133,9 @@ public class ValidRateTaskLogicServiceImpl {
             roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
             //初始化t_roomtype_facility
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(configRoomTypeId);
-            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
-                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
-            }
+//            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
+//                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
+//            }
             for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);

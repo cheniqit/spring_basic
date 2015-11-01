@@ -1,9 +1,11 @@
 package com.mk.taskfactory.biz.utils;
 
+import com.mk.taskfactory.common.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Seconds;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -154,5 +156,61 @@ public class DateUtils {
         int st = Seconds.secondsBetween(sysExTime, startExTime).getSeconds();
         return st;
     }
+    public static Integer promoStatus(Date startDate, Date endDate, Time startTime, Time endTime) {
 
+        Calendar cal = Calendar.getInstance();
+        java.util.Date sysTime = cal.getTime();
+
+
+        cal.clear();
+        cal.setTime(sysTime);
+        getCalTime(endTime, cal);
+        Date tmpEndTime = cal.getTime();
+        Date startPromoTime;
+
+        if (startTime.after(endTime) && tmpEndTime.after(sysTime)) {
+            getCalTime(startTime, cal);
+            cal.add(cal.DATE, -1);
+            startPromoTime = cal.getTime();
+        } else {
+            getCalTime(startTime, cal);
+            startPromoTime = cal.getTime();
+        }
+        cal.clear();
+        cal.setTime(sysTime);
+        Date endPromoTime;
+
+        if (startTime.after(endTime)) {
+            cal.add(cal.DATE, 1);
+            getCalTime(endTime, cal);
+            endPromoTime = cal.getTime();
+        } else {
+            getCalTime(endTime, cal);
+            endPromoTime = cal.getTime();
+        }
+
+
+        if (sysTime.before(startPromoTime)) {
+            return Constants.PROMO_NOT_START;
+        } else if (sysTime.after(endPromoTime)) {
+            if (sysTime.before(startDate) || sysTime.after(endDate)) {
+                return Constants.PROMO_FININSHED;
+            } else {
+                return Constants.PROMO_NOT_START;
+            }
+        } else {
+            return Constants.PROMOING;
+        }
+    }
+
+    public static void getCalTime(Time startTime, Calendar cal) {
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        cal.setTime(startTime);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+        int sec = cal.get(Calendar.SECOND);
+        cal.set(year, month, day, hour, min, sec);
+    }
 }
