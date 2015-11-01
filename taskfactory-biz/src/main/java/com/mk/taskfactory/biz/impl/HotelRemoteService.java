@@ -45,6 +45,10 @@ public class HotelRemoteService {
         params.put("token", token);
         params.put("cityid", cityId);
         params.put("hotelid", hotelId);
+        try {
+            Thread.sleep(1200);
+        } catch (InterruptedException e) {
+        }
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
         return postResult;
     }
