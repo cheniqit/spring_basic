@@ -133,9 +133,9 @@ public class ValidRateTaskLogicServiceImpl {
             roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
             //初始化t_roomtype_facility
             List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(configRoomTypeId);
-            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
-                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
-            }
+//            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
+//                throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
+//            }
             for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
                 roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                 roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
