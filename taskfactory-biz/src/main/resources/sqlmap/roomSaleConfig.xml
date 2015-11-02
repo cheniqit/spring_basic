@@ -82,8 +82,8 @@
             <if test="styleType != null">
                 AND styleType = #{styleType}
             </if>
-            <if test="saleRoomTypeIdIsNull != null">
-                AND saleRoomTypeId is null
+            <if test="saleRoomTypeIdIsNotNull != null">
+                AND saleRoomTypeId is not null
             </if>
         </where>
     </sql>

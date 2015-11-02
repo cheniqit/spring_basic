@@ -1,5 +1,4 @@
 package com.mk.taskfactory.biz.utils;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,8 +17,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+public  class PropertiesUtil {
 
-public class PropertiesUtil {
+
 
     private Properties properties;
 
@@ -46,19 +46,6 @@ public class PropertiesUtil {
     public PropertiesUtil(String filePath) throws IOException {
         load(filePath);
     }
-
-    public void loadResourceAsStream(String path) throws IOException{
-        properties = new Properties();
-        InputStream inputFile=null;
-        try {
-            inputFile = getClass().getResourceAsStream(path);
-            properties.load(inputFile);
-            inputFile.close();
-        } finally{
-            closeQuietly(inputFile);
-        }
-    }
-
     private void closeQuietly(Closeable inputFile) {
         if (inputFile != null) {
             try {
@@ -72,9 +59,7 @@ public class PropertiesUtil {
         properties = new Properties();
         InputStream inputFile=null;
         try {
-            File f=new File(filePath);
-            if(!f.exists())f.createNewFile();
-            inputFile = new FileInputStream(filePath);
+            inputFile = Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath);
             properties.load(inputFile);
             inputFile.close();
         } catch (FileNotFoundException e) {

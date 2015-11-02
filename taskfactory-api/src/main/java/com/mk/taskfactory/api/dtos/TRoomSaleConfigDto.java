@@ -1,5 +1,7 @@
 package com.mk.taskfactory.api.dtos;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
@@ -34,6 +36,15 @@ public class TRoomSaleConfigDto {
     private String description;
     private String fontColor;
     private Boolean saleRoomTypeIdIsNull;
+    private Boolean saleRoomTypeIdIsNotNull;
+
+    public Boolean isSaleRoomTypeIdIsNotNull() {
+        return saleRoomTypeIdIsNotNull;
+    }
+
+    public void setSaleRoomTypeIdIsNotNull(Boolean saleRoomTypeIdIsNotNull) {
+        this.saleRoomTypeIdIsNotNull = saleRoomTypeIdIsNotNull;
+    }
 
     public Integer getId() {
         return id;
