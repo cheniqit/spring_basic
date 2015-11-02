@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Service
@@ -19,6 +20,9 @@ public class ReFreshChannelTask {
     }
 
     public void reFlashBlackListData() {
-        validRateTaskService.updateOnline(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.add(cal.HOUR, 1);
+        Date startTime = cal.getTime();
+        validRateTaskService.updateOnline(startTime);
     }
 }
