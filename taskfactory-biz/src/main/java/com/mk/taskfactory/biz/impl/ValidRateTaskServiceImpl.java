@@ -10,6 +10,7 @@ import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSale;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
+import com.mk.taskfactory.model.TRoomType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -230,9 +231,15 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         List<Integer> roomVCList = roomStateDto.getRoomIdList();
 
         BigDecimal price = roomStateDto.getPrice();
-        if (null == price) {
+        BigDecimal pmsPrice = roomStateDto.getPmsPrice();
+        if (null == price || null == pmsPrice) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice:null continue" );
+            return;
+        }
+        if (pmsPrice.compareTo(price) > 0) {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
         }
         int roomVCSize = roomVCList.size();
@@ -632,8 +639,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
             logger.info("==================== oldRoomTypeId:" +oldRoomTypeId + "  hotelId:"+ hotelId);
             OtsRoomStateDto stateDto = this.roomService.getOtsRoomState(hotelId, oldRoomTypeId, null, null);
-            logger.info("==================== stateDto:" +stateDto.getPmsPrice());
+            logger.info("==================== stateDto:" + stateDto.getPmsPrice());
 
+            TRoomTypeDto roomType =  this.roomTypeService.findTRoomTypeById(oldRoomTypeId);
+            BigDecimal cost = roomType.getCost();
             //
             Integer configId = dto.getConfigId();
             TRoomSaleConfigDto configDto = this.roomSaleConfigService.queryRoomSaleConfigById(configId);
@@ -644,10 +653,15 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             logger.info("==================== steeleValue:" + steeleValue);
 
             //
-            dto.setSettleValue(steeleValue);
+            if (cost.compareTo(price) > 0) {
+                dto.setSettleValue(steeleValue);
+            } else {
+                dto.setSettleValue(cost);
+            }
             int i = this.roomSaleService.updateRoomSale(dto);
             logger.info("==================== save TRoomSaleDto:" + i);
             logger.info("==================== update TRoomSaleDto end");
         }
+        logger.info("==================== update allList end");
     }
 }

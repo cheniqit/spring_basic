@@ -50,6 +50,9 @@ public class ValidRateTaskLogicServiceImpl {
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data end===================="));
 //            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
                 int newRoomTypeId = initRoomTypeDto(roomSaleConfig);
+            if (newRoomTypeId < 0) {
+                return executeRecordMap;
+            }
                 roomTypeMap.put(roomSaleConfig.getRoomTypeId(), newRoomTypeId);
                 executeRecordMap.put("roomTypeMap", roomTypeMap);
 //            }
@@ -119,6 +122,13 @@ public class ValidRateTaskLogicServiceImpl {
             if(roomTypeModel == null || roomTypeModel.getId() == null){
                 throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find TRoomTypeDto is null params roomTypeId[%s]===============", tRoomSaleConfigDto.getRoomTypeId()));
             }
+            //
+            BigDecimal basePrice = figureBasePrice(tRoomSaleConfigDto);
+            if (basePrice.compareTo(roomTypeModel.getCost()) > 0) {
+                logger.info("====================initSaleRoomSaleConfigDto >> basePrice > roomType Cost continue");
+                return -1;
+            }
+
             int configRoomTypeId = tRoomSaleConfigDto.getRoomTypeId();
 
             TRoomSaleConfigDto param = new TRoomSaleConfigDto();
