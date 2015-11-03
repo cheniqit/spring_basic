@@ -93,6 +93,7 @@
         id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config
         <include refid="Base_Query_List"/>
+        ORDER BY RoomId DESC
     </select>
     <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="String">
         SELECT
