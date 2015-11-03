@@ -23,6 +23,9 @@ public class RoomSettingServiceImpl implements RoomSettingService {
 
     public TRoomSettingDto selectByRoomTypeIdAndRoomNo(TRoomSettingDto bean){
         TRoomSetting roomSetting= roomTypeSettingMapper.selectByRoomTypeIdAndRoomNo(bean);
+        if (null == roomSetting) {
+            return null;
+        }
         return buildTRoomSettingDto(roomSetting);
     }
     public Integer saveTRoomSetting(TRoomSettingDto bean){
