@@ -392,13 +392,23 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
     public static void main(String[] arg ) {
-        ValidRateTaskServiceImpl t = new ValidRateTaskServiceImpl();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        try {
-            Date[] d= t.getStartEndDate(new Date(), timeFormat.parse("8:00:00"), timeFormat.parse("20:00:00"));
-            System.out.println(d);
-        } catch (ParseException e) {
-            e.printStackTrace();
+//        ValidRateTaskServiceImpl t = new ValidRateTaskServiceImpl();
+//        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+//        try {
+//            Date[] d= t.getStartEndDate(new Date(), timeFormat.parse("8:00:00"), timeFormat.parse("20:00:00"));
+//            System.out.println(d);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+        BigDecimal cost = new BigDecimal(378);
+        BigDecimal price = new BigDecimal(223);
+
+        if(cost.compareTo(price) > 0){
+            System.out.printf("1");
+        }else
+        {
+            System.out.printf("2");
         }
     }
 
@@ -599,7 +609,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     }
     public Boolean  updateRoom(TRoomSaleDto  roomSaleDto){
-          roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomId(),roomSaleDto.getOldRoomTypeId());
+          roomService.updateRoomTypeByRoomType(roomSaleDto.getRoomId(), roomSaleDto.getOldRoomTypeId());
           return true;
     }
 
@@ -656,7 +666,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             if (cost.compareTo(price) > 0) {
                 dto.setSettleValue(steeleValue);
             } else {
-                dto.setSettleValue(cost);
+                BigDecimal costPrice = this.calaValue(cost, configDto.getSettleValue(), configDto.getSettleType());
+                dto.setSettleValue(costPrice);
             }
             int i = this.roomSaleService.updateRoomSale(dto);
             logger.info("==================== save TRoomSaleDto:" + i);
@@ -664,4 +675,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
         logger.info("==================== update allList end");
     }
+
+
 }
