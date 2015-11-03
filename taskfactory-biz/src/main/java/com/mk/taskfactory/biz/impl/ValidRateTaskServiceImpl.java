@@ -477,6 +477,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                             if (dto.getSaleRoomTypeId()==null){
                                 continue;
                             }
+                            //活动结束后把配置表置为F
+                            roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                         /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
