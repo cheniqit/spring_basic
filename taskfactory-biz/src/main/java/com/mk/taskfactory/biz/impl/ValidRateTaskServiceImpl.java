@@ -275,10 +275,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSettingParam.setRoomNo(roomDto.getName());
         TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
 
-        roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
-        this.roomSettingService.updateTRoomSetting(roomSettingDto);
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
+        if (null != roomSettingDto) {
+            roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
+            this.roomSettingService.updateTRoomSetting(roomSettingDto);
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
+        }
 
         //saveRoomSale
         saveRoomSale(configInfoDto, configDto, roomDto, runTime, roomStateDto);
