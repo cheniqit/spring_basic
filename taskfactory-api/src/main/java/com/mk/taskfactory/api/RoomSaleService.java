@@ -16,4 +16,8 @@ public interface RoomSaleService {
     public List<TRoomSaleDto>   queryByConfigAndBack(String  configId,String  isBack);
 
     public List<Integer>   queryByConfigGroup(Integer  configId,String  isBack);
+
+    public List<TRoomSaleDto> queryAll();
+
+    public int updateRoomSale(TRoomSaleDto roomSaleDto);
 }

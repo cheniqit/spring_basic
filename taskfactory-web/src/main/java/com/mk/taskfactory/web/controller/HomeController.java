@@ -61,4 +61,10 @@ public class HomeController {
 ////        this.roomTypeBedService.createByRoomTypeId(314l,1l);
 //        this.roomTypeBedService.deleteByRoomTypeId(1L);
 //    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @ResponseBody
+    public void updateRoomSalePrice() {
+        this.validRateTaskService.updateRoomSalePrice();
+    }
 }

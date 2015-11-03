@@ -153,4 +153,23 @@ public class RoomSaleServiceImpl implements RoomSaleService {
     }
 
 
+    public List<TRoomSaleDto> queryAll() {
+
+        List<TRoomSaleDto> resultList = new ArrayList<TRoomSaleDto>();
+
+        List<TRoomSale> queryList = this.roomSaleMapper.queryAll();
+        for (TRoomSale roomSale : queryList) {
+            TRoomSaleDto dto = new TRoomSaleDto();
+
+            //copy
+            BeanUtils.copyProperties(roomSale, dto);
+            resultList.add(dto);
+        }
+
+        return resultList;
+    }
+
+    public int updateRoomSale(TRoomSaleDto roomSaleDto){
+        return this.roomSaleMapper.updateRoomSale(roomSaleDto);
+    }
 }

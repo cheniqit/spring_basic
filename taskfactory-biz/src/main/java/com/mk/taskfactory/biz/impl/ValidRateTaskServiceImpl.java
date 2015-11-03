@@ -8,6 +8,7 @@ import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
+import com.mk.taskfactory.model.TRoomSale;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,6 +228,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //OTS房态
         OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
         List<Integer> roomVCList = roomStateDto.getRoomIdList();
+
+        BigDecimal price = roomStateDto.getPrice();
+        if (null == price) {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get roomPrice:null continue" );
+            return;
+        }
         int roomVCSize = roomVCList.size();
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " get roomVCSize:" + roomVCSize);
@@ -256,10 +264,14 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             Integer onSaleRoomId, Date runTime, OtsRoomStateDto roomStateDto) {
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " for onSaleRoomId:" + onSaleRoomId);
+
         //get roomDto
         TRoomDto roomDto = this.roomService.findRoomsById(onSaleRoomId);
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " get onSaleRoomId:" + onSaleRoomId);
+
+        //saveRoomSale
+        saveRoomSale(configInfoDto, configDto, roomDto, runTime, roomStateDto);
 
         //updateRoomType to saleRoomTypeId
         TRoomChangeTypeDto roomChangeTypeDto = new TRoomChangeTypeDto();
@@ -275,21 +287,13 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSettingParam.setRoomNo(roomDto.getName());
         TRoomSettingDto roomSettingDto = this.roomSettingService.selectByRoomTypeIdAndRoomNo(roomSettingParam);
 
-        roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
-         this.roomSettingService.updateTRoomSetting(roomSettingDto);
-        logger.info("============sales online job >> configDto.id:"
-           + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
+        if (null != roomSettingDto) {
+            roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
+            this.roomSettingService.updateTRoomSetting(roomSettingDto);
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
+        }
 
-
-//        if (null != roomSettingDto) {
-//            roomSettingDto.setRoomTypeId(configDto.getSaleRoomTypeId());
-//            this.roomSettingService.updateTRoomSetting(roomSettingDto);
-//            logger.info("============sales online job >> configDto.id:"
-//                    + configDto.getId() + " update roomSetting id:" + roomSettingDto.getId() + " online");
-//        }
-
-        //saveRoomSale
-        saveRoomSale(configInfoDto, configDto, roomDto, runTime, roomStateDto);
     }
 
     private List<Integer> buildOnSaleRoomList(Integer roomId, Integer num, List<Integer> roomVCList, int roomVCSize) {
@@ -324,23 +328,30 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto,
             TRoomDto roomDto, Date runTime,OtsRoomStateDto roomStateDto) {
 
-        BigDecimal basePrice = BigDecimal.ZERO;
+        BigDecimal basePrice = roomStateDto.getPrice();
+        logger.info("============sales online job >> configDto.id:"
+                + configDto.getId() + " basePrice: " + basePrice);
 
-        TBasePriceDto basePriceDto = this.basePriceService.findByRoomtypeId(new Long(configDto.getRoomTypeId()));
-
-        if (null == basePriceDto) {
-            basePrice = roomStateDto.getPrice();
+        BigDecimal saleValue = this.calaValue(basePrice, configDto.getSaleValue(), ValueTypeEnum.getById(configDto.getSaleType()));
+        if (null == saleValue) {
             logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " basePrice: null");
+                    + configDto.getId() + " saleValue:null continue" );
+            return;
         } else {
-            basePrice = basePriceDto.getPrice();
             logger.info("============sales online job >> configDto.id:"
-                    + configDto.getId() + " basePrice:" + basePrice);
+                    + configDto.getId() + " saleValue:" + saleValue.toString());
         }
+
         BigDecimal settleValue =
                 this.calaValue(basePrice, configDto.getSettleValue(), configDto.getSettleType());
-        logger.info("============sales online job >> configDto.id:"
-                + configDto.getId() + " settleValue:" + settleValue.toString());
+        if (null == settleValue) {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " settleValue:null continue" );
+            return;
+        } else {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " settleValue:" + settleValue.toString());
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //
@@ -356,7 +367,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomSaleDto.setPms(roomDto.getPms());
         roomSaleDto.setCreateDate(dateFormat.format(new Date()));
 
-        roomSaleDto.setSalePrice(configDto.getSaleValue());
+        roomSaleDto.setSalePrice(saleValue);
         roomSaleDto.setCostPrice(basePrice);
 
         roomSaleDto.setStartTime(dateFormat.format(startDate));
@@ -444,18 +455,25 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         if (null == value) {
             return baseValue;
         }
+
+        logger.info("============sales online job >> calaValue");
         if (ValueTypeEnum.TYPE_TO == valueTypeEnum) {
+            logger.info("============sales online job >> calaValue：TYPE_TO：" + value);
             return value;
         } else if (ValueTypeEnum.TYPE_ADD == valueTypeEnum) {
             BigDecimal result = baseValue.subtract(value);
             if (result.compareTo(BigDecimal.ZERO) > 0 ) {
+                logger.info("============sales online job >> calaValue：TYPE_ADD：" + value);
                 return result;
             }else {
+                logger.info("============sales online job >> calaValue：TYPE_ADD：" + BigDecimal.ZERO);
                 return BigDecimal.ZERO;
             }
         } else if (ValueTypeEnum.TYPE_OFF == valueTypeEnum) {
+            logger.info("============sales online job >> calaValue：TYPE_OFF：" + value);
             return baseValue.multiply(value).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
         } else {
+            logger.info("============sales online job >> calaValue：else：" + baseValue);
             return baseValue;
         }
     }
@@ -601,5 +619,35 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     public Boolean  updateRoomSaleConfigValid(Integer id,String  valid){
         roomSaleConfigService.updateRoomSaleConfigValid(id,valid);
         return  true;
+    }
+
+    public void updateRoomSalePrice(){
+        List<TRoomSaleDto> allList = this.roomSaleService.queryAll();
+
+        logger.info("==================== allList.size:" + allList.size());
+        for (TRoomSaleDto dto  : allList) {
+            logger.info("==================== update TRoomSaleDto start");
+            Integer oldRoomTypeId = dto.getOldRoomTypeId();
+            Integer hotelId = dto.getHotelId();
+
+            logger.info("==================== oldRoomTypeId:" +oldRoomTypeId + "  hotelId:"+ hotelId);
+            OtsRoomStateDto stateDto = this.roomService.getOtsRoomState(hotelId, oldRoomTypeId, null, null);
+            logger.info("==================== stateDto:" +stateDto.getPmsPrice());
+
+            //
+            Integer configId = dto.getConfigId();
+            TRoomSaleConfigDto configDto = this.roomSaleConfigService.queryRoomSaleConfigById(configId);
+            logger.info("==================== configDto:" +configId + " obj: " + configDto);
+
+            BigDecimal price = stateDto.getPrice();
+            BigDecimal steeleValue = this.calaValue(price, configDto.getSettleValue(), configDto.getSettleType());
+            logger.info("==================== steeleValue:" + steeleValue);
+
+            //
+            dto.setSettleValue(steeleValue);
+            int i = this.roomSaleService.updateRoomSale(dto);
+            logger.info("==================== save TRoomSaleDto:" + i);
+            logger.info("==================== update TRoomSaleDto end");
+        }
     }
 }

@@ -17,4 +17,8 @@ public interface RoomSaleMapper {
     public TRoomSale getHotelSaleByHotelId(Integer hotelId);
     public List<TRoomSale>   queryByConfigAndBack(HashMap parme);
     public List<Integer>   queryByConfigGroup(HashMap parme);
+
+    public List<TRoomSale> queryAll();
+
+    public int updateRoomSale(TRoomSaleDto roomSaleDto);
 }

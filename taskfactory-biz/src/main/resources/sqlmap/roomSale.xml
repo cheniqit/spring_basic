@@ -149,4 +149,11 @@
         SELECT  roomtypeId
         from t_room_sale  where   configId =  #{configId} and  isBack =#{isBack}   group  by   roomtypeId
     </select>
+
+
+    <select id="queryAll" resultMap="tRoomSale"  parameterType="java.util.Map" >
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_room_sale
+    </select>
 </mapper>
