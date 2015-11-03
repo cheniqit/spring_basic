@@ -116,7 +116,8 @@
          configId =  #{configId},
          isBack =  #{isBack},
          saleName =  #{saleName},
-         saleType =  #{saleType}
+         saleType =  #{saleType},
+         settleValue=#{settleValue}
         where id = #{id}
     </update>
 
