@@ -125,6 +125,7 @@ public class ValidRateTaskLogicServiceImpl {
             param.setValid(ValidEnum.VALID.getId());
             param.setRoomTypeId(configRoomTypeId);
             param.setSaleRoomTypeIdIsNotNull(true);
+            param.setSaleConfigInfoId(tRoomSaleConfigDto.getSaleConfigInfoId());
             List<TRoomSaleConfigDto> existsList =  this.roomSaleConfigService.queryRoomSaleConfigByParams(param);
 
             if (existsList.isEmpty()){
@@ -159,6 +160,7 @@ public class ValidRateTaskLogicServiceImpl {
                 basePriceDto.setPrice(price);
                 basePriceService.saveBasePriceService(basePriceDto);
             } else {
+
                 TRoomSaleConfigDto dto = existsList.get(0);
                 newRoomTypeId = dto.getSaleRoomTypeId();
             }
