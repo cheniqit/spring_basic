@@ -83,19 +83,5 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         }
         return  roomDtos;
     }
-    public List<TRoomSaleConfigDto> queryRoomSaleConfigByStarted(String   started){
-        if(StringUtils.isEmpty(started)){
-            return  null;
-        }
-        List<TRoomSaleConfig> list=roomSaleConfigMapper.queryRoomSaleConfigByStarted(started);
-        if (list==null){
-            return  null;
-        }
-        List<TRoomSaleConfigDto> roomDtos=new ArrayList<TRoomSaleConfigDto>();
-        for (TRoomSaleConfig roomSaleConfig :list) {
-            roomDtos.add(buildTRoomSaleConfigDto(roomSaleConfig));
-        }
-        return  roomDtos;
-    }
 
 }

@@ -509,7 +509,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     //数据回复
     public void dateReback() {
         logger.info("============sales dateReback job >> start============");
-        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByStarted(ValidEnum.VALID.getId());
+        List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
+        logger.info("============sales dateReback job >> get TRoomSaleConfigDto size:" + list.size());
         Map<Integer,Integer> hotelMap=new HashMap<Integer, Integer>();
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
@@ -518,7 +519,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     //比较活动结束日期和当前日期
                     //比较活动结束时间和当前时间
                     if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
-                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " start");
+                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " end,");
                     //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                          reBackRoom(dto);
 
@@ -530,6 +531,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         java.util.Date now=dafShort.parse(nowDate);
                         java.util.Date endDate = dafShort.parse(dto.getEndDate()+" "+dto.getEndTime());
                         if ( now.compareTo(endDate)>= 0) {
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " start close job");
                             if (dto.getSaleRoomTypeId()==null){
                                 logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " getSaleRoomTypeId IS NULL continue");
                                 continue;
@@ -566,6 +568,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                         + "hotelId is null, NOT update price");
                                 continue;
                             }
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " end close job");
 
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " to update price");
@@ -582,9 +585,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                             logger.info(String.format("==================== updatemikepricesbegin ===================="));
                              String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, dto.getHotelId().toString());
                             logger.info(String.format("====================updatemikeprices end  hotelId:" + dto.getHotelId() + " ===================="));
+
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " end update price");
                         }
                     } else {
-                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " not start");
+                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " not end");
                     }
                 } catch (ParseException e){
                     e.printStackTrace();
