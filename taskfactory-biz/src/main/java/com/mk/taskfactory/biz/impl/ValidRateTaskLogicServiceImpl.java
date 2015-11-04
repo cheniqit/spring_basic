@@ -94,6 +94,7 @@ public class ValidRateTaskLogicServiceImpl {
             BigDecimal roomTypePrice = otsRoomStateDto.getPrice();
             if(roomTypePrice == null){
                 throw new RuntimeException(String.format("saveBasePriceService roomTypePrice id is null >> tRoomSaleConfigDto HotelId[%s]", tRoomSaleConfigDto.getHotelId()));
+
             }
             price = roomTypePrice.subtract(tRoomSaleConfigDto.getSaleValue());
             price = price.compareTo(new BigDecimal(0)) < 1 ? new BigDecimal(0) : price;
@@ -169,27 +170,11 @@ public class ValidRateTaskLogicServiceImpl {
                 BigDecimal price = figureBasePrice(tRoomSaleConfigDto);
                 basePriceDto.setPrice(price);
                 basePriceService.saveBasePriceService(basePriceDto);
+
             } else {
 
                 TRoomSaleConfigDto dto = existsList.get(0);
                 newRoomTypeId = dto.getSaleRoomTypeId();
-            }
-            //初始化t_roomtype_bed
-            roomTypeBedService.createByRoomTypeId(Long.valueOf(configRoomTypeId), Long.valueOf(newRoomTypeId));
-            //初始化t_baseprice
-            //先查找新房间类型的价格是否有，如果有则只需要更新
-            TBasePriceDto newBasePriceDto = basePriceService.findByRoomtypeId(newRoomTypeId.longValue());
-            if(newBasePriceDto == null){
-                TBasePriceDto oldBasePriceDto = basePriceService.findByRoomtypeId(new Long(configRoomTypeId));
-                //根据配置文件的价格规则算出价格设置到base Price表中
-
-                if(oldBasePriceDto == null || oldBasePriceDto.getId() == null){
-                    throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto  >> find tBasePriceDto id is null roomTypeId[%s]", configRoomTypeId));
-                }
-                oldBasePriceDto.setRoomtypeid(newRoomTypeId.longValue());
-                saveBasePrice(tRoomSaleConfigDto, oldBasePriceDto);
-            }else {
-                updateBasePrice(tRoomSaleConfigDto, newBasePriceDto);
             }
             //回填config信息
             tRoomSaleConfigDto.setSaleRoomTypeId(newRoomTypeId);

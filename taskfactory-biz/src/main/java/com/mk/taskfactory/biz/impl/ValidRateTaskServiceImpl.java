@@ -235,11 +235,22 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     + configDto.getId() + " get roomPrice:null continue" );
             return;
         }
+
+        //眯客价大于门市价
         if (pmsPrice.compareTo(price) <= 0) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
         }
+        //结算价大于原眯客价
+        BigDecimal settleValue =
+                this.calaValue(price, configDto.getSettleValue(), configDto.getSettleType());
+        if (price.compareTo(settleValue) <= 0) {
+            logger.info("============sales online job >> configDto.id:"
+                    + configDto.getId() + " get settleValue>roomPrice continue" );
+            return;
+        }
+        //
         int roomVCSize = roomVCList.size();
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " get roomVCSize:" + roomVCSize);
