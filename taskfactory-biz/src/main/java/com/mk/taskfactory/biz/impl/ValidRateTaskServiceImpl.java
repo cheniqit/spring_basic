@@ -8,9 +8,7 @@ import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
-import com.mk.taskfactory.model.TRoomSale;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
-import com.mk.taskfactory.model.TRoomType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,7 +235,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     + configDto.getId() + " get roomPrice:null continue" );
             return;
         }
-        if (pmsPrice.compareTo(price) > 0) {
+        if (pmsPrice.compareTo(price) < 0) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
