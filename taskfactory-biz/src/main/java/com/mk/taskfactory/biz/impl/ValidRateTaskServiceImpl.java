@@ -237,7 +237,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //眯客价大于门市价
-        if (pmsPrice.compareTo(price) <= 0) {
+        if (pmsPrice.compareTo(price) < 0) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
