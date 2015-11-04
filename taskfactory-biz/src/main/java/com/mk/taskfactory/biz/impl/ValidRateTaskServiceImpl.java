@@ -513,12 +513,16 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Map<Integer,Integer> hotelMap=new HashMap<Integer, Integer>();
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
+                logger.info("============sales dateReback job >> do saleConfigDto id:" + dto.getId());
                 try {
                     //比较活动结束日期和当前日期
                     //比较活动结束时间和当前时间
                     if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
+                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " start");
                     //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
                          reBackRoom(dto);
+
+                        logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " START DISVALID");
                         roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
                         String nowDate = DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss");
                         SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -527,25 +531,44 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         java.util.Date endDate = dafShort.parse(dto.getEndDate()+" "+dto.getEndTime());
                         if ( now.compareTo(endDate)>= 0) {
                             if (dto.getSaleRoomTypeId()==null){
+                                logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " getSaleRoomTypeId IS NULL continue");
                                 continue;
                             }
                             //活动结束后把配置表置为F
+                            logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID DISVALID");
                             roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " delete roomTypeInfo roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                         /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
                          */
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " delete roomTypeFacility roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
 
                          /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
                          */
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " delete roomType roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
+
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " delete BasePrice roomTypeId:" + dto.getSaleRoomTypeId());
                             basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
+
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " delete roomTypeBed roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeBedService.deleteByRoomTypeId(dto.getSaleRoomTypeId().longValue());
                             if (dto.getHotelId()==null){
+                                logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                        + "hotelId is null, NOT update price");
                                 continue;
                             }
+
+                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
+                                    + " to update price");
                             if (hotelMap.get(dto.getHotelId())==null){
                                 logger.info(String.format("==================== ots/hotel/init begin ===================="));
                                THotel hotel= hotelMapper.getCityIdByHotelId(dto.getHotelId());
@@ -553,18 +576,16 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                     continue;
                                 }
                                 String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
-                                logger.info(String.format("====================ots/hotel/init end  result:" + postResult + " ===================="));
+                                logger.info(String.format("====================ots/hotel/init end  hotelId:" + hotel.getId() + " ===================="));
                                 hotelMap.put(hotel.getId(),hotel.getCityId());
                             }
                             logger.info(String.format("==================== updatemikepricesbegin ===================="));
                              String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, dto.getHotelId().toString());
-                            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
-
+                            logger.info(String.format("====================updatemikeprices end  hotelId:" + dto.getHotelId() + " ===================="));
                         }
-
-
+                    } else {
+                        logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " not start");
                     }
-
                 } catch (ParseException e){
                     e.printStackTrace();
                     logger.info("==================== 返回异常 ====================");
