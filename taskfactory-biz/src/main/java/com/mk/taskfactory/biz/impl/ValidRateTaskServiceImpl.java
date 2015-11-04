@@ -235,7 +235,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     + configDto.getId() + " get roomPrice:null continue" );
             return;
         }
-        if (pmsPrice.compareTo(price) < 0) {
+        if (pmsPrice.compareTo(price) <= 0) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
