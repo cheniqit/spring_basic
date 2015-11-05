@@ -751,7 +751,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //update
+        Integer leftSize = hotelSet.size();
         for (Integer hotelId : hotelSet) {
+            logger.info(String.format("====================initHotel >> update left:[%s]", leftSize--));
             //log start
             logger.info(String.format("====================initHotel >> update hotel id[%s] start", hotelId));
 
