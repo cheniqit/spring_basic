@@ -46,17 +46,19 @@ public class ValidRateTaskLogicServiceImpl {
         //将新roomTypeId和老的roomTypeId对应起来
         Map<Integer, Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
-        logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data begin===================="));
+        logger.info(String.format("====================initSaleRoomSaleConfigDto >> begin do roomSaleConfig id : [%s]",roomSaleConfig.getId()));
         try {
 
-            logger.info(String.format("====================initSaleRoomSaleConfigDto >> find data end===================="));
 //            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
                 int newRoomTypeId = initRoomTypeDto(roomSaleConfig);
             if (newRoomTypeId < 0) {
                 //失败后，将vaild置为F
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F1", roomSaleConfig.getId()));
                 this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(),ValidEnum.DISVALID.getId());
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F2", roomSaleConfig.getId()));
                 return executeRecordMap;
             }
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig createRoomTypeId : [%s]", newRoomTypeId));
                 roomTypeMap.put(roomSaleConfig.getRoomTypeId(), newRoomTypeId);
                 executeRecordMap.put("roomTypeMap", roomTypeMap);
 //            }
@@ -68,8 +70,14 @@ public class ValidRateTaskLogicServiceImpl {
 
         } catch (Exception e) {
             e.printStackTrace();
+            //失败后，将vaild置为F
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F1", roomSaleConfig.getId()));
+            this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(), ValidEnum.DISVALID.getId());
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F2", roomSaleConfig.getId()));
             throw new RuntimeException("initSaleRoomSaleConfigDto error");
         }
+
+        logger.info(String.format("====================initSaleRoomSaleConfigDto >> end do roomSaleConfig id : [%s]",roomSaleConfig.getId()));
         return executeRecordMap;
     }
 
@@ -129,9 +137,12 @@ public class ValidRateTaskLogicServiceImpl {
             }
             OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(),tRoomSaleConfigDto.getRoomTypeId(),null,null);
             BigDecimal mikePrice = roomStateDto.getPrice();
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomSate mikePrice:[%s]",mikePrice));
             //眯客价大于门市价
             BigDecimal basePrice = validRateTaskService.calaValue(
                     mikePrice, tRoomSaleConfigDto.getSaleValue(), ValueTypeEnum.getById(tRoomSaleConfigDto.getSaleType()));
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get basePrice:[%s]",basePrice));
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomTypeModel.getCost():[%s]",roomTypeModel.getCost()));
             if (basePrice.compareTo(roomTypeModel.getCost()) > 0) {
                 logger.info("====================initSaleRoomSaleConfigDto >> basePrice > roomType Cost continue");
                 return -1;
@@ -139,6 +150,7 @@ public class ValidRateTaskLogicServiceImpl {
             //结算价大于原眯客价
             BigDecimal settleValue = validRateTaskService.calaValue(
                     mikePrice, tRoomSaleConfigDto.getSettleValue(), tRoomSaleConfigDto.getSettleType());
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get settleValue:[%s]",settleValue));
             if (settleValue.compareTo(mikePrice) > 0) {
                 logger.info("====================initSaleRoomSaleConfigDto >> settleValue > basePrice Cost continue");
                 return -1;
@@ -152,6 +164,7 @@ public class ValidRateTaskLogicServiceImpl {
             param.setSaleRoomTypeIdIsNotNull(true);
             param.setSaleConfigInfoId(tRoomSaleConfigDto.getSaleConfigInfoId());
             List<TRoomSaleConfigDto> existsList =  this.roomSaleConfigService.queryRoomSaleConfigByParams(param);
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomSaleConfig List size:[%s]",existsList.size()));
 
             if (existsList.isEmpty()){
                 //初始化t_roomtype
@@ -159,6 +172,8 @@ public class ValidRateTaskLogicServiceImpl {
                 roomTypeModel.setRoomNum(tRoomSaleConfigDto.getNum());
                 roomTypeService.saveTRoomType(roomTypeModel);
                 newRoomTypeId = roomTypeModel.getId();
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new RoomType id:[%s]",newRoomTypeId));
+
                 //初始化t_roomtype_info
                 TRoomTypeInfoDto findRoomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(configRoomTypeId);
                 if(findRoomTypeInfo == null || findRoomTypeInfo.getId() == null){
@@ -166,6 +181,7 @@ public class ValidRateTaskLogicServiceImpl {
                 }
                 findRoomTypeInfo.setRoomTypeId(newRoomTypeId);
                 roomTypeInfoMapper.saveRoomTypeInfo(findRoomTypeInfo);
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new findRoomTypeInfo id:[%s]", findRoomTypeInfo.getId()));
                 //初始化t_roomtype_facility
                 List<TRoomTypeFacilityDto> roomTypeFacilityDtos = roomTypeFacilityService.findByRoomTypeId(configRoomTypeId);
 //            if(CollectionUtils.isEmpty(roomTypeFacilityDtos)){
@@ -174,16 +190,19 @@ public class ValidRateTaskLogicServiceImpl {
                 for (TRoomTypeFacilityDto roomTypeFacilityDto : roomTypeFacilityDtos) {
                     roomTypeFacilityDto.setRoomTypeId(newRoomTypeId);
                     roomTypeFacilityService.saveRoomSaleConfig(roomTypeFacilityDto);
+                    logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new roomTypeFacility id:[%s]", roomTypeFacilityDto.getId()));
                 }
                 //初始化t_roomtype_bed
                 roomTypeBedService.createByRoomTypeId(Long.valueOf(configRoomTypeId), Long.valueOf(newRoomTypeId));
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new roomTypeBed"));
+
                 //初始化t_baseprice
                 TBasePriceDto basePriceDto = new TBasePriceDto();
                 basePriceDto.setUpdatetime(new Date());
                 basePriceDto.setRoomtypeid(newRoomTypeId.longValue());
-                BigDecimal price = figureBasePrice(tRoomSaleConfigDto);
-                basePriceDto.setPrice(price);
+                basePriceDto.setPrice(basePrice);
                 basePriceService.saveBasePriceService(basePriceDto);
+                logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new basePrice id:[%s]",basePriceDto.getId()));
 
             } else {
 

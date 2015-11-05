@@ -37,6 +37,16 @@ public class TRoomSaleConfigDto {
     private String fontColor;
     private Boolean saleRoomTypeIdIsNull;
     private Boolean saleRoomTypeIdIsNotNull;
+    private Date updatePriceCacheTime;
+
+
+    public Date getUpdatePriceCacheTime() {
+        return updatePriceCacheTime;
+    }
+
+    public void setUpdatePriceCacheTime(Date updatePriceCacheTime) {
+        this.updatePriceCacheTime = updatePriceCacheTime;
+    }
 
     public Boolean isSaleRoomTypeIdIsNotNull() {
         return saleRoomTypeIdIsNotNull;
