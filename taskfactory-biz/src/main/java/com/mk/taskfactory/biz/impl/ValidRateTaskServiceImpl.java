@@ -729,7 +729,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         Set<Integer> hotelSet = new HashSet<Integer>();
 
-        if (null == paramHotelId) {
+        if (null != paramHotelId) {
             hotelSet.add(paramHotelId.intValue());
         } else {
             List<TRoomSaleConfigDto> dtoList = null;
