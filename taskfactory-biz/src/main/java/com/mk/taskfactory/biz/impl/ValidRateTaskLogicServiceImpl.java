@@ -141,9 +141,12 @@ public class ValidRateTaskLogicServiceImpl {
             //眯客价大于门市价
             BigDecimal basePrice = validRateTaskService.calaValue(
                     mikePrice, tRoomSaleConfigDto.getSaleValue(), ValueTypeEnum.getById(tRoomSaleConfigDto.getSaleType()));
-            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get basePrice:[%s]",basePrice));
-            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomTypeModel.getCost():[%s]",roomTypeModel.getCost()));
-            if (basePrice.compareTo(roomTypeModel.getCost()) > 0) {
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get basePrice:[%s]", basePrice));
+            logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomTypeModel.getCost():[%s]", roomTypeModel.getCost()));
+           if(basePrice == null){
+               logger.info("====================initSaleRoomSaleConfigDto >> basePrice is null");
+               return -1;
+            }else if ( basePrice.compareTo(roomTypeModel.getCost()) > 0) {
                 logger.info("====================initSaleRoomSaleConfigDto >> basePrice > roomType Cost continue");
                 return -1;
             }
@@ -151,7 +154,10 @@ public class ValidRateTaskLogicServiceImpl {
             BigDecimal settleValue = validRateTaskService.calaValue(
                     mikePrice, tRoomSaleConfigDto.getSettleValue(), tRoomSaleConfigDto.getSettleType());
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get settleValue:[%s]",settleValue));
-            if (settleValue.compareTo(mikePrice) > 0) {
+            if (settleValue == null){
+                logger.info("====================initSaleRoomSaleConfigDto >> settleValue is null");
+                return -1;
+            }else if (settleValue.compareTo(mikePrice) > 0) {
                 logger.info("====================initSaleRoomSaleConfigDto >> settleValue > basePrice Cost continue");
                 return -1;
             }

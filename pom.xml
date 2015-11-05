@@ -65,9 +65,7 @@
 
         <profile>
             <id>test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+
             <properties>
                 <label>test</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -81,6 +79,9 @@
 
         <profile>
             <id>dump-simulation</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
