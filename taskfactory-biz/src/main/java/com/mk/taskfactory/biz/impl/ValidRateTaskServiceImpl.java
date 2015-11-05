@@ -110,27 +110,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote begin===================="));
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
-        for(Map.Entry<Integer, Integer> entry : hotelMap.entrySet()){
-            String hotelId = entry.getKey().toString();
-            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId);
-            if (!updateCacheSuccessFlag) {
-                logger.info(String.format("====================initSaleRoomSaleConfigDto updateMikePriceCache>> result[%s] remote end", hotelId));
-            }
-            THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
-            if (hotel==null){
-                logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit hotel is null>> hotelId[%s] remote end", hotelId));
-                continue;
-            }
 
-            String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
 
-            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
-            String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId);
-            logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
 
-            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] start", hotelId));
-            this.roomSaleConfigService.updatePriceCache(Long.parseLong(hotelId));
-            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] end", hotelId));
+        //刷新缓存及索引
+        if (!hotelMap.keySet().isEmpty()) {
+            this.hotelRemoteService.initHotel(hotelMap.keySet());
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }
@@ -517,7 +502,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         logger.info("============sales dateReback job >> start============");
         List<TRoomSaleConfigDto> list = roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
         logger.info("============sales dateReback job >> get TRoomSaleConfigDto size:" + list.size());
-        Map<Integer,Integer> hotelMap=new HashMap<Integer, Integer>();
+        Set<Integer> hotelSet=new HashSet<Integer>();
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
                 logger.info("============sales dateReback job >> do saleConfigDto id:" + dto.getId());
@@ -569,36 +554,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete roomTypeBed roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeBedService.deleteByRoomTypeId(dto.getSaleRoomTypeId().longValue());
-                            if (dto.getHotelId()==null){
-                                logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
-                                        + "hotelId is null, NOT update price");
-                                continue;
-                            }
-                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " end close job");
 
-                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
-                                    + " to update price");
-                            Integer hotelId = dto.getHotelId();
-                            if (hotelMap.get(dto.getHotelId())==null){
-                                logger.info(String.format("==================== ots/hotel/init begin ===================="));
-                               THotel hotel= hotelMapper.getCityIdByHotelId(hotelId);
-                                if (hotel==null){
-                                    continue;
-                                }
-                                String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotelId.toString());
-                                logger.info(String.format("====================ots/hotel/init end  hotelId:" + hotel.getId() + " ===================="));
-                                hotelMap.put(hotelId,hotel.getCityId());
-                            }
-                            logger.info(String.format("==================== updatemikepricesbegin ===================="));
-                             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId.toString());
-                            logger.info(String.format("====================updatemikeprices end  hotelId:" + hotelId + " ===================="));
-
-                            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] start", hotelId));
-                            this.roomSaleConfigService.updatePriceCache(hotelId.longValue());
-                            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] end", hotelId));
-
-                            logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
-                                    + " end update price");
+                            //
+                            hotelSet.add(dto.getHotelId());
                         }
                     } else {
                         logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " not end");
@@ -608,6 +566,11 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     logger.info("==================== 返回异常 ====================");
                 }
             }
+        }
+
+        //刷新缓存及索引
+        if (!hotelSet.isEmpty()) {
+            this.hotelRemoteService.initHotel(hotelSet);
         }
         logger.info("============sales dateReback job >> end============");
     }
@@ -751,43 +714,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //update
-        Integer leftSize = hotelSet.size();
-        for (Integer hotelId : hotelSet) {
-            logger.info(String.format("====================initHotel >> update left:[%s]", leftSize--));
-            //log start
-            logger.info(String.format("====================initHotel >> update hotel id[%s] start", hotelId));
-
-            //find hotel
-            logger.info(String.format("====================initHotel >> find hotel id[%s] start", hotelId));
-            THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
-            if (hotel==null){
-                logger.info(String.format("====================initHotel>> hotelId[%s] not find continue", hotelId));
-                continue;
-            }
-            logger.info(String.format("====================initHotel >> find hotel id[%s] end", hotelId));
-
-            //updateMikePriceCache
-            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] start", hotelId));
-            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId.toString());
-            if (!updateCacheSuccessFlag) {
-                logger.info(String.format("====================initHotel>> updateMikePriceCache faild hotel id : [%s]", hotelId));
-            }
-            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] end", hotelId));
-
-            //hotelInit
-            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] start", hotelId));
-            String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
-            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] end", hotelId));
-
-            //updatemikeprices
-            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] start", hotelId));
-            String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId.toString());
-            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] end", hotelId));
-
-            //log end
-            logger.info(String.format("====================initHotel >> update hotel id[%s] end", hotelId));
-        }
-
+        this.hotelRemoteService.initHotel(hotelSet);
         logger.info(String.format("====================initHotel >> end"));
     }
 }

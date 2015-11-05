@@ -138,6 +138,10 @@ public class ValidRateTaskLogicServiceImpl {
             OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(),tRoomSaleConfigDto.getRoomTypeId(),null,null);
             BigDecimal mikePrice = roomStateDto.getPrice();
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto get roomSate mikePrice:[%s]",mikePrice));
+            if(mikePrice == null){
+                logger.info("====================initSaleRoomSaleConfigDto >> mikePrice is null");
+                return -1;
+            }
             //眯客价大于门市价
             BigDecimal basePrice = validRateTaskService.calaValue(
                     mikePrice, tRoomSaleConfigDto.getSaleValue(), ValueTypeEnum.getById(tRoomSaleConfigDto.getSaleType()));

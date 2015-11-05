@@ -1,15 +1,19 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.common.Constants;
+import com.mk.taskfactory.model.THotel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Thinkpad on 2015/10/17.
@@ -19,6 +23,9 @@ public class HotelRemoteService {
     private static Logger logger = LoggerFactory.getLogger(ValidRateTaskLogicServiceImpl.class);
 
     private final static String UPDATE_MIKE_PRICE_CACHE = "/hotel/updatemikepricecache";
+
+    @Autowired
+    private HotelMapper hotelMapper;
 
     public boolean updateMikePriceCache(String hotelid){
         logger.info(String.format("remote url [%s] begin params hotelid[%s]", this.UPDATE_MIKE_PRICE_CACHE, hotelid));
@@ -46,18 +53,11 @@ public class HotelRemoteService {
         params.put("token", token);
         params.put("cityid", cityId);
         params.put("hotelid", hotelId);
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-        }
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
         return postResult;
     }
+
     public String updatemikeprices(String token, String hotelId){
-        try {
-            Thread.sleep(1200);
-        } catch (InterruptedException e) {
-        }
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);
         params.put("hotelid", hotelId);
@@ -65,4 +65,89 @@ public class HotelRemoteService {
         return postResult;
     }
 
+    public void initHotel(Set<Integer> hotelSet) {
+        logger.info(String.format("====================initHotel >> initHotel start"));
+        if (null == hotelSet || hotelSet.isEmpty()) {
+            logger.info(String.format("====================initHotel >> initHotel set is null end"));
+            return;
+        }
+
+        Integer leftSize = hotelSet.size();
+        logger.info(String.format("====================initHotel >> hotelSet.size:[%s]", leftSize));
+
+        //updateMikePriceCache
+        for (Integer hotelId : hotelSet) {
+            logger.info(String.format("====================initHotel >> updateMikePriceCache left:[%s]", leftSize--));
+
+            //updateMikePriceCache
+            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] start", hotelId));
+
+            boolean updateCacheSuccessFlag = this.updateMikePriceCache(hotelId.toString());
+            if (!updateCacheSuccessFlag) {
+                logger.info(String.format("====================initHotel>> updateMikePriceCache faild hotel id : [%s] try again", hotelId));
+                updateCacheSuccessFlag = this.updateMikePriceCache(hotelId.toString());
+
+                if (!updateCacheSuccessFlag) {
+                    logger.info(String.format("====================initHotel>> updateMikePriceCache faild hotel id : [%s]", hotelId));
+                }
+            }
+            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] end", hotelId));
+
+        }
+
+        //initHotel
+        leftSize = hotelSet.size();
+        for (Integer hotelId : hotelSet) {
+            logger.info(String.format("====================initHotel >> hotelInit left:[%s]", leftSize--));
+            THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
+            if (hotel==null){
+                logger.info(String.format("====================initHotel>>find hotel hotelId[%s] not find continue", hotelId));
+                continue;
+            }
+            logger.info(String.format("====================initHotel >> find hotel id[%s] end", hotelId));
+            //hotelInit
+            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] start", hotelId));
+            try {
+                this.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+            }catch (Exception e) {
+                logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] faild try again", hotelId));
+                try {
+                    this.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+                }catch (Exception e1) {
+                    logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] faild", hotelId));
+                }
+            }
+
+            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] end", hotelId));
+        }
+
+        //
+        logger.info(String.format("====================initHotel >> sleep 5000 start"));
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
+        logger.info(String.format("====================initHotel >> sleep 5000 end"));
+
+        //
+        leftSize = hotelSet.size();
+        for (Integer hotelId : hotelSet) {
+            logger.info(String.format("====================initHotel >> updatemikeprices left:[%s]", leftSize--));
+            //updatemikeprices
+            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] start", hotelId));
+            try {
+                this.updatemikeprices(Constants.token, hotelId.toString());
+            } catch (Exception e) {
+                logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] faild try again", hotelId));
+                try {
+                    this.updatemikeprices(Constants.token, hotelId.toString());
+                } catch (Exception e1) {
+                    logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] faild", hotelId));
+                }
+            }
+            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] end", hotelId));
+        }
+
+        logger.info(String.format("====================initHotel >> initHotel end"));
+    }
 }

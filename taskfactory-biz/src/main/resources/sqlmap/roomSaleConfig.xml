@@ -96,7 +96,7 @@
         <include refid="Base_Query_List"/>
         ORDER BY RoomId DESC
     </select>
-    <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="String">
+    <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="java.lang.String">
          SELECT
         b.id,b.hotelId, b.roomId, b.roomTypeId,b.saleType,b.costPrice,b.num,b.saleName,b.settleValue,b.settleType,
         b.styleType,b.started,b.saleConfigInfoId,b.saleRoomTypeId,a.startDate,a.endDate,a.startTime,a.endTime,b.saleValue,a.saleLabel,a.description,a.fontColor,

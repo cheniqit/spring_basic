@@ -4,6 +4,7 @@ package com.mk.taskfactory.biz.mapper;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 import com.mk.taskfactory.model.TRoomSaleConfig;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface RoomSaleConfigMapper {
     public Integer updateRoomSaleConfig(TRoomSaleConfigDto bean);
     public  Integer  updateRoomSaleConfigValid(HashMap mp);
     public  Integer  updateRoomSaleConfigStarted(HashMap hm);
-    public List<TRoomSaleConfig> queryRoomSaleConfigByValid(String  valid);
+    public List<TRoomSaleConfig> queryRoomSaleConfigByValid(@Param("valid")String  valid);
     public TRoomSaleConfig queryRoomSaleConfigById(Integer id);
 
     public Integer updatePriceCache(Long hotelId);
