@@ -84,4 +84,7 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
         return  roomDtos;
     }
 
+    public Integer updatePriceCache(Long hotelId) {
+        return this.roomSaleConfigMapper.updatePriceCache(hotelId);
+    }
 }

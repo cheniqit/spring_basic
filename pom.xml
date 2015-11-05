@@ -52,9 +52,6 @@
 
         <profile>
             <id>shanghai-simulation</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -68,6 +65,9 @@
 
         <profile>
             <id>test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>test</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -76,6 +76,19 @@
                 <jdbc.password>www.imike.com</jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://ota2test.imike.cn/ots</ots.url>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>dump-simulation</id>
+            <properties>
+                <label>simulation</label>
+                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+                <jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/otsdump?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.user>root</jdbc.user>
+                <jdbc.password>LZBV5D5ak</jdbc.password>
+                <ots.token>1qaz2wsx</ots.token>
+                <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
             </properties>
         </profile>
     </profiles>

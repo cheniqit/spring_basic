@@ -22,4 +22,6 @@ public interface RoomSaleConfigService {
 
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid);
     public TRoomSaleConfigDto  queryRoomSaleConfigById(Integer id);
+
+    public Integer updatePriceCache(Long hotelId);
 }

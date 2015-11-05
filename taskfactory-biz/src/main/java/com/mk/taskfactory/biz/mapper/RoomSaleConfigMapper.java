@@ -20,4 +20,5 @@ public interface RoomSaleConfigMapper {
     public List<TRoomSaleConfig> queryRoomSaleConfigByValid(String  valid);
     public TRoomSaleConfig queryRoomSaleConfigById(Integer id);
 
+    public Integer updatePriceCache(Long hotelId);
 }

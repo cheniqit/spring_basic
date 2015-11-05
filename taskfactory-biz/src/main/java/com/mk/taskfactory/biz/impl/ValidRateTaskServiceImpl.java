@@ -127,6 +127,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> result[%s] remote end", postResult));
             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId);
             logger.info(String.format("====================updatemikeprices end  result:" + mkPostResult + " ===================="));
+
+            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] start", hotelId));
+            this.roomSaleConfigService.updatePriceCache(Long.parseLong(hotelId));
+            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] end", hotelId));
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }
@@ -572,19 +576,24 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " to update price");
+                            Integer hotelId = dto.getHotelId();
                             if (hotelMap.get(dto.getHotelId())==null){
                                 logger.info(String.format("==================== ots/hotel/init begin ===================="));
-                               THotel hotel= hotelMapper.getCityIdByHotelId(dto.getHotelId());
+                               THotel hotel= hotelMapper.getCityIdByHotelId(hotelId);
                                 if (hotel==null){
                                     continue;
                                 }
-                                String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+                                String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotelId.toString());
                                 logger.info(String.format("====================ots/hotel/init end  hotelId:" + hotel.getId() + " ===================="));
-                                hotelMap.put(hotel.getId(),hotel.getCityId());
+                                hotelMap.put(hotelId,hotel.getCityId());
                             }
                             logger.info(String.format("==================== updatemikepricesbegin ===================="));
-                             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, dto.getHotelId().toString());
-                            logger.info(String.format("====================updatemikeprices end  hotelId:" + dto.getHotelId() + " ===================="));
+                             String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId.toString());
+                            logger.info(String.format("====================updatemikeprices end  hotelId:" + hotelId + " ===================="));
+
+                            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] start", hotelId));
+                            this.roomSaleConfigService.updatePriceCache(hotelId.longValue());
+                            logger.info(String.format("====================initSaleRoomSaleConfigDto hotelInit>> update price cache hotelid : [%s] end", hotelId));
 
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " end update price");

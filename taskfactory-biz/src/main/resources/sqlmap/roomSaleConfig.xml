@@ -31,11 +31,12 @@
         <result property="saleLabel" column="saleLabel" />
         <result property="description" column="description" />
         <result property="fontColor" column="fontColor" />
+        <result property="updatePriceCacheTime" column="updatePriceCacheTime" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
          hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
-        styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId
+        styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId,updatePriceCacheTime
     </sql>
     <sql id="Base_Query_List" >
         <where>
@@ -96,10 +97,12 @@
         ORDER BY RoomId DESC
     </select>
     <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="String">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM  t_room_sale_config
-           WHERE valid = #{valid}
+         SELECT
+        b.id,b.hotelId, b.roomId, b.roomTypeId,b.saleType,b.costPrice,b.num,b.saleName,b.settleValue,b.settleType,
+        b.styleType,b.started,b.saleConfigInfoId,b.saleRoomTypeId,a.startDate,a.endDate,a.startTime,a.endTime,b.saleValue,a.saleLabel,a.description,a.fontColor,
+        b.updatePriceCacheTime
+        FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
+        WHERE a.valid='T' and b.valid=#{valid}
     </select>
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto"
@@ -110,7 +113,7 @@
          (
             #{hotelId}, #{roomId},#{roomTypeId},#{saleType}, #{saleValue},#{costPrice},#{num},#{saleName},#{settleValue},
             #{settleType},#{valid},#{styleType},#{started},#{saleConfigInfoId},#{createTime},#{createBy},#{updateTime},
-            #{updateBy},#{saleRoomTypeId}
+            #{updateBy},#{saleRoomTypeId},#{updatePriceCacheTime}
             )
     </insert>
 
@@ -176,6 +179,10 @@
             <if test="updateBy != null" >
                 updateBy = #{updateBy},
             </if>
+            <if test="updatePriceCacheTime != null" >
+                updatePriceCacheTime = #{updatePriceCacheTime},
+            </if>
+
         </set>
 
          WHERE  id= #{id}
@@ -194,6 +201,14 @@
         started =  #{isStart}
         WHERE  id= #{id}
     </update>
+
+    <update id="updatePriceCache" parameterType="java.lang.Long" >
+        update t_room_sale_config
+        set
+        updatePriceCacheTime =  sysdate()
+        WHERE  hotelId= #{hotelId}
+    </update>
+
     <select id="queryRoomSaleConfigById" resultMap="roomSaleConfig" parameterType="java.lang.Integer">
         SELECT
         id,<include refid="Base_Column_List"/>

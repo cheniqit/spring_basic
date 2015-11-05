@@ -24,6 +24,7 @@ public class TRoomSaleConfig {
     private String createBy;
     private Date updateTime;
     private String updateBy;
+    private Date updatePriceCacheTime;
 
     private Integer saleRoomTypeId;
     private Integer saleTypeId;
@@ -266,5 +267,13 @@ public class TRoomSaleConfig {
 
     public void setDealCount(String dealCount) {
         this.dealCount = dealCount;
+    }
+
+    public Date getUpdatePriceCacheTime() {
+        return updatePriceCacheTime;
+    }
+
+    public void setUpdatePriceCacheTime(Date updatePriceCacheTime) {
+        this.updatePriceCacheTime = updatePriceCacheTime;
     }
 }
