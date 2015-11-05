@@ -24,18 +24,19 @@ public class HotelRemoteService {
         logger.info(String.format("remote url [%s] begin params hotelid[%s]", this.UPDATE_MIKE_PRICE_CACHE, hotelid));
         HashMap params = new HashMap();
         params.put("hotelid", hotelid);
-        String jsonStr = "";
+
+        boolean successFlag = true;
         try {
-            jsonStr = HttpUtils.doPost(Constants.OTS_URL + this.UPDATE_MIKE_PRICE_CACHE, params);
+            String jsonStr = HttpUtils.doPost(Constants.OTS_URL + this.UPDATE_MIKE_PRICE_CACHE, params);
+
+            logger.info(String.format("remote url [%s] end params result[%s]", this.UPDATE_MIKE_PRICE_CACHE, jsonStr));
+            JSONObject jsonObject = JsonUtils.parseObject(jsonStr);
+            if(jsonObject.getBoolean("success") == null){
+                successFlag = false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-        logger.info(String.format("remote url [%s] end params result[%s]", this.UPDATE_MIKE_PRICE_CACHE, jsonStr));
-        JSONObject jsonObject = JsonUtils.parseObject(jsonStr);
-        boolean successFlag = true;
-        if(jsonObject.getBoolean("success") == null){
-            successFlag = false;
         }
         return successFlag;
     }

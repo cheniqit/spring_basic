@@ -724,4 +724,55 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
 
+    public void initHotel() {
+        logger.info(String.format("====================initHotel >> start"));
+        List<TRoomSaleConfigDto> dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
+        logger.info(String.format("====================initHotel >> get list size [%s]", dtoList.size()));
+
+        //收集hotelid
+        Set<Integer> hotelSet = new HashSet<Integer>();
+        for (TRoomSaleConfigDto dto : dtoList) {
+            logger.info(String.format("====================initHotel >> get hotel [%s]", dto.getId()));
+            Integer hotelId = dto.getHotelId();
+            hotelSet.add(hotelId);
+        }
+
+        //update
+        for (Integer hotelId : hotelSet) {
+            //log start
+            logger.info(String.format("====================initHotel >> update hotel id[%s] start", hotelId));
+
+            //find hotel
+            logger.info(String.format("====================initHotel >> find hotel id[%s] start", hotelId));
+            THotel hotel= hotelMapper.getCityIdByHotelId(Integer.valueOf(hotelId));
+            if (hotel==null){
+                logger.info(String.format("====================initHotel>> hotelId[%s] not find continue", hotelId));
+                continue;
+            }
+            logger.info(String.format("====================initHotel >> find hotel id[%s] end", hotelId));
+
+            //updateMikePriceCache
+            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] start", hotelId));
+            boolean updateCacheSuccessFlag = hotelRemoteService.updateMikePriceCache(hotelId.toString());
+            if (!updateCacheSuccessFlag) {
+                logger.info(String.format("====================initHotel>> updateMikePriceCache faild hotel id : [%s]", hotelId));
+            }
+            logger.info(String.format("====================initHotel >> updateMikePriceCache hotel id[%s] end", hotelId));
+
+            //hotelInit
+            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] start", hotelId));
+            String postResult= hotelRemoteService.hotelInit(Constants.token, hotel.getCityId().toString(), hotel.getId().toString());
+            logger.info(String.format("====================initHotel >> hotelInit hotel id[%s] end", hotelId));
+
+            //updatemikeprices
+            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] start", hotelId));
+            String mkPostResult= hotelRemoteService.updatemikeprices(Constants.token, hotelId.toString());
+            logger.info(String.format("====================initHotel >> updatemikeprices hotel id[%s] end", hotelId));
+
+            //log end
+            logger.info(String.format("====================initHotel >> update hotel id[%s] end", hotelId));
+        }
+
+        logger.info(String.format("====================initHotel >> end"));
+    }
 }

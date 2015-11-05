@@ -15,4 +15,6 @@ public interface ValidRateTaskService {
     public void dateReback();
 
     public void updateRoomSalePrice();
+
+    public void initHotel();
 }

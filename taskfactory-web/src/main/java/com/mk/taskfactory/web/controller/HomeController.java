@@ -67,4 +67,10 @@ public class HomeController {
     public void updateRoomSalePrice() {
         this.validRateTaskService.updateRoomSalePrice();
     }
+
+    @RequestMapping(value = "/initHotel", method = RequestMethod.GET)
+    @ResponseBody
+    public void initHotel() {
+        this.validRateTaskService.initHotel();
+    }
 }
