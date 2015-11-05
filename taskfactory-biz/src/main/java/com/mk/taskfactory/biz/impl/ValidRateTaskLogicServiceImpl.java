@@ -49,6 +49,12 @@ public class ValidRateTaskLogicServiceImpl {
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> begin do roomSaleConfig id : [%s]",roomSaleConfig.getId()));
         try {
 
+            //刷新价格
+            if (hotelMap.get(roomSaleConfig.getHotelId()) == null) {
+                hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
+                executeRecordMap.put("hotelMap", hotelMap);
+            }
+
 //            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
                 int newRoomTypeId = initRoomTypeDto(roomSaleConfig);
             if (newRoomTypeId < 0) {
@@ -62,11 +68,6 @@ public class ValidRateTaskLogicServiceImpl {
                 roomTypeMap.put(roomSaleConfig.getRoomTypeId(), newRoomTypeId);
                 executeRecordMap.put("roomTypeMap", roomTypeMap);
 //            }
-            //刷新价格
-            if (hotelMap.get(roomSaleConfig.getHotelId()) == null) {
-                hotelMap.put(roomSaleConfig.getHotelId(), roomSaleConfig.getHotelId());
-                executeRecordMap.put("hotelMap", hotelMap);
-            }
 
         } catch (Exception e) {
             e.printStackTrace();

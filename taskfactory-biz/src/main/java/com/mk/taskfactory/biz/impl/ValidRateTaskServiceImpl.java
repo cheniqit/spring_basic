@@ -109,10 +109,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             }
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote begin===================="));
+
         Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
-
-
-
         //刷新缓存及索引
         if (!hotelMap.keySet().isEmpty()) {
             this.hotelRemoteService.initHotel(hotelMap.keySet());
@@ -506,6 +504,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
                 logger.info("============sales dateReback job >> do saleConfigDto id:" + dto.getId());
+                //
+                hotelSet.add(dto.getHotelId());
                 try {
                     //比较活动结束日期和当前日期
                     //比较活动结束时间和当前时间
@@ -555,8 +555,6 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                     + " delete roomTypeBed roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeBedService.deleteByRoomTypeId(dto.getSaleRoomTypeId().longValue());
 
-                            //
-                            hotelSet.add(dto.getHotelId());
                         }
                     } else {
                         logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " not end");
