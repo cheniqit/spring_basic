@@ -206,7 +206,7 @@
         update t_room_sale_config
         set
         updatePriceCacheTime =  sysdate()
-        WHERE  hotelId= #{hotelId}
+        WHERE  hotelId= #{hotelId} and valid = 'T'
     </update>
 
     <select id="queryRoomSaleConfigById" resultMap="roomSaleConfig" parameterType="java.lang.Integer">

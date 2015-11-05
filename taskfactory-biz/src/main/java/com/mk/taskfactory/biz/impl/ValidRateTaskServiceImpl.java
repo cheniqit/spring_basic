@@ -241,7 +241,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         }
 
         //眯客价大于门市价
-        if (pmsPrice.compareTo(price) < 0) {
+        BigDecimal saleValue =
+                this.calaValue(price, configDto.getSaleValue(), ValueTypeEnum.getById(configDto.getSaleType()));
+        if (pmsPrice.compareTo(saleValue) < 0) {
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get roomPrice>pmsPrice continue" );
             return;
@@ -477,7 +479,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         return new Date[]{runTime,runTime};
     }
-    private BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
+    public BigDecimal calaValue(BigDecimal baseValue, BigDecimal value, ValueTypeEnum valueTypeEnum) {
         if (null == baseValue || null == valueTypeEnum) {
             return baseValue;
         }

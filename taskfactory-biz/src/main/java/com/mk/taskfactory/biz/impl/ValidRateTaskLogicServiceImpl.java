@@ -38,6 +38,8 @@ public class ValidRateTaskLogicServiceImpl {
     private RoomTypeInfoMapper roomTypeInfoMapper;
     @Autowired
     private RoomTypeBedServiceImpl roomTypeBedService;
+    @Autowired
+    private ValidRateTaskServiceImpl validRateTaskService;
 
     @Transactional
     public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
@@ -51,6 +53,8 @@ public class ValidRateTaskLogicServiceImpl {
 //            if(roomTypeMap.get(roomSaleConfig.getRoomTypeId()) == null){
                 int newRoomTypeId = initRoomTypeDto(roomSaleConfig);
             if (newRoomTypeId < 0) {
+                //失败后，将vaild置为F
+                this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(),ValidEnum.DISVALID.getId());
                 return executeRecordMap;
             }
                 roomTypeMap.put(roomSaleConfig.getRoomTypeId(), newRoomTypeId);
@@ -123,10 +127,20 @@ public class ValidRateTaskLogicServiceImpl {
             if(roomTypeModel == null || roomTypeModel.getId() == null){
                 throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find TRoomTypeDto is null params roomTypeId[%s]===============", tRoomSaleConfigDto.getRoomTypeId()));
             }
-            //
-            BigDecimal basePrice = figureBasePrice(tRoomSaleConfigDto);
+            OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(tRoomSaleConfigDto.getHotelId(),tRoomSaleConfigDto.getRoomTypeId(),null,null);
+            BigDecimal mikePrice = roomStateDto.getPrice();
+            //眯客价大于门市价
+            BigDecimal basePrice = validRateTaskService.calaValue(
+                    mikePrice, tRoomSaleConfigDto.getSaleValue(), ValueTypeEnum.getById(tRoomSaleConfigDto.getSaleType()));
             if (basePrice.compareTo(roomTypeModel.getCost()) > 0) {
                 logger.info("====================initSaleRoomSaleConfigDto >> basePrice > roomType Cost continue");
+                return -1;
+            }
+            //结算价大于原眯客价
+            BigDecimal settleValue = validRateTaskService.calaValue(
+                    mikePrice, tRoomSaleConfigDto.getSettleValue(), tRoomSaleConfigDto.getSettleType());
+            if (settleValue.compareTo(mikePrice) > 0) {
+                logger.info("====================initSaleRoomSaleConfigDto >> settleValue > basePrice Cost continue");
                 return -1;
             }
 

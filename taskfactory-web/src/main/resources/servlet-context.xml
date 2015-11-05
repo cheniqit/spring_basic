@@ -59,7 +59,7 @@
     </task:scheduled-tasks>
     -->
 
-    <!--初始化线任务-->
+    <!--下线任务-->
     <bean id="dateReback" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
     <task:scheduled-tasks>
         <task:scheduled ref="validRateTaskService" method="dateReback" cron="0 1 2 * * ?"/>
