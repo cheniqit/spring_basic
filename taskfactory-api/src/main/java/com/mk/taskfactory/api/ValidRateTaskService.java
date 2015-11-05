@@ -16,5 +16,5 @@ public interface ValidRateTaskService {
 
     public void updateRoomSalePrice();
 
-    public void initHotel();
+    public void initHotel(Boolean isInitValid, Long hotelId);
 }

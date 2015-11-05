@@ -70,9 +70,6 @@ public class RoomSaleConfigServiceImpl implements RoomSaleConfigService {
     }
 
     public List<TRoomSaleConfigDto> queryRoomSaleConfigByValid(String   valid){
-        if(StringUtils.isEmpty(valid)){
-            return  null;
-        }
         List<TRoomSaleConfig> list=roomSaleConfigMapper.queryRoomSaleConfigByValid(valid);
         if (list==null){
             return  null;

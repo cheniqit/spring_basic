@@ -70,7 +70,7 @@ public class HomeController {
 
     @RequestMapping(value = "/initHotel", method = RequestMethod.GET)
     @ResponseBody
-    public void initHotel() {
+    public void initHotel(Boolean isInitValid, Long hotelId) {
         this.validRateTaskService.initHotel();
     }
 }

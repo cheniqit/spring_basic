@@ -102,7 +102,10 @@
         b.styleType,b.started,b.saleConfigInfoId,b.saleRoomTypeId,a.startDate,a.endDate,a.startTime,a.endTime,b.saleValue,a.saleLabel,a.description,a.fontColor,
         b.updatePriceCacheTime
         FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
-        WHERE a.valid='T' and b.valid=#{valid}
+        WHERE a.valid='T'
+        <if test="valid != null">
+        and b.valid=#{valid}
+        </if>
     </select>
 
     <insert id="saveRoomSaleConfig"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleConfigDto"

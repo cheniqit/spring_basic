@@ -724,17 +724,30 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     }
 
 
-    public void initHotel() {
+    public void initHotel(Boolean isInitValid, Long paramHotelId) {
         logger.info(String.format("====================initHotel >> start"));
-        List<TRoomSaleConfigDto> dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
-        logger.info(String.format("====================initHotel >> get list size [%s]", dtoList.size()));
 
-        //收集hotelid
         Set<Integer> hotelSet = new HashSet<Integer>();
-        for (TRoomSaleConfigDto dto : dtoList) {
-            logger.info(String.format("====================initHotel >> get hotel [%s]", dto.getId()));
-            Integer hotelId = dto.getHotelId();
-            hotelSet.add(hotelId);
+
+        if (null == paramHotelId) {
+            hotelSet.add(paramHotelId.intValue());
+        } else {
+            List<TRoomSaleConfigDto> dtoList = null;
+            if (null == isInitValid) {
+                dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(null);
+            } else if (isInitValid) {
+                dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
+            } else {
+                dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.DISVALID.getId());
+            }
+            logger.info(String.format("====================initHotel >> get list size [%s]", dtoList.size()));
+
+            //收集hotelid
+            for (TRoomSaleConfigDto dto : dtoList) {
+                logger.info(String.format("====================initHotel >> get hotel [%s]", dto.getId()));
+                Integer hotelId = dto.getHotelId();
+                hotelSet.add(hotelId);
+            }
         }
 
         //update
