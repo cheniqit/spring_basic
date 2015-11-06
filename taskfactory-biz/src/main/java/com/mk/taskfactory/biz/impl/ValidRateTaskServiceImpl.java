@@ -512,7 +512,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     if (checkCanDown(dto.getStartTime(),dto.getEndTime())) {
                         logger.info("============sales dateReback job >> saleConfigDto id:" + dto.getId() + " end,");
                     //if (DateUtils.getCompareResult(endTimeComp,nowTimeComp , "yyyy-MM-dd HH:mm")) {
-                         reBackRoom(dto);
+                        if (null != dto.getSaleRoomTypeId()) {
+                            reBackRoom(dto);
+                        }
 
                         logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " START DISVALID");
                         roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
