@@ -54,7 +54,7 @@
     <!--上线任务-->
     <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
     <task:scheduled-tasks>
-        <task:scheduled ref="validRateTask" method="run" cron="1 0 19 * * ?"/>
+        <task:scheduled ref="validRateTask" method="run" cron="0 50 19 * * ?"/>
     </task:scheduled-tasks>
 
 
