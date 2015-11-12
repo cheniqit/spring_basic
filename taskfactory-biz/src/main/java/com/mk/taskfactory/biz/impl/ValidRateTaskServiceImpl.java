@@ -102,7 +102,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         executeRecordMap.put("hotelMap", new HashMap<Integer, Integer>());
         for(TRoomSaleConfigDto tRoomSaleConfigDto : list){
             Integer tag = tRoomSaleConfigDto.getTag();
-            if (null == tag) {
+            if (null == tag || 0 == tag) {
                 try{
                     executeRecordMap = validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto, executeRecordMap);
                 }catch (Exception e){
@@ -581,6 +581,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         if (!hotelSet.isEmpty()) {
             this.hotelRemoteService.initHotel(hotelSet);
         }
+        for (Integer hotelId : hotelSet) {
+            this.roomSaleConfigService.updatePriceCache(hotelId.longValue());
+        }
         logger.info("============sales dateReback job >> end============");
     }
     public Boolean checkCanDown(Time startTime,Time endTime){
@@ -724,6 +727,10 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         //update
         this.hotelRemoteService.initHotel(hotelSet);
+
+        for (Integer hotelId : hotelSet) {
+            this.roomSaleConfigService.updatePriceCache(hotelId.longValue());
+        }
         logger.info(String.format("====================initHotel >> end"));
     }
 }
