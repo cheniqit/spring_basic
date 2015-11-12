@@ -515,6 +515,14 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 logger.info("============sales dateReback job >> do saleConfigDto id:" + dto.getId());
                 //
                 hotelSet.add(dto.getHotelId());
+                Integer tag = dto.getTag();
+                if (null != tag  && tag > 0) {
+                    //活动结束后把配置表置为F
+                    logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID DISVALID");
+                    roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                    continue;
+                }
+
                 try {
                     //比较活动结束日期和当前日期
                     //比较活动结束时间和当前时间
