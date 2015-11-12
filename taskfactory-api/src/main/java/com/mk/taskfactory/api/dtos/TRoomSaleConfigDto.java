@@ -38,6 +38,16 @@ public class TRoomSaleConfigDto {
     private Boolean saleRoomTypeIdIsNull;
     private Boolean saleRoomTypeIdIsNotNull;
     private Date updatePriceCacheTime;
+    private Integer tag;
+
+    public Integer getTag() {
+        return tag;
+    }
+
+    public void setTag(Integer tag) {
+        this.tag = tag;
+    }
+
 
 
     public Date getUpdatePriceCacheTime() {

@@ -32,11 +32,13 @@
         <result property="description" column="description" />
         <result property="fontColor" column="fontColor" />
         <result property="updatePriceCacheTime" column="updatePriceCacheTime" />
+        <result property="tag" column="tag" />
 	</resultMap>
 
     <sql id="Base_Column_List" >
          hotelId, roomId, roomTypeId,saleType,saleValue,costPrice,num,saleName,settleValue,settleType,valid,
-        styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId,updatePriceCacheTime
+        styleType,started,saleConfigInfoId,createTime,createBy,updateTime,updateBy,saleRoomTypeId,updatePriceCacheTime,
+        tag
     </sql>
     <sql id="Base_Query_List" >
         <where>
@@ -100,7 +102,7 @@
          SELECT
         b.id,b.hotelId, b.roomId, b.roomTypeId,b.saleType,b.costPrice,b.num,b.saleName,b.settleValue,b.settleType,
         b.styleType,b.started,b.saleConfigInfoId,b.saleRoomTypeId,a.startDate,a.endDate,a.startTime,a.endTime,b.saleValue,a.saleLabel,a.description,a.fontColor,
-        b.updatePriceCacheTime
+        b.updatePriceCacheTime,b.tag
         FROM  t_room_sale_config_info  a LEFT  JOIN t_room_sale_config b ON a.id=b.saleConfigInfoId
         WHERE a.valid='T'
         <if test="valid != null">
@@ -116,7 +118,7 @@
          (
             #{hotelId}, #{roomId},#{roomTypeId},#{saleType}, #{saleValue},#{costPrice},#{num},#{saleName},#{settleValue},
             #{settleType},#{valid},#{styleType},#{started},#{saleConfigInfoId},#{createTime},#{createBy},#{updateTime},
-            #{updateBy},#{saleRoomTypeId},#{updatePriceCacheTime}
+            #{updateBy},#{saleRoomTypeId},#{updatePriceCacheTime},#{tag}
             )
     </insert>
 
@@ -184,6 +186,9 @@
             </if>
             <if test="updatePriceCacheTime != null" >
                 updatePriceCacheTime = #{updatePriceCacheTime},
+            </if>
+            <if test="tag != null" >
+                tag = #{tag},
             </if>
 
         </set>

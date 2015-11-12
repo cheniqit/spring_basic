@@ -101,11 +101,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         executeRecordMap.put("roomTypeMap", new HashMap<Integer, Integer>());
         executeRecordMap.put("hotelMap", new HashMap<Integer, Integer>());
         for(TRoomSaleConfigDto tRoomSaleConfigDto : list){
-            try{
-                executeRecordMap = validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto, executeRecordMap);
-            }catch (Exception e){
-                e.printStackTrace();
-                logger.info(String.format("====================init sales config job >>  initSaleRoomSaleConfigDto erroe ===================="));
+            Integer tag = tRoomSaleConfigDto.getTag();
+            if (null == tag) {
+                try{
+                    executeRecordMap = validRateTaskLogicService.initSaleRoomSaleConfigDto(tRoomSaleConfigDto, executeRecordMap);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    logger.info(String.format("====================init sales config job >>  initSaleRoomSaleConfigDto erroe ===================="));
+                }
+            } else {
+                Map<Integer, Integer> hotelMap = executeRecordMap.get("hotelMap");
+                hotelMap.put(tRoomSaleConfigDto.getHotelId(),tRoomSaleConfigDto.getHotelId());
             }
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote begin===================="));
@@ -114,6 +120,9 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //刷新缓存及索引
         if (!hotelMap.keySet().isEmpty()) {
             this.hotelRemoteService.initHotel(hotelMap.keySet());
+        }
+        for (Integer hotelId : hotelMap.keySet()) {
+            this.roomSaleConfigService.updatePriceCache(hotelId.longValue());
         }
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> remote end"));
     }

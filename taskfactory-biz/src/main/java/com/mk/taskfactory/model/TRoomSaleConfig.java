@@ -36,6 +36,15 @@ public class TRoomSaleConfig {
     private String description;
     private String fontColor;
     private String dealCount;
+    private Integer tag;
+
+    public Integer getTag() {
+        return tag;
+    }
+
+    public void setTag(Integer tag) {
+        this.tag = tag;
+    }
 
     public Integer getId() {
         return id;
