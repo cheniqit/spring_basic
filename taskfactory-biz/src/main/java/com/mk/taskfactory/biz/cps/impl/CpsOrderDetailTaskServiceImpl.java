@@ -48,7 +48,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         }
         for(CpsChannel cpsChannle:cpsChannelList){
             HashMap<Long,UMember> memberMap = new  HashMap<Long,UMember>();
-            String  channelCode = cpsChannle.getChannelCode();
+            String  channelCode = cpsChannle.getChannelcode();
             if(StringUtils.isEmpty(channelCode)){
                 continue;
             }
@@ -60,7 +60,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             }
             String mids = "";
             for(UMember umember:umemberList){
-                umember.setCpsName(cpsChannle.getChannelName());
+                umember.setCpsName(cpsChannle.getChannelname());
                 memberMap.put(umember.getMid(), umember);
                 mids = mids  + "," + umember.getMid();
             }
