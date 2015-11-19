@@ -4,12 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 消费用户实体
- * @author nolan
- *
+ * Created by jeashi on 2015/11/19.
  */
 public class UMember {
-
     private Long mid;
 
     private String loginName;
@@ -85,7 +82,7 @@ public class UMember {
     private BigDecimal givescore3;
 
     private String openid;
-    
+
     private String email;
 
     private String phone;
@@ -97,9 +94,9 @@ public class UMember {
     private String phonepic;
 
     private String personpic;
-    
+
     private String channelid;
-    
+
     private String devicetype;
 
     private String marketsource;
@@ -113,13 +110,13 @@ public class UMember {
     private String weixinname;
 
     private String comefrom;
-    
+
     private String comefromtype;
 
     private Long hotelid;
-    
+
     private String unionid;
-    
+
     private String regostype;
 
     private String citycode;

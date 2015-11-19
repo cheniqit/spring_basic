@@ -22,9 +22,9 @@ public class OtaOrderServiceImpl  {
     public  Boolean  isFirstOrder(OtaOrder otaOrder){
             Long id =  otaOrder.getId();
             Long mid = otaOrder.getMid();
-            //�ж��Ƿ��ǵ�ǰ��Ա�ĵ�һ��
+            //当前会员的第一条离店订单记录
             if(id==getFirstOrderIdByMid(mid)){
-             //�ж��Ƿ��ǵ�ǰ�ֻ��ĵ�һ��
+                //当前设备的第一条离店订单记录
               return  getFirstOrderMac(otaOrder);
             }else{
                 return  false;
@@ -35,7 +35,7 @@ public class OtaOrderServiceImpl  {
         return  otaOrderMapper.getFirstOrderIdByMid(mid);
     }
 
-    //�жϵ�ǰ������Ԥ���ֻ��Ƿ����׵�
+    //查找当前设备的第一条离店记录
     public Boolean  getFirstOrderMac(OtaOrder otaOrder){
         if(null==otaOrder){
             return  true;
@@ -44,7 +44,7 @@ public class OtaOrderServiceImpl  {
         if(CollectionUtils.isEmpty(otaOrderMacList)){
             return  true;
         }
-        if(4==otaOrder.getOrderMethod()){//iosԤ��
+        if(4==otaOrder.getOrderMethod()){//当前为ios设备
            String uuid =  otaOrderMacList.get(0).getUuid();
             if(StringUtils.isEmpty(uuid)){
                 return true;
@@ -53,7 +53,7 @@ public class OtaOrderServiceImpl  {
             if(null!=oOMacIOSList&&oOMacIOSList.size()>1){
                 return  false;
             }
-        }else if  (5==otaOrder.getOrderMethod()){//androidԤ��
+        }else if  (5==otaOrder.getOrderMethod()){//当前为android的订单
             String  deviceimei =  otaOrderMacList.get(0).getDeviceimei();
             if(StringUtils.isEmpty(deviceimei)){
                 return true;
@@ -62,7 +62,8 @@ public class OtaOrderServiceImpl  {
             if(null!=oOMacAndroidList&&oOMacAndroidList.size()>1){
                 return  false;
             }
-        }else{ //����ƽ̨Ԥ��������pcsͳ��
+        }else{
+            //非app下的订单不录入cps
             return false;
         }
         return   true;

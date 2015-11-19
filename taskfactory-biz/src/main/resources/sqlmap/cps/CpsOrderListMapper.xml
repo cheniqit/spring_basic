@@ -11,7 +11,7 @@
     <result column="summaryDetailId" property="summarydetailid" jdbcType="BIGINT" />
     <result column="mid" property="mid" jdbcType="BIGINT" />
     <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="checkOutTime" property="checkouttime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="hotelId" property="hotelid" jdbcType="BIGINT" />
     <result column="isFirst" property="isfirst" jdbcType="CHAR" />
     <result column="isNew" property="isnew" jdbcType="CHAR" />
@@ -167,4 +167,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
+    createTime,checkOutTime,hotelId,isFirst,isNew)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.orderId},#{item.channelType},#{item.channelCode},#{item.channelName},#{item.channelName}
+      ,#{item.orderPrice},#{item.orderPrice},#{item.summaryDetailId},#{item.mid},#{item.createTime},#{item.checkOutTime}
+      ,#{item.hotelId} ,#{item.isFirst} ,#{item.isNew} )
+    </foreach>
+  </insert>
+
+  <select id="getMaxCheckOutTime"   resultType="java.util.Date" >
+     select max(updateTime) from cps_order_list
+  </select>
+
 </mapper>

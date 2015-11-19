@@ -21,13 +21,22 @@
     <result column="totalPrice" property="totalPrice" jdbcType="BigDecimal />
   </resultMap>
 
-  <select id="selectByMid" resultMap="ResultMapWithCps" parameterType="java.util.HashMap" >
-    select 
+  <select id="selectByMidMoreThenMaxTime"  resultMap="ResultMapWithCps" parameterType="java.util.HashMap" >
+   select
     <include refid="Blob_Column_List" />
     from b_otaorder
     where mid  in  #{mids}
      and  OrderStatus  = 180
-     and  updatetime>#{maxtime}
+     <![CDATA[ and  updatetime> #{maxtime}]]>
+  </select>
+
+  <select id="selectByMidLessThenMaxTime" resultMap="ResultMapWithCps" parameterType="java.util.HashMap" >
+    select
+    <include refid="Blob_Column_List" />
+    from b_otaorder
+    where mid  in  #{mids}
+    and  OrderStatus  = 180
+    <![CDATA[ and  updatetime< #{maxtime}]]>
   </select>
 
   <select id="selectFirstByMid" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
@@ -36,11 +45,11 @@
     where mid   = #{mids}
   </select>
 
-	<!-- 判断是否用户首单-->
+  <!-- 判断是否用户首单-->
   <select id="getFirstOrderIdByMid" resultType="long"  parameterType="java.lang.Long">
     SELECT  b.id  FROM b_otaorder b where  b.mid  =  #{mid}  and
-      ((b.OrderStatus IN (140,160,180,190,200) and  b.Ordertype =1)
-      or    (b.OrderStatus IN (160,180,190,200) and  b.Ordertype =2))
-      order  by   id  limit  1;
+    ((b.OrderStatus IN (140,160,180,190,200) and  b.Ordertype =1)
+    or    (b.OrderStatus IN (160,180,190,200) and  b.Ordertype =2))
+    order  by   id  limit  1;
   </select>
 </mapper>

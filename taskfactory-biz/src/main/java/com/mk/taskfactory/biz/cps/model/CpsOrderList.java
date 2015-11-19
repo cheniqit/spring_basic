@@ -1,5 +1,6 @@
 package com.mk.taskfactory.biz.cps.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CpsOrderList {
@@ -13,7 +14,7 @@ public class CpsOrderList {
 
     private String channelname;
 
-    private Long orderprice;
+    private BigDecimal orderprice;
 
     private Long summarydetailid;
 
@@ -21,7 +22,7 @@ public class CpsOrderList {
 
     private Date createtime;
 
-    private Date checkouttime;
+    private Date updateTime;
 
     private Long hotelid;
 
@@ -69,11 +70,11 @@ public class CpsOrderList {
         this.channelname = channelname == null ? null : channelname.trim();
     }
 
-    public Long getOrderprice() {
+    public BigDecimal getOrderprice() {
         return orderprice;
     }
 
-    public void setOrderprice(Long orderprice) {
+    public void setOrderprice(BigDecimal orderprice) {
         this.orderprice = orderprice;
     }
 
@@ -101,12 +102,12 @@ public class CpsOrderList {
         this.createtime = createtime;
     }
 
-    public Date getCheckouttime() {
-        return checkouttime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setCheckouttime(Date checkouttime) {
-        this.checkouttime = checkouttime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Long getHotelid() {

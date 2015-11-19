@@ -3,6 +3,7 @@ package com.mk.taskfactory.biz.cps.impl;
 import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsChannelExample;
+import com.mk.taskfactory.biz.cps.model.CpsOrderList;
 import com.mk.taskfactory.biz.cps.model.CpsOrderListExample;
 import com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper;
 import com.mk.taskfactory.biz.mapper.cps.CpsOrderListMapper;
@@ -11,6 +12,7 @@ import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
+import com.mk.taskfactory.biz.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,13 +42,16 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     private OtaOrderMapper otaOrderMapper;
 
     @Autowired
+    private  CpsOrderListMapper  cpsOrderListMapper;
+
+    @Autowired
     private OtaOrderServiceImpl otaOrderServiceImpl;
 
 
     public  void    cpsOrderProduce(){
         logger.info(" begin cpsOrderProduce []");
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
-        cpsChannelExample.createCriteria().andValidEqualTo("F");
+        cpsChannelExample.createCriteria().andValidEqualTo(1);
         List<CpsChannel>  cpsChannelList = cpsChannelMapper.selectByExample(cpsChannelExample);
         if(CollectionUtils.isEmpty(cpsChannelList)){
             logger.info("query  cpsChannel : [cpsChannelList = null]  " );
@@ -73,28 +78,55 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             if(mids.length()>0&&mids.startsWith(",")){
                 mids = mids.substring(1,mids.length());
             }
+            Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
+            List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(mids,maxTime,channelCode,cpsChannle.getChannelname(),cpsChannle.getTypeid());
         }
     }
 
-    public   List<OtaOrder>  queryOrderByMid(String  mids,Date maxTime){
-        List<OtaOrder>  resultOrderList = new ArrayList<OtaOrder>();
+    public   List<CpsOrderList>  queryOrderByMid(String  mids,Date maxTime,String channelCode,String  channelName,Integer typeId){
+        List<CpsOrderList>  resultOrderList = new ArrayList<CpsOrderList>();
         HashMap map = new HashMap();
         map.put("mids",mids);
-        map.put("maxTime", maxTime);
-        List<OtaOrder>  orderList =  otaOrderMapper.selectByMid(map);
+        List<OtaOrder>  orderList = null;
+        if(null == maxTime){
+            map.put("maxTime",maxTime);
+            orderList =  otaOrderMapper.selectByMidLessThenMaxTime(map);
+        }else{
+            map.put("maxTime", maxTime);
+            orderList =  otaOrderMapper.selectByMidMoreThenMaxTime(map);
+        }
         if(CollectionUtils.isEmpty(orderList)){
             return null ;
         }
         for(OtaOrder  otaOrder:orderList){
+            CpsOrderList   cpsOrderListEntity = new  CpsOrderList();
+            cpsOrderListEntity.setMid(otaOrder.getMid());
+            cpsOrderListEntity.setChannelcode(channelCode);
+            cpsOrderListEntity.setChannelname(channelName);
+            cpsOrderListEntity.setChanneltype(typeId);
+            cpsOrderListEntity.setUpdateTime(otaOrder.getUpdateTime());
+            cpsOrderListEntity.setCreatetime(new Date());
+            cpsOrderListEntity.setHotelid(otaOrder.getHotelId());
+            cpsOrderListEntity.setIsnew("T");
+            cpsOrderListEntity.setOrderid(otaOrder.getId());
+            cpsOrderListEntity.setOrderprice(otaOrder.getTotalPrice());
           if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
-              resultOrderList.add(otaOrder);
+            cpsOrderListEntity.setIsfirst("T");
+          }else{
+              cpsOrderListEntity.setIsfirst("F");
           }
+            resultOrderList.add(cpsOrderListEntity);
         }
-        return null;
+        return  resultOrderList;
     }
 
-    public void saveOrderSummary(){
-        //查找对应orderList数据
-
+    public  Boolean  saveCpsOrderList(List<CpsOrderList>  cpsOrderList){
+        if(CollectionUtils.isEmpty(cpsOrderList)){
+            return  false;
+        }
+        int  effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
+        return  true;
     }
+
+
 }

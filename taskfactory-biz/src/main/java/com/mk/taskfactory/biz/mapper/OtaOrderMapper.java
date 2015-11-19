@@ -10,7 +10,9 @@ import java.util.List;
 @MyBatisRepository
 public interface OtaOrderMapper {
 
-       public List<OtaOrder> selectByMid(HashMap map);
+       public List<OtaOrder>  selectByMidLessThenMaxTime(HashMap map);
+
+       public List<OtaOrder>  selectByMidMoreThenMaxTime(HashMap map);
 
        public   long   getFirstOrderIdByMid(Long  mid);
 

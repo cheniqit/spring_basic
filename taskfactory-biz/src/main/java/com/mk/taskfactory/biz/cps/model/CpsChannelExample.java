@@ -315,7 +315,7 @@ public class CpsChannelExample {
             return (Criteria) this;
         }
 
-        public Criteria andValidEqualTo(String value) {
+        public Criteria andValidEqualTo(Integer value) {
             addCriterion("valid =", value, "valid");
             return (Criteria) this;
         }
