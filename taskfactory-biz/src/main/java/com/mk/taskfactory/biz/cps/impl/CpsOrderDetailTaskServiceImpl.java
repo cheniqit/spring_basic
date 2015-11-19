@@ -1,8 +1,11 @@
 package com.mk.taskfactory.biz.cps.impl;
 
 import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
-import com.mk.taskfactory.biz.mapper.cps.CpsOrderMapper;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
+import com.mk.taskfactory.biz.cps.model.CpsChannelExample;
+import com.mk.taskfactory.biz.cps.model.CpsOrderListExample;
+import com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper;
+import com.mk.taskfactory.biz.mapper.cps.CpsOrderListMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
 import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
@@ -25,7 +28,10 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     private static Logger logger = LoggerFactory.getLogger(CpsOrderDetailTaskServiceImpl.class);
 
     @Autowired
-    private  CpsOrderMapper cpsOrderMapper;
+    private CpsOrderListMapper cpsOrderMapper;
+
+    @Autowired
+    private CpsChannelMapper cpsChannelMapper;
 
     @Autowired
     private  UMemberMapper umemberMapper;
@@ -39,9 +45,9 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
 
     public  void    cpsOrderProduce(){
         logger.info(" begin cpsOrderProduce []");
-        HashMap hm = new  HashMap();
-        hm.put("valid",'F');
-        List<CpsChannel>  cpsChannelList = cpsOrderMapper.selectChannelByParme(hm);
+        CpsChannelExample cpsChannelExample = new CpsChannelExample();
+        cpsChannelExample.createCriteria().andValidEqualTo("F");
+        List<CpsChannel>  cpsChannelList = cpsChannelMapper.selectByExample(cpsChannelExample);
         if(CollectionUtils.isEmpty(cpsChannelList)){
             logger.info("query  cpsChannel : [cpsChannelList = null]  " );
             return ;
