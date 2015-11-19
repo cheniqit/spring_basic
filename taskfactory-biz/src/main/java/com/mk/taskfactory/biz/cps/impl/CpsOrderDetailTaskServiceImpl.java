@@ -1,12 +1,12 @@
 package com.mk.taskfactory.biz.cps.impl;
 
 import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
-import com.mk.taskfactory.biz.cps.mapper.CpsOrderMapper;
+import com.mk.taskfactory.biz.mapper.cps.CpsOrderMapper;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
-import com.mk.taskfactory.biz.order.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
-import com.mk.taskfactory.biz.umember.mapper.UMemberMapper;
+import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +35,8 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
 
     @Autowired
     private OtaOrderServiceImpl otaOrderServiceImpl;
+
+
     public  void    cpsOrderProduce(){
         logger.info(" begin cpsOrderProduce []");
         HashMap hm = new  HashMap();
@@ -85,4 +87,8 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         return null;
     }
 
+    public void saveOrderSummary(){
+        //查找对应orderList数据
+
+    }
 }

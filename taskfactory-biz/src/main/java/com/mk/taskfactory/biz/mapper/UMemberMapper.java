@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.umember.mapper;
+package com.mk.taskfactory.biz.mapper;
 
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;

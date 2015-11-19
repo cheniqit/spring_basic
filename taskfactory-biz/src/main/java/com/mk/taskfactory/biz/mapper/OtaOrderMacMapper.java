@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.order.mapper;
+package com.mk.taskfactory.biz.mapper;
 
 
 import com.mk.taskfactory.biz.order.model.OtaOrder;

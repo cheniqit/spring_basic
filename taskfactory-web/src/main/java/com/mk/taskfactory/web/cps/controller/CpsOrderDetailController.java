@@ -14,63 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Controller
-@RequestMapping(value = "/roomSale", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CpsOrderDetailController {
 
-    @Autowired
-    private ValidRateTaskService validRateTaskService;
-
-    @Autowired
-    private RoomTypeBedService roomTypeBedService;
-
-    @RequestMapping(value = "/validRateTaskRun", method = RequestMethod.GET)
-    @ResponseBody
-    public void validRateTaskRun() {
-        this.validRateTaskService.validRateTaskRun();
-        return;
-    }
-
-    @RequestMapping(value = "/validRateTaskRunToday", method = RequestMethod.GET)
-    @ResponseBody
-    public void validRateTaskRunToday() {
-        this.validRateTaskService.validRateTaskRunToday();
-        return;
-    }
-
-    @RequestMapping(value = "/updateOnline", method = RequestMethod.GET)
-    @ResponseBody
-    public void updateOnline() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(cal.HOUR, 1);
-        Date startTime = cal.getTime();
-        System.out.println(startTime);
-        this.validRateTaskService.updateOnline(startTime);
-        return;
-    }
-
-    @RequestMapping(value = "/dateReback", method = RequestMethod.GET)
-    @ResponseBody
-    public void dateReback() {
-        this.validRateTaskService.dateReback();
-        return;
-    }
-//
-//    @RequestMapping(value = "/test", method = RequestMethod.GET)
-//    @ResponseBody
-//    public void test() {
-////        this.roomTypeBedService.createByRoomTypeId(314l,1l);
-//        this.roomTypeBedService.deleteByRoomTypeId(1L);
-//    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    @ResponseBody
-    public void updateRoomSalePrice() {
-        this.validRateTaskService.updateRoomSalePrice();
-    }
-
-    @RequestMapping(value = "/initHotel", method = RequestMethod.GET)
-    @ResponseBody
-    public void initHotel(Boolean isInitValid, Long hotelId) {
-        this.validRateTaskService.initHotel(isInitValid,hotelId);
-    }
 }

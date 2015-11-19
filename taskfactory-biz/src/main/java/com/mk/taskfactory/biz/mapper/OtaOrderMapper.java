@@ -1,7 +1,6 @@
-package com.mk.taskfactory.biz.order.mapper;
+package com.mk.taskfactory.biz.mapper;
 
 
-import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.repository.MyBatisRepository;
 

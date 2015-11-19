@@ -1,7 +1,7 @@
 package com.mk.taskfactory.biz.order.impl;
 
-import com.mk.taskfactory.biz.order.mapper.OtaOrderMacMapper;
-import com.mk.taskfactory.biz.order.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.OtaOrderMacMapper;
+import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.order.model.OtaOrderMac;
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +22,9 @@ public class OtaOrderServiceImpl  {
     public  Boolean  isFirstOrder(OtaOrder otaOrder){
             Long id =  otaOrder.getId();
             Long mid = otaOrder.getMid();
-            //判断是否是当前会员的第一单
+            //锟叫讹拷锟角凤拷锟角碉拷前锟斤拷员锟侥碉拷一锟斤拷
             if(id==getFirstOrderIdByMid(mid)){
-             //判断是否是当前手机的第一单
+             //锟叫讹拷锟角凤拷锟角碉拷前锟街伙拷锟侥碉拷一锟斤拷
               return  getFirstOrderMac(otaOrder);
             }else{
                 return  false;
@@ -35,7 +35,7 @@ public class OtaOrderServiceImpl  {
         return  otaOrderMapper.getFirstOrderIdByMid(mid);
     }
 
-    //判断当前订单的预定手机是否是首单
+    //锟叫断碉拷前锟斤拷锟斤拷锟斤拷预锟斤拷锟街伙拷锟角凤拷锟斤拷锟阶碉拷
     public Boolean  getFirstOrderMac(OtaOrder otaOrder){
         if(null==otaOrder){
             return  true;
@@ -44,7 +44,7 @@ public class OtaOrderServiceImpl  {
         if(CollectionUtils.isEmpty(otaOrderMacList)){
             return  true;
         }
-        if(4==otaOrder.getOrderMethod()){//ios预定
+        if(4==otaOrder.getOrderMethod()){//ios预锟斤拷
            String uuid =  otaOrderMacList.get(0).getUuid();
             if(StringUtils.isEmpty(uuid)){
                 return true;
@@ -53,7 +53,7 @@ public class OtaOrderServiceImpl  {
             if(null!=oOMacIOSList&&oOMacIOSList.size()>1){
                 return  false;
             }
-        }else if  (5==otaOrder.getOrderMethod()){//android预定
+        }else if  (5==otaOrder.getOrderMethod()){//android预锟斤拷
             String  deviceimei =  otaOrderMacList.get(0).getDeviceimei();
             if(StringUtils.isEmpty(deviceimei)){
                 return true;
@@ -62,7 +62,7 @@ public class OtaOrderServiceImpl  {
             if(null!=oOMacAndroidList&&oOMacAndroidList.size()>1){
                 return  false;
             }
-        }else{ //其它平台预定不参与pcs统计
+        }else{ //锟斤拷锟斤拷平台预锟斤拷锟斤拷锟斤拷锟斤拷pcs统锟斤拷
             return false;
         }
         return   true;

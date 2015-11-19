@@ -1,17 +1,25 @@
 package com.mk.taskfactory.biz.cps.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class CpsChannel {
     private Integer id;
-    private String channelCode;
-    private String channelName;
-    private Double valid;
-    private Date createTime;
-    private String createBy;
-    private Date updateTime;
-    private String updateBy;
-    private  Integer  typeId;
+
+    private String channelcode;
+
+    private String channelname;
+
+    private String valid;
+
+    private Date createtime;
+
+    private String createby;
+
+    private Date updatetime;
+
+    private String updateby;
+
+    private Integer typeid;
 
     public Integer getId() {
         return id;
@@ -21,67 +29,67 @@ public class CpsChannel {
         this.id = id;
     }
 
-    public String getChannelCode() {
-        return channelCode;
+    public String getChannelcode() {
+        return channelcode;
     }
 
-    public void setChannelCode(String channelCode) {
-        this.channelCode = channelCode;
+    public void setChannelcode(String channelcode) {
+        this.channelcode = channelcode == null ? null : channelcode.trim();
     }
 
-    public String getChannelName() {
-        return channelName;
+    public String getChannelname() {
+        return channelname;
     }
 
-    public void setChannelName(String channelName) {
-        this.channelName = channelName;
+    public void setChannelname(String channelname) {
+        this.channelname = channelname == null ? null : channelname.trim();
     }
 
-    public Double getValid() {
+    public String getValid() {
         return valid;
     }
 
-    public void setValid(Double valid) {
-        this.valid = valid;
+    public void setValid(String valid) {
+        this.valid = valid == null ? null : valid.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getCreatetime() {
+        return createtime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
     }
 
-    public String getCreateBy() {
-        return createBy;
+    public String getCreateby() {
+        return createby;
     }
 
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
+    public void setCreateby(String createby) {
+        this.createby = createby == null ? null : createby.trim();
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getUpdatetime() {
+        return updatetime;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdatetime(Date updatetime) {
+        this.updatetime = updatetime;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
+    public String getUpdateby() {
+        return updateby;
     }
 
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
+    public void setUpdateby(String updateby) {
+        this.updateby = updateby == null ? null : updateby.trim();
     }
 
-    public Integer getTypeId() {
-        return typeId;
+    public Integer getTypeid() {
+        return typeid;
     }
 
-    public void setTypeId(Integer typeId) {
-        this.typeId = typeId;
+    public void setTypeid(Integer typeid) {
+        this.typeid = typeid;
     }
 }

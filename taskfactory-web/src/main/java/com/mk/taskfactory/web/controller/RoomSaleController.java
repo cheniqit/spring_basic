@@ -39,11 +39,4 @@ public class RoomSaleController {
         RoomSaleToOtsDto result=roomSaleService.getHotelSaleByHotelId(hotelId);
         return new ResponseEntity<RoomSaleToOtsDto>(result, HttpStatus.OK);
     }
-    @RequestMapping(value = "/dateReback", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity dateReback() {
-        validRateTaskService.dateReback();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 }
