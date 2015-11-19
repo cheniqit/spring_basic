@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.ots.mapper.OtaOrderTastsMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.order.model.OtaOrderMac" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.order.model.CpsOrderList" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="otaorderid" property="orderID" jdbcType="BIGINT" />
-    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
-    <result column="sysno" property="sysno" jdbcType="VARCHAR" />
-    <result column="deviceimei" property="deviceimei" jdbcType="VARCHAR" />
-    <result column="simsn" property="simsn" jdbcType="VARCHAR" />
-    <result column="wifimacaddr" property="wifimacaddr" jdbcType="VARCHAR" />
-    <result column="blmacaddr" property="blmacaddr" jdbcType="VARCHAR" />
+    <result column="orderId" property="orderId" jdbcType="BIGINT" />
+    <result column="channelType" property="channelType" jdbcType="Integer" />
+    <result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channelName" property="channelName" jdbcType="VARCHAR" />
+    <result column="orderPrice"  property="orderPrice" jdbcType="Bigde" />
+    <result column="summaryDetailId" property="summaryDetailId" jdbcType="BIGINT" />
+    <result column="mid" property="mid" jdbcType="BIGINT" />
+    <result column="createTime" property="createTime" jdbcType="TimeStamp" />
+    <result column="checkInTime" property="checkInTime" jdbcType="TimeStamp" />
+    <result column="checkOutTime" property="checkOutTime" jdbcType="TimeStamp" />
+    <result column="hotelId" property="hotelId" jdbcType="BIGINT" />
+    <result column="isFirst" property="isFirst" jdbcType="CHAR" />
+    <result column="isNew" property="isNew" jdbcType="CHAR" />
   </resultMap>
 
-  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.long" >
-    select
-      *
-    from b_otaorder_mac
-    where
-       orderID  = #{orderId}
-  </select>
+  1.<insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
+  6.    insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
+          createTime,checkInTime,checkOutTime,hotelId,isFirst,isNew)
+  7.    values
+  8.    <foreach collection="list" item="item" index="index" separator="," >
+  9.        (#{item.orderId},#{item.channelType},#{item.channelCode},#{item.channelName},#{item.channelName}
+              )
+  10.    </foreach>
+  11.</insert>
 
-  <select id="selectAndroidByDeviceimei" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-      *
-    from b_otaorder_mac
-    where  deviceimei   = #{deviceimei}
-  </select>
 
-  <select id="selectIOSByUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-       *
-    from b_otaorder_mac
-    where  uuid = #{uuid}
-  </select>
 </mapper>

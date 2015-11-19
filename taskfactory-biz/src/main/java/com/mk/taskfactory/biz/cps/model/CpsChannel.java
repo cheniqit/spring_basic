@@ -1,13 +1,17 @@
 package com.mk.taskfactory.biz.cps.model;
 
+import java.sql.Date;
+
 public class CpsChannel {
     private Integer id;
-    private Integer roomTypeId;
-    private Double minArea;
-    private Double maxArea;
-    private String pics;
-    private Integer bedType;
-    private String bedSize;
+    private String channelCode;
+    private String channelName;
+    private Double valid;
+    private Date createTime;
+    private String createBy;
+    private Date updateTime;
+    private String updateBy;
+    private  Integer  typeId;
 
     public Integer getId() {
         return id;
@@ -17,51 +21,67 @@ public class CpsChannel {
         this.id = id;
     }
 
-    public Integer getRoomTypeId() {
-        return roomTypeId;
+    public String getChannelCode() {
+        return channelCode;
     }
 
-    public void setRoomTypeId(Integer roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setChannelCode(String channelCode) {
+        this.channelCode = channelCode;
     }
 
-    public Double getMinArea() {
-        return minArea;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setMinArea(Double minArea) {
-        this.minArea = minArea;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
-    public Double getMaxArea() {
-        return maxArea;
+    public Double getValid() {
+        return valid;
     }
 
-    public void setMaxArea(Double maxArea) {
-        this.maxArea = maxArea;
+    public void setValid(Double valid) {
+        this.valid = valid;
     }
 
-    public String getPics() {
-        return pics;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setPics(String pics) {
-        this.pics = pics;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getBedType() {
-        return bedType;
+    public String getCreateBy() {
+        return createBy;
     }
 
-    public void setBedType(Integer bedType) {
-        this.bedType = bedType;
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
     }
 
-    public String getBedSize() {
-        return bedSize;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setBedSize(String bedSize) {
-        this.bedSize = bedSize;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Integer getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 }

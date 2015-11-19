@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.order.model;
 
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -14,13 +15,13 @@ public class CpsOrderList {
 	private  Integer  channelType;
 	private  String  channelCode;
 	private  String  channelName;
-	private  String  orderPrice;
-	private  String  summaryDetailId;
-	private  String  mid;
+	private  BigDecimal orderPrice;
+	private  Long  summaryDetailId;
+	private  Long  mid;
 	private  Date createTime;
 	private  Date  checkInTime;
 	private  Date  checkOutTime;
-	private  String  hotelId;
+	private  Long  hotelId;
 	private  String  isFirst;
 	private  String  isNew;
 
@@ -64,27 +65,27 @@ public class CpsOrderList {
 		this.channelName = channelName;
 	}
 
-	public String getOrderPrice() {
+	public BigDecimal getOrderPrice() {
 		return orderPrice;
 	}
 
-	public void setOrderPrice(String orderPrice) {
+	public void setOrderPrice(BigDecimal orderPrice) {
 		this.orderPrice = orderPrice;
 	}
 
-	public String getSummaryDetailId() {
+	public Long getSummaryDetailId() {
 		return summaryDetailId;
 	}
 
-	public void setSummaryDetailId(String summaryDetailId) {
+	public void setSummaryDetailId(Long summaryDetailId) {
 		this.summaryDetailId = summaryDetailId;
 	}
 
-	public String getMid() {
+	public Long getMid() {
 		return mid;
 	}
 
-	public void setMid(String mid) {
+	public void setMid(Long mid) {
 		this.mid = mid;
 	}
 
@@ -112,11 +113,11 @@ public class CpsOrderList {
 		this.checkOutTime = checkOutTime;
 	}
 
-	public String getHotelId() {
+	public Long getHotelId() {
 		return hotelId;
 	}
 
-	public void setHotelId(String hotelId) {
+	public void setHotelId(Long hotelId) {
 		this.hotelId = hotelId;
 	}
 
