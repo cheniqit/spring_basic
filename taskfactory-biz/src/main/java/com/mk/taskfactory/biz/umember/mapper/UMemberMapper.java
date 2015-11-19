@@ -1,0 +1,12 @@
+package com.mk.taskfactory.biz.umember.mapper;
+
+import com.mk.taskfactory.api.dtos.TRoomTypeDto;
+import com.mk.taskfactory.biz.repository.MyBatisRepository;
+import com.mk.taskfactory.model.TRoomType;
+
+import java.util.List;
+
+@MyBatisRepository
+public interface UMemberMapper {
+    public List<TRoomType> findByName(TRoomTypeDto bean);
+}
