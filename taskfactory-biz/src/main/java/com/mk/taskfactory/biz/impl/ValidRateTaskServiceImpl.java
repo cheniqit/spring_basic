@@ -517,9 +517,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                 hotelSet.add(dto.getHotelId());
                 Integer tag = dto.getTag();
                 if (null != tag  && tag > 0) {
-                    //活动结束后把配置表置为F
-                    logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID DISVALID");
-                    roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                    //主题房 不处理
                     continue;
                 }
 
