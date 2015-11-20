@@ -149,7 +149,12 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(configParam);
             logger.info("============sales online job >> find RoomSaleConfigList:" + configDtoList.size());
             for (TRoomSaleConfigDto configDto : configDtoList) {
-                updateConfigOnline(configInfoDto, configDto, runTime);
+                try {
+                    updateConfigOnline(configInfoDto, configDto, runTime);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    logger.info("============sales online job >> exception config id :" + configDto.getId());
+                }
             }
         }
 
