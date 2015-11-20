@@ -151,7 +151,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             logger.info("开始保存cpsOrderList");
             int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
             bl = true;
-        }catch (Exception e){
+        }catch (Exception e1){
             //遍历重复的订单号
             logger.info("保存cpsOrderList、、、、、、、、、、、出现异常，开始去除已经存在的订单");
             for(CpsOrderList cpsOrderListEntity:cpsOrderList){
@@ -166,8 +166,8 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
                 int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
                 logger.info("再次开始保存cpsOrderList成功");
                 bl = true;
-            }catch (Exception e) {
-                logger.info("再次开始保存cpsOrderList失败,失败原因："+e.getMessage());
+            }catch (Exception e2) {
+                logger.info("再次开始保存cpsOrderList失败,失败原因："+e2.getMessage());
                 bl = false;
             }
         }finally {
