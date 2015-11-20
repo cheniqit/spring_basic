@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Created by jeashi on 2015/11/19.
+ * Created by Thinkpad on 2015/11/20.
  */
 public class UMember {
     private Long mid;

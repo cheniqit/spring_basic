@@ -167,6 +167,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="getIsNewDistinctChannelCode" resultType="com.mk.taskfactory.biz.cps.model.CpsOrderList" parameterType="java.lang.String" >
+    select
+    DISTINCT channelCode as channelCode
+    from cps_order_list
+    where isNew = #{isNew}
+  </select>
+  <update id="updateSummaryDetailId">
+    update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId} where isNew = '1'
+  </update>
   <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
     insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
     createTime,checkOutTime,hotelId,isFirst,isNew)
@@ -180,6 +189,31 @@
 
   <select id="getMaxCheckOutTime"   resultType="java.util.Date" >
      select max(updateTime) from cps_order_list
+  <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
+    select sum(orderPrice) sumOrder,count(1) sumOrderPrice
+    from cps_order_list
+    where isNew = '1' and isFirst = #{isFirst}
+    and channelCode = #{channelCode}
+     <![CDATA[ and updateTime >= #{payStartDate} and updateTime < #{payEndDate}]]>
+  </select>
+
+  <select id="getIsNewDistinctChannelCode" resultType="com.mk.taskfactory.biz.cps.model.CpsOrderList" parameterType="java.lang.String" >
+    select
+    DISTINCT channelCode as channelCode
+    from cps_order_list
+    where isNew = #{isNew}
+  </select>
+
+  <update id="updateSummaryDetailId">
+    update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId} where isNew = '1'
+  </update>
+
+  <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
+    select sum(orderPrice) sumOrder,count(1) sumOrderPrice
+    from cps_order_list
+    where isNew = '1' and isFirst = #{isFirst}
+    and channelCode = #{channelCode}
+     <![CDATA[ and updateTime >= #{payStartDate} and updateTime < #{payEndDate}]]>
   </select>
 
 </mapper>

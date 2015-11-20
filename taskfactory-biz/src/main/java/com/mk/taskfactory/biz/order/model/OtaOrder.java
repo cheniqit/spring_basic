@@ -1,6 +1,8 @@
 package com.mk.taskfactory.biz.order.model;
 
 
+import com.mk.taskfactory.biz.cps.model.CpsOrderList;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,7 +10,7 @@ import java.util.Date;
  * b_otaorder
  */
 
-public class OtaOrder {
+public class OtaOrder extends CpsOrderList {
 
 	private  Long id;
 	private  Long  hotelId;
