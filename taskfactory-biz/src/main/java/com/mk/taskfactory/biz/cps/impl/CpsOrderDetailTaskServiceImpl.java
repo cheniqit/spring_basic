@@ -107,13 +107,13 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             cpsOrderListEntity.setUpdateTime(otaOrder.getUpdateTime());
             cpsOrderListEntity.setCreatetime(new Date());
             cpsOrderListEntity.setHotelid(otaOrder.getHotelId());
-            cpsOrderListEntity.setIsnew("T");
+            cpsOrderListEntity.setIsnew("1");
             cpsOrderListEntity.setOrderid(otaOrder.getId());
             cpsOrderListEntity.setOrderprice(otaOrder.getTotalPrice());
           if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
-            cpsOrderListEntity.setIsfirst("T");
+            cpsOrderListEntity.setIsfirst("1");
           }else{
-              cpsOrderListEntity.setIsfirst("F");
+              cpsOrderListEntity.setIsfirst("0");
           }
             resultOrderList.add(cpsOrderListEntity);
         }
