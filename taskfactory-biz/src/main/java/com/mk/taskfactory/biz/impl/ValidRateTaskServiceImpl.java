@@ -6,8 +6,6 @@ import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.HotelMapper;
 import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.common.Constants;
-import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -380,7 +378,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         roomSaleDto.setRoomId(roomDto.getId());
         roomSaleDto.setConfigId(configDto.getId());
-        roomSaleDto.setIsBack(ValidEnum.DISVALID.getId());
+        roomSaleDto.setIsBack(ValidEnum.INVALID.getId());
         roomSaleDto.setSaleName(configDto.getSaleName());
         roomSaleDto.setSaleType(configDto.getSaleType());
         roomSaleDto.setHotelId(configDto.getHotelId());
@@ -516,8 +514,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                             reBackRoom(dto);
                         }
 
-                        logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " START DISVALID");
-                        roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.DISVALID.getId());
+                        logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " START INVALID");
+                        roomSaleConfigService.updateRoomSaleConfigStarted(dto.getId(), ValidEnum.INVALID.getId());
                         String nowDate = DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss");
                         SimpleDateFormat dafShort = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -530,8 +528,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                 continue;
                             }
                             //活动结束后把配置表置为F
-                            logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID DISVALID");
-                            roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.DISVALID.getId());
+                            logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID INVALID");
+                            roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.INVALID.getId());
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete roomTypeInfo roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
@@ -601,7 +599,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return;
         }
         //根据配置id查询当前没有回复的数据
-        List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", ValidEnum.DISVALID.getId());
+        List<TRoomSaleDto> saleDtoList = roomSaleService.queryByConfigAndBack(dto.getId() + "", ValidEnum.INVALID.getId());
         if (CollectionUtils.isEmpty(saleDtoList)) {
             return;
         }
@@ -633,7 +631,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return false;
         }
         //根据配置id查询当前没有回复的数据
-        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), ValidEnum.DISVALID.getId());
+        List<Integer>  newRoomTypeIdList =  roomSaleService.queryByConfigGroup(troomSaleConfigDto.getId(), ValidEnum.INVALID.getId());
         if (CollectionUtils.isEmpty(newRoomTypeIdList)) {
             return false;
         }
@@ -701,7 +699,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             } else if (isInitValid) {
                 dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.VALID.getId());
             } else {
-                dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.DISVALID.getId());
+                dtoList = this.roomSaleConfigService.queryRoomSaleConfigByValid(ValidEnum.INVALID.getId());
             }
             logger.info(String.format("====================initHotel >> get list size [%s]", dtoList.size()));
 

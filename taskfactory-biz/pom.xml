@@ -9,6 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>taskfactory-biz</artifactId>
+    <groupId>taskfactory-biz</groupId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
