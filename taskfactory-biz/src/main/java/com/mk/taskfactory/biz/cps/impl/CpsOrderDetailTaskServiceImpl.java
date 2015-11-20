@@ -17,7 +17,6 @@ import com.mk.taskfactory.biz.mapper.cps.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.umember.model.UMember;
-import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.exception.CpsException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -195,6 +194,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         //订单金额信息
         cpsOrderSummaryCollect.setSumorderfirst(cpsOrderListSummaryIsFirst.getSumOrder());
         cpsOrderSummaryCollect.setSumorderpricefirst(cpsOrderListSummaryIsFirst.getSumOrderPrice());
+
         cpsOrderSummaryCollect.setSumorder(cpsOrderListSummaryNoFirst.getSumOrder());
         cpsOrderSummaryCollect.setSumorderprice(cpsOrderListSummaryNoFirst.getSumOrderPrice());
 
@@ -211,8 +211,12 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         cpsOrderSummaryCollect.setRuleupdateby(cpsRateConfig.getUpdateby());
         //cps金额=     sum结算订单（眯客价（实际支付金额）*cps比例） *（1-扣率）
         BigDecimal firstCps = cpsOrderListSummaryIsFirst.getSumOrderPrice().multiply(
-                cpsRateConfig.getCpsrate()).multiply(new BigDecimal("1").subtract(cpsRateConfig.getFirstdeductrate()));
+                cpsRateConfig.getFirstcpsrate()).multiply(new BigDecimal("1").subtract(cpsRateConfig.getFirstdeductrate()));
 
+        BigDecimal noFirstCps = cpsOrderListSummaryNoFirst.getSumOrderPrice().multiply(
+                cpsRateConfig.getCpsrate()).multiply(new BigDecimal("1").subtract(cpsRateConfig.getDeductrate()));
+        BigDecimal totalCps = firstCps.add(noFirstCps);
+        cpsOrderSummaryCollect.setTotalprice(totalCps);
         return cpsOrderSummaryCollect;
     }
 

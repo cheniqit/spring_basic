@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.cps.CpsOrderSummaryCollectMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="channelType" property="channeltype" jdbcType="INTEGER" />
+    <result column="channelCode" property="channelcode" jdbcType="VARCHAR" />
+    <result column="channelName" property="channelname" jdbcType="VARCHAR" />
+    <result column="sumOrderFirst" property="sumorderfirst" jdbcType="INTEGER" />
+    <result column="sumOrderPriceFirst" property="sumorderpricefirst" jdbcType="DECIMAL" />
+    <result column="sumOrder" property="sumorder" jdbcType="INTEGER" />
+    <result column="sumOrderPrice" property="sumorderprice" jdbcType="DECIMAL" />
+    <result column="deductRateFirst" property="deductratefirst" jdbcType="DOUBLE" />
+    <result column="cpsRateFirst" property="cpsratefirst" jdbcType="DOUBLE" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="ruleUpdateTime" property="ruleupdatetime" jdbcType="TIMESTAMP" />
+    <result column="ruleUpdateBy" property="ruleupdateby" jdbcType="VARCHAR" />
+    <result column="cpsRate" property="cpsrate" jdbcType="DOUBLE" />
+    <result column="deductRate" property="deductrate" jdbcType="DOUBLE" />
+    <result column="orderDate" property="orderdate" jdbcType="DATE" />
+    <result column="sumOrderPriceRateFirst" property="sumorderpriceratefirst" jdbcType="DECIMAL" />
+    <result column="sumOrderPriceRate" property="sumorderpricerate" jdbcType="DECIMAL" />
+    <result column="totalPrice" property="totalprice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, channelType, channelCode, channelName, sumOrderFirst, sumOrderPriceFirst, sumOrder, 
+    sumOrderPrice, deductRateFirst, cpsRateFirst, createTime, ruleUpdateTime, ruleUpdateBy, 
+    cpsRate, deductRate, orderDate, sumOrderPriceRateFirst, sumOrderPriceRate, totalPrice
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollectExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cps_order_summary_collect
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from cps_order_summary_collect
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from cps_order_summary_collect
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
+    insert into cps_order_summary_collect (ID, channelType, channelCode, 
+      channelName, sumOrderFirst, sumOrderPriceFirst, 
+      sumOrder, sumOrderPrice, deductRateFirst, 
+      cpsRateFirst, createTime, ruleUpdateTime, 
+      ruleUpdateBy, cpsRate, deductRate, 
+      orderDate, sumOrderPriceRateFirst, sumOrderPriceRate, 
+      totalPrice)
+    values (#{id,jdbcType=BIGINT}, #{channeltype,jdbcType=INTEGER}, #{channelcode,jdbcType=VARCHAR}, 
+      #{channelname,jdbcType=VARCHAR}, #{sumorderfirst,jdbcType=INTEGER}, #{sumorderpricefirst,jdbcType=DECIMAL}, 
+      #{sumorder,jdbcType=INTEGER}, #{sumorderprice,jdbcType=DECIMAL}, #{deductratefirst,jdbcType=DOUBLE}, 
+      #{cpsratefirst,jdbcType=DOUBLE}, #{createtime,jdbcType=TIMESTAMP}, #{ruleupdatetime,jdbcType=TIMESTAMP}, 
+      #{ruleupdateby,jdbcType=VARCHAR}, #{cpsrate,jdbcType=DOUBLE}, #{deductrate,jdbcType=DOUBLE}, 
+      #{orderdate,jdbcType=DATE}, #{sumorderpriceratefirst,jdbcType=DECIMAL}, #{sumorderpricerate,jdbcType=DECIMAL}, 
+      #{totalprice,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
+    insert into cps_order_summary_collect
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="channeltype != null" >
+        channelType,
+      </if>
+      <if test="channelcode != null" >
+        channelCode,
+      </if>
+      <if test="channelname != null" >
+        channelName,
+      </if>
+      <if test="sumorderfirst != null" >
+        sumOrderFirst,
+      </if>
+      <if test="sumorderpricefirst != null" >
+        sumOrderPriceFirst,
+      </if>
+      <if test="sumorder != null" >
+        sumOrder,
+      </if>
+      <if test="sumorderprice != null" >
+        sumOrderPrice,
+      </if>
+      <if test="deductratefirst != null" >
+        deductRateFirst,
+      </if>
+      <if test="cpsratefirst != null" >
+        cpsRateFirst,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="ruleupdatetime != null" >
+        ruleUpdateTime,
+      </if>
+      <if test="ruleupdateby != null" >
+        ruleUpdateBy,
+      </if>
+      <if test="cpsrate != null" >
+        cpsRate,
+      </if>
+      <if test="deductrate != null" >
+        deductRate,
+      </if>
+      <if test="orderdate != null" >
+        orderDate,
+      </if>
+      <if test="sumorderpriceratefirst != null" >
+        sumOrderPriceRateFirst,
+      </if>
+      <if test="sumorderpricerate != null" >
+        sumOrderPriceRate,
+      </if>
+      <if test="totalprice != null" >
+        totalPrice,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="channeltype != null" >
+        #{channeltype,jdbcType=INTEGER},
+      </if>
+      <if test="channelcode != null" >
+        #{channelcode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelname != null" >
+        #{channelname,jdbcType=VARCHAR},
+      </if>
+      <if test="sumorderfirst != null" >
+        #{sumorderfirst,jdbcType=INTEGER},
+      </if>
+      <if test="sumorderpricefirst != null" >
+        #{sumorderpricefirst,jdbcType=DECIMAL},
+      </if>
+      <if test="sumorder != null" >
+        #{sumorder,jdbcType=INTEGER},
+      </if>
+      <if test="sumorderprice != null" >
+        #{sumorderprice,jdbcType=DECIMAL},
+      </if>
+      <if test="deductratefirst != null" >
+        #{deductratefirst,jdbcType=DOUBLE},
+      </if>
+      <if test="cpsratefirst != null" >
+        #{cpsratefirst,jdbcType=DOUBLE},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleupdatetime != null" >
+        #{ruleupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleupdateby != null" >
+        #{ruleupdateby,jdbcType=VARCHAR},
+      </if>
+      <if test="cpsrate != null" >
+        #{cpsrate,jdbcType=DOUBLE},
+      </if>
+      <if test="deductrate != null" >
+        #{deductrate,jdbcType=DOUBLE},
+      </if>
+      <if test="orderdate != null" >
+        #{orderdate,jdbcType=DATE},
+      </if>
+      <if test="sumorderpriceratefirst != null" >
+        #{sumorderpriceratefirst,jdbcType=DECIMAL},
+      </if>
+      <if test="sumorderpricerate != null" >
+        #{sumorderpricerate,jdbcType=DECIMAL},
+      </if>
+      <if test="totalprice != null" >
+        #{totalprice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollectExample" resultType="java.lang.Integer" >
+    select count(*) from cps_order_summary_collect
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
+    update cps_order_summary_collect
+    <set >
+      <if test="channeltype != null" >
+        channelType = #{channeltype,jdbcType=INTEGER},
+      </if>
+      <if test="channelcode != null" >
+        channelCode = #{channelcode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelname != null" >
+        channelName = #{channelname,jdbcType=VARCHAR},
+      </if>
+      <if test="sumorderfirst != null" >
+        sumOrderFirst = #{sumorderfirst,jdbcType=INTEGER},
+      </if>
+      <if test="sumorderpricefirst != null" >
+        sumOrderPriceFirst = #{sumorderpricefirst,jdbcType=DECIMAL},
+      </if>
+      <if test="sumorder != null" >
+        sumOrder = #{sumorder,jdbcType=INTEGER},
+      </if>
+      <if test="sumorderprice != null" >
+        sumOrderPrice = #{sumorderprice,jdbcType=DECIMAL},
+      </if>
+      <if test="deductratefirst != null" >
+        deductRateFirst = #{deductratefirst,jdbcType=DOUBLE},
+      </if>
+      <if test="cpsratefirst != null" >
+        cpsRateFirst = #{cpsratefirst,jdbcType=DOUBLE},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleupdatetime != null" >
+        ruleUpdateTime = #{ruleupdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ruleupdateby != null" >
+        ruleUpdateBy = #{ruleupdateby,jdbcType=VARCHAR},
+      </if>
+      <if test="cpsrate != null" >
+        cpsRate = #{cpsrate,jdbcType=DOUBLE},
+      </if>
+      <if test="deductrate != null" >
+        deductRate = #{deductrate,jdbcType=DOUBLE},
+      </if>
+      <if test="orderdate != null" >
+        orderDate = #{orderdate,jdbcType=DATE},
+      </if>
+      <if test="sumorderpriceratefirst != null" >
+        sumOrderPriceRateFirst = #{sumorderpriceratefirst,jdbcType=DECIMAL},
+      </if>
+      <if test="sumorderpricerate != null" >
+        sumOrderPriceRate = #{sumorderpricerate,jdbcType=DECIMAL},
+      </if>
+      <if test="totalprice != null" >
+        totalPrice = #{totalprice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
+    update cps_order_summary_collect
+    set channelType = #{channeltype,jdbcType=INTEGER},
+      channelCode = #{channelcode,jdbcType=VARCHAR},
+      channelName = #{channelname,jdbcType=VARCHAR},
+      sumOrderFirst = #{sumorderfirst,jdbcType=INTEGER},
+      sumOrderPriceFirst = #{sumorderpricefirst,jdbcType=DECIMAL},
+      sumOrder = #{sumorder,jdbcType=INTEGER},
+      sumOrderPrice = #{sumorderprice,jdbcType=DECIMAL},
+      deductRateFirst = #{deductratefirst,jdbcType=DOUBLE},
+      cpsRateFirst = #{cpsratefirst,jdbcType=DOUBLE},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      ruleUpdateTime = #{ruleupdatetime,jdbcType=TIMESTAMP},
+      ruleUpdateBy = #{ruleupdateby,jdbcType=VARCHAR},
+      cpsRate = #{cpsrate,jdbcType=DOUBLE},
+      deductRate = #{deductrate,jdbcType=DOUBLE},
+      orderDate = #{orderdate,jdbcType=DATE},
+      sumOrderPriceRateFirst = #{sumorderpriceratefirst,jdbcType=DECIMAL},
+      sumOrderPriceRate = #{sumorderpricerate,jdbcType=DECIMAL},
+      totalPrice = #{totalprice,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
