@@ -11,10 +11,10 @@ import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.*;
 import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.mapper.UMemberMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsOrderListMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsOrderSummaryCollectMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsRateConfigMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsChannelMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsOrderListMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsOrderSummaryCollectMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.umember.model.UMember;
@@ -166,7 +166,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
                 int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
                 logger.info("再次开始保存cpsOrderList成功");
                 bl = true;
-            }catch (Exception e2){
+            }catch (Exception e2) {
                 logger.info("再次开始保存cpsOrderList失败,失败原因："+e2.getMessage());
                 bl = false;
             }

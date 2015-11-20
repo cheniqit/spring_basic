@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper" >
+<mapper namespace="com.mk.taskfactory.biz.cps.mapper.CpsChannelMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.cps.model.CpsChannel" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="channelCode" property="channelcode" jdbcType="VARCHAR" />

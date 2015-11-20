@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.mapper.cps;
+package com.mk.taskfactory.biz.cps.mapper;
 
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.CpsOrderList;
