@@ -176,6 +176,34 @@
   <update id="updateSummaryDetailId">
     update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId} where isNew = '1'
   </update>
+  <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
+    createTime,checkOutTime,hotelId,isFirst,isNew)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.orderId},#{item.channelType},#{item.channelCode},#{item.channelName},#{item.channelName}
+      ,#{item.orderPrice},#{item.orderPrice},#{item.summaryDetailId},#{item.mid},#{item.createTime},#{item.checkOutTime}
+      ,#{item.hotelId} ,#{item.isFirst} ,#{item.isNew} )
+    </foreach>
+  </insert>
+  <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
+    select sum(orderPrice) sumOrder,count(1) sumOrderPrice
+    from cps_order_list
+    where isNew = '1' and isFirst = #{isFirst}
+    and channelCode = #{channelCode}
+     <![CDATA[ and updateTime >= #{payStartDate} and updateTime < #{payEndDate}]]>
+  </select>
+
+  <select id="getIsNewDistinctChannelCode" resultType="com.mk.taskfactory.biz.cps.model.CpsOrderList" parameterType="java.lang.String" >
+    select
+    DISTINCT channelCode as channelCode
+    from cps_order_list
+    where isNew = #{isNew}
+  </select>
+
+  <update id="updateSummaryDetailId">
+    update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId} where isNew = '1'
+  </update>
 
   <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
     select sum(orderPrice) sumOrder,count(1) sumOrderPrice

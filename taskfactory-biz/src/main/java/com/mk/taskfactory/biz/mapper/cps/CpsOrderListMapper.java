@@ -21,6 +21,10 @@ public interface CpsOrderListMapper {
 
     List<String> getIsNewDistinctChannelCode(String isNew);
 
+    public Date getMaxCheckOutTime();
+
+    public int addCpsOrderListBatch(List<CpsOrderList>  cpsOrderList);
+
     int updateSummaryDetailId(@Param("cpsOrderSummaryCollectId'")Long cpsOrderSummaryCollectId);
 
     CpsOrderListSummary getCpsOrderListSummary(@Param("isFirst")boolean isFirst, @Param("payStartDate")Date payStartDate,

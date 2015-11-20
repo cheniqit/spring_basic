@@ -4,14 +4,14 @@ import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.*;
+import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper;
 import com.mk.taskfactory.biz.mapper.cps.CpsOrderListMapper;
 import com.mk.taskfactory.biz.mapper.cps.CpsOrderSummaryCollectMapper;
 import com.mk.taskfactory.biz.mapper.cps.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
-import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
-import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import com.mk.taskfactory.common.exception.CpsException;
 import org.apache.commons.collections.CollectionUtils;
@@ -41,7 +41,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     private  UMemberMapper umemberMapper;
 
     @Autowired
-    private OtaOrderMapper otaOrderMapper;
+    private CpsOrderListMapper cpsOrderListMapper;
 
     @Autowired
     private OtaOrderServiceImpl otaOrderServiceImpl;
@@ -51,6 +51,9 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
 
     @Autowired
     private CpsOrderSummaryCollectMapper cpsOrderSummaryCollectMapper;
+
+    @Autowired
+    private OtaOrderMapper otaOrderMapper;
 
 
     public  void    cpsOrderProduce(){
@@ -96,11 +99,19 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             return null ;
         }
         for(OtaOrder  otaOrder:orderList){
-          if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
-              resultOrderList.add(otaOrder);
-          }
+            if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
+                resultOrderList.add(otaOrder);
+            }
         }
         return null;
+    }
+
+    public  Boolean  saveCpsOrderList(List<CpsOrderList>  cpsOrderList) {
+        if (CollectionUtils.isEmpty(cpsOrderList)) {
+            return false;
+        }
+        int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
+        return true;
     }
 
     public void saveOrderSummary(){

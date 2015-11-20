@@ -2,8 +2,10 @@ package com.mk.taskfactory.biz.mapper.cps;
 
 import com.mk.taskfactory.biz.cps.model.CpsRateConfig;
 import com.mk.taskfactory.biz.cps.model.CpsRateConfigExample;
-import java.util.List;
+import com.mk.taskfactory.biz.repository.MyBatisRepository;
 
+import java.util.List;
+@MyBatisRepository
 public interface CpsRateConfigMapper {
     int countByExample(CpsRateConfigExample example);
 
