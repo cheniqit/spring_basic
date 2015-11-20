@@ -2,8 +2,11 @@ package com.mk.taskfactory.biz.mapper.cps;
 
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsChannelExample;
+import com.mk.taskfactory.biz.repository.MyBatisRepository;
+
 import java.util.List;
 
+@MyBatisRepository
 public interface CpsChannelMapper {
     int countByExample(CpsChannelExample example);
 
