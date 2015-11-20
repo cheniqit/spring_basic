@@ -27,6 +27,8 @@ public interface CpsOrderListMapper {
 
     int updateSummaryDetailId(@Param("cpsOrderSummaryCollectId'")Long cpsOrderSummaryCollectId);
 
+    public   CpsOrderList  getCpsOrderListByOrderId(Long  orderId);
+
     CpsOrderListSummary getCpsOrderListSummary(@Param("isFirst")boolean isFirst, @Param("payStartDate")Date payStartDate,
                                                @Param("payEndDate")Date payEndDate, @Param("channelCode")String channelCode);
 }

@@ -216,4 +216,10 @@
      <![CDATA[ and updateTime >= #{payStartDate} and updateTime < #{payEndDate}]]>
   </select>
 
+  <select id="getCpsOrderListByOrderId" resultMap="BaseResultMap" parameterType="java.lang.long">
+    select  *
+    from  cps_order_list
+    where  orderId = #{orderId}
+  </select>
+
 </mapper>
