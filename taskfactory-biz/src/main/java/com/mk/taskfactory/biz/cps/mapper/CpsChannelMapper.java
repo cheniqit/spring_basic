@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.mapper.cps;
+package com.mk.taskfactory.biz.cps.mapper;
 
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsChannelExample;

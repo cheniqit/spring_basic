@@ -1,4 +1,4 @@
-package com.mk.taskfactory.biz.mapper.cps;
+package com.mk.taskfactory.biz.cps.mapper;
 
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.CpsOrderList;
@@ -26,6 +26,8 @@ public interface CpsOrderListMapper {
     public Date getMaxCheckOutTime();
 
     int updateSummaryDetailId(@Param("cpsOrderSummaryCollectId'")Long cpsOrderSummaryCollectId);
+
+    public   CpsOrderList  getCpsOrderListByOrderId(Long  orderId);
 
     CpsOrderListSummary getCpsOrderListSummary(@Param("isFirst")boolean isFirst, @Param("payStartDate")Date payStartDate,
                                                @Param("payEndDate")Date payEndDate, @Param("channelCode")String channelCode);

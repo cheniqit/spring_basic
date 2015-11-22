@@ -23,12 +23,12 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
   
    <context:property-placeholder location="classpath:db.properties"/>
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-        <property name="url" value="${mysql.jdbc.url}"/>
-        <property name="username" value="${mysql.jdbc.username}"/>
-        <property name="password" value="${mysql.jdbc.password}"/>
-    </bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="url" value="${mysql.jdbc.url}"/>
+		<property name="username" value="${mysql.jdbc.username}"/>
+		<property name="password" value="${mysql.jdbc.password}"/>
+	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
@@ -36,12 +36,12 @@
 
 	</bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
-    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
 
 	<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
@@ -64,5 +64,50 @@
 		<property name="basePackage" value="com.mk.taskfactory.biz.mapper"/>
 
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+
+										<!---     cps 数据源  -->
+
+	<bean id="dataSourceCPS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="url" value="${csp.mysql.jdbc.url}"/>
+		<property name="username" value="${csp.mysql.jdbc.username}"/>
+		<property name="password" value="${csp.mysql.jdbc.password}"/>
+	</bean>
+
+	<bean id="sqlSessionFactoryCPS" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceCPS"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/*.xml"/>
+
+	</bean>
+
+	<bean id="transactionManagerCPS" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceCPS"/>
+	</bean>
+
+	<aop:aspectj-autoproxy expose-proxy="true"/>
+	<tx:annotation-driven transaction-manager="transactionManagerCPS" proxy-target-class="true"/>
+
+	<tx:advice id="txadviceCPS" transaction-manager="transactionManagerCPS">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
+			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config expose-proxy="true">
+		<aop:pointcut id="txPointcutCPS" expression="execution(* com.mk..service..*.*(..))" />
+		<aop:advisor advice-ref="txadviceCPS" pointcut-ref="txPointcutCPS" />
+	</aop:config>
+
+	<aop:aspectj-autoproxy expose-proxy="true"/>
+	<bean name="scannerConfigurerCPS" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.taskfactory.biz.cps.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCPS"></property>
 	</bean>
 </beans>

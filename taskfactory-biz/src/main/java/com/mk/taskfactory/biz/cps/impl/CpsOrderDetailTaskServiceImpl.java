@@ -1,5 +1,6 @@
 package com.mk.taskfactory.biz.cps.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsChannelExample;
@@ -10,10 +11,10 @@ import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.*;
 import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
 import com.mk.taskfactory.biz.mapper.UMemberMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsChannelMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsOrderListMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsOrderSummaryCollectMapper;
-import com.mk.taskfactory.biz.mapper.cps.CpsRateConfigMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsChannelMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsOrderListMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsOrderSummaryCollectMapper;
+import com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.umember.model.UMember;
@@ -61,14 +62,15 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
 
 
     public  void    cpsOrderProduce(){
-        logger.info(" begin cpsOrderProduce []");
+        logger.info(" 开始执行 cpsOrderProduce、、、、、、、、、、、、、begin");
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andValidEqualTo(1);
         List<CpsChannel>  cpsChannelList = cpsChannelMapper.selectByExample(cpsChannelExample);
         if(CollectionUtils.isEmpty(cpsChannelList)){
-            logger.info("query  cpsChannel : [cpsChannelList = null]  " );
+            logger.info(" query  cpsChannel : [ cpsChannelList = null ]  " );
             return ;
         }
+        logger.info(" query  cpsChannel result: " + JSONArray.toJSON(cpsChannelList).toString());
         for(CpsChannel cpsChannle:cpsChannelList){
             HashMap<Long,UMember> memberMap = new  HashMap<Long,UMember>();
             String  channelCode = cpsChannle.getChannelcode();
@@ -77,6 +79,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             }
             HashMap  hmap = new HashMap();
             hmap.put("comefrom", channelCode);
+            logger.info(" selectCpsUserByComeFrom    parme  comefrom  :  " + channelCode );
             List<UMember>  umemberList =   umemberMapper.selectCpsUserByComeFrom(hmap);
             if(CollectionUtils.isEmpty(cpsChannelList)){
                 continue ;
@@ -92,6 +95,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             }
             Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
             List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(mids,maxTime,channelCode,cpsChannle.getChannelname(),cpsChannle.getTypeid());
+            saveCpsOrderList(cpsOrderListCollection);
         }
     }
 
@@ -136,11 +140,40 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     }
 
     public  Boolean  saveCpsOrderList(List<CpsOrderList>  cpsOrderList) {
+        logger.info("执行saveCpsOrderList、、、、、、、、、、、、begin");
+        Boolean bl = false;
         if (CollectionUtils.isEmpty(cpsOrderList)) {
-            return false;
+            logger.info("开始保存cpsOrderList、、、、、、、、、 cpsOrderList  is  null ");
+            bl = false;
+            return bl;
         }
-        int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
-        return true;
+        try{
+            logger.info("开始保存cpsOrderList");
+            int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
+            bl = true;
+        }catch (Exception e1){
+            //遍历重复的订单号
+            logger.info("保存cpsOrderList、、、、、、、、、、、出现异常，开始去除已经存在的订单");
+            for(CpsOrderList cpsOrderListEntity:cpsOrderList){
+                CpsOrderList  cpsOrderListExist = cpsOrderListMapper.getCpsOrderListByOrderId(cpsOrderListEntity.getOrderid());
+                if(null!=cpsOrderListExist){
+                    logger.info("订单号："+cpsOrderListEntity.getOrderid()+"已经存在,正在移除、、、、、、");
+                    cpsOrderList.remove(cpsOrderListEntity);
+                }
+            }
+            try{
+                logger.info("再次开始保存cpsOrderList");
+                int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
+                logger.info("再次开始保存cpsOrderList成功");
+                bl = true;
+            }catch (Exception e2) {
+                logger.info("再次开始保存cpsOrderList失败,失败原因："+e2.getMessage());
+                bl = false;
+            }
+        }finally {
+            logger.info("执行saveCpsOrderList.....................end");
+            return bl;
+        }
     }
 
     public void saveOrderSummary(){
