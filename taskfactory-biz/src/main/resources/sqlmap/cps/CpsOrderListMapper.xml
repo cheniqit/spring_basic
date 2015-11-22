@@ -192,7 +192,7 @@
   </select>
 
   <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
-    select sum(orderPrice) sumOrderPrice,count(1) sumOrder
+    select sum(orderPrice) sumOrderPrice,count(1) sumOrder,max(updateTime) updateTime
     from cps_order_list
     where isNew = '1' and isFirst = #{isFirst}
     and channelCode = #{channelCode}
