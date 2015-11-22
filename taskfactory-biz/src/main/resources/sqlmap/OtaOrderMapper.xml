@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.ots.mapper.OtaOrderTastsMapper" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.OtaOrderMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.order.model.OtaOrder" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="otaorderid" property="otaorderid" jdbcType="BIGINT" />
@@ -12,16 +12,8 @@
     <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="executeTime" property="executeTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap id="ResultMapWithCps" type="com.mk.taskfactory.biz.order.model.OtaOrder" >
-    <result column="id" property="id" jdbcType="long" />
-    <result column="mid" property="mid" jdbcType="long" />
-    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="priceType" property="priceType" jdbcType="int" />
-    <result column="price" property="Price" jdbcType="BigDecimal" />
-    <result column="totalPrice" property="totalPrice" jdbcType="BigDecimal />
-  </resultMap>
 
-  <select id="selectByMidMoreThenMaxTime"  resultMap="ResultMapWithCps" parameterType="java.util.HashMap" >
+  <select id="selectByMidMoreThenMaxTime"  resultMap="BaseResultMap" parameterType="java.util.HashMap" >
    select
     <include refid="Blob_Column_List" />
     from b_otaorder
@@ -30,7 +22,7 @@
      <![CDATA[ and  updatetime> #{maxtime}]]>
   </select>
 
-  <select id="selectByMidLessThenMaxTime" resultMap="ResultMapWithCps" parameterType="java.util.HashMap" >
+  <select id="selectByMidLessThenMaxTime" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
     select
     <include refid="Blob_Column_List" />
     from b_otaorder

@@ -12,7 +12,7 @@
     <result column="blmacaddr" property="blmacaddr" jdbcType="VARCHAR" />
   </resultMap>
 
-  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.long" >
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
       *
     from b_otaorder_mac

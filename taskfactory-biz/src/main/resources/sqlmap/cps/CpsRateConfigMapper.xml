@@ -8,7 +8,7 @@
     <result column="firstDeductRate" property="firstdeductrate" jdbcType="DECIMAL" />
     <result column="cpsRate" property="cpsrate" jdbcType="DECIMAL" />
     <result column="deductRate" property="deductrate" jdbcType="DECIMAL" />
-    <result column="paySartDate" property="paysartdate" jdbcType="DATE" />
+    <result column="payStartDate" property="paystartdate" jdbcType="DATE" />
     <result column="payEndDate" property="payenddate" jdbcType="DATE" />
     <result column="valid" property="valid" jdbcType="CHAR" />
     <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
@@ -46,7 +46,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, channelId, firstCpsRate, firstDeductRate, cpsRate, deductRate, paySartDate, payEndDate, 
+    id, channelId, firstCpsRate, firstDeductRate, cpsRate, deductRate, payStartDate, payEndDate, 
     valid, createTime, createBy, updateTime, updateBy
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfigExample" >
@@ -77,12 +77,12 @@
   <insert id="insert" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
     insert into cps_rate_config (id, channelId, firstCpsRate, 
       firstDeductRate, cpsRate, deductRate, 
-      paySartDate, payEndDate, valid, 
+      payStartDate, payEndDate, valid, 
       createTime, createBy, updateTime, 
       updateBy)
     values (#{id,jdbcType=INTEGER}, #{channelid,jdbcType=INTEGER}, #{firstcpsrate,jdbcType=DECIMAL}, 
       #{firstdeductrate,jdbcType=DECIMAL}, #{cpsrate,jdbcType=DECIMAL}, #{deductrate,jdbcType=DECIMAL}, 
-      #{paysartdate,jdbcType=DATE}, #{payenddate,jdbcType=DATE}, #{valid,jdbcType=CHAR}, 
+      #{paystartdate,jdbcType=DATE}, #{payenddate,jdbcType=DATE}, #{valid,jdbcType=CHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
       #{updateby,jdbcType=VARCHAR})
   </insert>
@@ -107,8 +107,8 @@
       <if test="deductrate != null" >
         deductRate,
       </if>
-      <if test="paysartdate != null" >
-        paySartDate,
+      <if test="paystartdate != null" >
+        payStartDate,
       </if>
       <if test="payenddate != null" >
         payEndDate,
@@ -148,8 +148,8 @@
       <if test="deductrate != null" >
         #{deductrate,jdbcType=DECIMAL},
       </if>
-      <if test="paysartdate != null" >
-        #{paysartdate,jdbcType=DATE},
+      <if test="paystartdate != null" >
+        #{paystartdate,jdbcType=DATE},
       </if>
       <if test="payenddate != null" >
         #{payenddate,jdbcType=DATE},
@@ -195,8 +195,8 @@
       <if test="deductrate != null" >
         deductRate = #{deductrate,jdbcType=DECIMAL},
       </if>
-      <if test="paysartdate != null" >
-        paySartDate = #{paysartdate,jdbcType=DATE},
+      <if test="paystartdate != null" >
+        payStartDate = #{paystartdate,jdbcType=DATE},
       </if>
       <if test="payenddate != null" >
         payEndDate = #{payenddate,jdbcType=DATE},
@@ -226,7 +226,7 @@
       firstDeductRate = #{firstdeductrate,jdbcType=DECIMAL},
       cpsRate = #{cpsrate,jdbcType=DECIMAL},
       deductRate = #{deductrate,jdbcType=DECIMAL},
-      paySartDate = #{paysartdate,jdbcType=DATE},
+      payStartDate = #{paystartdate,jdbcType=DATE},
       payEndDate = #{payenddate,jdbcType=DATE},
       valid = #{valid,jdbcType=CHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},

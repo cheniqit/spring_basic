@@ -71,14 +71,14 @@
 
 	<bean id="dataSourceCPS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="url" value="${csp.mysql.jdbc.url}"/>
-		<property name="username" value="${csp.mysql.jdbc.username}"/>
-		<property name="password" value="${csp.mysql.jdbc.password}"/>
+		<property name="url" value="${cps.mysql.jdbc.url}"/>
+		<property name="username" value="${cps.mysql.jdbc.username}"/>
+		<property name="password" value="${cps.mysql.jdbc.password}"/>
 	</bean>
 
 	<bean id="sqlSessionFactoryCPS" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceCPS"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/*.xml"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/cps/*.xml"/>
 
 	</bean>
 
@@ -88,22 +88,6 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<tx:annotation-driven transaction-manager="transactionManagerCPS" proxy-target-class="true"/>
-
-	<tx:advice id="txadviceCPS" transaction-manager="transactionManagerCPS">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="txPointcutCPS" expression="execution(* com.mk..service..*.*(..))" />
-		<aop:advisor advice-ref="txadviceCPS" pointcut-ref="txPointcutCPS" />
-	</aop:config>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurerCPS" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

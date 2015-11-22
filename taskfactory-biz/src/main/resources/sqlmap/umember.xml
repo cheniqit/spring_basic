@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.taskfactory.biz.mapper.UMemberMapper">
-    <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.umember.model.UMember">
-        <id column="mid" property="mid" jdbcType="BIGINT"/>
-    </resultMap>
     <resultMap id="BaseCpsUsertMap" type="com.mk.taskfactory.biz.umember.model.UMember">
         <id column="mid" property="mid" jdbcType="BIGINT"/>
         <id column="loginName" property="loginName" jdbcType="VARCHAR"/>
-        <id column="phone" property="phone" jdbcType="long"/>
+        <id column="phone" property="phone" jdbcType="BIGINT"/>
         <id column="comefrom" property="comefrom" jdbcType="VARCHAR"/>
         <id column="comefromtype" property="comefromtype" jdbcType="VARCHAR"/>
     </resultMap>
