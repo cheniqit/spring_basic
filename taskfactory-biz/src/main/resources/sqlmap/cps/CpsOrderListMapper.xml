@@ -47,7 +47,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, orderId, channelType, channelCode, channelName, orderPrice, summaryDetailId, 
-    mid, createTime, checkOutTime, hotelId, isFirst, isNew
+    mid, createTime, updateTime, hotelId, isFirst, isNew
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderListExample" >
     select
@@ -68,12 +68,12 @@
     insert into cps_order_list (id, orderId, channelType, 
       channelCode, channelName, orderPrice, 
       summaryDetailId, mid, createTime, 
-      checkOutTime, hotelId, isFirst, 
+      updateTime, hotelId, isFirst, 
       isNew)
     values (#{id,jdbcType=BIGINT}, #{orderid,jdbcType=BIGINT}, #{channeltype,jdbcType=INTEGER}, 
       #{channelcode,jdbcType=VARCHAR}, #{channelname,jdbcType=VARCHAR}, #{orderprice,jdbcType=DECIMAL}, 
       #{summarydetailid,jdbcType=BIGINT}, #{mid,jdbcType=BIGINT}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{checkouttime,jdbcType=TIMESTAMP}, #{hotelid,jdbcType=BIGINT}, #{isfirst,jdbcType=CHAR}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{hotelid,jdbcType=BIGINT}, #{isfirst,jdbcType=CHAR},
       #{isnew,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderList" >
@@ -106,8 +106,8 @@
       <if test="createtime != null" >
         createTime,
       </if>
-      <if test="checkouttime != null" >
-        checkOutTime,
+      <if test="updatetime != null" >
+        updateTime,
       </if>
       <if test="hotelid != null" >
         hotelId,
@@ -147,8 +147,8 @@
       <if test="createtime != null" >
         #{createtime,jdbcType=TIMESTAMP},
       </if>
-      <if test="checkouttime != null" >
-        #{checkouttime,jdbcType=TIMESTAMP},
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
       </if>
       <if test="hotelid != null" >
         #{hotelid,jdbcType=BIGINT},
@@ -178,11 +178,11 @@
   </update>
   <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
     insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
-    createTime,checkOutTime,hotelId,isFirst,isNew)
+    createTime,updateTime,hotelId,isFirst,isNew)
     values
     <foreach collection="list" item="item" index="index" separator="," >
       (#{item.orderId},#{item.channelType},#{item.channelCode},#{item.channelName},#{item.channelName}
-      ,#{item.orderPrice},#{item.orderPrice},#{item.summaryDetailId},#{item.mid},#{item.createTime},#{item.checkOutTime}
+      ,#{item.orderPrice},#{item.orderPrice},#{item.summaryDetailId},#{item.mid},#{item.createTime},#{item.updateTime}
       ,#{item.hotelId} ,#{item.isFirst} ,#{item.isNew} )
     </foreach>
   </insert>

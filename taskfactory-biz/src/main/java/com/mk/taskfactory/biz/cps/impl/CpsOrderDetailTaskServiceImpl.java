@@ -189,7 +189,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     }
 
     public void saveOrderSummaryByChannelCode(String channelCode){
-        CpsChannel cpsChannel = getCpsChannel(channelCode);
+        CpsChannel cpsChannel = getCpsChannelByCode(channelCode);
         if(cpsChannel == null){
             throw new CpsException(String.format("find cpsChannel result is null,params channelCode[%s]", channelCode));
         }
@@ -259,7 +259,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         return cpsOrderMapper.selectByExample(example);
     }
 
-    public CpsChannel getCpsChannel(String channelCode) {
+    public CpsChannel getCpsChannelByCode(String channelCode) {
         CpsChannel cpsChannel = null;
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andChannelcodeEqualTo(channelCode);
@@ -277,6 +277,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     public List<CpsRateConfig> getCpsRateConfig(Integer channelId) {
         CpsRateConfigExample example = new CpsRateConfigExample();
         example.createCriteria().andChannelidEqualTo(channelId);
+        example.setOrderByClause("id");
         List<CpsRateConfig> cpsRateConfigList = cpsRateConfigMapper.selectByExample(example);
         return cpsRateConfigList;
     }

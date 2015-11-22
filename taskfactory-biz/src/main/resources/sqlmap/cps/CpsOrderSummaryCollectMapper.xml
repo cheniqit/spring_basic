@@ -81,15 +81,15 @@
     delete from cps_order_summary_collect
     where ID = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect" >
-    insert into cps_order_summary_collect (ID, channelType, channelCode, 
+  <insert id="insert" parameterType="com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect"  useGeneratedKeys="true" keyProperty="id">
+    insert into cps_order_summary_collect (ID, channelType, channelCode,
       channelName, sumOrderFirst, sumOrderPriceFirst, 
       sumOrder, sumOrderPrice, deductRateFirst, 
       cpsRateFirst, createTime, ruleUpdateTime, 
       ruleUpdateBy, cpsRate, deductRate, 
       orderDate, sumOrderPriceRateFirst, sumOrderPriceRate, 
       totalPrice)
-    values (#{id,jdbcType=BIGINT}, #{channeltype,jdbcType=INTEGER}, #{channelcode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{channeltype,jdbcType=INTEGER}, #{channelcode,jdbcType=VARCHAR},
       #{channelname,jdbcType=VARCHAR}, #{sumorderfirst,jdbcType=INTEGER}, #{sumorderpricefirst,jdbcType=DECIMAL}, 
       #{sumorder,jdbcType=INTEGER}, #{sumorderprice,jdbcType=DECIMAL}, #{deductratefirst,jdbcType=DOUBLE}, 
       #{cpsratefirst,jdbcType=DOUBLE}, #{createtime,jdbcType=TIMESTAMP}, #{ruleupdatetime,jdbcType=TIMESTAMP}, 
