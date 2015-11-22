@@ -95,20 +95,5 @@
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCPS"></property>
 	</bean>
 
-	<tx:advice id="txadviceCps" transaction-manager="transactionManagerCPS">
-		<tx:attributes>
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="txPointcut" expression="execution(* com.mk.taskfactory.biz.cps.*(..))" />
-		<aop:advisor advice-ref="txadviceCps" pointcut-ref="txPointcut" />
-	</aop:config>
 
 </beans>

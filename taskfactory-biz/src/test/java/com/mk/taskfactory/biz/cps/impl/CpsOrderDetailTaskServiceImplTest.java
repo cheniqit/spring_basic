@@ -22,7 +22,8 @@ public class CpsOrderDetailTaskServiceImplTest extends BaseTest {
 
     @Test
     public void testSaveOrderSummaryByChannelCode() throws Exception {
-
+        String channelCode  = "test1";
+        cpsOrderDetailTaskService.saveOrderSummaryByChannelCode(channelCode);
     }
 
     @Test

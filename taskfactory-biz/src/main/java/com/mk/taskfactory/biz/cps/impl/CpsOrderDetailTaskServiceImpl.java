@@ -18,6 +18,7 @@ import com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.umember.model.UMember;
+import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.exception.CpsException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,10 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService {
@@ -210,9 +208,12 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         CpsOrderSummaryCollect cpsOrderSummaryCollect = null;
         Date payStartDate = cpsRateConfig.getPaystartdate();
         Date payEndDate = cpsRateConfig.getPayenddate();
+        payEndDate = DateUtils.add(payEndDate, Calendar.DATE, 1);
         if(payStartDate == null || payEndDate == null){
             logger.error(String.format("cpsRateConfig payStartDate or payEndDate is null,params cpsRateConfig Id[%s]", cpsRateConfig.getId()));
             return null;
+        }else{
+            cpsOrderSummaryCollect = new CpsOrderSummaryCollect();
         }
         //查询对出对应的订单数据
         boolean isFirst = true;
