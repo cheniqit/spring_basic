@@ -178,7 +178,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         //查找对应orderList数据
         String isNew = ValidEnum.VALID.getCode();
         List<String>  distinctChannelCodeList = cpsOrderMapper.getIsNewDistinctChannelCode(isNew);
-        if(CollectionUtils.isNotEmpty(distinctChannelCodeList)){
+        if(CollectionUtils.isEmpty(distinctChannelCodeList)){
             return;
         }
         for(String channelCode : distinctChannelCodeList){
@@ -193,14 +193,19 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         }
         List<CpsRateConfig> cpsRateConfigList = getCpsRateConfig(cpsChannel.getId());
         for(CpsRateConfig cpsRateConfig : cpsRateConfigList){
-            CpsOrderSummaryCollect cpsOrderSummaryCollect = buildCpsOrderSummaryCollect(cpsChannel, cpsRateConfig);
+            CpsOrderSummaryCollect cpsOrderSummaryCollect = null;
+            try {
+                cpsOrderSummaryCollect = buildCpsOrderSummaryCollect(cpsChannel, cpsRateConfig);
+            }catch (Exception e){
+                logger.error(String.format("buildCpsOrderSummaryCollect error,params cpsChannel[%s] cpsRateConfig[%s]", cpsChannel, cpsRateConfig), e);
+            }
             if(cpsOrderSummaryCollect == null){
                 continue;
             }
             //保存对应的cpsOrderSummaryCollect
             cpsOrderSummaryCollectMapper.insert(cpsOrderSummaryCollect);
             //cpsOrderList回填cpsOrderSummaryCollectId
-            cpsOrderMapper.updateSummaryDetailId(cpsOrderSummaryCollect.getId());
+            cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
         }
     }
 

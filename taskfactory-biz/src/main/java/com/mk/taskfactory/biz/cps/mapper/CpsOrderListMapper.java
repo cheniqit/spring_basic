@@ -25,7 +25,7 @@ public interface CpsOrderListMapper {
 
     public Date getMaxCheckOutTime();
 
-    int updateSummaryDetailId(@Param("cpsOrderSummaryCollectId'")Long cpsOrderSummaryCollectId);
+    int updateSummaryDetailId(@Param("cpsChannel")String cpsChannel, @Param("cpsOrderSummaryCollectId")Long cpsOrderSummaryCollectId);
 
     public   CpsOrderList  getCpsOrderListByOrderId(Long  orderId);
 

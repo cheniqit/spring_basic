@@ -17,7 +17,7 @@ public class CpsOrderDetailTaskServiceImplTest extends BaseTest {
 
     @Test
     public void testSaveOrderSummary() throws Exception {
-
+        cpsOrderDetailTaskService.saveOrderSummary();
     }
 
     @Test
