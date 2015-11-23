@@ -77,30 +77,32 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             }
             HashMap  hmap = new HashMap();
             hmap.put("comefrom", channelCode);
-            logger.info(" selectCpsUserByComeFrom    parme  comefrom  :  " + channelCode );
+            logger.info(" selectCpsUserByComeFrom    parme  comefrom  :  " + channelCode);
             List<UMember>  umemberList =   umemberMapper.selectCpsUserByComeFrom(hmap);
             if(CollectionUtils.isEmpty(cpsChannelList)){
                 continue ;
             }
             String mids = "";
+            List<Long>  midList = new ArrayList<Long>();
             for(UMember umember:umemberList){
                 umember.setCpsName(cpsChannle.getChannelname());
                 memberMap.put(umember.getMid(), umember);
-                mids = mids  + "," + umember.getMid();
-            }
-            if(mids.length()>0&&mids.startsWith(",")){
-                mids = mids.substring(1,mids.length());
+                midList.add(umember.getMid());
             }
             Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
-            List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(mids,maxTime,channelCode,cpsChannle.getChannelname(),cpsChannle.getTypeid());
+            String  maxTimeStr = DateUtils.format_yMdHms(maxTime);
+            List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(midList,maxTimeStr,channelCode,cpsChannle.getChannelname(),cpsChannle.getTypeid());
             saveCpsOrderList(cpsOrderListCollection);
         }
     }
 
-    public   List<CpsOrderList>  queryOrderByMid(String  mids,Date maxTime,String channelCode,String  channelName,Integer typeId){
+    public   List<CpsOrderList>  queryOrderByMid(List<Long>  midList,String maxTime,String channelCode,String  channelName,Integer typeId){
+        if(CollectionUtils.isEmpty(midList)){
+            return null;
+        }
         List<CpsOrderList>  resultOrderList = new ArrayList<CpsOrderList>();
         HashMap map = new HashMap();
-        map.put("mids",mids);
+        map.put("midList", midList);
         List<OtaOrder>  orderList = null;
         if(null == maxTime){
             map.put("maxTime",maxTime);
@@ -130,42 +132,46 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
               cpsOrderListEntity.setIsfirst("0");
           }
             resultOrderList.add(cpsOrderListEntity);
-            if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
-                resultOrderList.add(otaOrder);
-            }
         }
         return  resultOrderList;
     }
 
-    public  Boolean  saveCpsOrderList(List<CpsOrderList>  cpsOrderList) {
+    public  Boolean  saveCpsOrderList(List<CpsOrderList>  cpsOrderListCollection) {
         logger.info("执行saveCpsOrderList、、、、、、、、、、、、begin");
         Boolean bl = false;
-        if (CollectionUtils.isEmpty(cpsOrderList)) {
-            logger.info("开始保存cpsOrderList、、、、、、、、、 cpsOrderList  is  null ");
+        if (CollectionUtils.isEmpty(cpsOrderListCollection)) {
+            logger.info("开始保存cpsOrderListCollection、、、、、、、、、 cpsOrderListCollection  is  null ");
             bl = false;
             return bl;
         }
         try{
-            logger.info("开始保存cpsOrderList");
-            int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
+            logger.info("开始保存cpsOrderListCollection");
+            Map params = new HashMap();
+            params.put("orderList", cpsOrderListCollection);
+            int effectLine = cpsOrderListMapper.addCpsOrderListBatch(params);
             bl = true;
         }catch (Exception e1){
             //遍历重复的订单号
             logger.info("保存cpsOrderList、、、、、、、、、、、出现异常，开始去除已经存在的订单");
-            for(CpsOrderList cpsOrderListEntity:cpsOrderList){
+            for(CpsOrderList cpsOrderListEntity:cpsOrderListCollection){
                 CpsOrderList  cpsOrderListExist = cpsOrderListMapper.getCpsOrderListByOrderId(cpsOrderListEntity.getOrderid());
                 if(null!=cpsOrderListExist){
                     logger.info("订单号："+cpsOrderListEntity.getOrderid()+"已经存在,正在移除、、、、、、");
-                    cpsOrderList.remove(cpsOrderListEntity);
+                    cpsOrderListCollection.remove(cpsOrderListEntity);
                 }
             }
             try{
-                logger.info("再次开始保存cpsOrderList");
-                int effectLine = cpsOrderListMapper.addCpsOrderListBatch(cpsOrderList);
-                logger.info("再次开始保存cpsOrderList成功");
+                logger.info("再次开始保存cpsOrderListCollection");
+                if (CollectionUtils.isEmpty(cpsOrderListCollection)) {
+                    return bl;
+                }
+                Map params = new HashMap();
+                params.put("orderList", cpsOrderListCollection);
+                int effectLine = cpsOrderListMapper.addCpsOrderListBatch(params);
+                logger.info("再次开始保存cpsOrderListCollection成功");
                 bl = true;
             }catch (Exception e2) {
-                logger.info("再次开始保存cpsOrderList失败,失败原因："+e2.getMessage());
+                logger.info("再次开始保存cpsOrderListCollection失败,失败原因："+e2.getMessage());
                 bl = false;
             }
         }finally {

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @MyBatisRepository
 public interface CpsOrderListMapper {
@@ -19,7 +20,7 @@ public interface CpsOrderListMapper {
 
     List<CpsOrderList> selectByExample(CpsOrderListExample example);
 
-    int  addCpsOrderListBatch(List<CpsOrderList> cpsOrderList);
+    int  addCpsOrderListBatch(Map params);
 
     List<String> getIsNewDistinctChannelCode(String isNew);
 

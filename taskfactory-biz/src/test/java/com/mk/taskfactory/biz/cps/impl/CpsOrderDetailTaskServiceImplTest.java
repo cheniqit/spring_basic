@@ -27,6 +27,11 @@ public class CpsOrderDetailTaskServiceImplTest extends BaseTest {
     }
 
     @Test
+    public void testProductDate() throws Exception {
+        cpsOrderDetailTaskService.cpsOrderProduce();
+    }
+
+    @Test
     public void testGetCpsOrderListByResultIsNull() throws Exception {
         String channelCode  = "test1--------------";
         String isNew = "1";
