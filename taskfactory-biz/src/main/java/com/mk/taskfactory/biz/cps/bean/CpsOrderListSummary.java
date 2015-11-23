@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.cps.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by Thinkpad on 2015/11/20.
@@ -10,6 +11,7 @@ public class CpsOrderListSummary {
     private Integer sumOrder;
     /**订单总价格**/
     private BigDecimal sumOrderPrice;
+    private Date updateTime;
 
     public Integer getSumOrder() {
         return sumOrder;
@@ -25,5 +27,13 @@ public class CpsOrderListSummary {
 
     public void setSumOrderPrice(BigDecimal sumOrderPrice) {
         this.sumOrderPrice = sumOrderPrice;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

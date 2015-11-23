@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -59,7 +60,8 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     private OtaOrderMapper otaOrderMapper;
 
 
-    public  void    cpsOrderProduce(){
+    @Transactional("cps")
+    public void cpsOrderProduce(){
         logger.info(" 开始执行 cpsOrderProduce、、、、、、、、、、、、、begin");
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andValidEqualTo(1);
@@ -180,33 +182,43 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         }
     }
 
+    @Transactional("cps")
     public void saveOrderSummary(){
         //查找对应orderList数据
         String isNew = ValidEnum.VALID.getCode();
         List<String>  distinctChannelCodeList = cpsOrderMapper.getIsNewDistinctChannelCode(isNew);
-        if(CollectionUtils.isNotEmpty(distinctChannelCodeList)){
+        if(CollectionUtils.isEmpty(distinctChannelCodeList)){
             return;
         }
         for(String channelCode : distinctChannelCodeList){
-            saveOrderSummaryByChannelCode(channelCode);
+            try {
+                saveOrderSummaryByChannelCode(channelCode);
+            } catch (CpsException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public void saveOrderSummaryByChannelCode(String channelCode){
+    public void saveOrderSummaryByChannelCode(String channelCode) throws CpsException {
         CpsChannel cpsChannel = getCpsChannelByCode(channelCode);
         if(cpsChannel == null){
             throw new CpsException(String.format("find cpsChannel result is null,params channelCode[%s]", channelCode));
         }
         List<CpsRateConfig> cpsRateConfigList = getCpsRateConfig(cpsChannel.getId());
         for(CpsRateConfig cpsRateConfig : cpsRateConfigList){
-            CpsOrderSummaryCollect cpsOrderSummaryCollect = buildCpsOrderSummaryCollect(cpsChannel, cpsRateConfig);
+            CpsOrderSummaryCollect cpsOrderSummaryCollect = null;
+            try {
+                cpsOrderSummaryCollect = buildCpsOrderSummaryCollect(cpsChannel, cpsRateConfig);
+            }catch (Exception e){
+                logger.error(String.format("buildCpsOrderSummaryCollect error,params cpsChannel[%s] cpsRateConfig[%s]", cpsChannel, cpsRateConfig), e);
+            }
             if(cpsOrderSummaryCollect == null){
                 continue;
             }
             //保存对应的cpsOrderSummaryCollect
             cpsOrderSummaryCollectMapper.insert(cpsOrderSummaryCollect);
             //cpsOrderList回填cpsOrderSummaryCollectId
-            cpsOrderMapper.updateSummaryDetailId(cpsOrderSummaryCollect.getId());
+            cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
         }
     }
 
@@ -224,8 +236,25 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         //查询对出对应的订单数据
         boolean isFirst = true;
         CpsOrderListSummary cpsOrderListSummaryIsFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+        if(cpsOrderListSummaryIsFirst.getSumOrder() == null){
+            cpsOrderListSummaryIsFirst.setSumOrder(0);
+        }
+        if(cpsOrderListSummaryIsFirst.getSumOrderPrice() == null){
+            cpsOrderListSummaryIsFirst.setSumOrderPrice(new BigDecimal("0"));
+        }
         isFirst = false;
         CpsOrderListSummary cpsOrderListSummaryNoFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+        if(cpsOrderListSummaryNoFirst.getSumOrder() == null){
+            cpsOrderListSummaryNoFirst.setSumOrder(0);
+        }
+        if(cpsOrderListSummaryNoFirst.getSumOrderPrice() == null){
+            cpsOrderListSummaryNoFirst.setSumOrderPrice(new BigDecimal("0"));
+        }
+        if(cpsOrderListSummaryIsFirst.getUpdateTime() != null){
+            cpsOrderSummaryCollect.setOrderdate(cpsOrderListSummaryIsFirst.getUpdateTime());
+        }else{
+            cpsOrderSummaryCollect.setOrderdate(cpsOrderListSummaryNoFirst.getUpdateTime());
+        }
 
         cpsOrderSummaryCollect.setCreatetime(new Date());
         cpsOrderSummaryCollect.setChannelcode(cpsChannel.getChannelcode());
@@ -266,7 +295,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         return cpsOrderMapper.selectByExample(example);
     }
 
-    public CpsChannel getCpsChannelByCode(String channelCode) {
+    public CpsChannel getCpsChannelByCode(String channelCode) throws CpsException {
         CpsChannel cpsChannel = null;
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andChannelcodeEqualTo(channelCode);
@@ -288,6 +317,5 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         List<CpsRateConfig> cpsRateConfigList = cpsRateConfigMapper.selectByExample(example);
         return cpsRateConfigList;
     }
-
 
 }

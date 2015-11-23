@@ -1,18 +1,23 @@
 package com.mk.taskfactory.biz.mapper.cps;
 
-import com.common.BaseTest;
+import com.common.BaseCpsTest;
+import com.mk.taskfactory.biz.cps.impl.CpsOrderDetailTaskServiceImpl;
 import com.mk.taskfactory.biz.cps.mapper.CpsOrderSummaryCollectMapper;
 import com.mk.taskfactory.biz.cps.model.CpsOrderSummaryCollect;
+import com.mk.taskfactory.common.exception.CpsRuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class CpsOrderSummaryCollectMapperTest extends BaseTest {
+public class CpsOrderSummaryCollectMapperCpsTest extends BaseCpsTest {
     @Autowired
     private CpsOrderSummaryCollectMapper cpsOrderSummaryCollectMapper;
+    @Autowired
+    private CpsOrderDetailTaskServiceImpl cpsOrderDetailTaskService;
 
     @Test
     public void findByIdTest(){

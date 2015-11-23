@@ -186,7 +186,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         return configInfoDtoStartList;
     }
 
-    @Transactional
+    @Transactional("ots")
     private void updateConfigOnline(TRoomSaleConfigInfoDto configInfoDto, TRoomSaleConfigDto configDto, Date runTime) {
         logger.info("============sales online job >> for configDto.id======" + configDto.getId());
         Integer saleRoomTypeId = configDto.getSaleRoomTypeId();

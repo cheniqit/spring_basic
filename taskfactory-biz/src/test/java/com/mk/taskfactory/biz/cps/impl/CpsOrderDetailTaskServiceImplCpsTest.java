@@ -1,6 +1,6 @@
 package com.mk.taskfactory.biz.cps.impl;
 
-import com.common.BaseTest;
+import com.common.BaseCpsTest;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsOrderList;
 import com.mk.taskfactory.biz.cps.model.CpsRateConfig;
@@ -11,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public class CpsOrderDetailTaskServiceImplTest extends BaseTest {
+public class CpsOrderDetailTaskServiceImplCpsTest extends BaseCpsTest {
     @Autowired
     private CpsOrderDetailTaskServiceImpl cpsOrderDetailTaskService;
 
     @Test
     public void testSaveOrderSummary() throws Exception {
-
+        cpsOrderDetailTaskService.saveOrderSummary();
     }
 
     @Test

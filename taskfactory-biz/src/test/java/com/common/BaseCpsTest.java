@@ -14,6 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 /*@WebAppConfiguration(value = "src/main/webapp")*/
 @ContextConfiguration(locations = {"classpath:root-context.xml"})
-@Transactional
-public class BaseTest extends AbstractJUnit4SpringContextTests {
+@Transactional("cps")
+public class BaseCpsTest extends AbstractJUnit4SpringContextTests {
 }

@@ -167,14 +167,14 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <select id="getIsNewDistinctChannelCode" resultType="com.mk.taskfactory.biz.cps.model.CpsOrderList" parameterType="java.lang.String" >
+  <select id="getIsNewDistinctChannelCode" resultType="java.lang.String" parameterType="java.lang.String" >
     select
     DISTINCT channelCode as channelCode
     from cps_order_list
     where isNew = #{isNew}
   </select>
   <update id="updateSummaryDetailId">
-    update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId} where isNew = '1'
+    update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId},isNew=0 where isNew = '1' and channelCode = ${channelCode}
   </update>
   <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.Map">
     insert into cps_order_list (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
@@ -192,7 +192,7 @@
   </select>
 
   <select id="getCpsOrderListSummary" resultType="com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary">
-    select sum(orderPrice) sumOrder,count(1) sumOrderPrice
+    select sum(orderPrice) sumOrderPrice,count(1) sumOrder,max(updateTime) updateTime
     from cps_order_list
     where isNew = '1' and isFirst = #{isFirst}
     and channelCode = #{channelCode}
