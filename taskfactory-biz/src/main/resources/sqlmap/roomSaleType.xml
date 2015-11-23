@@ -49,6 +49,7 @@
         id,<include refid="Base_Column_List"/>
         FROM  t_room_sale_type
         <include refid="Base_Query_List"/>
+        order by id desc
     </select>
 
     <insert id="saveRoomSaleType"  parameterType="com.mk.taskfactory.api.dtos.TRoomSaleTypeDto"
