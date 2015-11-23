@@ -18,7 +18,7 @@
     </resultMap>
 
 
-  <select id="getByOrderId" resultType="BaseResultMap"  parameterType="java.lang.Long">
+  <select id="getByOrderId" resultMap="BaseResultMap"  parameterType="java.lang.Long">
       SELECT  *   from  p_pay  where  orderId = #{orderId}  limit  1;
   </select>
 </mapper>

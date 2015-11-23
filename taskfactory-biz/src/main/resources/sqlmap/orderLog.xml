@@ -15,7 +15,7 @@
     </resultMap>
 
 
-  <select id="getByPayId" resultType="BaseResultMap"  parameterType="java.lang.Long">
+  <select id="getByPayId" resultMap="BaseResultMap"  parameterType="java.lang.Long">
       SELECT  *   from  p_orderlog  where  payid = #{payId};
   </select>
 </mapper>
