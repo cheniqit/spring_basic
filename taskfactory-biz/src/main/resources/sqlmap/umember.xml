@@ -8,7 +8,7 @@
         <id column="comefrom" property="comefrom" jdbcType="VARCHAR"/>
         <id column="comefromtype" property="comefromtype" jdbcType="VARCHAR"/>
     </resultMap>
-    <select id="selectCpsUserByComeFrom" resultMap="BaseCpsUsertMap" parameterType="java.lang.String">
+    <select id="selectCpsUserByComeFrom"  resultMap="BaseCpsUsertMap"  parameterType="java.util.HashMap">
         select
         mid,loginName,phone,comefrom,comefromtype
         from  u_member

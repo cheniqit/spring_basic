@@ -16,4 +16,5 @@ public interface OtaOrderMapper {
 
        public   long   getFirstOrderIdByMid(Long  mid);
 
+
 }

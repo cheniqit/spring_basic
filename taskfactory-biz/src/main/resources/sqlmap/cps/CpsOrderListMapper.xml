@@ -176,14 +176,14 @@
   <update id="updateSummaryDetailId">
     update cps_order_list set summaryDetailId = #{cpsOrderSummaryCollectId},isNew=0 where isNew = '1' and channelCode = ${channelCode}
   </update>
-  <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.List">
-    insert into t_train_record (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
+  <insert id="addCpsOrderListBatch" useGeneratedKeys="true" parameterType="java.util.Map">
+    insert into cps_order_list (orderId,channelType,channelCode,channelName,orderPrice,summaryDetailId,mid,
     createTime,updateTime,hotelId,isFirst,isNew)
     values
-    <foreach collection="list" item="item" index="index" separator="," >
-      (#{item.orderId},#{item.channelType},#{item.channelCode},#{item.channelName},#{item.channelName}
-      ,#{item.orderPrice},#{item.orderPrice},#{item.summaryDetailId},#{item.mid},#{item.createTime},#{item.updateTime}
-      ,#{item.hotelId} ,#{item.isFirst} ,#{item.isNew} )
+    <foreach collection="orderList" item="item" index="index" separator="," >
+      (#{item.orderid},#{item.channeltype},#{item.channelcode},#{item.channelname}
+      ,#{item.orderprice},#{item.summarydetailId},#{item.mid},#{item.createtime},#{item.updateTime}
+      ,#{item.hotelid} ,#{item.isfirst} ,#{item.isnew} )
     </foreach>
   </insert>
 
