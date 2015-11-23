@@ -3,8 +3,10 @@ package com.mk.taskfactory.web.controller;
 
 import com.mk.taskfactory.api.RoomTypeBedService;
 import com.mk.taskfactory.api.ValidRateTaskService;
+import com.mk.taskfactory.biz.cps.impl.CpsOrderDetailTaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/roomSale", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -23,11 +27,23 @@ public class HomeController {
     @Autowired
     private RoomTypeBedService roomTypeBedService;
 
+    @Autowired
+    private CpsOrderDetailTaskServiceImpl cpsOrderDetailTaskService;
+
     @RequestMapping(value = "/validRateTaskRun", method = RequestMethod.GET)
     @ResponseBody
     public void validRateTaskRun() {
         this.validRateTaskService.validRateTaskRun();
         return;
+    }
+
+    @RequestMapping(value = "/cpsinit", method = RequestMethod.GET)
+    @ResponseBody
+    public String cpsinit() {
+        cpsOrderDetailTaskService.cpsOrderProduce();
+        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        rtnMap.put("code", "222");
+      return "ok";
     }
 
     @RequestMapping(value = "/validRateTaskRunToday", method = RequestMethod.GET)
