@@ -434,7 +434,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         try {
             String strMidTime = dateFormat.format(runTime);
-            Date midTime = datetimeFormat.parse(strMidTime + " 12:00:00");
+            Date midTime = datetimeFormat.parse(strMidTime + " 3:00:00");
 
             Date startDate = null;
             Date endDate = null;

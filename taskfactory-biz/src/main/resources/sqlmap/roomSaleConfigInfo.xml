@@ -82,6 +82,7 @@
         id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config_info
         <include refid="Base_Query_List"/>
+        order by saleValue
     </select>
     <update id="updateTRoomSaleConfigInfo" parameterType="com.mk.taskfactory.model.TRoomSaleConfigInfo" >
         update t_room_sale_config_info
