@@ -12,17 +12,17 @@ public class PPay {
 
 	private Long id;
 	private Long mid;
-	private Long orderid;
-	private Long userid;
-	private BigDecimal orderprice;
-	private BigDecimal lezhu;
+	private Long orderId;
+	private Long userId;
+	private BigDecimal orderPrice;
+	private BigDecimal leZhu;
 	private Date time;
-	private String pmsorderno;
+	private String pmsOrderno;
 	private Long hotelId;
 	private Integer status;
 	private String needReturn;
 	private Long newOrderId;
-	private Integer  paysrc;
+	private Integer  paySrc;
 
 
 }
