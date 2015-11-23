@@ -1,13 +1,12 @@
 package com.mk.taskfactory.biz.cps.mapper;
 
-import com.common.BaseTest;
+import com.common.BaseCpsTest;
 import com.mk.taskfactory.biz.cps.model.CpsRateConfig;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class CpsRateConfigMapperTest extends BaseTest {
+public class CpsRateConfigMapperCpsTest extends BaseCpsTest {
 
     @Autowired
     private  CpsRateConfigMapper cpsRateConfigMapper;

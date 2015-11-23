@@ -1,6 +1,6 @@
 package com.mk.taskfactory.biz.cps.mapper;
 
-import com.common.BaseTest;
+import com.common.BaseCpsTest;
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import org.junit.Assert;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
-public class CpsOrderListMapperTest extends BaseTest {
+public class CpsOrderListMapperCpsTest extends BaseCpsTest {
 
     @Autowired
     private CpsOrderListMapper cpsOrderListMapper;

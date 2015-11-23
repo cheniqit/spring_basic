@@ -21,7 +21,10 @@
  	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd  
     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd  
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
-  
+
+	<aop:aspectj-autoproxy expose-proxy="true"/>
+	<tx:annotation-driven proxy-target-class="true"/>
+
    <context:property-placeholder location="classpath:db.properties"/>
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
@@ -38,10 +41,10 @@
 
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
+		<qualifier value="ots"/>
 	</bean>
 
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
 
 	<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
@@ -84,10 +87,8 @@
 
 	<bean id="transactionManagerCPS" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSourceCPS"/>
+		<qualifier value="cps"/>
 	</bean>
-
-	<aop:aspectj-autoproxy expose-proxy="true"/>
-	<tx:annotation-driven transaction-manager="transactionManagerCPS" proxy-target-class="true"/>
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurerCPS" class="org.mybatis.spring.mapper.MapperScannerConfigurer">

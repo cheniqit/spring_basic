@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -59,7 +60,8 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     private OtaOrderMapper otaOrderMapper;
 
 
-    public  void    cpsOrderProduce(){
+    @Transactional("cps")
+    public void cpsOrderProduce(){
         logger.info(" 开始执行 cpsOrderProduce、、、、、、、、、、、、、begin");
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andValidEqualTo(1);
@@ -174,6 +176,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         }
     }
 
+    @Transactional("cps")
     public void saveOrderSummary(){
         //查找对应orderList数据
         String isNew = ValidEnum.VALID.getCode();
@@ -308,6 +311,5 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         List<CpsRateConfig> cpsRateConfigList = cpsRateConfigMapper.selectByExample(example);
         return cpsRateConfigList;
     }
-
 
 }

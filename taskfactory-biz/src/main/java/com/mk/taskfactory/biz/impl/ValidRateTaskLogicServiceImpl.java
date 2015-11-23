@@ -41,7 +41,7 @@ public class ValidRateTaskLogicServiceImpl {
     @Autowired
     private ValidRateTaskServiceImpl validRateTaskService;
 
-    @Transactional
+    @Transactional("ots")
     public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
         //将新roomTypeId和老的roomTypeId对应起来
         Map<Integer, Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
@@ -126,7 +126,7 @@ public class ValidRateTaskLogicServiceImpl {
         return price;
     }
 
-    @Transactional
+    @Transactional("ots")
     public int initRoomTypeDto(TRoomSaleConfigDto tRoomSaleConfigDto){
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method begin===================="));
         Integer newRoomTypeId = null;
