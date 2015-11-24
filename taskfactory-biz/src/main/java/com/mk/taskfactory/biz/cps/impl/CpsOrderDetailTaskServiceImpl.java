@@ -79,6 +79,11 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             logger.info(" query  cpsChannel : [ cpsChannelList = null ]  " );
             return ;
         }
+        Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
+        String  maxTimeStr = null;
+        if(null!=maxTime){
+            maxTimeStr = DateUtils.format_yMdHms(maxTime);
+        }
         logger.info(" query  cpsChannel result: " + JSONArray.toJSON(cpsChannelList).toString());
         for(CpsChannel cpsChannle:cpsChannelList){
             HashMap<Long,UMember> memberMap = new  HashMap<Long,UMember>();
@@ -100,8 +105,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
                 memberMap.put(umember.getMid(), umember);
                 midList.add(umember.getMid());
             }
-            Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
-            String  maxTimeStr = DateUtils.format_yMdHms(maxTime);
+
             List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(midList, maxTimeStr, channelCode, cpsChannle.getChannelname(), cpsChannle.getTypeid());
             Boolean  bl =  saveCpsOrderList(cpsOrderListCollection);
             logger.info("执行 saveCpsOrderList  结束,执行结果：",bl);
