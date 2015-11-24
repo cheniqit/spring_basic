@@ -110,8 +110,12 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             Boolean  bl =  saveCpsOrderList(cpsOrderListCollection);
             logger.info("执行 saveCpsOrderList  结束,执行结果：",bl);
             if(bl){
-                logger.info("执行 saveOrderSummary结束");
-                saveOrderSummary();
+                logger.info("执行 saveOrderSummary开始");
+                try{
+                    saveOrderSummary();
+                }catch (Exception e1){
+                    logger.info("执行 saveOrderSummary出错");
+                }
                 logger.info("执行 saveOrderSummary完成");
             }
         }
