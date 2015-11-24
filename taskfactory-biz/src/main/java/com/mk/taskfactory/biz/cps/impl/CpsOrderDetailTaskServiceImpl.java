@@ -126,7 +126,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         map.put("midList", midList);
         List<OtaOrder>  orderList = null;
         if(null == maxTime){
-            map.put("maxTime",maxTime);
+            map.put("maxTime",DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss"));
             orderList =  otaOrderMapper.selectByMidLessThenMaxTime(map);
         }else{
             map.put("maxTime", maxTime);
