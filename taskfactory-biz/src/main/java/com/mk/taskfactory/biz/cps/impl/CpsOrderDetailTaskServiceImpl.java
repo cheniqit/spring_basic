@@ -297,10 +297,10 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         cpsOrderSummaryCollect.setRuleupdateby(cpsRateConfig.getUpdateby());
         //cps金额=     sum结算订单（眯客价（实际支付金额）*cps比例） *（1-扣率）
         BigDecimal firstCps = cpsOrderListSummaryIsFirst.getSumOrderPrice().multiply(
-                cpsRateConfig.getFirstcpsrate()).multiply(new BigDecimal("1").subtract(cpsRateConfig.getFirstdeductrate()));
+                cpsRateConfig.getFirstcpsrate()).multiply(new BigDecimal("100").subtract(cpsRateConfig.getFirstdeductrate()));
 
         BigDecimal noFirstCps = cpsOrderListSummaryNoFirst.getSumOrderPrice().multiply(
-                cpsRateConfig.getCpsrate()).multiply(new BigDecimal("1").subtract(cpsRateConfig.getDeductrate()));
+                cpsRateConfig.getCpsrate()).multiply(new BigDecimal("100").subtract(cpsRateConfig.getDeductrate()));
         BigDecimal totalCps = firstCps.add(noFirstCps);
         cpsOrderSummaryCollect.setTotalprice(totalCps);
         return cpsOrderSummaryCollect;
