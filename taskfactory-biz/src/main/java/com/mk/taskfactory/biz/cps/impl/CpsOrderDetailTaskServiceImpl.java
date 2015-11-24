@@ -249,7 +249,9 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             //保存对应的cpsOrderSummaryCollect
             cpsOrderSummaryCollectMapper.insert(cpsOrderSummaryCollect);
             //cpsOrderList回填cpsOrderSummaryCollectId
-            cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
+            if(cpsOrderSummaryCollect != null && cpsOrderSummaryCollect.getId() != null){
+                cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
+            }
         }
     }
 
@@ -267,14 +269,22 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         //查询对出对应的订单数据
         boolean isFirst = true;
         CpsOrderListSummary cpsOrderListSummaryIsFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+
+        isFirst = false;
+        CpsOrderListSummary cpsOrderListSummaryNoFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+
+        if(cpsOrderListSummaryIsFirst == null && cpsOrderListSummaryNoFirst == null){
+            return null;
+        }
+        if(0 == cpsOrderListSummaryIsFirst.getSumOrder() && 0 == cpsOrderListSummaryNoFirst.getSumOrder()){
+            return null;
+        }
         if(cpsOrderListSummaryIsFirst.getSumOrder() == null){
             cpsOrderListSummaryIsFirst.setSumOrder(0);
         }
         if(cpsOrderListSummaryIsFirst.getSumOrderPrice() == null){
             cpsOrderListSummaryIsFirst.setSumOrderPrice(new BigDecimal("0"));
         }
-        isFirst = false;
-        CpsOrderListSummary cpsOrderListSummaryNoFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
         if(cpsOrderListSummaryNoFirst.getSumOrder() == null){
             cpsOrderListSummaryNoFirst.setSumOrder(0);
         }
