@@ -9,14 +9,18 @@ import com.mk.taskfactory.biz.cps.model.CpsOrderListExample;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.*;
+import com.mk.taskfactory.biz.mapper.OrderLogMapper;
 import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.PPayMapper;
 import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsChannelMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsOrderListMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsOrderSummaryCollectMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
+import com.mk.taskfactory.biz.order.model.OrderLog;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
+import com.mk.taskfactory.biz.order.model.PPay;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.exception.CpsException;
@@ -59,6 +63,11 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     @Autowired
     private OtaOrderMapper otaOrderMapper;
 
+    @Autowired
+    private PPayMapper payMapper ;
+
+    @Autowired
+    private OrderLogMapper orderLogMapper;
 
     @Transactional("cps")
     public void cpsOrderProduce(){
@@ -127,8 +136,16 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             cpsOrderListEntity.setHotelid(otaOrder.getHotelId());
             cpsOrderListEntity.setIsnew("1");
             cpsOrderListEntity.setOrderid(otaOrder.getId());
-            cpsOrderListEntity.setOrderprice(otaOrder.getTotalPrice());
-          if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
+            List<PPay>  ppayList = payMapper.getByOrderId(otaOrder.getId());
+            BigDecimal  orderPrice = new  BigDecimal(0);
+            if(!CollectionUtils.isEmpty(ppayList)){
+                List<OrderLog>  orderLogList =  orderLogMapper.getByPayId(ppayList.get(0).getId());
+                if(!CollectionUtils.isEmpty(orderLogList)){
+                    orderPrice = orderLogList.get(0).getUsercost();
+                }
+            }
+            cpsOrderListEntity.setOrderprice(orderPrice);
+            if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
             cpsOrderListEntity.setIsfirst("1");
           }else{
               cpsOrderListEntity.setIsfirst("0");
