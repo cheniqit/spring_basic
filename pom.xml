@@ -91,7 +91,7 @@
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/otsdump?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
                 <jdbc.user>root</jdbc.user>
                 <jdbc.password>LZBV5D5ak</jdbc.password>
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
