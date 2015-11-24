@@ -92,5 +92,33 @@
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
             </properties>
         </profile>
+
+
+        <profile>
+            <id>bgp-simulation</id>
+            <properties>
+                <label>product</label>
+                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+                <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.username>smlt-writer</jdbc.username>
+                <jdbc.password>j9bcyZ5U5LQp7xxEomsu</jdbc.password>
+                <ots.token>1qaz2wsx</ots.token>
+                <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>bgp-clu</id>
+            <properties>
+                <label>product</label>
+                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+                <jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.username>imike-writer</jdbc.username>
+                <jdbc.password>Imike-writer</jdbc.password>
+                <ots.token>1qaz2wsx</ots.token>
+                <ots.url>http://ots.imike.com/ots</ots.url>
+            </properties>
+        </profile>
+
     </profiles>
 </project>
