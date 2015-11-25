@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.OtaOrderMacMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.order.model.OtaOrderMac" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="otaorderid" property="orderID" jdbcType="BIGINT" />
+    <result column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="sysno" property="sysno" jdbcType="VARCHAR" />
+    <result column="deviceimei" property="deviceimei" jdbcType="VARCHAR" />
+    <result column="simsn" property="simsn" jdbcType="VARCHAR" />
+    <result column="wifimacaddr" property="wifimacaddr" jdbcType="VARCHAR" />
+    <result column="blmacaddr" property="blmacaddr" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+      *
+    from b_otaorder_mac
+    where
+       orderID  = #{orderId}
+  </select>
+
+  <select id="selectAndroidByDeviceimei" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      *
+    from b_otaorder_mac
+    where  deviceimei   = #{deviceimei}
+  </select>
+
+  <select id="selectIOSByUuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+       *
+    from b_otaorder_mac
+    where  uuid = #{uuid}
+  </select>
+</mapper>

@@ -213,4 +213,21 @@ public class DateUtils {
         int sec = cal.get(Calendar.SECOND);
         cal.set(year, month, day, hour, min, sec);
     }
+
+    /**
+     * 为指定日期增加一段指定单位的时间
+     * @param date 日期对象
+     * @param calendarField 时间单位。
+     * @param amount 数量
+     * @return 增加指定单位之间之后的Date对象
+     */
+    public static Date add(Date date, int calendarField, int amount) {
+        if (date == null) {
+            throw new IllegalArgumentException("The date must not be null");
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(calendarField, amount);
+        return c.getTime();
+    }
 }

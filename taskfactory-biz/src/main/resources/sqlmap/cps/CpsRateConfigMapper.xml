@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="channelId" property="channelid" jdbcType="INTEGER" />
+    <result column="firstCpsRate" property="firstcpsrate" jdbcType="DECIMAL" />
+    <result column="firstDeductRate" property="firstdeductrate" jdbcType="DECIMAL" />
+    <result column="cpsRate" property="cpsrate" jdbcType="DECIMAL" />
+    <result column="deductRate" property="deductrate" jdbcType="DECIMAL" />
+    <result column="payStartDate" property="paystartdate" jdbcType="DATE" />
+    <result column="payEndDate" property="payenddate" jdbcType="DATE" />
+    <result column="valid" property="valid" jdbcType="CHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createby" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateby" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, channelId, firstCpsRate, firstDeductRate, cpsRate, deductRate, payStartDate, payEndDate, 
+    valid, createTime, createBy, updateTime, updateBy
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from cps_rate_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cps_rate_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cps_rate_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
+    insert into cps_rate_config (id, channelId, firstCpsRate, 
+      firstDeductRate, cpsRate, deductRate, 
+      payStartDate, payEndDate, valid, 
+      createTime, createBy, updateTime, 
+      updateBy)
+    values (#{id,jdbcType=INTEGER}, #{channelid,jdbcType=INTEGER}, #{firstcpsrate,jdbcType=DECIMAL}, 
+      #{firstdeductrate,jdbcType=DECIMAL}, #{cpsrate,jdbcType=DECIMAL}, #{deductrate,jdbcType=DECIMAL}, 
+      #{paystartdate,jdbcType=DATE}, #{payenddate,jdbcType=DATE}, #{valid,jdbcType=CHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{updateby,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
+    insert into cps_rate_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelid != null" >
+        channelId,
+      </if>
+      <if test="firstcpsrate != null" >
+        firstCpsRate,
+      </if>
+      <if test="firstdeductrate != null" >
+        firstDeductRate,
+      </if>
+      <if test="cpsrate != null" >
+        cpsRate,
+      </if>
+      <if test="deductrate != null" >
+        deductRate,
+      </if>
+      <if test="paystartdate != null" >
+        payStartDate,
+      </if>
+      <if test="payenddate != null" >
+        payEndDate,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="createby != null" >
+        createBy,
+      </if>
+      <if test="updatetime != null" >
+        updateTime,
+      </if>
+      <if test="updateby != null" >
+        updateBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelid != null" >
+        #{channelid,jdbcType=INTEGER},
+      </if>
+      <if test="firstcpsrate != null" >
+        #{firstcpsrate,jdbcType=DECIMAL},
+      </if>
+      <if test="firstdeductrate != null" >
+        #{firstdeductrate,jdbcType=DECIMAL},
+      </if>
+      <if test="cpsrate != null" >
+        #{cpsrate,jdbcType=DECIMAL},
+      </if>
+      <if test="deductrate != null" >
+        #{deductrate,jdbcType=DECIMAL},
+      </if>
+      <if test="paystartdate != null" >
+        #{paystartdate,jdbcType=DATE},
+      </if>
+      <if test="payenddate != null" >
+        #{payenddate,jdbcType=DATE},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null" >
+        #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateby != null" >
+        #{updateby,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfigExample" resultType="java.lang.Integer" >
+    select count(*) from cps_rate_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
+    update cps_rate_config
+    <set >
+      <if test="channelid != null" >
+        channelId = #{channelid,jdbcType=INTEGER},
+      </if>
+      <if test="firstcpsrate != null" >
+        firstCpsRate = #{firstcpsrate,jdbcType=DECIMAL},
+      </if>
+      <if test="firstdeductrate != null" >
+        firstDeductRate = #{firstdeductrate,jdbcType=DECIMAL},
+      </if>
+      <if test="cpsrate != null" >
+        cpsRate = #{cpsrate,jdbcType=DECIMAL},
+      </if>
+      <if test="deductrate != null" >
+        deductRate = #{deductrate,jdbcType=DECIMAL},
+      </if>
+      <if test="paystartdate != null" >
+        payStartDate = #{paystartdate,jdbcType=DATE},
+      </if>
+      <if test="payenddate != null" >
+        payEndDate = #{payenddate,jdbcType=DATE},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=CHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null" >
+        createBy = #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateby != null" >
+        updateBy = #{updateby,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.taskfactory.biz.cps.model.CpsRateConfig" >
+    update cps_rate_config
+    set channelId = #{channelid,jdbcType=INTEGER},
+      firstCpsRate = #{firstcpsrate,jdbcType=DECIMAL},
+      firstDeductRate = #{firstdeductrate,jdbcType=DECIMAL},
+      cpsRate = #{cpsrate,jdbcType=DECIMAL},
+      deductRate = #{deductrate,jdbcType=DECIMAL},
+      payStartDate = #{paystartdate,jdbcType=DATE},
+      payEndDate = #{payenddate,jdbcType=DATE},
+      valid = #{valid,jdbcType=CHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      createBy = #{createby,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      updateBy = #{updateby,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

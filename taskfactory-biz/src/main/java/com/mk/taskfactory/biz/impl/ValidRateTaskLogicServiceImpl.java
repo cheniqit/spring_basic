@@ -41,7 +41,7 @@ public class ValidRateTaskLogicServiceImpl {
     @Autowired
     private ValidRateTaskServiceImpl validRateTaskService;
 
-    @Transactional
+    @Transactional("ots")
     public HashMap<String, Map> initSaleRoomSaleConfigDto(TRoomSaleConfigDto roomSaleConfig, HashMap<String, Map> executeRecordMap) {
         //将新roomTypeId和老的roomTypeId对应起来
         Map<Integer, Integer> roomTypeMap = executeRecordMap.get("roomTypeMap");
@@ -60,7 +60,7 @@ public class ValidRateTaskLogicServiceImpl {
             if (newRoomTypeId < 0) {
                 //失败后，将vaild置为F
                 logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F1", roomSaleConfig.getId()));
-                this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(),ValidEnum.DISVALID.getId());
+                this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(),ValidEnum.INVALID.getId());
                 logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F2", roomSaleConfig.getId()));
                 return executeRecordMap;
             }
@@ -73,7 +73,7 @@ public class ValidRateTaskLogicServiceImpl {
             e.printStackTrace();
             //失败后，将vaild置为F
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F1", roomSaleConfig.getId()));
-            this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(), ValidEnum.DISVALID.getId());
+            this.roomSaleConfigService.updateRoomSaleConfigValid(roomSaleConfig.getId(), ValidEnum.INVALID.getId());
             logger.info(String.format("====================initSaleRoomSaleConfigDto >> do roomSaleConfig faild set roomSaleConfig id: [%s] vaild To F2", roomSaleConfig.getId()));
             throw new RuntimeException("initSaleRoomSaleConfigDto error");
         }
@@ -126,7 +126,7 @@ public class ValidRateTaskLogicServiceImpl {
         return price;
     }
 
-    @Transactional
+    @Transactional("ots")
     public int initRoomTypeDto(TRoomSaleConfigDto tRoomSaleConfigDto){
         logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto method begin===================="));
         Integer newRoomTypeId = null;
