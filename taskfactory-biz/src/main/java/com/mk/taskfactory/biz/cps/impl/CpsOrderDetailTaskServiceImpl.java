@@ -9,14 +9,18 @@ import com.mk.taskfactory.biz.cps.model.CpsOrderListExample;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.cps.bean.CpsOrderListSummary;
 import com.mk.taskfactory.biz.cps.model.*;
+import com.mk.taskfactory.biz.mapper.OrderLogMapper;
 import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.PPayMapper;
 import com.mk.taskfactory.biz.mapper.UMemberMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsChannelMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsOrderListMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsOrderSummaryCollectMapper;
 import com.mk.taskfactory.biz.cps.mapper.CpsRateConfigMapper;
 import com.mk.taskfactory.biz.order.impl.OtaOrderServiceImpl;
+import com.mk.taskfactory.biz.order.model.OrderLog;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
+import com.mk.taskfactory.biz.order.model.PPay;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.common.exception.CpsException;
@@ -59,6 +63,11 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
     @Autowired
     private OtaOrderMapper otaOrderMapper;
 
+    @Autowired
+    private PPayMapper payMapper ;
+
+    @Autowired
+    private OrderLogMapper orderLogMapper;
 
     @Transactional("cps")
     public void cpsOrderProduce(){
@@ -69,6 +78,11 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         if(CollectionUtils.isEmpty(cpsChannelList)){
             logger.info(" query  cpsChannel : [ cpsChannelList = null ]  " );
             return ;
+        }
+        Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
+        String  maxTimeStr = null;
+        if(null!=maxTime){
+            maxTimeStr = DateUtils.format_yMdHms(maxTime);
         }
         logger.info(" query  cpsChannel result: " + JSONArray.toJSON(cpsChannelList).toString());
         for(CpsChannel cpsChannle:cpsChannelList){
@@ -91,10 +105,19 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
                 memberMap.put(umember.getMid(), umember);
                 midList.add(umember.getMid());
             }
-            Date  maxTime =  cpsOrderListMapper.getMaxCheckOutTime();
-            String  maxTimeStr = DateUtils.format_yMdHms(maxTime);
-            List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(midList,maxTimeStr,channelCode,cpsChannle.getChannelname(),cpsChannle.getTypeid());
-            saveCpsOrderList(cpsOrderListCollection);
+
+            List<CpsOrderList>  cpsOrderListCollection =queryOrderByMid(midList, maxTimeStr, channelCode, cpsChannle.getChannelname(), cpsChannle.getTypeid());
+            Boolean  bl =  saveCpsOrderList(cpsOrderListCollection);
+            logger.info("执行 saveCpsOrderList  结束,执行结果：",bl);
+            if(bl){
+                logger.info("执行 saveOrderSummary开始");
+                try{
+                    saveOrderSummary();
+                }catch (Exception e1){
+                    logger.info("执行 saveOrderSummary出错");
+                }
+                logger.info("执行 saveOrderSummary完成");
+            }
         }
     }
 
@@ -107,7 +130,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         map.put("midList", midList);
         List<OtaOrder>  orderList = null;
         if(null == maxTime){
-            map.put("maxTime",maxTime);
+            map.put("maxTime",DateUtils.getStringDate("yyyy-MM-dd HH:mm:ss"));
             orderList =  otaOrderMapper.selectByMidLessThenMaxTime(map);
         }else{
             map.put("maxTime", maxTime);
@@ -127,8 +150,16 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             cpsOrderListEntity.setHotelid(otaOrder.getHotelId());
             cpsOrderListEntity.setIsnew("1");
             cpsOrderListEntity.setOrderid(otaOrder.getId());
-            cpsOrderListEntity.setOrderprice(otaOrder.getTotalPrice());
-          if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
+            List<PPay>  ppayList = payMapper.getByOrderId(otaOrder.getId());
+            BigDecimal  orderPrice = new  BigDecimal(0);
+            if(!CollectionUtils.isEmpty(ppayList)){
+                List<OrderLog>  orderLogList =  orderLogMapper.getByPayId(ppayList.get(0).getId());
+                if(!CollectionUtils.isEmpty(orderLogList)){
+                    orderPrice = orderLogList.get(0).getUsercost();
+                }
+            }
+            cpsOrderListEntity.setOrderprice(orderPrice);
+            if(otaOrderServiceImpl.isFirstOrder(otaOrder)){
             cpsOrderListEntity.setIsfirst("1");
           }else{
               cpsOrderListEntity.setIsfirst("0");
@@ -218,7 +249,9 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
             //保存对应的cpsOrderSummaryCollect
             cpsOrderSummaryCollectMapper.insert(cpsOrderSummaryCollect);
             //cpsOrderList回填cpsOrderSummaryCollectId
-            cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
+            if(cpsOrderSummaryCollect != null && cpsOrderSummaryCollect.getId() != null){
+                cpsOrderMapper.updateSummaryDetailId(channelCode, cpsOrderSummaryCollect.getId());
+            }
         }
     }
 
@@ -236,14 +269,22 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
         //查询对出对应的订单数据
         boolean isFirst = true;
         CpsOrderListSummary cpsOrderListSummaryIsFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+
+        isFirst = false;
+        CpsOrderListSummary cpsOrderListSummaryNoFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
+
+        if(cpsOrderListSummaryIsFirst == null && cpsOrderListSummaryNoFirst == null){
+            return null;
+        }
+        if(0 == cpsOrderListSummaryIsFirst.getSumOrder() && 0 == cpsOrderListSummaryNoFirst.getSumOrder()){
+            return null;
+        }
         if(cpsOrderListSummaryIsFirst.getSumOrder() == null){
             cpsOrderListSummaryIsFirst.setSumOrder(0);
         }
         if(cpsOrderListSummaryIsFirst.getSumOrderPrice() == null){
             cpsOrderListSummaryIsFirst.setSumOrderPrice(new BigDecimal("0"));
         }
-        isFirst = false;
-        CpsOrderListSummary cpsOrderListSummaryNoFirst = cpsOrderMapper.getCpsOrderListSummary(isFirst, payStartDate, payEndDate, cpsChannel.getChannelcode());
         if(cpsOrderListSummaryNoFirst.getSumOrder() == null){
             cpsOrderListSummaryNoFirst.setSumOrder(0);
         }

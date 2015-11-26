@@ -3,7 +3,8 @@
 <mapper namespace="com.mk.taskfactory.biz.mapper.OtaOrderMapper" >
   <sql id="Base_Column_List" >
     bo.id, bo.HotelId, bo.Hotelname,
-    bo.Mid, bo.TotalPrice, bo.Updatetime
+    bo.Mid, bo.TotalPrice, bo.Updatetime,
+    bo.Ordermethod
   </sql>
   <select id="selectByMidMoreThenMaxTime"  resultType="com.mk.taskfactory.biz.order.model.OtaOrder"  parameterType="java.util.HashMap" >
    select
@@ -13,7 +14,7 @@
     <foreach collection="midList" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
-    and  bo.OrderStatus  = 180
+    and  bo.OrderStatus  = 200
      <![CDATA[ and  bo.updatetime> #{maxTime}]]>
   </select>
 
@@ -25,7 +26,7 @@
     <foreach collection="midList" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
-    and  bo.OrderStatus  = 180
+    and  bo.OrderStatus  = 200
     <![CDATA[ and  bo.updatetime< #{maxTime}]]>
   </select>
 

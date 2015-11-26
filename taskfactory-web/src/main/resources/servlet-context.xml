@@ -67,7 +67,13 @@
     <!--初始化线任务-->
     <bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
     <task:scheduled-tasks>
-        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 3 * * ?"/>
+        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 17 * * ?"/>
+    </task:scheduled-tasks>
+
+
+    <bean id="cpsOrderDetailTaskServiceImpl" class="com.mk.taskfactory.biz.cps.impl.CpsOrderDetailTaskServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="cpsOrderDetailTaskServiceImpl" method="cpsOrderProduce" cron="0 0 0/1 * * ?"/>
     </task:scheduled-tasks>
 
 </beans>

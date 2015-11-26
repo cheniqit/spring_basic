@@ -58,7 +58,7 @@ public class OtaOrderServiceImpl  {
             if(StringUtils.isEmpty(deviceimei)){
                 return true;
             }
-            List<OtaOrderMac>  oOMacAndroidList =  otaOrderMacMapper.selectIOSByUuid(deviceimei);
+            List<OtaOrderMac>  oOMacAndroidList =  otaOrderMacMapper.selectAndroidByDeviceimei(deviceimei);
             if(null!=oOMacAndroidList&&oOMacAndroidList.size()>1){
                 return  false;
             }
