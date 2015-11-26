@@ -25,7 +25,7 @@ public class ReFreshChannelTask {
         Calendar cal = Calendar.getInstance();
         cal.add(cal.HOUR, 1);
         Date startTime = cal.getTime();
-        Cat.logEvent("validRateTaskService ", "活动上线" + DateUtils.dateToString(startTime, "yyyy-MM-dd HH:mm:ss"));
+        Cat.logEvent("validRateTaskService ", "娲诲姩涓婄嚎" + DateUtils.dateToString(startTime, "yyyy-MM-dd HH:mm:ss"));
         validRateTaskService.updateOnline(startTime);
     }
 }
