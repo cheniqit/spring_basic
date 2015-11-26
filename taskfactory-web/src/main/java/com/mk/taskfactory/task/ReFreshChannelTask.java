@@ -1,7 +1,9 @@
 package com.mk.taskfactory.task;
 
 
+import com.dianping.cat.Cat;
 import com.mk.taskfactory.api.ValidRateTaskService;
+import com.mk.taskfactory.biz.utils.DateUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class ReFreshChannelTask {
         Calendar cal = Calendar.getInstance();
         cal.add(cal.HOUR, 1);
         Date startTime = cal.getTime();
+        Cat.logEvent("validRateTaskService ", "活动上线" + DateUtils.dateToString(startTime, "yyyy-MM-dd HH:mm:ss"));
         validRateTaskService.updateOnline(startTime);
     }
 }

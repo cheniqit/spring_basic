@@ -1,6 +1,7 @@
 package com.mk.taskfactory.biz.cps.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.dianping.cat.Cat;
 import com.mk.taskfactory.api.cps.CpsOrderDetailTaskService;
 import com.mk.taskfactory.biz.cps.model.CpsChannel;
 import com.mk.taskfactory.biz.cps.model.CpsChannelExample;
@@ -71,6 +72,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
 
     @Transactional("cps")
     public void cpsOrderProduce(){
+        Cat.logEvent("cpsOrderProduce ", "cps渠道job开始  time=" + DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
         logger.info(" 开始执行 cpsOrderProduce、、、、、、、、、、、、、begin");
         CpsChannelExample cpsChannelExample = new CpsChannelExample();
         cpsChannelExample.createCriteria().andValidEqualTo(1);
@@ -119,6 +121,7 @@ public class CpsOrderDetailTaskServiceImpl implements CpsOrderDetailTaskService 
                 logger.info("执行 saveOrderSummary完成");
             }
         }
+        Cat.logEvent("cpsOrderProduce ", "cps渠道job结束  time=" + DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
     }
 
     public   List<CpsOrderList>  queryOrderByMid(List<Long>  midList,String maxTime,String channelCode,String  channelName,Integer typeId){
