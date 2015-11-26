@@ -95,7 +95,6 @@ public class HomeController {
     @ResponseBody
     public void initHotel(Boolean isInitValid, Long hotelId) {
         Cat.logEvent("initHotel ", "刷新索引" + hotelId.toString() + "  date=" + DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-        return;
-        // this.validRateTaskService.initHotel(isInitValid,hotelId);
+        this.validRateTaskService.initHotel(isInitValid,hotelId);
     }
 }
