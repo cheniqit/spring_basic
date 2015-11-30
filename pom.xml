@@ -123,7 +123,7 @@
                 <jdbc.password>j9bcyZ5U5LQp7xxEomsu</jdbc.password>
                 <cps.jdbc.driver>com.mysql.jdbc.Driver</cps.jdbc.driver>
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
-                <cps.jdbc.username>smlt-writer</cps.jdbc.username>
+                <cps.jdbc.user>smlt-writer</cps.jdbc.user>
                 <cps.jdbc.password>j9bcyZ5U5LQp7xxEomsu</cps.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
@@ -136,11 +136,11 @@
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
                 <jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.username>imike-writer</jdbc.username>
+                <jdbc.user>imike-writer</jdbc.user>
                 <jdbc.password>Imike-writer</jdbc.password>
                 <cps.jdbc.driver>com.mysql.jdbc.Driver</cps.jdbc.driver>
                 <cps.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.119.90:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
-                <cps.jdbc.username>imike-writer</cps.jdbc.username>
+                <cps.jdbc.user>imike-writer</cps.jdbc.user>
                 <cps.jdbc.password>Imike-writer</cps.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://ots.imike.com/ots</ots.url>
