@@ -78,7 +78,6 @@
 
         <profile>
             <id>test</id>
-
             <properties>
                 <label>test</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -119,7 +118,7 @@
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
                 <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
-                <jdbc.username>smlt-writer</jdbc.username>
+                <jdbc.user>smlt-writer</jdbc.user>
                 <jdbc.password>j9bcyZ5U5LQp7xxEomsu</jdbc.password>
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>smlt-writer</cps.jdbc.user>
