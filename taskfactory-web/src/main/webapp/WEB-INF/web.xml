@@ -10,17 +10,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!-- cat集成 -->
-    <filter>
-        <filter-name>cat-filter</filter-name>
-        <filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>cat-filter</filter-name>
-        <url-pattern>/*</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
+
 
     <servlet>
         <servlet-name>appServlet</servlet-name>
@@ -35,7 +25,17 @@
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
+    <!-- cat集成 -->
+    <filter>
+        <filter-name>cat-filter</filter-name>
+        <filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>cat-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
  <welcome-file-list>
      <welcome-file>/WEB-INF/views/index.jsp</welcome-file>
  </welcome-file-list>
