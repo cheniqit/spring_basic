@@ -133,10 +133,10 @@
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
                 <jdbc.user>imike-writer</jdbc.user>
                 <jdbc.password>Imike-writer</jdbc.password>
-                <cps.jdbc.url><![CDATA[jdbc:monitor4jdbc:mysql://10.10.119.90:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
+                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>imike-writer</cps.jdbc.user>
                 <cps.jdbc.password>Imike-writer</cps.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
