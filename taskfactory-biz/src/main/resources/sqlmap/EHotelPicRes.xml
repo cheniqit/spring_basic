@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.HotelPicResMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.EHotelPicRes" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="p_id" property="pId" jdbcType="BIGINT" />
+    <result column="state_code" property="stateCode" jdbcType="VARCHAR" />
+    <result column="approver_id" property="approverId" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="remote_key" property="remoteKey" jdbcType="VARCHAR" />
+    <result column="valid" property="valid" jdbcType="BOOLEAN" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+     type_code, url, p_id, state_code, approver_id, hotel_id, remote_key, valid, create_time,
+    create_by, update_time, update_by
+  </sql>
+  <sql id="Base_Query_List" >
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="typeCode != null">
+        AND type_code = #{typeCode}
+      </if>
+      <if test="pId != null">
+        AND p_id = #{pId}
+      </if>
+      <if test="stateCode != null">
+        AND state_code = #{stateCode}
+      </if>
+      <if test="approverId != null">
+        AND approver_id = #{approverId}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="remoteKey != null">
+        AND remote_key = #{remoteKey}
+      </if>
+      <if test="valid != null">
+        AND valid = #{valid}
+      </if>
+    </where>
+  </sql>
+  <select id="queryEHotelPicRes" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
+    select
+    id,<include refid="Base_Column_List" />
+    from e_hotel_pic_res
+    <include refid="Base_Column_List" />
+    ORDER BY  id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${limitStart} , ${limitEnd}
+    </if>
+  </select>
+  <select id="countEHotelPicRes" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" resultType="java.lang.Integer" >
+    select count(*) from e_hotel_pic_res
+    <include refid="Base_Column_List" />
+  </select>
+  <select id="getEHotelPicResById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    id,<include refid="Base_Column_List" />
+    from e_hotel_pic_res
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="queryEHotelPicResByJoinPic" resultMap="JoinResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
+     select
+     res.id,pic.type_code,pic.main_show,res.state_code,res.url
+     from e_hotel_pic_res res,e_hotel_pic pic
+     where res.id = pic.res_id and pic.valid = 1 and res.valid = 1
+     and pic.type_code = #{typeCode}
+    <if test="stateCode != null" >
+      and res.state_code =#{stateCode}
+    </if>
+    <if test="stateCode != null" >
+      res.hotel_id = #{hotelId}
+    </if>
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${limitStart} , ${limitEnd}
+    </if>
+  </select>
+
+  <delete id="deleteEHotelPicResById" parameterType="java.lang.Long" >
+    delete from e_hotel_pic_res
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertEHotelPicRes" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" useGeneratedKeys="true" keyProperty="id">
+    insert into e_hotel_pic_res ( type_code, url,
+      p_id, state_code, approver_id, 
+      hotel_id, remote_key, valid, 
+      create_time, create_by, update_time, 
+      update_by)
+    values ( #{typeCode,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
+      #{pId,jdbcType=BIGINT}, #{stateCode,jdbcType=VARCHAR}, #{approverId,jdbcType=BIGINT}, 
+      #{hotelId,jdbcType=BIGINT}, #{remoteKey,jdbcType=VARCHAR}, #{valid,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateEHotelPicResById" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
+    update e_hotel_pic_res
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=BIGINT},
+      </if>
+      <if test="stateCode != null" >
+        state_code = #{stateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="approverId != null" >
+        approver_id = #{approverId,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="remoteKey != null" >
+        remote_key = #{remoteKey,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateInvalidByHotelId" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
+    update e_hotel_pic_res
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null" >
+        p_id = #{pId,jdbcType=BIGINT},
+      </if>
+      <if test="stateCode != null" >
+        state_code = #{stateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="approverId != null" >
+        approver_id = #{approverId,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="remoteKey != null" >
+        remote_key = #{remoteKey,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where hotel_id = #{hotelId,jdbcType=BIGINT}
+  </update>
+
+</mapper>

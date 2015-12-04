@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.hms.mapper.EHotelPicMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.EHotelPic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="roomtype_id" property="roomtypeId" jdbcType="BIGINT" />
+    <result column="res_id" property="resId" jdbcType="BIGINT" />
+    <result column="main_show" property="mainShow" jdbcType="INTEGER" />
+    <result column="valid" property="valid" jdbcType="BOOLEAN" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    type_code, hotel_id, roomtype_id, res_id, main_show, valid, create_time, create_by,
+    update_time, update_by
+  </sql>
+  <sql id="Base_Query_List" >
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="typeCode != null">
+        AND type_code = #{typeCode}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="roomtypeId != null">
+        AND roomtype_id = #{roomtypeId}
+      </if>
+      <if test="resId != null">
+        AND res_id = #{resId}
+      </if>
+      <if test="mainShow != null">
+        AND main_show = #{mainShow}
+      </if>
+      <if test="valid != null">
+        AND valid = #{valid}
+      </if>
+    </where>
+  </sql>
+  <select id="queryEHotelPic" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    select
+     id,<include refid="Base_Column_List" />
+    from e_hotel_pic
+    <include refid="Base_Column_List" />
+    ORDER BY  id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${limitStart} , ${limitEnd}
+    </if>
+  </select>
+  <select id="countEHotelPic" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" resultType="java.lang.Integer" >
+    select count(*) from e_hotel_pic
+    <include refid="Base_Column_List" />
+  </select>
+  <select id="getEHotelPicById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    id,<include refid="Base_Column_List" />
+    from e_hotel_pic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteEHotelPicById" parameterType="java.lang.Long" >
+    delete from e_hotel_pic
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertEHotelPic" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    insert into e_hotel_pic (type_code, hotel_id,
+      roomtype_id, res_id, main_show, 
+      valid, create_time, create_by, 
+      update_time, update_by)
+    values (#{typeCode,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT},
+      #{roomtypeId,jdbcType=BIGINT}, #{resId,jdbcType=BIGINT}, #{mainShow,jdbcType=INTEGER}, 
+      #{valid,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateEHotelPicById" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    update e_hotel_pic
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomtypeId != null" >
+        roomtype_id = #{roomtypeId,jdbcType=BIGINT},
+      </if>
+      <if test="resId != null" >
+        res_id = #{resId,jdbcType=BIGINT},
+      </if>
+      <if test="mainShow != null" >
+        main_show = #{mainShow,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateEHotelPicByHotelId" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    update e_hotel_pic
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="roomtypeId != null" >
+        roomtype_id = #{roomtypeId,jdbcType=BIGINT},
+      </if>
+      <if test="resId != null" >
+        res_id = #{resId,jdbcType=BIGINT},
+      </if>
+      <if test="mainShow != null" >
+        main_show = #{mainShow,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where hotel_id = #{hotelId,jdbcType=BIGINT}
+  </update>
+</mapper>
