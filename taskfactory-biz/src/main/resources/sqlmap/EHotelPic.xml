@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.hms.mapper.EHotelPicMapper" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.HotelPicMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.EHotelPic" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
@@ -47,15 +47,15 @@
     select
      id,<include refid="Base_Column_List" />
     from e_hotel_pic
-    <include refid="Base_Column_List" />
+    <include refid="Base_Query_List" />
     ORDER BY  id DESC
     <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
-      limit ${limitStart} , ${limitEnd}
+      limit ${pageIndex} , ${pageSize}
     </if>
   </select>
   <select id="countEHotelPic" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" resultType="java.lang.Integer" >
     select count(*) from e_hotel_pic
-    <include refid="Base_Column_List" />
+    <include refid="Base_Query_List" />
   </select>
   <select id="getEHotelPicById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 

@@ -39,4 +39,28 @@
   <delete id="deleteByRoomType" parameterType="java.lang.Integer">
     delete from t_roomtype_info where roomTypeId = #{roomTypeId}
   </delete>
+  <sql id="Base_Query_List" >
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="roomTypeId != null">
+        AND roomTypeId = #{roomTypeId}
+      </if>
+    </where>
+  </sql>
+  <select id="queryTRoomTypeInfo" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeInfoDto" >
+    select
+    id,<include refid="Base_Column_List" />
+    from t_roomtype_info
+    <include refid="Base_Query_List" />
+    ORDER BY  id ASC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="countTRoomTypeInfo" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeInfoDto" resultType="java.lang.Integer" >
+    select count(*) from t_roomtype_info
+    <include refid="Base_Column_List" />
+  </select>
 </mapper>

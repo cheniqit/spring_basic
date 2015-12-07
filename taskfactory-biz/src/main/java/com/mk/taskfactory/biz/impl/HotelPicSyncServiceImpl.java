@@ -1,0 +1,205 @@
+package com.mk.taskfactory.biz.impl;
+
+import com.mk.taskfactory.api.HotelPicSyncService;
+import com.mk.taskfactory.api.dtos.EHotelPicDto;
+import com.mk.taskfactory.api.dtos.EHotelPicResDto;
+import com.mk.taskfactory.api.dtos.THotelDto;
+import com.mk.taskfactory.api.dtos.TRoomTypeInfoDto;
+import com.mk.taskfactory.api.enums.HMSStatusEnum;
+import com.mk.taskfactory.api.enums.HotelPicEnum;
+import com.mk.taskfactory.biz.mapper.*;
+import com.mk.taskfactory.biz.utils.JsonUtils;
+import com.mk.taskfactory.model.PicJsonCalss;
+import com.mk.taskfactory.model.THotel;
+import com.mk.taskfactory.model.TRoomType;
+import com.mk.taskfactory.model.TRoomTypeInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+
+@Service
+public class HotelPicSyncServiceImpl implements HotelPicSyncService {
+
+    @Autowired
+    private HotelMapper hotelMapper;
+    @Autowired
+    private RoomTypeInfoMapper roomTypeInfoMapper;
+    @Autowired
+    private HotelPicMapper hotelPicMapper;
+    @Autowired
+    private HotelPicResMapper hotelPicResMapper;
+    @Autowired
+    private RoomTypeMapper roomTypeMapper;
+
+    public void hotelPicSync() {
+        THotelDto hotelDto=new THotelDto();
+        Integer count=hotelMapper.countTHotel(hotelDto);
+        if (count<=0){
+            return;
+        }
+        Integer pageSize=2;//100
+        Integer pageNum=1/pageSize;
+        for (int i=0;i<=pageNum;i++){
+            hotelDto.setPageIndex(i);
+            hotelDto.setPageSize(pageSize);
+            List<THotel>hotels=hotelMapper.queryTHotel(hotelDto);
+            if (CollectionUtils.isEmpty(hotels)){
+                continue;
+            }
+            for (THotel hotel:hotels){
+                if (StringUtils.isEmpty(hotel.getHotelPic())){
+                    continue;
+                }
+                List<PicJsonCalss> picJsonCalsses=getPicUrl(hotel.getHotelPic());
+
+                for (PicJsonCalss picJsonCalss:picJsonCalsses){
+                    if (picJsonCalss.getName()==null||picJsonCalss.getPic()==null){
+                        continue;
+                    }
+                    String typeCode=HotelPicEnum.getByCode(picJsonCalss.getName(),1).getId();
+                    for (String picUrl:picJsonCalss.getPic()){
+                        EHotelPicResDto hotelPicResDto =new EHotelPicResDto();
+                        hotelPicResDto.setTypeCode(typeCode);
+                        hotelPicResDto.setUrl(picUrl);
+                        hotelPicResDto.setStateCode(HMSStatusEnum.Editing.getCode());
+                        hotelPicResDto.setHotelId(hotel.getId().longValue());
+                        Long resId=saveHotelPicRes(hotelPicResDto);
+                        if (resId==null){
+                            continue;
+                        }
+                        hotelPicResDto.setpId(resId);
+                        resId=saveHotelPicRes(hotelPicResDto);
+                        if (resId==null){
+                            continue;
+                        }
+                        EHotelPicDto hotelPicDto =new EHotelPicDto();
+                        hotelPicDto.setTypeCode(typeCode);
+                        hotelPicDto.setHotelId(hotel.getId().longValue());
+                        hotelPicDto.setResId(resId);
+                        hotelPicDto.setValid(true);
+                        hotelPicDto.setCreateBy("手动同步");
+                        hotelPicDto.setCreateTime(new Date());
+                        hotelPicMapper.insertEHotelPic(hotelPicDto);
+                    }
+                }
+            }
+        }
+
+        return;
+    }
+    public void roomTypeInfoPicSync() {
+        TRoomTypeInfoDto roomTypeInfoDto=new TRoomTypeInfoDto();
+        Integer count=roomTypeInfoMapper.countTRoomTypeInfo(roomTypeInfoDto);
+        if (count<=0){
+            return;
+        }
+        Integer pageSize=2;//100
+        Integer pageNum=1/pageSize;
+        for (int i=0;i<=pageNum;i++){
+            roomTypeInfoDto.setPageIndex(i);
+            roomTypeInfoDto.setPageSize(pageSize);
+            List<TRoomTypeInfo>roomTypeInfos=roomTypeInfoMapper.queryTRoomTypeInfo(roomTypeInfoDto);
+            if (CollectionUtils.isEmpty(roomTypeInfos)){
+                continue;
+            }
+            for (TRoomTypeInfo roomTypeInfo:roomTypeInfos){
+                if (StringUtils.isEmpty(roomTypeInfo.getPics())){
+                    continue;
+                }
+                TRoomType roomType=roomTypeMapper.findTRoomTypeById(roomTypeInfo.getRoomTypeId());
+
+                List<PicJsonCalss> picJsonCalsses=getPicUrl(roomTypeInfo.getPics());
+
+                for (PicJsonCalss picJsonCalss:picJsonCalsses){
+                    if (picJsonCalss.getName()==null||picJsonCalss.getPic()==null){
+                        continue;
+                    }
+                    String typeCode=HotelPicEnum.getByCode(picJsonCalss.getName(),2).getId();
+                    for (String picUrl:picJsonCalss.getPic()){
+                        EHotelPicResDto hotelPicResDto =new EHotelPicResDto();
+                        hotelPicResDto.setTypeCode(typeCode);
+                        hotelPicResDto.setUrl(picUrl);
+                        hotelPicResDto.setStateCode(HMSStatusEnum.Editing.getCode());
+                        hotelPicResDto.setHotelId(roomType.getThotelId().longValue());
+                        Long resId=saveHotelPicRes(hotelPicResDto);
+                        if (resId==null){
+                            continue;
+                        }
+                        hotelPicResDto.setpId(resId);
+                        resId=saveHotelPicRes(hotelPicResDto);
+                        if (resId==null){
+                            continue;
+                        }
+                        EHotelPicDto hotelPicDto =new EHotelPicDto();
+                        hotelPicDto.setTypeCode(typeCode);
+                        hotelPicDto.setHotelId(roomType.getThotelId().longValue());
+                        hotelPicDto.setRoomtypeId(roomType.getId().longValue());
+                        hotelPicDto.setResId(resId);
+                        hotelPicDto.setValid(true);
+                        hotelPicDto.setCreateBy("手动同步");
+                        hotelPicDto.setCreateTime(new Date());
+                        hotelPicMapper.insertEHotelPic(hotelPicDto);
+                    }
+                }
+            }
+        }
+
+        return;
+    }
+    public List<PicJsonCalss> getPicUrl(String hotelPic) {
+        List<PicJsonCalss> pics=new ArrayList<PicJsonCalss>();
+        List<Object> objects=JsonUtils.jsonToList(hotelPic);
+        try {
+            for (Object obj:objects){
+                if (obj==null){
+                    continue;
+                }
+                Map<String,String> picMaps=JsonUtils.jsonToMap(obj.toString());
+                PicJsonCalss picJsonCalss = new PicJsonCalss();
+                for (String key:picMaps.keySet()) {
+                    if ("name".equals(key)) {
+                        picJsonCalss.setName(picMaps.get(key));
+                    }else{
+                        System.out.println(picMaps.get(key));
+                        List<Object> urls=JsonUtils.jsonToList(picMaps.get(key).toString());
+                        List<String> urlStrings=new ArrayList<String>();
+                        for (Object url:urls) {
+                            if (url==null){
+                                continue;
+                            }
+                            Map<String,String> urlMaps=JsonUtils.jsonToMap(url.toString());
+                            for (String url1:urlMaps.keySet())
+                            {
+                                urlStrings.add(urlMaps.get(url1));
+                            }
+                        }
+                        picJsonCalss.setPic(urlStrings);
+                    }
+
+                }
+                pics.add(picJsonCalss);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return pics;
+    }
+
+    public Long saveHotelPicRes(EHotelPicResDto bean){
+        EHotelPicResDto hotelPicRes=new EHotelPicResDto();
+        hotelPicRes.setTypeCode(bean.getTypeCode());
+        hotelPicRes.setUrl(bean.getUrl());
+        hotelPicRes.setpId(bean.getpId());
+        hotelPicRes.setStateCode(bean.getStateCode());
+        hotelPicRes.setHotelId(bean.getHotelId());
+        hotelPicRes.setValid(true);
+        hotelPicRes.setCreateTime(new Date());
+        hotelPicRes.setCreateBy("手动同步");
+        hotelPicResMapper.insertEHotelPicRes(hotelPicRes);
+        return hotelPicRes.getId();
+    }
+}

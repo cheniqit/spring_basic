@@ -8,6 +8,8 @@ public class TRoomTypeInfoDto {
     private String pics;
     private Integer bedType;
     private String bedSize;
+    private Integer pageIndex; // 开始行数
+    private Integer pageSize; // 每页显示数量
 
     public Integer getId() {
         return id;
@@ -63,5 +65,21 @@ public class TRoomTypeInfoDto {
 
     public void setBedSize(String bedSize) {
         this.bedSize = bedSize;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

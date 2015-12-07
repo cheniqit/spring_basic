@@ -50,46 +50,42 @@
         WHERE a.id=#{id}
     </select>
     <sql id="Base_Column_List" >
-        type_code, hotel_id, roomtype_id, res_id, main_show, valid, create_time, create_by,
-        update_time, update_by
+        hotelContactName, regTime, disId, detailAddr, longitude, latitude, openTime,
+        repairTime, roomNum, introduction, traffic, hotelPic, peripheral, businessLicenseFront, businessLicenseBack, pms, visible, online, idCardFront
+        , idCardBack, retentionTime, defaultLeaveTime, needWait, hotelPhone, isNewPms, priority, ruleCode, isthreshold, pmsOptTime, provCode, disCode
+        , areaCode, areaName, qtPhone, hotelType, cityCode
     </sql>
     <sql id="Base_Query_List" >
         <where>
             <if test="id != null">
                 id = #{id}
             </if>
-            <if test="typeCode != null">
-                AND type_code = #{typeCode}
+            <if test="hotelContactName != null">
+                AND hotelContactName like  '%${hotelContactName}%'
             </if>
-            <if test="hotelId != null">
-                AND hotel_id = #{hotelId}
+            <if test="disId != null">
+                AND disId = #{disId}
             </if>
-            <if test="roomtypeId != null">
-                AND roomtype_id = #{roomtypeId}
+            <if test="hotelType != null">
+                AND hotelType = #{hotelType}
             </if>
-            <if test="resId != null">
-                AND res_id = #{resId}
-            </if>
-            <if test="mainShow != null">
-                AND main_show = #{mainShow}
-            </if>
-            <if test="valid != null">
-                AND valid = #{valid}
+            <if test="cityCode != null">
+                AND cityCode = #{cityCode}
             </if>
         </where>
     </sql>
-    <select id="queryEHotelPic" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    <select id="queryTHotel" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.THotelDto" >
         select
         id,<include refid="Base_Column_List" />
-        from e_hotel_pic
-        <include refid="Base_Column_List" />
-        ORDER BY  id DESC
+        from t_hotel
+        <include refid="Base_Query_List" />
+        ORDER BY  id ASC
         <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
-            limit ${limitStart} , ${limitEnd}
+            limit ${pageIndex} , ${pageSize}
         </if>
     </select>
-    <select id="countEHotelPic" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" resultType="java.lang.Integer" >
-        select count(*) from e_hotel_pic
-        <include refid="Base_Column_List" />
+    <select id="countTHotel" parameterType="com.mk.taskfactory.api.dtos.THotelDto" resultType="java.lang.Integer" >
+        select count(*) from t_hotel
+        <include refid="Base_Query_List" />
     </select>
 </mapper>

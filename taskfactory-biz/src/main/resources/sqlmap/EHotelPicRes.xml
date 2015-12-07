@@ -52,15 +52,15 @@
     select
     id,<include refid="Base_Column_List" />
     from e_hotel_pic_res
-    <include refid="Base_Column_List" />
+    <include refid="Base_Query_List" />
     ORDER BY  id DESC
     <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
-      limit ${limitStart} , ${limitEnd}
+      limit ${pageIndex} , ${pageSize}
     </if>
   </select>
   <select id="countEHotelPicRes" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" resultType="java.lang.Integer" >
     select count(*) from e_hotel_pic_res
-    <include refid="Base_Column_List" />
+    <include refid="Base_Query_List" />
   </select>
   <select id="getEHotelPicResById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -69,7 +69,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="queryEHotelPicResByJoinPic" resultMap="JoinResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
+ <!-- <select id="queryEHotelPicResByJoinPic" resultMap="JoinResultMap" parameterType="com.mk.taskfactory.api.dtos.EHotelPicResDto" >
      select
      res.id,pic.type_code,pic.main_show,res.state_code,res.url
      from e_hotel_pic_res res,e_hotel_pic pic
@@ -84,7 +84,7 @@
     <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
       limit ${limitStart} , ${limitEnd}
     </if>
-  </select>
+  </select>-->
 
   <delete id="deleteEHotelPicResById" parameterType="java.lang.Long" >
     delete from e_hotel_pic_res

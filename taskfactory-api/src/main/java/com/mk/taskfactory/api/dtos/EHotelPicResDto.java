@@ -29,6 +29,10 @@ public class EHotelPicResDto {
 
     private String updateBy;
 
+    private Integer pageIndex; // 开始行数
+
+    private Integer pageSize; // 每页显示数量
+
     public Long getId() {
         return id;
     }
@@ -131,5 +135,21 @@ public class EHotelPicResDto {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy == null ? null : updateBy.trim();
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }
