@@ -40,8 +40,8 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         if (count<=0){
             return;
         }
-        Integer pageSize=2;//100
-        Integer pageNum=1/pageSize;
+        Integer pageSize=100;//100
+        Integer pageNum=count/pageSize;
         for (int i=0;i<=pageNum;i++){
             hotelDto.setPageIndex(i);
             hotelDto.setPageSize(pageSize);
@@ -96,8 +96,8 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         if (count<=0){
             return;
         }
-        Integer pageSize=2;//100
-        Integer pageNum=1/pageSize;
+        Integer pageSize=100;//100
+        Integer pageNum=count/pageSize;
         for (int i=0;i<=pageNum;i++){
             roomTypeInfoDto.setPageIndex(i);
             roomTypeInfoDto.setPageSize(pageSize);
