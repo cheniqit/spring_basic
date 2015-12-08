@@ -14,6 +14,8 @@ import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.model.TRoomType;
 import com.mk.taskfactory.model.TRoomTypeInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +24,7 @@ import java.util.*;
 
 @Service
 public class HotelPicSyncServiceImpl implements HotelPicSyncService {
-
+    private static Logger logger = LoggerFactory.getLogger(HotelPicSyncServiceImpl.class);
     @Autowired
     private HotelMapper hotelMapper;
     @Autowired
@@ -40,12 +42,15 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         if (count<=0){
             return;
         }
+        logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync method begin===================="));
         Integer pageSize=100;//100
         Integer pageNum=count/pageSize;
+        logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync hotelSize"+count+"===================="));
         for (int i=0;i<=pageNum;i++){
             hotelDto.setPageIndex(i);
             hotelDto.setPageSize(pageSize);
             List<THotel>hotels=hotelMapper.queryTHotel(hotelDto);
+            logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync setPageIndex"+i+"===================="));
             if (CollectionUtils.isEmpty(hotels)){
                 continue;
             }
@@ -53,6 +58,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 if (StringUtils.isEmpty(hotel.getHotelPic())){
                     continue;
                 }
+                logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync hotelId"+hotel.getId()+"===================="));
                 List<PicJsonCalss> picJsonCalsses=getPicUrl(hotel.getHotelPic());
 
                 for (PicJsonCalss picJsonCalss:picJsonCalsses){
@@ -87,7 +93,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 }
             }
         }
-
+        logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync end===================="));
         return;
     }
     public void roomTypeInfoPicSync() {
@@ -96,11 +102,14 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         if (count<=0){
             return;
         }
+        logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync begin===================="));
+        logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync roomTypeInfo size="+count+"===================="));
         Integer pageSize=100;//100
         Integer pageNum=count/pageSize;
         for (int i=0;i<=pageNum;i++){
             roomTypeInfoDto.setPageIndex(i);
             roomTypeInfoDto.setPageSize(pageSize);
+            logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync pageIndex=" + i + "===================="));
             List<TRoomTypeInfo>roomTypeInfos=roomTypeInfoMapper.queryTRoomTypeInfo(roomTypeInfoDto);
             if (CollectionUtils.isEmpty(roomTypeInfos)){
                 continue;
@@ -109,6 +118,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 if (StringUtils.isEmpty(roomTypeInfo.getPics())){
                     continue;
                 }
+                logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync roomTypeId=" + roomTypeInfo.getRoomTypeId()+ "===================="));
                 TRoomType roomType=roomTypeMapper.findTRoomTypeById(roomTypeInfo.getRoomTypeId());
 
                 List<PicJsonCalss> picJsonCalsses=getPicUrl(roomTypeInfo.getPics());
@@ -146,7 +156,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 }
             }
         }
-
+        logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync end===================="));
         return;
     }
     public List<PicJsonCalss> getPicUrl(String hotelPic) {
