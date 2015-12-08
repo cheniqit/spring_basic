@@ -26,7 +26,7 @@ public enum HotelPicEnum {
             return OTHER;
         }
         for (HotelPicEnum valueTypeEnum : HotelPicEnum.values()) {
-            if (valueTypeEnum.getCode().equals(code)||type==valueTypeEnum.getType()) {
+            if (valueTypeEnum.getCode().equals(code)&&type==valueTypeEnum.getType()) {
                 return valueTypeEnum;
             }
         }
