@@ -70,7 +70,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                         EHotelPicResDto hotelPicResDto =new EHotelPicResDto();
                         hotelPicResDto.setTypeCode(typeCode);
                         hotelPicResDto.setUrl(picUrl);
-                        hotelPicResDto.setStateCode(HMSStatusEnum.Editing.getCode());
+                        hotelPicResDto.setStateCode(HMSStatusEnum.PASS.getCode());
                         hotelPicResDto.setHotelId(hotel.getId().longValue());
                         Long resId=saveHotelPicRes(hotelPicResDto);
                         if (resId==null){
@@ -85,6 +85,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                         hotelPicDto.setTypeCode(typeCode);
                         hotelPicDto.setHotelId(hotel.getId().longValue());
                         hotelPicDto.setResId(resId);
+                        hotelPicDto.setMainShow(0);
                         hotelPicDto.setValid(true);
                         hotelPicDto.setCreateBy("手动同步");
                         hotelPicDto.setCreateTime(new Date());
@@ -132,7 +133,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                         EHotelPicResDto hotelPicResDto =new EHotelPicResDto();
                         hotelPicResDto.setTypeCode(typeCode);
                         hotelPicResDto.setUrl(picUrl);
-                        hotelPicResDto.setStateCode(HMSStatusEnum.Editing.getCode());
+                        hotelPicResDto.setStateCode(HMSStatusEnum.PASS.getCode());
                         hotelPicResDto.setHotelId(roomType.getThotelId().longValue());
                         Long resId=saveHotelPicRes(hotelPicResDto);
                         if (resId==null){
@@ -148,6 +149,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                         hotelPicDto.setHotelId(roomType.getThotelId().longValue());
                         hotelPicDto.setRoomtypeId(roomType.getId().longValue());
                         hotelPicDto.setResId(resId);
+                        hotelPicDto.setMainShow(0);
                         hotelPicDto.setValid(true);
                         hotelPicDto.setCreateBy("手动同步");
                         hotelPicDto.setCreateTime(new Date());

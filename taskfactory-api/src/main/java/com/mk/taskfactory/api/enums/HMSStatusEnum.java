@@ -1,13 +1,10 @@
 package com.mk.taskfactory.api.enums;
 
 public enum HMSStatusEnum {
-    Init("-1","初始化"),
-    UNInitial("0","未初次审核"),
-    Initial("1","正在初次审核"),
-    ManagerEdite("2","店长编辑中（未经过上限）"),
-    Submit("3","提交审核中"),
-    ManagerEditing("4","店长正在编辑中（已进行过一次上线）"),
-    Editing("5","审核中（已进行过一次上线）");
+    DOING("10","审批中"),
+    PASS("20","审批通过"),
+    FAIL("30","审批未过"),
+    OTHER("-1","其他");
 
     private String code;
     private String desc;
@@ -23,7 +20,7 @@ public enum HMSStatusEnum {
                 return valueTypeEnum;
             }
         }
-        return Init;
+        return OTHER;
     }
 
     public String getDesc() {
