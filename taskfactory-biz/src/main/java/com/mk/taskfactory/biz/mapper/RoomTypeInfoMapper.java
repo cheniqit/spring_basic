@@ -9,7 +9,7 @@ import java.util.List;
 @MyBatisRepository
 public interface RoomTypeInfoMapper {
     public void deleteByRoomType(Integer roomTypeId);
-    public TRoomTypeInfoDto findByRoomTypeId(Integer roomTypeId);
+    public TRoomTypeInfo findByRoomTypeId(Integer roomTypeId);
     public Integer saveRoomTypeInfo(TRoomTypeInfoDto bean);
     public List<TRoomTypeInfo> queryTRoomTypeInfo(TRoomTypeInfoDto bean);
     public Integer countTRoomTypeInfo(TRoomTypeInfoDto bean);

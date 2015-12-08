@@ -3,6 +3,7 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.RoomTypeInfoService;
 import com.mk.taskfactory.api.dtos.TRoomTypeInfoDto;
 import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
+import com.mk.taskfactory.model.TRoomTypeInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
         this.roomTypeInfoMapper.deleteByRoomType(roomTypeId);
     }
     public TRoomTypeInfoDto findByRoomTypeId(Integer roomTypeId){
-        TRoomTypeInfoDto roomTypeInfo=roomTypeInfoMapper.findByRoomTypeId(roomTypeId);
+        TRoomTypeInfo roomTypeInfo=roomTypeInfoMapper.findByRoomTypeId(roomTypeId);
         if (roomTypeInfo==null){
             return  null;
         }
@@ -30,7 +31,7 @@ public class RoomTypeInfoServiceImpl implements RoomTypeInfoService {
     public Integer saveRoomTypeInfo(TRoomTypeInfoDto bean){
         return  roomTypeInfoMapper.saveRoomTypeInfo(bean);
     }
-    private TRoomTypeInfoDto buildTRoomTypeInfoDto(TRoomTypeInfoDto bean) {
+    private TRoomTypeInfoDto buildTRoomTypeInfoDto(TRoomTypeInfo bean) {
         if (bean==null){
             return new TRoomTypeInfoDto();
         }

@@ -4,8 +4,10 @@ import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
 import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
+import com.mk.taskfactory.model.TRoomTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -186,7 +188,9 @@ public class ValidRateTaskLogicServiceImpl {
                 logger.info(String.format("====================initSaleRoomSaleConfigDto >> initRoomTypeDto save new RoomType id:[%s]",newRoomTypeId));
 
                 //初始化t_roomtype_info
-                TRoomTypeInfoDto findRoomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(configRoomTypeId);
+                TRoomTypeInfo roomTypeInfo = roomTypeInfoMapper.findByRoomTypeId(configRoomTypeId);
+                TRoomTypeInfoDto findRoomTypeInfo = new TRoomTypeInfoDto();
+                 BeanUtils.copyProperties(roomTypeInfo, findRoomTypeInfo);;
                 if(findRoomTypeInfo == null || findRoomTypeInfo.getId() == null){
                     throw new RuntimeException(String.format("====================initSaleRoomSaleConfigDto >> find findRoomTypeInfo is null params roomTypeId[%s]===============", configRoomTypeId));
                 }
