@@ -149,14 +149,14 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
         //查询指定的CONFIG
         for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoStartList) {
-            Cat.logEvent("updateOnline","特价活动上线  while configInfoDto.id="+configInfoDto.getId());
+            //Cat.logEvent("updateOnline","特价活动上线  while configInfoDto.id="+configInfoDto.getId());
             logger.info("============sales online job >> while configInfoDto.id:"
                     + configInfoDto.getId() + " start");
             TRoomSaleConfigDto configParam = new TRoomSaleConfigDto();
             configParam.setValid(ValidEnum.VALID.getId());
             configParam.setSaleConfigInfoId(configInfoDto.getId());
             List<TRoomSaleConfigDto> configDtoList = roomSaleConfigService.queryRoomSaleConfigByParams(configParam);
-            Cat.logEvent("updateOnline","特价活动上线  find RoomSaleConfigList sizi="+configDtoList.size());
+            //Cat.logEvent("updateOnline","特价活动上线  find RoomSaleConfigList sizi="+configDtoList.size());
             logger.info("============sales online job >> find RoomSaleConfigList:" + configDtoList.size());
             for (TRoomSaleConfigDto configDto : configDtoList) {
                 try {
@@ -178,7 +178,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return configInfoDtoStartList;
         }
         for (TRoomSaleTypeDto typeDto : saleTypeDtoList) {
-            Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo while TRoomSaleTypeDto.id=" + typeDto.getId());
+           // Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo while TRoomSaleTypeDto.id=" + typeDto.getId());
             logger.info("============sales online job >> while TRoomSaleTypeDto.id:" + typeDto.getId());
 
             Integer typeId = typeDto.getId();
@@ -188,7 +188,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
             List<TRoomSaleConfigInfoDto> configInfoDtoList =
                     roomSaleConfigInfoService.queryRoomSaleConfigInfoList(configInfoParam);
-            Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo  find configInfoDtoList=" + configInfoDtoList.size());
+            //Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo  find configInfoDtoList=" + configInfoDtoList.size());
             logger.info("============sales online job >> find configInfoDtoList:" + configInfoDtoList.size());
 
             for (TRoomSaleConfigInfoDto configInfoDto : configInfoDtoList) {
@@ -202,7 +202,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
                 //若是开始结束时间未跨日，活动必须在开始结束时间范围内
                 if (!runTime.before(startDate) && !runTime.after(endDate)) {
-                    Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo  while start configInfoDto.id="+configInfoDto.getId());
+                    //Cat.logEvent("updateOnline","特价活动上线 getStartedRoomSaleConfigInfo  while start configInfoDto.id="+configInfoDto.getId());
                     logger.info("============sales online job >> while configInfoDto.id:"
                             + configInfoDto.getId() + " start");
                     configInfoDtoStartList.add(configInfoDto);
@@ -233,7 +233,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             logger.info("============sales online job >> configDto.id:" + configDto.getId() + " is started, continue");
             return;
         }
-        Cat.logEvent("updateOnline","特价活动上线 updateConfigOnline configId=" + configDto.getId() + " 活动已开始 continue");
+        //Cat.logEvent("updateOnline","特价活动上线 updateConfigOnline configId=" + configDto.getId() + " 活动已开始 continue");
         logger.info("============sales online job >> configDto.id:" + configDto.getId() + " after startTime");
         int hotelId = configDto.getHotelId();
         int roomTypeId = configDto.getRoomTypeId();
@@ -241,8 +241,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Integer num = configDto.getNum();
         logger.info("============sales online job >> configDto.id:" + configDto.getId()
                 + " roomTypeId:" + roomTypeId + " saleRoomTypeId:" + saleRoomTypeId);
-        Cat.logEvent("updateOnline", "特价活动上线 configId=" +  configDto.getId() + "&roomTypeId="
-                + roomTypeId+"&saleRoomTypeId="+saleRoomTypeId);
+        //Cat.logEvent("updateOnline", "特价活动上线 configId=" +  configDto.getId() + "&roomTypeId="
+        //        + roomTypeId+"&saleRoomTypeId="+saleRoomTypeId);
         //OTS房态
         OtsRoomStateDto roomStateDto = this.roomService.getOtsRoomState(hotelId,roomTypeId,null,null);
         List<Integer> roomVCList = roomStateDto.getRoomIdList();
@@ -296,8 +296,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //更新config started
         configDto.setStarted(ValidEnum.VALID.getId());
         this.roomSaleConfigService.updateRoomSaleConfig(configDto);
-        Cat.logEvent("updateOnline", "特价活动上线 updateRoomSaleConfig configId=" +configDto.getId()
-                + "&valid=" + ValidEnum.VALID.getId());
+        //Cat.logEvent("updateOnline", "特价活动上线 updateRoomSaleConfig configId=" +configDto.getId()
+        //       + "&valid=" + ValidEnum.VALID.getId());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " to started");
     }
@@ -321,8 +321,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         roomChangeTypeDto.setId(onSaleRoomId);
         roomChangeTypeDto.setRoomTypeId(configDto.getSaleRoomTypeId());
         this.roomService.updateRoomTypeByRoomType(roomChangeTypeDto);
-        Cat.logEvent("updateOnline", "特价活动上线 updateRoomTypeByRoomType roomId=" + onSaleRoomId + "&newRoomTypeId="
-                + configDto.getSaleRoomTypeId()+"&oldRoomTypeId="+roomDto.getRoomTypeId());
+        //Cat.logEvent("updateOnline", "特价活动上线 updateRoomTypeByRoomType roomId=" + onSaleRoomId + "&newRoomTypeId="
+        //        + configDto.getSaleRoomTypeId()+"&oldRoomTypeId="+roomDto.getRoomTypeId());
         logger.info("============sales online job >> configDto.id:"
                 + configDto.getId() + " update room id:" + onSaleRoomId + " online");
 
@@ -545,7 +545,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         Set<Integer> hotelSet=new HashSet<Integer>();
         if (!CollectionUtils.isEmpty(list)) {
             for (TRoomSaleConfigDto dto : list) {
-                Cat.logEvent("dateReback", "特价活动下线 saleConfigId:" + dto.getId());
+                //Cat.logEvent("dateReback", "特价活动下线 saleConfigId:" + dto.getId());
                 logger.info("============sales dateReback job >> do saleConfigDto id=" + dto.getId());
                 hotelSet.add(dto.getHotelId());
                 Integer tag = dto.getTag();
@@ -572,7 +572,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                         java.util.Date now=dafShort.parse(nowDate);
                         java.util.Date endDate = dafShort.parse(dto.getEndDate()+" "+dto.getEndTime());
                         if ( now.compareTo(endDate)>= 0) {
-                            Cat.logEvent("dateReback", "活动结束 endDate="+endDate+"&nowDate="+nowDate);
+                            //Cat.logEvent("dateReback", "活动结束 endDate="+endDate+"&nowDate="+nowDate);
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId() + " start close job");
                             if (dto.getSaleRoomTypeId()==null){
                                 Cat.logEvent("dateReback", "活动结束 saleRoomTypeId is null continue");
@@ -581,17 +581,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                                 continue;
                             }
                             //活动结束后把配置表置为F
-                            Cat.logEvent("dateReback", "活动结束 updateRoomSaleConfigValid i saleConfigDto id=" + dto.getId());
+                            //Cat.logEvent("dateReback", "活动结束 updateRoomSaleConfigValid i saleConfigDto id=" + dto.getId());
                             logger.info("============sales dateReback job >>update saleConfigDto id:" + dto.getId() + " VALID INVALID");
                             roomSaleConfigService.updateRoomSaleConfigValid(dto.getId(), ValidEnum.INVALID.getId());
-                            Cat.logEvent("dateReback", "活动结束 deleteByRoomType");
+                            //Cat.logEvent("dateReback", "活动结束 deleteByRoomType");
                             logger.info("============sales dateReback job >>saleConfigDto id=" + dto.getId()
                                     + " delete roomTypeInfo roomTypeId=" + dto.getSaleRoomTypeId());
                             roomTypeInfoService.deleteByRoomType(dto.getSaleRoomTypeId());
                         /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
                          */
-                            Cat.logEvent("dateReback", "活动结束 deleteByRoomType");
+                           // Cat.logEvent("dateReback", "活动结束 deleteByRoomType");
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete roomTypeFacility roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeFacilityService.deleteByRoomType(dto.getSaleRoomTypeId());
@@ -599,15 +599,15 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                          /*
                          *（5）根据t_room_sale roomtypeid删除表t_roomtype_facilit中where roomtypeid=${roomtypeid}中数据
                          */
-                            Cat.logEvent("dateReback", "活动结束 delTRoomTypeById");
+                            //Cat.logEvent("dateReback", "活动结束 delTRoomTypeById");
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete roomType roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeService.delTRoomTypeById(dto.getSaleRoomTypeId());
-                            Cat.logEvent("dateReback", "活动结束 deleteBasePriceByRoomType");
+                            //Cat.logEvent("dateReback", "活动结束 deleteBasePriceByRoomType");
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete BasePrice roomTypeId:" + dto.getSaleRoomTypeId());
                             basePriceService.deleteBasePriceByRoomType(dto.getSaleRoomTypeId());
-                            Cat.logEvent("dateReback", "活动结束 deleteByRoomTypeId");
+                            //Cat.logEvent("dateReback", "活动结束 deleteByRoomTypeId");
                             logger.info("============sales dateReback job >>saleConfigDto id:" + dto.getId()
                                     + " delete roomTypeBed roomTypeId:" + dto.getSaleRoomTypeId());
                             roomTypeBedService.deleteByRoomTypeId(dto.getSaleRoomTypeId().longValue());
@@ -670,17 +670,17 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
             return;
         }
         for (TRoomSaleDto saleTo : saleDtoList) {
-            Cat.logEvent("dateReback", "特价活动下线 还原t_room表中的数据 updateRoom roomSaleId="+saleTo.getId()
-                    +"&roomId="+saleTo.getRoomId()+"&oldRoomTypeId="+saleTo.getOldRoomTypeId()+"&roomTypeId="+saleTo.getRoomTypeId());
+            //Cat.logEvent("dateReback", "特价活动下线 还原t_room表中的数据 updateRoom roomSaleId="+saleTo.getId()
+            //        +"&roomId="+saleTo.getRoomId()+"&oldRoomTypeId="+saleTo.getOldRoomTypeId()+"&roomTypeId="+saleTo.getRoomTypeId());
             //还原t_room表中的数据
             this.updateRoom(saleTo);
-            Cat.logEvent("dateReback", "特价活动下线 还原t_room_setting表中的数据 updateRoomSetting roomSaleId=" + saleTo.getId()
-                    + "&roomId=" + saleTo.getRoomId() + "&oldRoomTypeId=" + saleTo.getOldRoomTypeId() + "&roomTypeId="
-                    + saleTo.getRoomTypeId()+ "&roomNo="+saleTo.getRoomNo());
+            //Cat.logEvent("dateReback", "特价活动下线 还原t_room_setting表中的数据 updateRoomSetting roomSaleId=" + saleTo.getId()
+            //        + "&roomId=" + saleTo.getRoomId() + "&oldRoomTypeId=" + saleTo.getOldRoomTypeId() + "&roomTypeId="
+            //        + saleTo.getRoomTypeId()+ "&roomNo="+saleTo.getRoomNo());
             //还原t_room_setting表中的数据
             this.updateRoomSetting(saleTo);
-            Cat.logEvent("dateReback", "特价活动下线 还原roomSaleDto数据 updateRoomSaleBack roomSaleId=" + saleTo.getId()
-                    + "&IsBack=T");
+            //Cat.logEvent("dateReback", "特价活动下线 还原roomSaleDto数据 updateRoomSaleBack roomSaleId=" + saleTo.getId()
+            //        + "&IsBack=T");
             //还原roomSaleDto数据
             TRoomSaleDto roomSaleDto = new TRoomSaleDto();
             roomSaleDto.setId(saleTo.getId());
@@ -760,8 +760,8 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
 
     public void initHotel(Boolean isInitValid, Long paramHotelId) {
         logger.info(String.format("====================initHotel >> start"));
-        Cat.logEvent("initHotel", "手动刷新索性  InitValid=" +isInitValid
-                + "&hotelId="+paramHotelId);
+        //Cat.logEvent("initHotel", "手动刷新索性  InitValid=" +isInitValid
+        //       + "&hotelId="+paramHotelId);
         Set<Integer> hotelSet = new HashSet<Integer>();
 
         if (null != paramHotelId) {
