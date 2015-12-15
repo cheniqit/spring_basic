@@ -268,7 +268,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
         //结算价大于原眯客价
         BigDecimal settleValue =
                 this.calaValue(price, configDto.getSettleValue(), configDto.getSettleType());
-        if (price.compareTo(settleValue) <= 0) {
+        if (price.compareTo(settleValue) < 0) {
             Cat.logEvent("updateOnline","特价活动上线 get settleValue>roomPrice settleValue="+settleValue+"&roomPrice="+price);
             logger.info("============sales online job >> configDto.id:"
                     + configDto.getId() + " get settleValue>roomPrice continue" );
@@ -360,6 +360,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
                     onSaleRoomList.add(roomVCList.get(number));
                     randomSet.add(number);
                 }
+
             }
         } else {
             if (roomVCList.contains(roomId)){
@@ -761,7 +762,7 @@ public class ValidRateTaskServiceImpl implements ValidRateTaskService {
     public void initHotel(Boolean isInitValid, Long paramHotelId) {
         logger.info(String.format("====================initHotel >> start"));
         //Cat.logEvent("initHotel", "手动刷新索性  InitValid=" +isInitValid
-        //       + "&hotelId="+paramHotelId);
+        //        + "&hotelId="+paramHotelId);
         Set<Integer> hotelSet = new HashSet<Integer>();
 
         if (null != paramHotelId) {
