@@ -2,13 +2,15 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomTypeService;
 import com.mk.taskfactory.api.dtos.TRoomTypeDto;
-import com.mk.taskfactory.biz.mapper.RoomTypeMapper;
+import com.mk.taskfactory.biz.mapper.ots.RoomTypeMapper;
 import com.mk.taskfactory.model.TRoomType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -69,5 +71,28 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         BeanUtils.copyProperties(roomType, roomTypeDto);
 
         return roomTypeDto;
+    }
+    public List<TRoomTypeDto> queryJionThotel(TRoomTypeDto bean){
+        List<TRoomType> list = roomTypeMapper.queryJionThotel(bean);
+        if (CollectionUtils.isEmpty(list)){
+            return  null;
+        }
+        List<TRoomTypeDto> resultList = new ArrayList<TRoomTypeDto>();
+
+        for (TRoomType model : list) {
+            resultList.add(buildDto(model));
+        }
+        return resultList;
+    }
+    public Integer count(){
+        return  roomTypeMapper.count();
+    }
+    private TRoomTypeDto buildDto(TRoomType bean) {
+        if (bean==null){
+            return new TRoomTypeDto();
+        }
+        TRoomTypeDto resultDto=new TRoomTypeDto();
+        BeanUtils.copyProperties(bean, resultDto);
+        return resultDto;
     }
 }

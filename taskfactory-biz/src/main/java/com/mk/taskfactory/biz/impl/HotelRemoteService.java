@@ -1,7 +1,7 @@
 package com.mk.taskfactory.biz.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mk.taskfactory.biz.mapper.HotelMapper;
+import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.common.Constants;

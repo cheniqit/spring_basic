@@ -1,7 +1,7 @@
 package com.mk.taskfactory.biz.order.impl;
 
-import com.mk.taskfactory.biz.mapper.OtaOrderMacMapper;
-import com.mk.taskfactory.biz.mapper.OtaOrderMapper;
+import com.mk.taskfactory.biz.mapper.ots.OtaOrderMacMapper;
+import com.mk.taskfactory.biz.mapper.ots.OtaOrderMapper;
 import com.mk.taskfactory.biz.order.model.OtaOrder;
 import com.mk.taskfactory.biz.order.model.OtaOrderMac;
 import org.apache.commons.lang3.StringUtils;

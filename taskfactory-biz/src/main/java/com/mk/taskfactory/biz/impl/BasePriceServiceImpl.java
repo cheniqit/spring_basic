@@ -3,7 +3,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.BasePriceService;
 import com.mk.taskfactory.api.dtos.TBasePriceDto;
-import com.mk.taskfactory.biz.mapper.BasePriceMapper;
+import com.mk.taskfactory.biz.mapper.ots.BasePriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -76,4 +76,10 @@
         <task:scheduled ref="cpsOrderDetailTaskServiceImpl" method="cpsOrderProduce" cron="0 0 0/1 * * ?"/>
     </task:scheduled-tasks>
 
+    <!--dump room price-->
+    <bean id="doPriceDump" class="com.mk.taskfactory.biz.impl.DoPriceDumpServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="doPriceDump" method="doPriceDump" cron="0 0 7 * * ?"/>
+    </task:scheduled-tasks>
+
 </beans>

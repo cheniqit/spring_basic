@@ -2,7 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomTypeBedService;
 import com.mk.taskfactory.api.dtos.TRoomTypeBedDto;
-import com.mk.taskfactory.biz.mapper.RoomTypeBedMapper;
+import com.mk.taskfactory.biz.mapper.ots.RoomTypeBedMapper;
 import com.mk.taskfactory.model.TRoomTypeBed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

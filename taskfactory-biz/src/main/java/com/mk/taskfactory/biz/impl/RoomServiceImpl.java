@@ -6,7 +6,7 @@ import com.mk.taskfactory.api.RoomService;
 import com.mk.taskfactory.api.dtos.OtsRoomStateDto;
 import com.mk.taskfactory.api.dtos.TRoomChangeTypeDto;
 import com.mk.taskfactory.api.dtos.TRoomDto;
-import com.mk.taskfactory.biz.mapper.RoomMapper;
+import com.mk.taskfactory.biz.mapper.ots.RoomMapper;
 import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.common.Constants;

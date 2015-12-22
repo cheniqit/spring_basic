@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ods.RoomPriceContrastMapper">
+	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ods.TRoomPriceContrast">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="hotelId" property="hotelId" jdbcType="BIGINT" />
+		<result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT" />
+		<result column="hotelName" property="hotelName" jdbcType="VARCHAR" />
+		<result column="roomTypeName" property="roomTypeName" jdbcType="VARCHAR" />
+		<result column="oldMarketPrice" property="oldMarketPrice" jdbcType="DECIMAL" />
+		<result column="newMarketPrice" property="newMarketPrice" jdbcType="DECIMAL" />
+		<result column="oldMkPrice" property="oldMkPrice" jdbcType="DECIMAL" />
+		<result column="newMkPrice" property="newMkPrice" jdbcType="DECIMAL" />
+		<result column="isPromo" property="isPromo" jdbcType="BOOLEAN" />
+		<result column="promoId" property="promoId" jdbcType="INTEGER" />
+		<result column="oldPromoPrice" property="oldPromoPrice" jdbcType="DECIMAL" />
+		<result column="newPromoPrice" property="newPromoPrice" jdbcType="DECIMAL" />
+		<result column="oldSettlePrice" property="oldSettlePrice" jdbcType="DECIMAL" />
+		<result column="newSettlePrice" property="newSettlePrice" jdbcType="DECIMAL" />
+		<result column="statisticDate" property="statisticDate" jdbcType="TIMESTAMP" />
+		<result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, hotelId, roomTypeId, hotelName, roomTypeName,
+		oldMarketPrice, newMarketPrice,oldMkPrice,newMkPriceisPromo,
+		promoId,oldPromoPrice,newPromoPrice,oldSettlePrice,newSettlePrice,
+		statisticDate,createDate
+	</sql>
+
+	<sql id="Base_Query_List">
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="hotelId != null">
+				AND hotelId = #{hotelId}
+			</if>
+			<if test="roomTypeId != null">
+				AND roomTypeId = #{roomTypeId}
+			</if>
+			<if test="roomTypeId != null">
+				AND roomTypeId = #{roomTypeId}
+			</if>
+			<if test="isPromo != null">
+				AND isPromo = #{isPromo}
+			</if>
+			<if test="statisticDate != null">
+				AND statisticDate = #{statisticDate}
+			</if>
+		</where>
+	</sql>
+	<select id="queryByParams" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM t_room_price_contrast
+		<include refid="Base_Query_List"/>
+		ORDER BY id DESC
+	</select>
+	<select id="getById" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM t_room_price_contrast
+		where id=#{id}
+	</select>
+	<insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto"
+			useGeneratedKeys="true" keyProperty="id">
+		insert into t_room_price_contrast(<include refid="Base_Column_List" />)
+		values (
+		#{id}, #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
+		#{oldMarketPrice}, #{newMarketPrice},#{oldMkPrice},#{newMkPrice}, #{isPromo},
+		#{promoId},#{oldPromoPrice},#{newPromoPrice},#{oldSettlePrice},#{newSettlePrice},
+		#{statisticDate}, #{createDate}
+		)
+	</insert>
+
+	<delete id="deleteById" parameterType="java.math.BigInteger">
+		delete from t_room_price_contrast where id=#{id,jdbcType=BIGINT}
+	</delete>
+
+	<update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto">
+		update t_room_price_contrast
+		<set >
+			<if test="hotelId != null" >
+				hotelId = #{hotelId},
+			</if>
+			<if test="roomTypeId != null" >
+				roomTypeId = #{roomTypeId},
+			</if>
+			<if test="hotelName != null" >
+				hotelName = #{hotelName},
+			</if>
+			<if test="roomTypeName != null" >
+				roomTypeName = #{roomTypeName},
+			</if>
+			<if test="oldMarketPrice != null" >
+				oldMarketPrice = #{oldMarketPrice},
+			</if>
+			<if test="newMarketPrice != null" >
+				newMarketPrice = #{newMarketPrice},
+			</if>
+			<if test="oldMkPrice != null" >
+				oldMkPrice = #{oldMkPrice},
+			</if>
+			<if test="newMkPrice != null" >
+				newMkPrice = #{newMkPrice},
+			</if>
+			<if test="isPromo != null" >
+				isPromo = #{isPromo},
+			</if>
+			<if test="promoId != null" >
+				promoId = #{promoId},
+			</if>
+			<if test="oldPromoPrice != null" >
+				oldPromoPrice = #{oldPromoPrice},
+			</if>
+			<if test="newPromoPrice != null" >
+				newPromoPrice = #{newPromoPrice},
+			</if>
+			<if test="oldSettlePrice != null" >
+				oldSettlePrice = #{oldSettlePrice},
+			</if>
+			<if test="newSettlePrice != null" >
+				newSettlePrice = #{newSettlePrice},
+			</if>
+			<if test="statisticDate != null" >
+				statisticDate = #{statisticDate},
+			</if>
+			<if test="createDate != null" >
+				createDate = #{createDate},
+			</if>
+		</set>
+		  where id=#{id}
+	</update>
+</mapper>

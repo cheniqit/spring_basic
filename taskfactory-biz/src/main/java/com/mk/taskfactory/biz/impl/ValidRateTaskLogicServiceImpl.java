@@ -3,7 +3,7 @@ package com.mk.taskfactory.biz.impl;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
-import com.mk.taskfactory.biz.mapper.RoomTypeInfoMapper;
+import com.mk.taskfactory.biz.mapper.ots.RoomTypeInfoMapper;
 import com.mk.taskfactory.model.TRoomTypeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

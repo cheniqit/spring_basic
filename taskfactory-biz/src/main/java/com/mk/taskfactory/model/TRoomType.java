@@ -11,6 +11,7 @@ public class TRoomType {
     private Integer bedNum;
     private Integer roomNum;
     private BigDecimal cost;
+    private String hotelName;
 
     public Integer getId() {
         return id;
@@ -74,5 +75,13 @@ public class TRoomType {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 }

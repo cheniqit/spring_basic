@@ -2,9 +2,9 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.PromoCardService;
 import com.mk.taskfactory.api.dtos.TypeEnum;
-import com.mk.taskfactory.biz.mapper.CardMapper;
-import com.mk.taskfactory.biz.mapper.PromoCardTypeMapper;
-import com.mk.taskfactory.biz.mapper.PromoMapper;
+import com.mk.taskfactory.biz.mapper.ots.CardMapper;
+import com.mk.taskfactory.biz.mapper.ots.PromoCardTypeMapper;
+import com.mk.taskfactory.biz.mapper.ots.PromoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.model.BCard;
 import com.mk.taskfactory.model.BPromo;

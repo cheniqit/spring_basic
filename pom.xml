@@ -25,14 +25,16 @@
             </snapshots>
             <id>public</id>
             <name>Public Repositories</name>
-            <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+            <!--<url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>-->
+            <url>http://192.168.20.80:8081/mkrepo/content/repositories/releases/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>public</id>
             <name>Public Repositories</name>
-            <url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>
+            <!--<url>http://10.10.144.74:8081/nexus/content/repositories/releases/</url>-->
+            <url>http://192.168.20.80:8081/mkrepo/content/repositories/releases/</url>
         </pluginRepository>
     </pluginRepositories>
     <properties>
@@ -62,6 +64,9 @@
 
         <profile>
             <id>shanghai-simulation</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -71,6 +76,9 @@
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>root</cps.jdbc.user>
                 <cps.jdbc.password>LZBV5D5ak</cps.jdbc.password>
+                <ods.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/cq_appimike?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
+                <ods.jdbc.user>root</ods.jdbc.user>
+                <ods.jdbc.password>LZBV5D5ak</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
             </properties>
@@ -94,9 +102,6 @@
 
         <profile>
             <id>dump-simulation</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -106,6 +111,9 @@
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.4.24.11:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>root</cps.jdbc.user>
                 <cps.jdbc.password>LZBV5D5ak</cps.jdbc.password>
+                <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
+                <ods.jdbc.user>biuser</ods.jdbc.user>
+                <ods.jdbc.password>biuser</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
             </properties>
@@ -123,6 +131,9 @@
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>smlt-writer</cps.jdbc.user>
                 <cps.jdbc.password>j9bcyZ5U5LQp7xxEomsu</cps.jdbc.password>
+                <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
+                <ods.jdbc.user>biuser</ods.jdbc.user>
+                <ods.jdbc.password>biuser</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
             </properties>
@@ -139,6 +150,9 @@
                 <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>imike-writer</cps.jdbc.user>
                 <cps.jdbc.password>Imike-writer</cps.jdbc.password>
+                <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
+                <ods.jdbc.user>biuser</ods.jdbc.user>
+                <ods.jdbc.password>biuser</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://ots.imike.com/ots</ots.url>
             </properties>

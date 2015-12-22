@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.taskfactory.biz.mapper.RoomTypeMapper">
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.RoomTypeMapper">
 	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomType">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="thotelId" property="thotelId" jdbcType="BIGINT" />
@@ -10,6 +10,7 @@
 		<result column="bedNum" property="bedNum" jdbcType="INTEGER" />
 		<result column="roomNum" property="roomNum" jdbcType="INTEGER" />
 		<result column="cost" property="cost" jdbcType="DECIMAL" />
+		<result column="hotelName" property="hotelName" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -103,5 +104,35 @@
 		FROM
 		t_roomtype
 		WHERE thotelid = #{thotelId} and NAME = #{name}
+	</select>
+
+	<select id="queryJionThotel" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDto">
+		SELECT
+		a.id,
+		a.thotelId,
+		a.ehotelId,
+		a.name,
+		a.pms,
+		a.roomNum,
+		a.cost,
+		b.hotelName
+		FROM
+		t_roomtype a INNER  JOIN t_hotel b ON  a.thotelId=b.id
+		<where>
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+			<if test="thotelId != null">
+				and a.thotelId = #{thotelId}
+			</if>
+			AND a.id NOT IN(SELECT saleRoomTypeId FROM t_room_sale_config WHERE valid='T' AND saleRoomTypeId IS NOT NULL GROUP BY saleRoomTypeId )
+		</where>
+		ORDER BY a.id
+		<if test="pageIndex != null and pageIndex&gt;-1 and pageSize != null and pageSize&gt;-1">
+			limit ${pageIndex} , ${pageSize}
+		</if>
+	</select>
+	<select id="count" resultType="java.lang.Integer" >
+		select count(*) from t_roomtype
 	</select>
 </mapper>

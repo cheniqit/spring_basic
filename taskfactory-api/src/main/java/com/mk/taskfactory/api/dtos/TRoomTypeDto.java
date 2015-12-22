@@ -13,6 +13,7 @@ public class TRoomTypeDto {
     private BigDecimal cost;
     private Integer pageIndex; // 开始行数
     private Integer pageSize; // 每页显示数量
+    private String hotelName;
     public Integer getId() {
         return id;
     }
@@ -91,5 +92,13 @@ public class TRoomTypeDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
     }
 }

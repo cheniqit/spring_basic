@@ -2,7 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleConfigInfoService;
 import com.mk.taskfactory.api.dtos.TRoomSaleConfigInfoDto;
-import com.mk.taskfactory.biz.mapper.RoomSaleConfigInfoMapper;
+import com.mk.taskfactory.biz.mapper.ots.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.model.TRoomSaleConfigInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

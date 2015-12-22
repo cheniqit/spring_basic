@@ -64,7 +64,7 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper"/>
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ots"/>
 
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
@@ -96,5 +96,28 @@
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCPS"></property>
 	</bean>
 
+	<!---     ods สýพÝิด  -->
+
+	<bean id="dataSourceOds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="url" value="${ods.mysql.jdbc.url}"/>
+		<property name="username" value="${ods.mysql.jdbc.username}"/>
+		<property name="password" value="${ods.mysql.jdbc.password}"/>
+	</bean>
+
+	<bean id="sqlSessionFactoryOds" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceOds"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/ods/*.xml"/>
+
+	</bean>
+
+	<bean id="transactionManagerOds" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceOds"/>
+		<qualifier value="ods"/>
+	</bean>
+	<bean name="scannerConfigurerOds" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ods"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOds"></property>
+	</bean>
 
 </beans>

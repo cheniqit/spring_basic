@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mk.taskfactory.biz.mapper.RoomSaleConfigMapper">
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.RoomSaleConfigMapper">
 
 	<resultMap id="roomSaleConfig" type="com.mk.taskfactory.model.TRoomSaleConfig">
 	    <result property="id" column="id" />
@@ -42,9 +42,8 @@
     </sql>
     <sql id="Base_Query_List" >
         <where>
-              1 = 1
             <if test="id != null">
-                AND id = #{id}
+                id = #{id}
             </if>
             <if test="hotelId != null">
                 AND hotelId = #{hotelId}
@@ -96,7 +95,7 @@
         id,<include refid="Base_Column_List"/>
          FROM  t_room_sale_config
         <include refid="Base_Query_List"/>
-        ORDER BY RoomId DESC
+        ORDER BY id DESC
     </select>
     <select id="queryRoomSaleConfigByValid" resultMap="roomSaleConfig" parameterType="java.lang.String">
          SELECT

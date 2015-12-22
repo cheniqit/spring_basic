@@ -7,7 +7,7 @@ import com.mk.taskfactory.api.dtos.THotelDto;
 import com.mk.taskfactory.api.dtos.TRoomTypeInfoDto;
 import com.mk.taskfactory.api.enums.HMSStatusEnum;
 import com.mk.taskfactory.api.enums.HotelPicEnum;
-import com.mk.taskfactory.biz.mapper.*;
+import com.mk.taskfactory.biz.mapper.ots.*;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.model.PicJsonCalss;
 import com.mk.taskfactory.model.THotel;
