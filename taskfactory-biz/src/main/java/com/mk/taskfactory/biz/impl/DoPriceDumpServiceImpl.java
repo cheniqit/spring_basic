@@ -68,8 +68,8 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
             logger.info("====================doPriceDump method roomTypeCount is null====================");
             return resultMap;
         }
-        Integer pageSize=2;//100
-        Integer pageNum=1/pageSize;
+        Integer pageSize=100;//100
+        Integer pageNum=roomTypeCount/pageSize;
         logger.info("====================doPriceDump roomTypeCount=" + roomTypeCount + "====================");
         for (int i=0;i<=pageNum;i++) {
             TRoomTypeDto roomTypeSearchBean = new TRoomTypeDto();
