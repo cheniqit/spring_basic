@@ -19,7 +19,7 @@ public class TRoomPriceContrast {
     private BigDecimal newPromoPrice;
     private BigDecimal oldSettlePrice;
     private BigDecimal newSettlePrice;
-    private String statisticDate;
+    private String contrastDate;
     private String createDate;
 
     public BigInteger getId() {
@@ -142,12 +142,12 @@ public class TRoomPriceContrast {
         this.newSettlePrice = newSettlePrice;
     }
 
-    public String getStatisticDate() {
-        return statisticDate;
+    public String getContrastDate() {
+        return contrastDate;
     }
 
-    public void setStatisticDate(String statisticDate) {
-        this.statisticDate = statisticDate;
+    public void setContrastDate(String contrastDate) {
+        this.contrastDate = contrastDate;
     }
 
     public String getCreateDate() {

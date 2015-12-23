@@ -36,6 +36,18 @@ public class RoomPriceContrastServiceImpl  implements RoomPriceContrastService {
         }
         return resultList;
     }
+    public List<TRoomPriceContrastDto> getRoomPriceContrast(TRoomPriceContrastDto bean){
+        List<TRoomPriceContrast> list = roomPriceContrastMapper.getRoomPriceContrast(bean);
+        if (CollectionUtils.isEmpty(list)){
+            return  null;
+        }
+        List<TRoomPriceContrastDto> resultList = new ArrayList<TRoomPriceContrastDto>();
+
+        for (TRoomPriceContrast roomPriceContrast : list) {
+            resultList.add(buildDto(roomPriceContrast));
+        }
+        return resultList;
+    }
     public TRoomPriceContrastDto getById(BigInteger id){
         TRoomPriceContrast result= roomPriceContrastMapper.getById(id);
         return buildDto(result);

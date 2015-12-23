@@ -77,9 +77,9 @@
     </task:scheduled-tasks>
 
     <!--dump room price-->
-    <bean id="doPriceDump" class="com.mk.taskfactory.biz.impl.DoPriceDumpServiceImpl" />
+    <bean id="doPriceDumpServiceImpl" class="com.mk.taskfactory.biz.impl.DoPriceDumpServiceImpl" />
     <task:scheduled-tasks>
-        <task:scheduled ref="doPriceDump" method="doPriceDump" cron="0 0 7 * * ?"/>
+        <task:scheduled ref="doPriceDumpServiceImpl" method="doPriceDump" cron="0 0 7 * * ?"/>
     </task:scheduled-tasks>
 
 </beans>

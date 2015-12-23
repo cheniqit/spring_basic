@@ -4,17 +4,25 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
+import com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto;
 import com.mk.taskfactory.api.dtos.ods.TRoomTypePriceDumpDto;
+import com.mk.taskfactory.api.ods.RoomPriceContrastService;
 import com.mk.taskfactory.api.ods.RoomTypePriceDumpService;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.biz.utils.FreeMarkerTemplateUtils;
+import com.mk.taskfactory.biz.utils.email.EmailSend;
+import freemarker.template.TemplateException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -29,6 +37,9 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
     private RoomTypeService roomTypeService;
     @Autowired
     private RoomService roomService;
+    @Autowired
+    private RoomPriceContrastService roomPriceContrastService;
+
     public Map<String,Object>  doPriceDump(){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
@@ -39,6 +50,8 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         String statisticDate=DateUtils.format_yMd(new Date());
         TRoomTypePriceDumpDto checkIsDoBean = new TRoomTypePriceDumpDto();
         checkIsDoBean.setStatisticDate(statisticDate);
+        checkIsDoBean.setPageIndex(0);
+        checkIsDoBean.setPageSize(1);
         List<TRoomTypePriceDumpDto> checkIsDoList=roomTypePriceDumpService.queryByParams(checkIsDoBean);
         if (!CollectionUtils.isEmpty(checkIsDoList)){
             resultMap.put("message", statisticDate+"数据已dump");
@@ -55,23 +68,23 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
             logger.info("====================doPriceDump method roomTypeCount is null====================");
             return resultMap;
         }
-        Integer pageSize=100;//100
-        Integer pageNum=roomTypeCount/pageSize;
-        logger.info(String.format("====================doPriceDump roomTypeCount=" + roomTypeCount + "===================="));
+        Integer pageSize=2;//100
+        Integer pageNum=1/pageSize;
+        logger.info("====================doPriceDump roomTypeCount=" + roomTypeCount + "====================");
         for (int i=0;i<=pageNum;i++) {
             TRoomTypeDto roomTypeSearchBean = new TRoomTypeDto();
             roomTypeSearchBean.setPageIndex(i);
             roomTypeSearchBean.setPageSize(pageSize);
             List<TRoomTypeDto> roomTypeList = roomTypeService.queryJionThotel(roomTypeSearchBean);
-            logger.info(String.format("====================queryJionThotel pageIndex={}&pageSize={}====================")
+            logger.info("====================queryJionThotel pageIndex={}&pageSize={}===================="
                     , i, pageSize);
             if (CollectionUtils.isEmpty(roomTypeList)) {
-                logger.info(String.format("====================queryJionThotel pageIndex={}&pageSize={} is empty====================")
+                logger.info("====================queryJionThotel pageIndex={}&pageSize={} is empty===================="
                         , i, pageSize);
                 continue;
             }
             for (TRoomTypeDto roomType:roomTypeList){
-                logger.info(String.format("====================doPriceDump roomType id={}&hotelId={}====================")
+                logger.info("====================doPriceDump roomType id={}&hotelId={}===================="
                         , roomType.getId(), roomType.getThotelId());
                 if(roomType==null||roomType.getThotelId()==null||roomType.getId()==null){
                     continue;
@@ -98,17 +111,23 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
                 checkRoomSaleConfigBean.setRoomTypeId(roomType.getId());
                 checkRoomSaleConfigBean.setValid("T");
                 List<TRoomSaleConfigDto> roomSaleConfigDtoList=roomSaleConfigService.queryRoomSaleConfigByParams(checkRoomSaleConfigBean);
+                Map<Integer,Integer> saleTypeMap;
                 if (!CollectionUtils.isEmpty(roomSaleConfigDtoList)) {
+                    saleTypeMap=new HashMap<Integer, Integer>();
                     for (TRoomSaleConfigDto roomSaleConfigDto:roomSaleConfigDtoList){
                         logger.info("============doPriceDump hotelId={}&roomTypeId={}&saleTypeId{}====================",
-                                roomType.getThotelId(),roomType.getId(),roomSaleConfigDto.getSaleRoomTypeId());
-                        roomTypePriceDumpDto.setIsPromo(true);
-                        roomTypePriceDumpDto.setPromoId(roomSaleConfigDto.getSaleTypeId());
-                        roomTypePriceDumpDto.setPromoPrice(roomSaleConfigDto.getSaleValue());
-                        roomTypePriceDumpDto.setSettlePrice(roomSaleConfigDto.getSettleValue());
-                        roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                                roomType.getThotelId(), roomType.getId(), roomSaleConfigDto.getSaleRoomTypeId());
+                        if (saleTypeMap.get(roomSaleConfigDto.getSaleTypeId())==null) {
+                            roomTypePriceDumpDto.setIsPromo(true);
+                            roomTypePriceDumpDto.setPromoId(roomSaleConfigDto.getSaleTypeId());
+                            roomTypePriceDumpDto.setPromoPrice(roomSaleConfigDto.getSaleValue());
+                            roomTypePriceDumpDto.setSettlePrice(roomSaleConfigDto.getSettleValue());
+                            roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                            saleTypeMap.put(roomSaleConfigDto.getSaleTypeId(), roomSaleConfigDto.getSaleTypeId());
+                        }
                     }
                 }else {
+                    roomTypePriceDumpDto.setPromoId(0);
                     roomTypePriceDumpService.save(roomTypePriceDumpDto);
                 }
             }
@@ -117,6 +136,104 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         resultMap.put("message","备份成功");
         resultMap.put("SUCCESS", true);
         Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info("====================doPriceDump method end time{}===================="
+                , DateUtils.format_yMdHms(new Date()));
+        priceContrast();
+        return resultMap;
+    }
+    public Map<String,Object> priceContrast(){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("priceContrast", "酒店价格备份", Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info("====================priceContrast method begin time{}===================="
+                , DateUtils.format_yMdHms(new Date()));
+        String statisticDate=DateUtils.format_yMd(new Date());
+        TRoomPriceContrastDto checkIsDoBean = new TRoomPriceContrastDto();
+        checkIsDoBean.setContrastDate(statisticDate);
+        checkIsDoBean.setPageIndex(0);
+        checkIsDoBean.setPageSize(1);
+        List<TRoomPriceContrastDto> checkIsDoList= roomPriceContrastService.queryByParams(checkIsDoBean);
+        if (!CollectionUtils.isEmpty(checkIsDoList)){
+            resultMap.put("message", statisticDate+"数据已存在");
+            resultMap.put("SUCCESS", false);
+            Cat.logEvent("doPriceDump", "数据已存在", Event.SUCCESS, "endTime=" + DateUtils.format_yMdHms(new Date()));
+            logger.info("====================priceContrast method data is exist====================");
+            return resultMap;
+        }
+        Date today = new Date();
+        Date yesterday = org.apache.commons.lang3.time.DateUtils.addDays(today, -1);
+        TRoomPriceContrastDto getDoBean = new TRoomPriceContrastDto();
+        getDoBean.setStatisticDate1(DateUtils.format_yMd(today));
+        getDoBean.setStatisticDate2(DateUtils.format_yMd(yesterday));
+        List<TRoomPriceContrastDto> contrastList= roomPriceContrastService.getRoomPriceContrast(getDoBean);
+        if (CollectionUtils.isEmpty(contrastList)){
+            resultMap.put("message","对比结果为空");
+            resultMap.put("SUCCESS", false);
+            Cat.logEvent("doPriceDump", "对比结果为空", Event.SUCCESS, "endTime=" + DateUtils.format_yMdHms(new Date()));
+            logger.info("====================priceContrast contrastList is empty====================");
+            return resultMap;
+        }
+        logger.info("====================priceContrast contrastList size=" + contrastList.size()+ "====================");
+        for (TRoomPriceContrastDto contrastDto:contrastList) {
+            contrastDto.setCreateDate(DateUtils.format_yMdHms(new Date()));
+            roomPriceContrastService.save(contrastDto);
+        }
+        resultMap.put("message","操作成功");
+        resultMap.put("SUCCESS", true);
+        Cat.logEvent("priceContrast", "操作成功", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info("====================priceContrast method end time={}===================="
+                , DateUtils.format_yMdHms(new Date()));
+        sendEmail(new TRoomPriceContrastDto());
+        return resultMap;
+    }
+    public Map<String,Object> sendEmail(TRoomPriceContrastDto bean){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        String sendDate="";
+        if (StringUtils.isNotEmpty(bean.getContrastDate())){
+            sendDate=bean.getContrastDate();
+        }else {
+            sendDate=DateUtils.format_yMd(new Date());
+        }
+        Cat.logEvent("sendEmail", "发送邮件", Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date())+"&sendDate="+sendDate
+        );
+        logger.info("====================sendEmail method begin time={}&sendDate={}===================="
+                , DateUtils.format_yMdHms(new Date()),sendDate);
+        TRoomPriceContrastDto getDoBean = new TRoomPriceContrastDto();
+        getDoBean.setContrastDate(sendDate);
+        List<TRoomPriceContrastDto> contrastList= roomPriceContrastService.queryByParams(getDoBean);
+        if(CollectionUtils.isEmpty(contrastList)){
+            resultMap.put("message","没有数据");
+            resultMap.put("SUCCESS", false);
+            Cat.logEvent("sendEmail", "没有数据", Event.SUCCESS, "data is empty");
+            logger.info("====================sendEmail  data is empty====================");
+            return resultMap;
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("list", contrastList);
+        String mailContent=null;
+        try {
+            mailContent = FreeMarkerTemplateUtils.process(map, "mail_priceContrast.ftl");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TemplateException e) {
+            e.printStackTrace();
+        }
+        Map<String,String> emailList=new HashMap<String, String>();
+        emailList.put("kxl","654195681@qq.com");
+        for (String email:emailList.keySet()) {
+            logger.info("************send email " + email + "***************");
+            EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), emailList.get(email));
+        }
+
+        resultMap.put("message","邮件发送成功");
+        resultMap.put("SUCCESS", true);
+        Cat.logEvent("doPriceDump", "邮件发送成功", Event.SUCCESS,
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info("====================doPriceDump method end time{}===================="

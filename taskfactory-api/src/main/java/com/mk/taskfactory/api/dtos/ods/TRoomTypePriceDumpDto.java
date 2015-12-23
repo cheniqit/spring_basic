@@ -17,6 +17,8 @@ public class TRoomTypePriceDumpDto {
     private BigDecimal settlePrice;
     private String statisticDate;
     private String createDate;
+    private Integer pageIndex; // 开始行数
+    private Integer pageSize; // 每页显示数量
 
     public BigInteger getId() {
         return id;
@@ -120,5 +122,21 @@ public class TRoomTypePriceDumpDto {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

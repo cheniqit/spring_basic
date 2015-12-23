@@ -19,8 +19,12 @@ public class TRoomPriceContrastDto {
     private BigDecimal newPromoPrice;
     private BigDecimal oldSettlePrice;
     private BigDecimal newSettlePrice;
-    private String statisticDate;
+    private String contrastDate;
+    private String statisticDate1;
+    private String statisticDate2;
     private String createDate;
+    private Integer pageIndex; // 开始行数
+    private Integer pageSize; // 每页显示数量
 
     public BigInteger getId() {
         return id;
@@ -142,12 +146,12 @@ public class TRoomPriceContrastDto {
         this.newSettlePrice = newSettlePrice;
     }
 
-    public String getStatisticDate() {
-        return statisticDate;
+    public String getContrastDate() {
+        return contrastDate;
     }
 
-    public void setStatisticDate(String statisticDate) {
-        this.statisticDate = statisticDate;
+    public void setContrastDate(String contrastDate) {
+        this.contrastDate = contrastDate;
     }
 
     public String getCreateDate() {
@@ -156,5 +160,37 @@ public class TRoomPriceContrastDto {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public String getStatisticDate1() {
+        return statisticDate1;
+    }
+
+    public void setStatisticDate1(String statisticDate1) {
+        this.statisticDate1 = statisticDate1;
+    }
+
+    public String getStatisticDate2() {
+        return statisticDate2;
+    }
+
+    public void setStatisticDate2(String statisticDate2) {
+        this.statisticDate2 = statisticDate2;
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

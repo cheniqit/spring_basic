@@ -17,15 +17,15 @@
 		<result column="newPromoPrice" property="newPromoPrice" jdbcType="DECIMAL" />
 		<result column="oldSettlePrice" property="oldSettlePrice" jdbcType="DECIMAL" />
 		<result column="newSettlePrice" property="newSettlePrice" jdbcType="DECIMAL" />
-		<result column="statisticDate" property="statisticDate" jdbcType="TIMESTAMP" />
+		<result column="contrastDate" property="contrastDate" jdbcType="TIMESTAMP" />
 		<result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		id, hotelId, roomTypeId, hotelName, roomTypeName,
-		oldMarketPrice, newMarketPrice,oldMkPrice,newMkPriceisPromo,
+		oldMarketPrice, newMarketPrice,oldMkPrice,newMkPrice,isPromo,
 		promoId,oldPromoPrice,newPromoPrice,oldSettlePrice,newSettlePrice,
-		statisticDate,createDate
+		contrastDate,createDate
 	</sql>
 
 	<sql id="Base_Query_List">
@@ -45,8 +45,8 @@
 			<if test="isPromo != null">
 				AND isPromo = #{isPromo}
 			</if>
-			<if test="statisticDate != null">
-				AND statisticDate = #{statisticDate}
+			<if test="contrastDate != null">
+				AND contrastDate = #{contrastDate}
 			</if>
 		</where>
 	</sql>
@@ -56,6 +56,9 @@
 		FROM t_room_price_contrast
 		<include refid="Base_Query_List"/>
 		ORDER BY id DESC
+		<if test="pageIndex != null and pageIndex&gt;-1 and pageSize != null and pageSize&gt;-1">
+			limit ${pageIndex} , ${pageSize}
+		</if>
 	</select>
 	<select id="getById" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto">
 		SELECT
@@ -70,7 +73,7 @@
 		#{id}, #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
 		#{oldMarketPrice}, #{newMarketPrice},#{oldMkPrice},#{newMkPrice}, #{isPromo},
 		#{promoId},#{oldPromoPrice},#{newPromoPrice},#{oldSettlePrice},#{newSettlePrice},
-		#{statisticDate}, #{createDate}
+		#{contrastDate}, #{createDate}
 		)
 	</insert>
 
@@ -123,8 +126,8 @@
 			<if test="newSettlePrice != null" >
 				newSettlePrice = #{newSettlePrice},
 			</if>
-			<if test="statisticDate != null" >
-				statisticDate = #{statisticDate},
+			<if test="contrastDate != null" >
+				contrastDate = #{contrastDate},
 			</if>
 			<if test="createDate != null" >
 				createDate = #{createDate},
@@ -132,4 +135,18 @@
 		</set>
 		  where id=#{id}
 	</update>
+	<select id="getRoomPriceContrast" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto">
+		SELECT  a.hotelId, a.roomTypeId, a.hotelName, a.roomTypeName,
+		b.marketPrice as oldMarketPrice,a.marketPrice as newMarketPrice,b.mkPrice as oldMkPrice,a.mkPrice newMkPrice,a.isPromo,
+		a.promoId,b.promoPrice as oldPromoPrice,a.promoPrice as newPromoPrice,b.settlePrice as oldSettlePrice,a.settlePrice as newSettlePrice,
+		a.statisticDate as contrastDate FROM t_roomtype_price_dump a, t_roomtype_price_dump b
+		WHERE a.`id`!= b.`id`
+		AND a.`statisticDate`= #{statisticDate1}
+		AND b.`statisticDate`=#{statisticDate2}
+		AND (a.`marketPrice`!=b.`marketPrice` OR a.`mkPrice`!=b.`mkPrice`)
+		AND a.`hotelid`=b.`hotelid`
+		AND a.`roomTypeId` =b.`roomTypeId`
+		AND a.`promoId` =b.`promoId`
+
+	</select>
 </mapper>

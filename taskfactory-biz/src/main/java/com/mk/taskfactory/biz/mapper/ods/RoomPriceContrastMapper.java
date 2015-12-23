@@ -12,6 +12,7 @@ import java.util.List;
 @MyBatisRepository
 public interface RoomPriceContrastMapper {
     public List<TRoomPriceContrast> queryByParams(TRoomPriceContrastDto bean);
+    public List<TRoomPriceContrast> getRoomPriceContrast(TRoomPriceContrastDto bean);
     public TRoomPriceContrast getById(BigInteger id);
     public Integer save(TRoomPriceContrastDto bean);
     public Integer deleteById(BigInteger id);

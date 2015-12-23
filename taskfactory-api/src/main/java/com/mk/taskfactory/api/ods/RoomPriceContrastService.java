@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface RoomPriceContrastService {
     public List<TRoomPriceContrastDto> queryByParams(TRoomPriceContrastDto bean);
+    public List<TRoomPriceContrastDto> getRoomPriceContrast(TRoomPriceContrastDto bean);
     public TRoomPriceContrastDto getById(BigInteger id);
     public Integer save(TRoomPriceContrastDto bean);
     public Integer deleteById(BigInteger id);

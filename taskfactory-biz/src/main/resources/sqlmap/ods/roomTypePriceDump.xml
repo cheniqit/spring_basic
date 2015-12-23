@@ -51,6 +51,9 @@
 		FROM t_roomtype_price_dump
 		<include refid="Base_Query_List"/>
 		ORDER BY id DESC
+		<if test="pageIndex != null and pageIndex&gt;-1 and pageSize != null and pageSize&gt;-1">
+			limit ${pageIndex} , ${pageSize}
+		</if>
 	</select>
 	<select id="getById" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomTypePriceDumpDto">
 		SELECT
