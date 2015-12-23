@@ -226,6 +226,9 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         }
         Map<String,String> emailList=new HashMap<String, String>();
         emailList.put("kxl","654195681@qq.com");
+        emailList.put("figo","rongwei.yang@imike.com");
+        emailList.put("bq","bingqiu.yuan@imike.com");
+        emailList.put("sj","jun.shi@imike.com");
         for (String email:emailList.keySet()) {
             logger.info("************send email " + email + "***************");
             EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), emailList.get(email));
