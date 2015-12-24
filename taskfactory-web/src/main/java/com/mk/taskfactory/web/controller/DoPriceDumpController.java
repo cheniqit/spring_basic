@@ -40,4 +40,10 @@ public class DoPriceDumpController {
         Map<String,Object> result=doPriceDumpService.sendEmail(bean);
         return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
     }
+    @RequestMapping(value = "/jobRun", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> jobRun() {
+        Map<String,Object> result=doPriceDumpService.jobRun();
+        return new ResponseEntity<Map<String,Object>>(result, HttpStatus.OK);
+    }
 }

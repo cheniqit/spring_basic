@@ -8,6 +8,7 @@ import com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto;
 import com.mk.taskfactory.api.dtos.ods.TRoomTypePriceDumpDto;
 import com.mk.taskfactory.api.ods.RoomPriceContrastService;
 import com.mk.taskfactory.api.ods.RoomTypePriceDumpService;
+import com.mk.taskfactory.api.ots.SyServDictItemService;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.FreeMarkerTemplateUtils;
 import com.mk.taskfactory.biz.utils.email.EmailSend;
@@ -39,6 +40,8 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
     private RoomService roomService;
     @Autowired
     private RoomPriceContrastService roomPriceContrastService;
+    @Autowired
+    private SyServDictItemService syServDictItemService;
 
     public Map<String,Object>  doPriceDump(){
         Map<String,Object> resultMap=new HashMap<String,Object>();
@@ -140,7 +143,6 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         );
         logger.info("====================doPriceDump method end time{}===================="
                 , DateUtils.format_yMdHms(new Date()));
-        priceContrast();
         return resultMap;
     }
     public Map<String,Object> priceContrast(){
@@ -188,7 +190,6 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         );
         logger.info("====================priceContrast method end time={}===================="
                 , DateUtils.format_yMdHms(new Date()));
-        sendEmail(new TRoomPriceContrastDto());
         return resultMap;
     }
     public Map<String,Object> sendEmail(TRoomPriceContrastDto bean){
@@ -203,7 +204,7 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
                 "beginTime=" + DateUtils.format_yMdHms(new Date())+"&sendDate="+sendDate
         );
         logger.info("====================sendEmail method begin time={}&sendDate={}===================="
-                , DateUtils.format_yMdHms(new Date()),sendDate);
+                , DateUtils.format_yMdHms(new Date()), sendDate);
         TRoomPriceContrastDto getDoBean = new TRoomPriceContrastDto();
         getDoBean.setContrastDate(sendDate);
         List<TRoomPriceContrastDto> contrastList= roomPriceContrastService.queryByParams(getDoBean);
@@ -224,15 +225,24 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         } catch (TemplateException e) {
             e.printStackTrace();
         }
-        Map<String,String> emailList=new HashMap<String, String>();
-        emailList.put("kxl","654195681@qq.com");
-        emailList.put("figo","rongwei.yang@imike.com");
-        emailList.put("bq","bingqiu.yuan@imike.com");
-        emailList.put("sj","jun.shi@imike.com");
-        for (String email:emailList.keySet()) {
-            logger.info("************send email " + email + "***************");
-            EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), emailList.get(email));
+        SyServDictItemDto getDictBean=new SyServDictItemDto();
+        getDictBean.setDictId("mail_price_contrast");
+        getDictBean.setItemFlag("1");
+        List<SyServDictItemDto> dictList=syServDictItemService.queryByParams(getDictBean);
+        for (SyServDictItemDto dict:dictList) {
+            logger.info("************send email " + dict.getItemName() + "***************");
+            System.out.println(mailContent);
+            EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), dict.getItemName());
         }
+//        Map<String,String> emailList=new HashMap<String, String>();
+//        emailList.put("kxl","654195681@qq.com");
+//        emailList.put("figo","rongwei.yang@imike.com");
+//        emailList.put("bq","bingqiu.yuan@imike.com");
+//        emailList.put("sj","jun.shi@imike.com");
+//        for (String email:emailList.keySet()) {
+//            logger.info("************send email " + email + "***************");
+//            EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), emailList.get(email));
+//        }
 
         resultMap.put("message","邮件发送成功");
         resultMap.put("SUCCESS", true);
@@ -241,6 +251,42 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         );
         logger.info("====================doPriceDump method end time{}===================="
                 , DateUtils.format_yMdHms(new Date()));
+        return resultMap;
+    }
+    public Map<String,Object> jobRun(){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("doPriceDump", "酒店价格备份", Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info("====================doPriceDump method begin time{}===================="
+                , DateUtils.format_yMdHms(new Date()));
+        Map<String,Object> dumpMap= doPriceDump();
+        if ((Boolean)dumpMap.get("SUCCESS")){
+            Map<String,Object> contrastMap=priceContrast();
+            if ((Boolean)contrastMap.get("SUCCESS")) {
+                Map<String,Object> sendMap=sendEmail(new TRoomPriceContrastDto());
+                if ((Boolean)contrastMap.get("SUCCESS")){
+                    resultMap.put("message","SUCCESS");
+                    resultMap.put("SUCCESS", true);
+                }else {
+                    resultMap.put("message","send Email fail");
+                    resultMap.put("SUCCESS", false);
+                }
+            }else {
+                resultMap.put("message","price contrast fail");
+                resultMap.put("SUCCESS", false);
+            }
+        }else {
+            resultMap.put("message","hotel room price dump fail");
+            resultMap.put("SUCCESS", false);
+        }
+
+        Cat.logEvent("doPriceDump", "SUCCESS", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info("====================doPriceDump method end time{}===================="
+                , DateUtils.format_yMdHms(new Date()));
+        priceContrast();
         return resultMap;
     }
 }

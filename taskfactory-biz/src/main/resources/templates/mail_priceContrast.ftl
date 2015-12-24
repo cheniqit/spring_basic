@@ -6,10 +6,10 @@
         <thead>
         <tr id="list-tr" bgcolor="#E3F5FF">
             <th width="5%" align="center" >编号</th>
-            <th width="10%" align="center" >酒店名称</th>
+            <th width="20%" align="center" >酒店名称</th>
 	        <th width="10%" align="center" >房型名称</th>
-            <th width="20%" align="center" >门市价 </th>
-            <th width="20%" align="center" >眯客价 </th>
+            <th width="10%" align="center" >门市price</th>
+            <th width="10%" align="center" >眯客price</th>
             <th width="5%" align="center" >isPromo</th>
             <th width="10%" align="center" >活动类型</th>
             <th width="10%" align="center" >活动价格</th>
@@ -20,9 +20,9 @@
         <#list list as reportBean>
         <tr>
             <td width="5%" align="center" >${reportBean_index+1}</td>
-            <td width="10%" align="center" >${reportBean.hotelName}</td>
+            <td width="20%" align="center" >${reportBean.hotelName}</td>
             <td width="10%" align="center" >${reportBean.roomTypeName}</td>
-            <td width="20%" align="center" >
+            <td width="10%" align="center" >
                 <#if reportBean.oldMarketPrice??&&reportBean.newMarketPrice??>
                     <#if reportBean.oldMarketPrice!=reportBean.newMarketPrice>
                         <font color="red">${reportBean.oldMarketPrice}->> ${reportBean.newMarketPrice}</font>
@@ -31,7 +31,7 @@
                     </#if>
                 </#if>
             </td>
-            <td width="20%" align="center" >
+            <td width="10%" align="center" >
                 <#if reportBean.oldMarketPrice??&&reportBean.newMarketPrice??>
                     <#if reportBean.oldMkPrice!=reportBean.newMkPrice>
                         <font color="red">${reportBean.oldMkPrice}->> ${reportBean.newMkPrice}</font>

@@ -10,4 +10,5 @@ public interface DoPriceDumpService {
     public Map<String,Object> doPriceDump();
     public Map<String,Object> priceContrast();
     public Map<String,Object> sendEmail(TRoomPriceContrastDto bean);
+    public Map<String,Object> jobRun();
 }
