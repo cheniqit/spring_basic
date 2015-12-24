@@ -41,7 +41,7 @@
                 </#if>
             </td>
             <td width="5%" align="center" >
-                <#if reportBean.isPromo==1>
+                <#if reportBean.isPromo??&&reportBean.isPromo==1>
                     是
                 <#else>
                     否
