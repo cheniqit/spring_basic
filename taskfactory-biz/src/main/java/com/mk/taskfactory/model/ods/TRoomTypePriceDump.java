@@ -17,6 +17,7 @@ public class TRoomTypePriceDump {
     private BigDecimal settlePrice;
     private String statisticDate;
     private String createDate;
+    private Integer cityCode;
 
     public BigInteger getId() {
         return id;
@@ -120,5 +121,13 @@ public class TRoomTypePriceDump {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 }

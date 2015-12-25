@@ -6,6 +6,7 @@
         <thead>
         <tr id="list-tr" bgcolor="#E3F5FF">
             <th width="5%" align="center" >编号</th>
+            <th width="10%" align="center" >城市</th>
             <th width="20%" align="center" >酒店名称</th>
 	        <th width="10%" align="center" >房型名称</th>
             <th width="10%" align="center" >门市price</th>
@@ -20,6 +21,7 @@
         <#list list as reportBean>
         <tr>
             <td width="5%" align="center" >${reportBean_index+1}</td>
+            <td width="10%" align="center" >${reportBean.cityName}</td>
             <td width="20%" align="center" >${reportBean.hotelName}</td>
             <td width="10%" align="center" >${reportBean.roomTypeName}</td>
             <td width="10%" align="center" >

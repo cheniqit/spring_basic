@@ -15,12 +15,13 @@
 		<result column="settlePrice" property="settlePrice" jdbcType="DECIMAL" />
 		<result column="statisticDate" property="statisticDate" jdbcType="TIMESTAMP" />
 		<result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="cityCode" property="cityCode" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
 		id, hotelId, roomTypeId, hotelName, roomTypeName,
 		marketPrice, mkPrice,isPromo,promoId,
-		promoPrice,settlePrice,statisticDate,createDate
+		promoPrice,settlePrice,statisticDate,createDate,cityCode
 	</sql>
 
 	<sql id="Base_Query_List">
@@ -42,6 +43,9 @@
 			</if>
 			<if test="statisticDate != null">
 				AND statisticDate = #{statisticDate}
+			</if>
+			<if test="cityCode != null">
+				AND cityCode = #{cityCode}
 			</if>
 		</where>
 	</sql>
@@ -67,7 +71,7 @@
 		values (
 		#{id}, #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
 		#{marketPrice}, #{mkPrice}, #{isPromo},#{promoId},#{promoPrice},
-		#{settlePrice}, #{statisticDate}, #{createDate}
+		#{settlePrice}, #{statisticDate}, #{createDate},#{cityCode}
 		)
 	</insert>
 
@@ -113,6 +117,9 @@
 			</if>
 			<if test="createDate != null" >
 				createDate = #{createDate},
+			</if>
+			<if test="cityCode != null" >
+				cityCode = #{cityCode},
 			</if>
 		</set>
 		  where id=#{id}

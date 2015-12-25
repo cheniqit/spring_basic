@@ -42,6 +42,8 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
     private RoomPriceContrastService roomPriceContrastService;
     @Autowired
     private SyServDictItemService syServDictItemService;
+    @Autowired
+    private CityService cityService;
 
     public Map<String,Object>  doPriceDump(){
         Map<String,Object> resultMap=new HashMap<String,Object>();
@@ -71,12 +73,12 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
             logger.info("====================doPriceDump method roomTypeCount is null====================");
             return resultMap;
         }
-        Integer pageSize=100;//100
+        Integer pageSize=1000;//100
         Integer pageNum=roomTypeCount/pageSize;
         logger.info("====================doPriceDump roomTypeCount=" + roomTypeCount + "====================");
         for (int i=0;i<=pageNum;i++) {
             TRoomTypeDto roomTypeSearchBean = new TRoomTypeDto();
-            roomTypeSearchBean.setPageIndex(i);
+            roomTypeSearchBean.setPageIndex(i*pageSize);
             roomTypeSearchBean.setPageSize(pageSize);
             List<TRoomTypeDto> roomTypeList = roomTypeService.queryJionThotel(roomTypeSearchBean);
             logger.info("====================queryJionThotel pageIndex={}&pageSize={}===================="
@@ -110,6 +112,7 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
                 roomTypePriceDumpDto.setMkPrice(mkPrice);
                 roomTypePriceDumpDto.setStatisticDate(statisticDate);
                 roomTypePriceDumpDto.setCreateDate(DateUtils.format_yMdHms(new Date()));
+                roomTypePriceDumpDto.setCityCode(roomType.getCityCode());
                 TRoomSaleConfigDto checkRoomSaleConfigBean=new TRoomSaleConfigDto();
                 checkRoomSaleConfigBean.setRoomTypeId(roomType.getId());
                 checkRoomSaleConfigBean.setValid("T");
@@ -215,8 +218,18 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
             logger.info("====================sendEmail  data is empty====================");
             return resultMap;
         }
+        List<TRoomPriceContrastDto> emailList=new ArrayList<TRoomPriceContrastDto>();
+        Map<Integer,String>cityMap=new HashMap<Integer, String>();
+        for (TRoomPriceContrastDto contrastBean:contrastList){
+            if (cityMap.get(contrastBean.getCityCode())==null){
+                TCityDto cityDto=cityService.getByCode(contrastBean.getCityCode().toString());
+                cityMap.put(contrastBean.getCityCode(),cityDto.getQueryCityName());
+            }
+            contrastBean.setCityName(cityMap.get(contrastBean.getCityCode()));
+            emailList.add(contrastBean);
+        }
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("list", contrastList);
+        map.put("list", emailList);
         String mailContent=null;
         try {
             mailContent = FreeMarkerTemplateUtils.process(map, "mail_priceContrast.ftl");

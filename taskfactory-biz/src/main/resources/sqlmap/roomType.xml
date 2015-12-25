@@ -11,6 +11,7 @@
 		<result column="roomNum" property="roomNum" jdbcType="INTEGER" />
 		<result column="cost" property="cost" jdbcType="DECIMAL" />
 		<result column="hotelName" property="hotelName" jdbcType="VARCHAR" />
+		<result column="cityCode" property="cityCode" jdbcType="INTEGER" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -115,7 +116,8 @@
 		a.pms,
 		a.roomNum,
 		a.cost,
-		b.hotelName
+		b.hotelName,
+		b.cityCode
 		FROM
 		t_roomtype a INNER  JOIN t_hotel b ON  a.thotelId=b.id
 		<where>

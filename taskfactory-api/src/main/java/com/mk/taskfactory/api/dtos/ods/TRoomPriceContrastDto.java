@@ -23,6 +23,8 @@ public class TRoomPriceContrastDto {
     private String statisticDate1;
     private String statisticDate2;
     private String createDate;
+    private String cityName;
+    private Integer cityCode;
     private Integer pageIndex; // 开始行数
     private Integer pageSize; // 每页显示数量
 
@@ -192,5 +194,21 @@ public class TRoomPriceContrastDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }

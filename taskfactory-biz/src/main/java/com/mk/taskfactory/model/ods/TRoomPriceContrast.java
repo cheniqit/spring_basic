@@ -21,6 +21,7 @@ public class TRoomPriceContrast {
     private BigDecimal newSettlePrice;
     private String contrastDate;
     private String createDate;
+    private Integer cityCode;
 
     public BigInteger getId() {
         return id;
@@ -156,5 +157,13 @@ public class TRoomPriceContrast {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
+    }
+
+    public Integer getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 }

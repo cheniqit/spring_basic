@@ -17,6 +17,7 @@ public class TRoomTypePriceDumpDto {
     private BigDecimal settlePrice;
     private String statisticDate;
     private String createDate;
+    private Integer cityCode;
     private Integer pageIndex; // 开始行数
     private Integer pageSize; // 每页显示数量
 
@@ -138,5 +139,13 @@ public class TRoomTypePriceDumpDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 }

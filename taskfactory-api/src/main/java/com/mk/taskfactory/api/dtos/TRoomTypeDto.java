@@ -14,6 +14,8 @@ public class TRoomTypeDto {
     private Integer pageIndex; // 开始行数
     private Integer pageSize; // 每页显示数量
     private String hotelName;
+    private Integer cityCode;
+
     public Integer getId() {
         return id;
     }
@@ -100,5 +102,13 @@ public class TRoomTypeDto {
 
     public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
+    }
+
+    public Integer getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 }

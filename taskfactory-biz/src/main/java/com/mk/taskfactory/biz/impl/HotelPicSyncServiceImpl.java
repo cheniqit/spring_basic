@@ -47,7 +47,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         Integer pageNum=count/pageSize;
         logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync hotelSize"+count+"===================="));
         for (int i=0;i<=pageNum;i++){
-            hotelDto.setPageIndex(i);
+            hotelDto.setPageIndex(i*pageSize);
             hotelDto.setPageSize(pageSize);
             List<THotel>hotels=hotelMapper.queryTHotel(hotelDto);
             logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync setPageIndex"+i+"===================="));
