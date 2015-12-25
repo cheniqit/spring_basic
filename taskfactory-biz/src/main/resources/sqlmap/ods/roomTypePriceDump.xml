@@ -67,9 +67,12 @@
 	</select>
 	<insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomTypePriceDumpDto"
 			useGeneratedKeys="true" keyProperty="id">
-		insert into t_roomtype_price_dump(<include refid="Base_Column_List" />)
+		insert into t_roomtype_price_dump
+		( hotelId, roomTypeId, hotelName, roomTypeName,
+		marketPrice, mkPrice,isPromo,promoId,
+		promoPrice,settlePrice,statisticDate,createDate,cityCode)
 		values (
-		#{id}, #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
+		 #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
 		#{marketPrice}, #{mkPrice}, #{isPromo},#{promoId},#{promoPrice},
 		#{settlePrice}, #{statisticDate}, #{createDate},#{cityCode}
 		)

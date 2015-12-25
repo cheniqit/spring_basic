@@ -72,9 +72,12 @@
 	</select>
 	<insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto"
 			useGeneratedKeys="true" keyProperty="id">
-		insert into t_room_price_contrast(<include refid="Base_Column_List" />)
+		insert into t_room_price_contrast(hotelId, roomTypeId, hotelName, roomTypeName,
+		oldMarketPrice, newMarketPrice,oldMkPrice,newMkPrice,isPromo,
+		promoId,oldPromoPrice,newPromoPrice,oldSettlePrice,newSettlePrice,
+		contrastDate,createDate,cityCode)
 		values (
-		#{id}, #{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
+		#{hotelId}, #{roomTypeId},#{hotelName},#{roomTypeName},
 		#{oldMarketPrice}, #{newMarketPrice},#{oldMkPrice},#{newMkPrice}, #{isPromo},
 		#{promoId},#{oldPromoPrice},#{newPromoPrice},#{oldSettlePrice},#{newSettlePrice},
 		#{contrastDate}, #{createDate},#{cityCode}
