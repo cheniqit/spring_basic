@@ -128,13 +128,21 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
                             roomTypePriceDumpDto.setPromoId(roomSaleConfigDto.getSaleTypeId());
                             roomTypePriceDumpDto.setPromoPrice(roomSaleConfigDto.getSaleValue());
                             roomTypePriceDumpDto.setSettlePrice(roomSaleConfigDto.getSettleValue());
-                            roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                            try{
+                                roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                            }catch (Exception e){
+                                continue;
+                            }
                             saleTypeMap.put(roomSaleConfigDto.getSaleTypeId(), roomSaleConfigDto.getSaleTypeId());
                         }
                     }
                 }else {
                     roomTypePriceDumpDto.setPromoId(0);
-                    roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                    try{
+                        roomTypePriceDumpService.save(roomTypePriceDumpDto);
+                    }catch (Exception e){
+                        continue;
+                    }
                 }
             }
 
