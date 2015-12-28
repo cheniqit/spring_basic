@@ -149,14 +149,14 @@
 		SELECT  a.hotelId, a.roomTypeId, a.hotelName, a.roomTypeName,
 		b.marketPrice as oldMarketPrice,a.marketPrice as newMarketPrice,b.mkPrice as oldMkPrice,a.mkPrice newMkPrice,a.isPromo,
 		a.promoId,b.promoPrice as oldPromoPrice,a.promoPrice as newPromoPrice,b.settlePrice as oldSettlePrice,a.settlePrice as newSettlePrice,
-		a.statisticDate as contrastDate,a.cityCode FROM t_roomtype_price_dump a, t_roomtype_price_dump b
-		WHERE a.`id`!= b.`id`
-		AND a.`statisticDate`= #{statisticDate1}
-		AND b.`statisticDate`=#{statisticDate2}
-		AND (a.`marketPrice`!=b.`marketPrice` OR a.`mkPrice`!=b.`mkPrice`)
-		AND a.`hotelid`=b.`hotelid`
+		a.statisticDate as contrastDate,a.cityCode
+		FROM
+		( SELECT * FROM t_roomtype_price_dump  WHERE  `statisticDate`=  #{statisticDate1}) a
+		 INNER JOIN  (SELECT * FROM t_roomtype_price_dump   WHERE `statisticDate`=#{statisticDate2} ) b ON
+		  a.`hotelid`=b.`hotelid`
 		AND a.`roomTypeId` =b.`roomTypeId`
 		AND a.`promoId` =b.`promoId`
+		WHERE a.`marketPrice`!=b.`marketPrice` OR a.`mkPrice`!=b.`mkPrice`
 
 	</select>
 </mapper>

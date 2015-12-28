@@ -137,6 +137,7 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
                         }
                     }
                 }else {
+                    roomTypePriceDumpDto.setIsPromo(false);
                     roomTypePriceDumpDto.setPromoId(0);
                     try{
                         roomTypePriceDumpService.save(roomTypePriceDumpDto);
@@ -252,7 +253,7 @@ public class DoPriceDumpServiceImpl implements DoPriceDumpService {
         List<SyServDictItemDto> dictList=syServDictItemService.queryByParams(getDictBean);
         for (SyServDictItemDto dict:dictList) {
             logger.info("************send email " + dict.getItemName() + "***************");
-            System.out.println(mailContent);
+            //System.out.println(mailContent);
             EmailSend.emailSend(null, mailContent, "酒店房价变更记录" + DateUtils.format_yMd(new Date()), dict.getItemName());
         }
 //        Map<String,String> emailList=new HashMap<String, String>();
