@@ -16,4 +16,6 @@ public interface HotelPicMapper {
     public Integer insertEHotelPic(EHotelPicDto bean);
     public Integer updateEHotelPicById(EHotelPicDto bean);
     public Integer updateEHotelPicByHotelId(EHotelPicDto bean);
+    public Integer deleteByParams(EHotelPicDto bean);
+    public void truncate();
 }

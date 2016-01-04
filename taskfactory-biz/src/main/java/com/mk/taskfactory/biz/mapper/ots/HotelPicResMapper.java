@@ -19,4 +19,6 @@ public interface HotelPicResMapper {
     public Integer insertEHotelPicRes(EHotelPicResDto bean);
     public Integer updateEHotelPicResById(EHotelPicResDto bean);
     public Integer updateInvalidByHotelId (EHotelPicResDto bean);
+    public Integer deleteByParams(EHotelPicResDto bean);
+    public void truncate();
 }

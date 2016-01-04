@@ -151,4 +151,33 @@
     </set>
     where hotel_id = #{hotelId,jdbcType=BIGINT}
   </update>
+  <delete id="deleteByParams" parameterType="com.mk.taskfactory.api.dtos.EHotelPicDto" >
+    delete from e_hotel_pic
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="typeCode != null">
+        AND type_code = #{typeCode}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="roomtypeId != null">
+        AND roomtype_id = #{roomtypeId}
+      </if>
+      <if test="resId != null">
+        AND res_id = #{resId}
+      </if>
+      <if test="mainShow != null">
+        AND main_show = #{mainShow}
+      </if>
+      <if test="valid != null">
+        AND valid = #{valid}
+      </if>
+    </where>
+  </delete>
+  <delete id="truncate">
+    truncate table e_hotel_pic
+  </delete>
 </mapper>
