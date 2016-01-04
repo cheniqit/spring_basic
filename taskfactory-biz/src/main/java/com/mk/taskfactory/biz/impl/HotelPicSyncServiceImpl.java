@@ -105,7 +105,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         Integer pageSize=100;//100
         Integer pageNum=count/pageSize;
         for (int i=0;i<=pageNum;i++){
-            roomTypeInfoDto.setPageIndex(i*pageSize);
+            roomTypeInfoDto.setPageIndex(i * pageSize);
             roomTypeInfoDto.setPageSize(pageSize);
             logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync pageIndex=" + i + "===================="));
             List<TRoomTypeInfo>roomTypeInfos=roomTypeInfoMapper.queryTRoomTypeInfo(roomTypeInfoDto);
@@ -118,7 +118,9 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 }
                 logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync roomTypeId=" + roomTypeInfo.getRoomTypeId()+ "===================="));
                 TRoomType roomType=roomTypeMapper.findTRoomTypeById(roomTypeInfo.getRoomTypeId());
-
+                if(roomType==null||roomType.getThotelId()==null||roomType.getId()==null){
+                    continue;
+                }
                 List<PicJsonCalss> picJsonCalsses=getPicUrl(roomTypeInfo.getPics());
 
                 for (PicJsonCalss picJsonCalss:picJsonCalsses){
