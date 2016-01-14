@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.RoomSaleAgreementPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.RoomSaleAgreementPrice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="hotelId" property="hotelId" jdbcType="INTEGER" />
+    <result column="hotelName" property="hotelName" jdbcType="VARCHAR" />
+    <result column="roomTypeId" property="roomTypeId" jdbcType="INTEGER" />
+    <result column="roomTypeName" property="roomTypeName" jdbcType="VARCHAR" />
+    <result column="roomNo" property="roomNo" jdbcType="VARCHAR" />
+    <result column="settleValue" property="settleValue" jdbcType="DECIMAL" />
+    <result column="meiTuanPrice" property="meiTuanPrice" jdbcType="DECIMAL" />
+    <result column="settleType" property="settleType" jdbcType="INTEGER" />
+    <result column="saleTypeId" property="saleTypeId" jdbcType="INTEGER" />
+    <result column="saleConfigInfoId" property="saleConfigInfoId" jdbcType="INTEGER" />
+    <result column="dealCount" property="dealCount" jdbcType="INTEGER" />
+    <result column="storeCount" property="storeCount" jdbcType="INTEGER" />
+    <result column="isLeZhu" property="isLeZhu" jdbcType="CHAR" />
+    <result column="valid" property="valid" jdbcType="CHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotelId, hotelName, roomTypeId, roomTypeName, roomNo, settleValue,meiTuanPrice, settleType,
+    saleTypeId, saleConfigInfoId, dealCount, storeCount, isLeZhu, valid, createTime, 
+    updateTime
+  </sql>
+  <sql id="Base_Query_List" >
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelId != null">
+        AND hotelId = #{hotelId}
+      </if>
+      <if test="hotelName != null">
+        AND hotelName = #{hotelName}
+      </if>
+      <if test="roomTypeId != null">
+        AND roomTypeId = #{v}
+      </if>
+      <if test="roomTypeName != null">
+        AND roomTypeName = #{roomTypeName}
+      </if>
+      <if test="saleTypeId != null">
+        AND saleTypeId = #{saleTypeId}
+      </if>
+      <if test="saleConfigInfoId != null">
+        AND saleConfigInfoId = #{saleConfigInfoId}
+      </if>
+      <if test="isLeZhu != null">
+        AND isLeZhu = #{isLeZhu}
+      </if>
+      <if test="valid != null">
+        AND valid = #{valid}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.RoomSaleAgreementPriceDto" >
+    select
+    <include refid="Base_Column_List" />
+    from t_room_sale_agreement_price
+    <include refid="Base_Query_List" />
+      order by id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="countByPramas" resultType="java.lang.Integer" parameterType="com.mk.taskfactory.api.dtos.RoomSaleAgreementPriceDto" >
+    select
+    COUNT(*)
+    from t_room_sale_agreement_price
+    <include refid="Base_Query_List" />
+  </select>
+
+</mapper>
