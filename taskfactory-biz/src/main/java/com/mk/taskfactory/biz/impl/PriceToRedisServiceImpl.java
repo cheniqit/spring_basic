@@ -139,6 +139,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                         logger.info(String.format("\n====================hotelId={}&roomTypeId={}====================\n")
                                 ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId());
                         continue;
+                    }
                     if (agreementPrice.getDealCount()!=null)
                         jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
