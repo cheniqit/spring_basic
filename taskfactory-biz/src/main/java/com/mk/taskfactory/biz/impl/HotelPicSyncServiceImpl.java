@@ -9,10 +9,7 @@ import com.mk.taskfactory.api.enums.HMSStatusEnum;
 import com.mk.taskfactory.api.enums.HotelPicEnum;
 import com.mk.taskfactory.biz.mapper.ots.*;
 import com.mk.taskfactory.biz.utils.JsonUtils;
-import com.mk.taskfactory.model.PicJsonCalss;
-import com.mk.taskfactory.model.THotel;
-import com.mk.taskfactory.model.TRoomType;
-import com.mk.taskfactory.model.TRoomTypeInfo;
+import com.mk.taskfactory.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +44,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         Integer pageNum=count/pageSize;
         logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync hotelSize"+count+"===================="));
         for (int i=0;i<=pageNum;i++){
-            hotelDto.setPageIndex(i*pageSize);
+            hotelDto.setPageIndex(i * pageSize);
             hotelDto.setPageSize(pageSize);
             List<THotel>hotels=hotelMapper.queryTHotel(hotelDto);
             logger.info(String.format("====================init PMS hotelPic sync job >> hotelPicSync setPageIndex"+i+"===================="));
@@ -108,7 +105,7 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         Integer pageSize=100;//100
         Integer pageNum=count/pageSize;
         for (int i=0;i<=pageNum;i++){
-            roomTypeInfoDto.setPageIndex(i);
+            roomTypeInfoDto.setPageIndex(i * pageSize);
             roomTypeInfoDto.setPageSize(pageSize);
             logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync pageIndex=" + i + "===================="));
             List<TRoomTypeInfo>roomTypeInfos=roomTypeInfoMapper.queryTRoomTypeInfo(roomTypeInfoDto);
@@ -121,7 +118,9 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
                 }
                 logger.info(String.format("====================init PMS roomTypeInfoPic sync job >> roomTypeInfoPicSync roomTypeId=" + roomTypeInfo.getRoomTypeId()+ "===================="));
                 TRoomType roomType=roomTypeMapper.findTRoomTypeById(roomTypeInfo.getRoomTypeId());
-
+                if(roomType==null||roomType.getThotelId()==null||roomType.getId()==null){
+                    continue;
+                }
                 List<PicJsonCalss> picJsonCalsses=getPicUrl(roomTypeInfo.getPics());
 
                 for (PicJsonCalss picJsonCalss:picJsonCalsses){
@@ -213,5 +212,33 @@ public class HotelPicSyncServiceImpl implements HotelPicSyncService {
         hotelPicRes.setCreateBy("手动同步");
         hotelPicResMapper.insertEHotelPicRes(hotelPicRes);
         return hotelPicRes.getId();
+    }
+    public Map<String,Object> deleteByParams(EHotelPicResDto bean){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        List<EHotelPicRes> hotelPicResList=hotelPicResMapper.queryEHotelPicRes(bean);
+        if (CollectionUtils.isEmpty(hotelPicResList)){
+            resultMap.put("message", "hotelPicResList  is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        for (EHotelPicRes hotelPicRes:hotelPicResList){
+            hotelPicResMapper.deleteEHotelPicResById(hotelPicRes.getId());
+            if (hotelPicRes.getpId()!=null){
+                EHotelPicDto hotelPicDto=new EHotelPicDto();
+                hotelPicDto.setResId(hotelPicRes.getId());
+                hotelPicMapper.deleteByParams(hotelPicDto);
+            }
+        }
+        resultMap.put("message", "操作成功！");
+        resultMap.put("SUCCESS", false);
+        return resultMap;
+    }
+    public Map<String,Object> truncate(){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        hotelPicResMapper.truncate();
+        hotelPicMapper.truncate();
+        resultMap.put("message", "操作成功！");
+        resultMap.put("SUCCESS", false);
+        return resultMap;
     }
 }
