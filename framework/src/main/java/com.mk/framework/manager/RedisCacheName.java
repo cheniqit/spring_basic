@@ -39,4 +39,6 @@ public class RedisCacheName {
     public static final String DYNAMIC_PRICE_MEITUAN = "DYNAMIC:PRICE:MEITUAN:";
     /********动态协议数量***********/
     public static final String DYNAMIC_DEALCOUNT = "DYNAMIC:DEALCOUNT:";
+    /********动态库存数量***********/
+    public static final String DYNAMIC_STORECOUNT = "DYNAMIC:STORECOUNT:";
 }

@@ -144,6 +144,9 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                         jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getDealCount().toString());
+                        jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_STORECOUNT,
+                                agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
+                                agreementPrice.getDealCount().toString());
                 }
 
             }
