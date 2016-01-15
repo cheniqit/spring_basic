@@ -71,6 +71,8 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                             ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId());
                             continue;
                         }
+                        logger.info(String.format("\n====hotelId={}&roomTypeId={}&settleValue={}&meiTuanPrice={}======\n")
+                        ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId(),agreementPrice.getSettleValue(),agreementPrice.getMeiTuanPrice());
                         if (agreementPrice.getSettleValue()!=null)
                             jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
                                     agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
@@ -140,6 +142,8 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                                 ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId());
                         continue;
                     }
+                    logger.info(String.format("\n====hotelId={}&roomTypeId={}&dealCount={}======\n")
+                            ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId(),agreementPrice.getDealCount());
                     if (agreementPrice.getDealCount()!=null)
                         jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
