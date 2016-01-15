@@ -3,7 +3,7 @@ package com.mk.taskfactory.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class RoomSaleAgreementPrice1 {
+public class RoomSaleAgreementPrice {
     private Integer id;
 
     private Integer hotelId;

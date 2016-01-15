@@ -3,8 +3,8 @@ package com.mk.taskfactory.biz.impl;
 
 import com.mk.taskfactory.api.RoomSaleAgreementPriceService;
 import com.mk.taskfactory.api.dtos.RoomSaleAgreementPriceDto;
-import com.mk.taskfactory.biz.mapper.ots.RoomSaleAgreementPriceMapper1;
-import com.mk.taskfactory.model.RoomSaleAgreementPrice1;
+import com.mk.taskfactory.biz.mapper.ots.RoomSaleAgreementPriceMapper;
+import com.mk.taskfactory.model.RoomSaleAgreementPrice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,26 +17,26 @@ import java.util.List;
 public class RoomSaleAgreementPriceServiceImpl implements RoomSaleAgreementPriceService {
 
     @Autowired
-    private RoomSaleAgreementPriceMapper1 roomSaleAgreementPriceMapper;
+    private RoomSaleAgreementPriceMapper roomSaleAgreementPriceMapper;
 
     public int countByPramas(RoomSaleAgreementPriceDto bean){
         return roomSaleAgreementPriceMapper.countByPramas(bean);
     }
 
     public List<RoomSaleAgreementPriceDto> qureyByPramas(RoomSaleAgreementPriceDto bean){
-        List<RoomSaleAgreementPrice1> list=roomSaleAgreementPriceMapper.qureyByPramas(bean);
+        List<RoomSaleAgreementPrice> list=roomSaleAgreementPriceMapper.qureyByPramas(bean);
         if (CollectionUtils.isEmpty(list)){
             return  null;
         }
         List<RoomSaleAgreementPriceDto> resultList = new ArrayList<RoomSaleAgreementPriceDto>();
 
-        for (RoomSaleAgreementPrice1 model : list) {
+        for (RoomSaleAgreementPrice model : list) {
             resultList.add(buildDto(model));
         }
         return resultList;
     }
 
-    private RoomSaleAgreementPriceDto buildDto(RoomSaleAgreementPrice1 bean) {
+    private RoomSaleAgreementPriceDto buildDto(RoomSaleAgreementPrice bean) {
         if (bean==null){
             return new RoomSaleAgreementPriceDto();
         }
