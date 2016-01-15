@@ -72,15 +72,15 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                             continue;
                         }
                         if (agreementPrice.getSettleValue()!=null)
-                            jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                            jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
                                     agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                     agreementPrice.getSettleValue().toString());
                         if (agreementPrice.getMeiTuanPrice()!=null)
-                            jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
+                            jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getMeiTuanPrice().toString());
                         if (hotelMap.get(agreementPrice.getHotelId())==null){
-                            jedis.set(String.format("%s:%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                            jedis.set(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
                                     agreementPrice.getHotelId()),
                                     "1");
                             hotelMap.put(agreementPrice.getHotelId(),agreementPrice.getHotelName());
@@ -141,10 +141,10 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                         continue;
                     }
                     if (agreementPrice.getDealCount()!=null)
-                        jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
+                        jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getDealCount().toString());
-                        jedis.set(String.format("%s:%s:%s", RedisCacheName.DYNAMIC_STORECOUNT,
+                        jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_STORECOUNT,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getDealCount().toString());
                 }
