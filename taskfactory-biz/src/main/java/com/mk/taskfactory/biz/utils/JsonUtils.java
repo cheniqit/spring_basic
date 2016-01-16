@@ -4,6 +4,7 @@ package com.mk.taskfactory.biz.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 
@@ -37,7 +38,8 @@ public class JsonUtils {
         JSONObject object = JSONObject.parseObject(jsonString);
         Map<String,String> result = new HashMap<String,String>();
         for (String key:object.keySet()){
-            result.put(key,object.get(key).toString());
+            if (object.get(key)!=null)
+                result.put(key,object.get(key).toString());
         }
         return result;
 

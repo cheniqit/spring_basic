@@ -6,24 +6,15 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
-import com.mk.taskfactory.api.enums.ValidEnum;
-import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
-import com.mk.taskfactory.biz.mapper.ots.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.model.TRoomSaleConfigInfo;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -33,7 +24,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
     @Autowired
     private RoomSaleAgreementPriceService priceService;
 
-    public Map<String,Object> priceToRedis(RoomSaleAgreementPriceDto dto){
+    public Map<String,Object> priceToRedis(TRoomSaleAgreementPriceDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("priceToRedis","协议价同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
@@ -57,7 +48,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                         ,i*pageSize);
                 dto.setPageSize(pageSize);
                 dto.setPageIndex(i*pageSize);
-                List<RoomSaleAgreementPriceDto> agreementPriceList = priceService.qureyByPramas(dto);
+                List<TRoomSaleAgreementPriceDto> agreementPriceList = priceService.qureyByPramas(dto);
                 if (CollectionUtils.isEmpty(agreementPriceList)){
                     logger.info(String.format("\n====================agreementPriceList is empty====================\n"));
                     continue;
@@ -65,7 +56,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
 
                 Map<Integer,String> hotelMap = new HashMap<Integer, String>();
 
-                    for (RoomSaleAgreementPriceDto agreementPrice:agreementPriceList){
+                    for (TRoomSaleAgreementPriceDto agreementPrice:agreementPriceList){
                         if (agreementPrice.getHotelId()==null||agreementPrice.getRoomTypeId()==null){
                             logger.info(String.format("\n====================hotelId={}&roomTypeId={}====================\n")
                             ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId());
@@ -106,7 +97,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
-    public Map<String,Object> updateDealCountToRedis(RoomSaleAgreementPriceDto dto){
+    public Map<String,Object> updateDealCountToRedis(TRoomSaleAgreementPriceDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("updateDealCountToRedis","协议价同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
@@ -130,13 +121,13 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                         ,i*pageSize);
                 dto.setPageSize(pageSize);
                 dto.setPageIndex(i*pageSize);
-                List<RoomSaleAgreementPriceDto> agreementPriceList = priceService.qureyByPramas(dto);
+                List<TRoomSaleAgreementPriceDto> agreementPriceList = priceService.qureyByPramas(dto);
                 if (CollectionUtils.isEmpty(agreementPriceList)){
                     logger.info(String.format("\n====================agreementPriceList is empty====================\n"));
                     continue;
                 }
 
-                for (RoomSaleAgreementPriceDto agreementPrice:agreementPriceList){
+                for (TRoomSaleAgreementPriceDto agreementPrice:agreementPriceList){
                     if (agreementPrice.getHotelId()==null||agreementPrice.getRoomTypeId()==null){
                         logger.info(String.format("\n====================hotelId={}&roomTypeId={}====================\n")
                                 ,agreementPrice.getHotelId(),agreementPrice.getRoomTypeId());
@@ -170,5 +161,62 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+    public Map<String,Object> deleteRedis(Integer id,String key){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("deleteRedis","删除Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================deleteRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n=========id={}&key={}=======\n"),id,key);
+        if (id==null&&StringUtils.isEmpty(key)){
+            resultMap.put("message","参数为空");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        Jedis jedis = RedisUtil.getJedis();
+        try {
+            if (id!=null){
+                TRoomSaleAgreementPriceDto dto = priceService.getById(id);
+                if (dto==null||dto.getHotelId()==null||dto.getRoomTypeId()==null){
+                    logger.info(String.format("\n====================hotelId={}&roomTypeId={}====================\n")
+                            ,dto.getHotelId(),dto.getRoomTypeId());
+                    resultMap.put("message","dto select is null");
+                    resultMap.put("SUCCESS", true);
+                    return resultMap;
+                }
+                logger.info(String.format("\n====================hotelId={}&roomTypeId={}====================\n")
+                        ,dto.getHotelId(),dto.getRoomTypeId());
+                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                        dto.getHotelId(),dto.getRoomTypeId())
+                );
+                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
+                        dto.getHotelId(),dto.getRoomTypeId())
+                );
+                jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                        dto.getHotelId()));
+                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
+                        dto.getHotelId(),dto.getRoomTypeId())
+                );
+                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
+                        dto.getHotelId(),dto.getRoomTypeId())
+                );
 
+            }else if (StringUtils.isNotEmpty(key)){
+                jedis.del(key);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+        Cat.logEvent("deleteRedis", "删除Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================deleteRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
 }

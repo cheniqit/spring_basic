@@ -21,6 +21,7 @@ public class Constants {
 
     public static String token = new PropertiesUtil().getValue("common.properties", "ots.token");
     public static String OTS_URL = new PropertiesUtil().getValue("common.properties", "ots.url");
+    public static String OTS_HUIDU = new PropertiesUtil().getValue("common.properties", "ots.huidu");
     //public static final String OTS_URL = "http://ota2test.imike.cn/ots";
     //public static final String OTS_URL = "http://localhost:9010/ots";
 }

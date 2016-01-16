@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.RoomTypeDynamicPriceMapper">
+	<resultMap id="BaseResultMap" type="com.mk.taskfactory.model.TRoomTypeDynamicPrice">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="hotelId" property="hotelId" jdbcType="BIGINT" />
+		<result column="roomTypeId" property="roomTypeId" jdbcType="BIGINT" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="timePoint" property="timePoint" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, hotelId, roomTypeId, price, timePoint, createTime
+	</sql>
+	<sql id="Base_Query_List" >
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="hotelId != null">
+				AND hotelId = #{hotelId}
+			</if>
+			<if test="roomTypeId != null">
+				AND roomTypeId = #{roomTypeId}
+			</if>
+			<if test="timePoint != null">
+				AND timePoint = #{timePoint}
+			</if>
+			<if test="createTime != null">
+				AND createTime >= #{createTime}
+			</if>
+		</where>
+	</sql>
+	<select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto">
+		select
+		<include refid="Base_Column_List" />
+		from t_roomtype_dynamic_price
+		<include refid="Base_Query_List" />
+		ORDER BY id DESC
+		<if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+			limit ${pageIndex} , ${pageSize}
+		</if>
+	</select>
+
+	<select id="count" resultType="java.lang.Integer" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto">
+		select
+		<include refid="Base_Column_List" />
+		from t_roomtype_dynamic_price
+		<include refid="Base_Query_List" />
+		ORDER BY id DESC
+	</select>
+
+	<select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto">
+		select
+		<include refid="Base_Column_List" />
+		from t_roomtype_dynamic_price
+		<include refid="Base_Query_List" />
+		ORDER BY id DESC
+		limit 1
+	</select>
+
+	<insert id="save"  parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto"
+			useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO t_roomtype_dynamic_price
+		(<include refid="Base_Column_List"/>)
+		VALUE
+		(
+			#{id}, #{hotelId},#{roomTypeId},#{price}, #{timePoint},#{createTime}
+		)
+	</insert>
+
+
+	<delete id="delete" parameterType="Integer">
+		delete from t_roomtype_dynamic_price where id = #{id}
+	</delete>
+
+	<update id="updateById" parameterType="com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto" >
+		update t_roomtype_dynamic_price
+		<set >
+			<if test="hotelId != null" >
+				hotelId = #{hotelId},
+			</if>
+			<if test="roomTypeId != null" >
+				roomTypeId =  #{roomTypeId},
+			</if>
+			<if test="price != null" >
+				price =  #{price},
+			</if>
+			<if test="timePoint != null" >
+				timePoint  = #{timePoint},
+			</if>
+			<if test="createTime != null" >
+				createTime  = #{createTime},
+			</if>
+		</set>
+		WHERE  id= #{id}
+	</update>
+</mapper>

@@ -1,9 +1,9 @@
-package com.mk.taskfactory.model;
+package com.mk.taskfactory.api.dtos;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class RoomSaleAgreementPrice {
+public class TRoomSaleAgreementPriceDto {
     private Integer id;
 
     private Integer hotelId;
@@ -37,6 +37,10 @@ public class RoomSaleAgreementPrice {
     private Date createTime;
 
     private Date updateTime;
+
+    private Integer pageIndex;
+
+    private Integer pageSize;
 
     public Integer getId() {
         return id;
@@ -100,6 +104,14 @@ public class RoomSaleAgreementPrice {
 
     public void setSettleType(Integer settleType) {
         this.settleType = settleType;
+    }
+
+    public BigDecimal getMeiTuanPrice() {
+        return meiTuanPrice;
+    }
+
+    public void setMeiTuanPrice(BigDecimal meiTuanPrice) {
+        this.meiTuanPrice = meiTuanPrice;
     }
 
     public Integer getSaleTypeId() {
@@ -166,11 +178,19 @@ public class RoomSaleAgreementPrice {
         this.updateTime = updateTime;
     }
 
-    public BigDecimal getMeiTuanPrice() {
-        return meiTuanPrice;
+    public Integer getPageIndex() {
+        return pageIndex;
     }
 
-    public void setMeiTuanPrice(BigDecimal meiTuanPrice) {
-        this.meiTuanPrice = meiTuanPrice;
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

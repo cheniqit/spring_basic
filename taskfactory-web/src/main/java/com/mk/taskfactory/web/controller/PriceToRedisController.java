@@ -2,11 +2,7 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.PriceToRedisService;
-import com.mk.taskfactory.api.RoomSaleService;
-import com.mk.taskfactory.api.ValidRateTaskService;
-import com.mk.taskfactory.api.dtos.RoomSaleAgreementPriceDto;
-import com.mk.taskfactory.api.dtos.RoomSaleToOtsDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleDto;
+import com.mk.taskfactory.api.dtos.TRoomSaleAgreementPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,14 +22,20 @@ public class PriceToRedisController {
 
     @RequestMapping(value = "/pricetoredis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> priceToRedis(RoomSaleAgreementPriceDto bean) {
+    public ResponseEntity<Map<String, Object>> priceToRedis(TRoomSaleAgreementPriceDto bean) {
         Map<String,Object> result=priceToRedisService.priceToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
     @RequestMapping(value = "/updatedealcount", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateDealCountToRedis(RoomSaleAgreementPriceDto bean) {
+    public ResponseEntity<Map<String, Object>> updateDealCountToRedis(TRoomSaleAgreementPriceDto bean) {
         Map<String,Object> result=priceToRedisService.updateDealCountToRedis(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/deleteredis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteRedis(Integer id, String key) {
+        Map<String,Object> result=priceToRedisService.deleteRedis(id,key);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 }

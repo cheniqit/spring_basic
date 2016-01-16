@@ -1,14 +1,13 @@
 package com.mk.taskfactory.api;
 
-import com.mk.taskfactory.api.dtos.RoomSaleAgreementPriceDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleTypeDto;
+import com.mk.taskfactory.api.dtos.TRoomSaleAgreementPriceDto;
 
-import java.util.List;
 import java.util.Map;
 
 public interface PriceToRedisService {
 
-    public Map<String,Object> priceToRedis(RoomSaleAgreementPriceDto dto);
-    public Map<String,Object> updateDealCountToRedis(RoomSaleAgreementPriceDto dto);
+    public Map<String,Object> priceToRedis(TRoomSaleAgreementPriceDto dto);
+    public Map<String,Object> updateDealCountToRedis(TRoomSaleAgreementPriceDto dto);
+    public Map<String,Object> deleteRedis(Integer id,String key);
 }
 
