@@ -72,18 +72,14 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                             jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getMeiTuanPrice().toString());
-                        TRoomSaleAgreementPriceDto checkBean = new TRoomSaleAgreementPriceDto();
-                        checkBean.setHotelId(agreementPrice.getHotelId());
-                        checkBean.setValid("T");
-                        int checkCount = priceService.countByPramas(checkBean);
-                        if (checkCount>0) {
-                            if (hotelMap.get(agreementPrice.getHotelId()) == null) {
-                                jedis.set(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
-                                        agreementPrice.getHotelId()),
-                                        "1");
-                                hotelMap.put(agreementPrice.getHotelId(), agreementPrice.getHotelName());
-                            }
+
+                        if (hotelMap.get(agreementPrice.getHotelId()) == null) {
+                            jedis.set(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                                    agreementPrice.getHotelId()),
+                                    "1");
+                            hotelMap.put(agreementPrice.getHotelId(), agreementPrice.getHotelName());
                         }
+
                     }
 
             }
@@ -202,9 +198,16 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                 jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                         dto.getHotelId(),dto.getRoomTypeId())
                 );
-                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
-                        dto.getHotelId(),dto.getRoomTypeId())
-                );
+                TRoomSaleAgreementPriceDto checkBean = new TRoomSaleAgreementPriceDto();
+                checkBean.setHotelId(dto.getHotelId());
+                checkBean.setValid("T");
+                int checkCount = priceService.countByPramas(checkBean);
+                if (checkCount<0) {
+                    jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
+                            dto.getHotelId(), dto.getRoomTypeId())
+                    );
+                }
+
 
             }else if (StringUtils.isNotEmpty(key)){
                 jedis.del(key);
