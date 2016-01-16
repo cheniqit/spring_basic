@@ -72,11 +72,17 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                             jedis.set(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
                                 agreementPrice.getHotelId(),agreementPrice.getRoomTypeId()),
                                 agreementPrice.getMeiTuanPrice().toString());
-                        if (hotelMap.get(agreementPrice.getHotelId())==null){
-                            jedis.set(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
-                                    agreementPrice.getHotelId()),
-                                    "1");
-                            hotelMap.put(agreementPrice.getHotelId(),agreementPrice.getHotelName());
+                        TRoomSaleAgreementPriceDto checkBean = new TRoomSaleAgreementPriceDto();
+                        checkBean.setHotelId(agreementPrice.getHotelId());
+                        checkBean.setValid("T");
+                        int checkCount = priceService.countByPramas(checkBean);
+                        if (checkCount>0) {
+                            if (hotelMap.get(agreementPrice.getHotelId()) == null) {
+                                jedis.set(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                                        agreementPrice.getHotelId()),
+                                        "1");
+                                hotelMap.put(agreementPrice.getHotelId(), agreementPrice.getHotelName());
+                            }
                         }
                     }
 
