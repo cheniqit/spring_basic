@@ -199,8 +199,6 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                 jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
                         dto.getHotelId(),dto.getRoomTypeId())
                 );
-                jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
-                        dto.getHotelId()));
                 jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                         dto.getHotelId(),dto.getRoomTypeId())
                 );
@@ -209,9 +207,8 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                 checkBean.setValid("T");
                 int checkCount = priceService.countByPramas(checkBean);
                 if (checkCount<0) {
-                    jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
-                            dto.getHotelId(), dto.getRoomTypeId())
-                    );
+                    jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                            dto.getHotelId()));
                 }
 
 

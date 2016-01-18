@@ -37,7 +37,7 @@
         AND hotelName = #{hotelName}
       </if>
       <if test="roomTypeId != null">
-        AND roomTypeId = #{v}
+        AND roomTypeId = #{roomTypeId}
       </if>
       <if test="roomTypeName != null">
         AND roomTypeName = #{roomTypeName}
