@@ -202,6 +202,9 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                 jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                         dto.getHotelId(),dto.getRoomTypeId())
                 );
+                jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_STORECOUNT,
+                        dto.getHotelId(),dto.getRoomTypeId())
+                );
                 TRoomSaleAgreementPriceDto checkBean = new TRoomSaleAgreementPriceDto();
                 checkBean.setHotelId(dto.getHotelId());
                 checkBean.setValid("T");
