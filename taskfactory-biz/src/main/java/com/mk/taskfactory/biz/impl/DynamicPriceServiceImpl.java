@@ -165,15 +165,15 @@ public class DynamicPriceServiceImpl implements DynamicPriceService {
                     jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_PRICE_MEITUAN,
                             dto.getHotelId(),dto.getRoomTypeId())
                     );
-                    jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
-                            dto.getHotelId()));
                     jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
                             dto.getHotelId(),dto.getRoomTypeId())
                     );
+                    jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_STORECOUNT,
+                            dto.getHotelId(), dto.getRoomTypeId())
+                    );
                     if (hotelMap.get(agreementPrice.getHotelId())==null) {
-                        jedis.del(String.format("%s%s:%s", RedisCacheName.DYNAMIC_DEALCOUNT,
-                                dto.getHotelId(), dto.getRoomTypeId())
-                        );
+                        jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
+                                dto.getHotelId()));
                         hotelMap.put(agreementPrice.getHotelId(),agreementPrice.getHotelName());
                     }
                     agreementPriceService.updateValidById(agreementPrice.getId());
