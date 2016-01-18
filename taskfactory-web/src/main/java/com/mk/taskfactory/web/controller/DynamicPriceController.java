@@ -29,5 +29,10 @@ public class DynamicPriceController {
         Map<String,Object> result=dynamicPriceService.dynamicPriceToLog(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
-
+    @RequestMapping(value = "/offline", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> offline() {
+        Map<String,Object> result=dynamicPriceService.offline();
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
 }

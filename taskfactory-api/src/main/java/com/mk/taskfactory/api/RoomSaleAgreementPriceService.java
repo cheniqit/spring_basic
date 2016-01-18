@@ -11,4 +11,5 @@ public interface RoomSaleAgreementPriceService {
     public int countByPramas(TRoomSaleAgreementPriceDto bean);
     public List<TRoomSaleAgreementPriceDto> qureyByPramas(TRoomSaleAgreementPriceDto bean);
     public TRoomSaleAgreementPriceDto getById(Integer id);
+    public Integer updateValidById(Integer id);
 }

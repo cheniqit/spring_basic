@@ -99,6 +99,11 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+    public void updateDealCountToRedis() {
+        TRoomSaleAgreementPriceDto dto = new TRoomSaleAgreementPriceDto();
+        updateDealCountToRedis(dto);
+    }
+
     public Map<String,Object> updateDealCountToRedis(TRoomSaleAgreementPriceDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("updateDealCountToRedis","协议价同步到Radis",Event.SUCCESS,
@@ -163,6 +168,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
     public Map<String,Object> deleteRedis(Integer id,String key){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("deleteRedis","删除Radis",Event.SUCCESS,

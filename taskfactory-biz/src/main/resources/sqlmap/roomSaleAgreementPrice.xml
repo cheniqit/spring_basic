@@ -78,5 +78,8 @@
     from t_room_sale_agreement_price
     WHERE  id=#{id}
   </select>
-
+  <update id="updateValidById" parameterType="java.lang.Integer">
+    update t_room_sale_agreement_price set valid='F' where
+    id=#{id}
+  </update>
 </mapper>

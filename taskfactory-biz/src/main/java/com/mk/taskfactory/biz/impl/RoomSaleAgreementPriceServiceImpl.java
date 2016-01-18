@@ -38,6 +38,9 @@ public class RoomSaleAgreementPriceServiceImpl implements RoomSaleAgreementPrice
     public TRoomSaleAgreementPriceDto getById(Integer id){
         return buildDto(roomSaleAgreementPriceMapper.getById(id));
     }
+    public Integer updateValidById(Integer id){
+        return roomSaleAgreementPriceMapper.updateValidById(id);
+    }
     private TRoomSaleAgreementPriceDto buildDto(TRoomSaleAgreementPrice bean) {
         if (bean==null){
             return new TRoomSaleAgreementPriceDto();

@@ -9,5 +9,5 @@ public interface RoomSaleAgreementPriceMapper {
     int countByPramas(TRoomSaleAgreementPriceDto bean);
     List<TRoomSaleAgreementPrice> qureyByPramas(TRoomSaleAgreementPriceDto bean);
     TRoomSaleAgreementPrice getById(Integer id);
-
+    Integer updateValidById(Integer id);
 }

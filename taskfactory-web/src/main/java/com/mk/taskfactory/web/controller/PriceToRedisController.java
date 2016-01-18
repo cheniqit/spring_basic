@@ -3,6 +3,7 @@ package com.mk.taskfactory.web.controller;
 
 import com.mk.taskfactory.api.PriceToRedisService;
 import com.mk.taskfactory.api.dtos.TRoomSaleAgreementPriceDto;
+import com.mk.taskfactory.api.dtos.TRoomTypeDynamicPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,4 +39,5 @@ public class PriceToRedisController {
         Map<String,Object> result=priceToRedisService.deleteRedis(id,key);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
+
 }

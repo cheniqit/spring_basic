@@ -7,5 +7,7 @@ import java.util.Map;
 
 public interface DynamicPriceService {
     public Map<String,Object> dynamicPriceToLog(TRoomTypeDynamicPriceDto dto);
+    public Map<String,Object> offline();
+
 }
 
