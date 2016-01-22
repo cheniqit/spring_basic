@@ -209,7 +209,7 @@ public class PriceToRedisServiceImpl implements PriceToRedisService {
                 checkBean.setHotelId(dto.getHotelId());
                 checkBean.setValid("T");
                 int checkCount = priceService.countByPramas(checkBean);
-                if (checkCount<0) {
+                if (checkCount<=0) {
                     jedis.del(String.format("%s%s", RedisCacheName.DYNAMIC_PRICE_AGREEMENT,
                             dto.getHotelId()));
                 }

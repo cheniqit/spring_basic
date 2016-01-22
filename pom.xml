@@ -357,7 +357,7 @@
                 <ods.jdbc.user>root</ods.jdbc.user>
                 <ods.jdbc.password>LZBV5D5ak</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
+                <ots.url>http://huidu.imike.cn/ots</ots.url>
                 <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
                 <spring.redis.sentinel.master>ota2-test-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.4.20.206:26379</spring.redis.sentinel.nodes>
@@ -422,7 +422,7 @@
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
+                <ots.url>http://huidu.imike.cn/ots</ots.url>
                 <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
                 <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
