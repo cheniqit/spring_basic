@@ -92,7 +92,7 @@ public class DynamicPriceServiceImpl implements DynamicPriceService {
                     params.put("hotelid", agreementPrice.getHotelId().toString());
                     params.put("roomtypeid", agreementPrice.getRoomTypeId().toString());
                     params.put("checkinoclock", checkinoclock);
-                    String postResult = HttpUtils.doPost(Constants.OTS_HUIDU + DYNAMICPRICE_URL, params);
+                    String postResult = HttpUtils.doPost(Constants.OTS_URL + DYNAMICPRICE_URL, params);
                     if (postResult == null) {
                         logger.info(String.format("====================postResult is null===================="));
                     }

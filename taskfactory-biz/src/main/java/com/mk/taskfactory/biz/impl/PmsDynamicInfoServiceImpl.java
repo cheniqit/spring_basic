@@ -88,7 +88,7 @@ public class PmsDynamicInfoServiceImpl implements PmsDynamicInfoService {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("hotelid", agreementPrice.getHotelId().toString());
                     params.put("roomtypeid", agreementPrice.getRoomTypeId().toString());
-                    String postResult = HttpUtils.doPost(Constants.OTS_HUIDU + DYNAMICPRICE_URL, params);
+                    String postResult = HttpUtils.doPost(Constants.OTS_URL + DYNAMICPRICE_URL, params);
                     if (postResult == null) {
                         logger.info(String.format("====================postResult is null===================="));
                     }
