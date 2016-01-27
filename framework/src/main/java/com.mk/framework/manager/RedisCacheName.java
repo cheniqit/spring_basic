@@ -41,4 +41,106 @@ public class RedisCacheName {
     public static final String DYNAMIC_DEALCOUNT = "DYNAMIC:DEALCOUNT:";
     /********动态库存数量***********/
     public static final String DYNAMIC_STORECOUNT = "DYNAMIC:STORECOUNT:";
+
+    /**
+     * 当前整点电话预定点击率
+     */
+
+    public static final String CURRENT_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO = "CURRENT_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO_";
+
+    /**
+     * 当前整点电话预定点击数
+     */
+
+    public static final String CURRENT_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM = "CURRENT_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM_";
+
+    /**
+     * 上一个整点电话预定点击率
+     */
+
+    public static final String FRONT_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO = "FRONT_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO_";
+
+    /**
+     * 上一个整点电话预定点击数
+     */
+
+    public static final String FRONT_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM = "FRONT_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM_";
+
+    /**
+     * 昨日电话预定点击率
+     */
+
+    public static final String YESTERDAY_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO = "YESTERDAY_OCLOCK_INTELLIGENT_PHONE_CLICK_RATIO_";
+
+    /**
+     * 昨日电话预定点击数
+     */
+
+    public static final String YESTERDAY_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM = "YESTERDAY_OCLOCK_INTELLIGENT_PHONE_CLICK_NUM_";
+
+    /**
+     * 电话预定点击率
+     *
+     */
+    public static final String INTELLIGENT_PHONE_CLICK_RATIO = "INTELLIGENT_PHONE_CLICK_RATIO_";
+
+    /**
+     * 电话预定点击率
+     *
+     */
+    public static final String INTELLIGENT_PHONE_CLICK_NUM = "INTELLIGENT_PHONE_CLICK_NUM_";
+
+    /**
+     * 当前整点酒店拒单率
+     */
+    public static final String CURRENT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO = "CURRENT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO_";
+    /**
+     * 当前整点酒店拒单数
+     */
+    public static final String CURRENT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM = "CURRENT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM_";
+
+    /**
+     * 上一个整点酒店拒单率
+     */
+
+    public static final String FRONT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO = "FRONT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO_";
+
+    /**
+     * 上一个整点酒店拒单数
+     */
+
+    public static final String FRONT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM = "FRONT_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM_";
+
+    /**
+     * 昨日酒店拒单率
+     */
+
+    public static final String YESTERDAY_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO = "YESTERDAY_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_RATIO_";
+
+    /**
+     * 昨日酒店拒单数
+     */
+
+    public static final String YESTERDAY_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM = "YESTERDAY_OCLOCK_INTELLIGENT_PHONE_REFUSE_ORDER_NUM_";
+    /**
+     * 酒店拒单率
+     */
+
+    public static final String INTELLIGENT_PHONE_REFUSE_ORDER_RATIO = "INTELLIGENT_PHONE_REFUSE_ORDER_RATIO_";
+
+    /**
+     * 酒店拒单数
+     */
+
+    public static final String INTELLIGENT_PHONE_REFUSE_ORDER_NUM = "INTELLIGENT_PHONE_REFUSE_ORDER_NUM_";
+    /**
+     * 酒店点击数量
+     */
+
+    public static final String HOTEL_CLICK_NUM = "HOTEL_CLICK_NUM";
+    /**
+     * 电话预定数量
+     */
+
+    public static final String INTELLIGENT_PHONE_ORDER_NUM = "INTELLIGENT_PHONE_ORDER_NUM";
 }
