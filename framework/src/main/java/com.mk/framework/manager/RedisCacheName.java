@@ -137,10 +137,9 @@ public class RedisCacheName {
      * 酒店点击数量
      */
 
-    public static final String HOTEL_CLICK_NUM = "HOTEL_CLICK_NUM";
-    /**
-     * 电话预定数量
-     */
-
-    public static final String INTELLIGENT_PHONE_ORDER_NUM = "INTELLIGENT_PHONE_ORDER_NUM";
+    public static final String HOTEL_CLICK_NUM = "HOTEL_CLICK_NUML_";
+    /***电话预定数量***/
+    public static final String INTELLIGENT_PHONE_ORDER_NUM = "INTELLIGENT_PHONE_ORDER_NUM_";
+    /***去哪儿酒店信息***/
+    public static final String QHOTE = "QHOTE_";
 }

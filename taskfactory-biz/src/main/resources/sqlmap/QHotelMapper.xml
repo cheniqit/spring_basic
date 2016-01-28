@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QHotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.QHotel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="hotel_contact_name" property="hotelContactName" jdbcType="VARCHAR" />
+    <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+    <result column="dis_id" property="disId" jdbcType="INTEGER" />
+    <result column="detail_addr" property="detailAddr" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="open_time" property="openTime" jdbcType="TIMESTAMP" />
+    <result column="repair_time" property="repairTime" jdbcType="TIMESTAMP" />
+    <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+    <result column="business_license_front" property="businessLicenseFront" jdbcType="VARCHAR" />
+    <result column="business_license_back" property="businessLicenseBack" jdbcType="VARCHAR" />
+    <result column="pms" property="pms" jdbcType="VARCHAR" />
+    <result column="visible" property="visible" jdbcType="CHAR" />
+    <result column="online" property="online" jdbcType="CHAR" />
+    <result column="id_card_front" property="idCardFront" jdbcType="VARCHAR" />
+    <result column="id_card_back" property="idCardBack" jdbcType="VARCHAR" />
+    <result column="retention_time" property="retentionTime" jdbcType="CHAR" />
+    <result column="default_leave_time" property="defaultLeaveTime" jdbcType="CHAR" />
+    <result column="need_wait" property="needWait" jdbcType="CHAR" />
+    <result column="hotel_phone" property="hotelPhone" jdbcType="VARCHAR" />
+    <result column="is_new_pms" property="isNewPms" jdbcType="CHAR" />
+    <result column="priority" property="priority" jdbcType="INTEGER" />
+    <result column="rulecode" property="rulecode" jdbcType="INTEGER" />
+    <result column="isthreshold" property="isthreshold" jdbcType="CHAR" />
+    <result column="pms_opt_time" property="pmsOptTime" jdbcType="BIGINT" />
+    <result column="prov_code" property="provCode" jdbcType="INTEGER" />
+    <result column="city_code" property="cityCode" jdbcType="INTEGER" />
+    <result column="dis_code" property="disCode" jdbcType="INTEGER" />
+    <result column="area_code" property="areaCode" jdbcType="INTEGER" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="qt_phone" property="qtPhone" jdbcType="VARCHAR" />
+    <result column="hotel_type" property="hotelType" jdbcType="INTEGER" />
+    <result column="introduction" property="introduction" jdbcType="LONGVARCHAR" />
+    <result column="traffic" property="traffic" jdbcType="LONGVARCHAR" />
+    <result column="hotel_pic" property="hotelPic" jdbcType="LONGVARCHAR" />
+    <result column="peripheral" property="peripheral" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, source_id, hotel_name, hotel_contact_name, reg_time, dis_id, detail_addr, longitude, 
+    latitude, open_time, repair_time, room_num, business_license_front, business_license_back, 
+    pms, visible, online, id_card_front, id_card_back, retention_time, default_leave_time, 
+    need_wait, hotel_phone, is_new_pms, priority, rulecode, isthreshold, pms_opt_time, 
+    prov_code, city_code, dis_code, area_code, area_name, qt_phone, hotel_type,
+    introduction, traffic, hotel_pic, peripheral
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="sourceId != null">
+        AND source_id = #{sourceId}
+      </if>
+      <if test="hotelName != null">
+        AND hotel_name = #{hotelName}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" resultType="java.lang.Integer" >
+    select count(*) from q_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from q_hotel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+    insert into q_hotel (id, source_id, hotel_name, 
+      hotel_contact_name, reg_time, dis_id, 
+      detail_addr, longitude, latitude, 
+      open_time, repair_time, room_num, 
+      business_license_front, business_license_back, 
+      pms, visible, online, id_card_front, 
+      id_card_back, retention_time, default_leave_time, 
+      need_wait, hotel_phone, is_new_pms, 
+      priority, rulecode, isthreshold, 
+      pms_opt_time, prov_code, city_code, 
+      dis_code, area_code, area_name, 
+      qt_phone, hotel_type, introduction, 
+      traffic, hotel_pic, peripheral
+      )
+    values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
+      #{hotelContactName,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, #{disId,jdbcType=INTEGER}, 
+      #{detailAddr,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, 
+      #{openTime,jdbcType=TIMESTAMP}, #{repairTime,jdbcType=TIMESTAMP}, #{roomNum,jdbcType=INTEGER}, 
+      #{businessLicenseFront,jdbcType=VARCHAR}, #{businessLicenseBack,jdbcType=VARCHAR}, 
+      #{pms,jdbcType=VARCHAR}, #{visible,jdbcType=CHAR}, #{online,jdbcType=CHAR}, #{idCardFront,jdbcType=VARCHAR}, 
+      #{idCardBack,jdbcType=VARCHAR}, #{retentionTime,jdbcType=CHAR}, #{defaultLeaveTime,jdbcType=CHAR}, 
+      #{needWait,jdbcType=CHAR}, #{hotelPhone,jdbcType=VARCHAR}, #{isNewPms,jdbcType=CHAR}, 
+      #{priority,jdbcType=INTEGER}, #{rulecode,jdbcType=INTEGER}, #{isthreshold,jdbcType=CHAR}, 
+      #{pmsOptTime,jdbcType=BIGINT}, #{provCode,jdbcType=INTEGER}, #{cityCode,jdbcType=INTEGER}, 
+      #{disCode,jdbcType=INTEGER}, #{areaCode,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, 
+      #{qtPhone,jdbcType=VARCHAR}, #{hotelType,jdbcType=INTEGER}, #{introduction,jdbcType=LONGVARCHAR}, 
+      #{traffic,jdbcType=LONGVARCHAR}, #{hotelPic,jdbcType=LONGVARCHAR}, #{peripheral,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+    update q_hotel
+    <set >
+      <if test="sourceId != null" >
+        source_id = #{sourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelContactName != null" >
+        hotel_contact_name = #{hotelContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="regTime != null" >
+        reg_time = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disId != null" >
+        dis_id = #{disId,jdbcType=INTEGER},
+      </if>
+      <if test="detailAddr != null" >
+        detail_addr = #{detailAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DECIMAL},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DECIMAL},
+      </if>
+      <if test="openTime != null" >
+        open_time = #{openTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repairTime != null" >
+        repair_time = #{repairTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomNum != null" >
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="businessLicenseFront != null" >
+        business_license_front = #{businessLicenseFront,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseBack != null" >
+        business_license_back = #{businessLicenseBack,jdbcType=VARCHAR},
+      </if>
+      <if test="pms != null" >
+        pms = #{pms,jdbcType=VARCHAR},
+      </if>
+      <if test="visible != null" >
+        visible = #{visible,jdbcType=CHAR},
+      </if>
+      <if test="online != null" >
+        online = #{online,jdbcType=CHAR},
+      </if>
+      <if test="idCardFront != null" >
+        id_card_front = #{idCardFront,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardBack != null" >
+        id_card_back = #{idCardBack,jdbcType=VARCHAR},
+      </if>
+      <if test="retentionTime != null" >
+        retention_time = #{retentionTime,jdbcType=CHAR},
+      </if>
+      <if test="defaultLeaveTime != null" >
+        default_leave_time = #{defaultLeaveTime,jdbcType=CHAR},
+      </if>
+      <if test="needWait != null" >
+        need_wait = #{needWait,jdbcType=CHAR},
+      </if>
+      <if test="hotelPhone != null" >
+        hotel_phone = #{hotelPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="isNewPms != null" >
+        is_new_pms = #{isNewPms,jdbcType=CHAR},
+      </if>
+      <if test="priority != null" >
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="rulecode != null" >
+        rulecode = #{rulecode,jdbcType=INTEGER},
+      </if>
+      <if test="isthreshold != null" >
+        isthreshold = #{isthreshold,jdbcType=CHAR},
+      </if>
+      <if test="pmsOptTime != null" >
+        pms_opt_time = #{pmsOptTime,jdbcType=BIGINT},
+      </if>
+      <if test="provCode != null" >
+        prov_code = #{provCode,jdbcType=INTEGER},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=INTEGER},
+      </if>
+      <if test="disCode != null" >
+        dis_code = #{disCode,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="qtPhone != null" >
+        qt_phone = #{qtPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelType != null" >
+        hotel_type = #{hotelType,jdbcType=INTEGER},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="traffic != null" >
+        traffic = #{traffic,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hotelPic != null" >
+        hotel_pic = #{hotelPic,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="peripheral != null" >
+        peripheral = #{peripheral,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

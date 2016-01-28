@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.OtsHotelImageMapper">
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.TExHotelImage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="city_url" jdbcType="VARCHAR" property="cityUrl" />
+    <result column="hotel_source_id" jdbcType="VARCHAR" property="hotelSourceId" />
+    <result column="hotel_name" jdbcType="VARCHAR" property="hotelName" />
+    <result column="hotel_address" jdbcType="VARCHAR" property="hotelAddress" />
+    <result column="big" jdbcType="VARCHAR" property="big" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="src" jdbcType="VARCHAR" property="src" />
+    <result column="ugc" jdbcType="CHAR" property="ugc" />
+    <result column="osrc" jdbcType="VARCHAR" property="osrc" />
+    <result column="cre_date" jdbcType="VARCHAR" property="creDate" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="width" jdbcType="BIGINT" property="width" />
+    <result column="height" jdbcType="BIGINT" property="height" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, city_name, city_url, hotel_source_id, hotel_name, hotel_address, big, url, tag, 
+    src, ugc, osrc, cre_date, title, author, width, height, create_time, update_time
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="cityName != null">
+        AND city_name = #{cityName}
+      </if>
+      <if test="cityUrl != null">
+        AND city_url = #{cityUrl}
+      </if>
+      <if test="hotelSourceId != null">
+        AND hotel_source_id = #{hotelSourceId}
+      </if>
+      <if test="hotelName != null">
+        AND hotel_name = #{hotelName}
+      </if>
+      <if test="tag != null">
+        AND tag = #{tag}
+      </if>
+      <if test="title != null">
+        AND title = #{title}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto" >
+    select
+    <include refid="Base_Column_List" />
+    from t_ex_hotel_hotel_image
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto" resultType="java.lang.Integer" >
+    select count(*) from t_ex_hotel_hotel_image
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto" >
+    select
+    <include refid="Base_Column_List" />
+    from t_ex_hotel_hotel_image
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from t_ex_hotel_hotel_image
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto">
+    insert into t_ex_hotel_hotel_image (id, city_name, city_url, 
+      hotel_source_id, hotel_name, hotel_address, 
+      big, url, tag, src, 
+      ugc, osrc, cre_date, title, 
+      author, width, height, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{cityUrl,jdbcType=VARCHAR}, 
+      #{hotelSourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, 
+      #{big,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{src,jdbcType=VARCHAR}, 
+      #{ugc,jdbcType=CHAR}, #{osrc,jdbcType=VARCHAR}, #{creDate,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{width,jdbcType=BIGINT}, #{height,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto">
+    update t_ex_hotel_hotel_image
+    <set>
+      <if test="cityName != null">
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityUrl != null">
+        city_url = #{cityUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelSourceId != null">
+        hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelName != null">
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelAddress != null">
+        hotel_address = #{hotelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="big != null">
+        big = #{big,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="src != null">
+        src = #{src,jdbcType=VARCHAR},
+      </if>
+      <if test="ugc != null">
+        ugc = #{ugc,jdbcType=CHAR},
+      </if>
+      <if test="osrc != null">
+        osrc = #{osrc,jdbcType=VARCHAR},
+      </if>
+      <if test="creDate != null">
+        cre_date = #{creDate,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="width != null">
+        width = #{width,jdbcType=BIGINT},
+      </if>
+      <if test="height != null">
+        height = #{height,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

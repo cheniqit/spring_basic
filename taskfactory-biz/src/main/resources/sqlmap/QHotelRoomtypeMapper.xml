@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.QHotelRoomtypeMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.QHotelRoomtype" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="VARCHAR" />
+    <result column="roomtype_name" property="roomtypeName" jdbcType="VARCHAR" />
+    <result column="room_area" property="roomArea" jdbcType="VARCHAR" />
+    <result column="rt_bed_type" property="rtBedType" jdbcType="VARCHAR" />
+    <result column="bed_type" property="bedType" jdbcType="VARCHAR" />
+    <result column="bed_size" property="bedSize" jdbcType="VARCHAR" />
+    <result column="bathroom_type" property="bathroomType" jdbcType="VARCHAR" />
+    <result column="air_conditioner" property="airConditioner" jdbcType="VARCHAR" />
+    <result column="wash_supplies" property="washSupplies" jdbcType="VARCHAR" />
+    <result column="shoes" property="shoes" jdbcType="VARCHAR" />
+    <result column="tv" property="tv" jdbcType="VARCHAR" />
+    <result column="broadband" property="broadband" jdbcType="VARCHAR" />
+    <result column="wifi" property="wifi" jdbcType="VARCHAR" />
+    <result column="free_water" property="freeWater" jdbcType="VARCHAR" />
+    <result column="floor_board" property="floorBoard" jdbcType="VARCHAR" />
+    <result column="free_tea" property="freeTea" jdbcType="VARCHAR" />
+    <result column="desk" property="desk" jdbcType="VARCHAR" />
+    <result column="computer" property="computer" jdbcType="VARCHAR" />
+    <result column="fridge" property="fridge" jdbcType="VARCHAR" />
+    <result column="code_case" property="codeCase" jdbcType="VARCHAR" />
+    <result column="coffee" property="coffee" jdbcType="VARCHAR" />
+    <result column="electric_kettle" property="electricKettle" jdbcType="VARCHAR" />
+    <result column="hair_drier" property="hairDrier" jdbcType="VARCHAR" />
+    <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+    <result column="has_window" property="hasWindow" jdbcType="VARCHAR" />
+    <result column="floor" property="floor" jdbcType="VARCHAR" />
+    <result column="live_num" property="liveNum" jdbcType="INTEGER" />
+    <result column="can_add_bed" property="canAddBed" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotel_id, roomtype_name, room_area, rt_bed_type, bed_type, bed_size, bath_room_type, 
+    air_conditioner, wash_supplies, shoes, tv, broadband, wifi, free_water, floor_board, 
+    free_tea, desk, computer, fridge, code_case, coffee, electric_kettle, hair_drier, 
+    room_num, has_window, floor, live_num, can_add_bed
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="roomtypeName != null">
+        AND roomtype_name = #{roomtypeName}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelRoomtypeDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel_roomtype
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.QHotelRoomtypeDto" resultType="java.lang.Integer" >
+    select count(*) from q_hotel_roomtype
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelRoomtypeDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel_roomtype
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from q_hotel_roomtype
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.QHotelRoomtypeDto" >
+    insert into q_hotel_roomtype (id, hotel_id, roomtype_name, 
+      room_area, rt_bed_type, bed_type, 
+      bed_size, bathroom_type, air_conditioner,
+      wash_supplies, shoes, tv, 
+      broadband, wifi, free_water, 
+      floor_board, free_tea, desk, 
+      computer, fridge, code_case, 
+      coffee, electric_kettle, hair_drier, 
+      room_num, has_window, floor,
+      live_num, can_add_bed)
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=VARCHAR}, #{roomtypeName,jdbcType=VARCHAR}, 
+      #{roomArea,jdbcType=VARCHAR}, #{rtBedType,jdbcType=VARCHAR}, #{bedType,jdbcType=VARCHAR}, 
+      #{bedSize,jdbcType=VARCHAR}, #{bathroomType,jdbcType=VARCHAR}, #{airConditioner,jdbcType=VARCHAR},
+      #{washSupplies,jdbcType=VARCHAR}, #{shoes,jdbcType=VARCHAR}, #{tv,jdbcType=VARCHAR}, 
+      #{broadband,jdbcType=VARCHAR}, #{wifi,jdbcType=VARCHAR}, #{freeWater,jdbcType=VARCHAR}, 
+      #{floorBoard,jdbcType=VARCHAR}, #{freeTea,jdbcType=VARCHAR}, #{desk,jdbcType=VARCHAR}, 
+      #{computer,jdbcType=VARCHAR}, #{fridge,jdbcType=VARCHAR}, #{codeCase,jdbcType=VARCHAR}, 
+      #{coffee,jdbcType=VARCHAR}, #{electricKettle,jdbcType=VARCHAR}, #{hairDrier,jdbcType=VARCHAR}, 
+      #{roomNum,jdbcType=INTEGER}, #{hasWindow,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR},
+      #{liveNum,jdbcType=INTEGER}, #{canAddBed,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.QHotelRoomtypeDto" >
+    update q_hotel_roomtype
+    <set >
+      <if test="id != null" >
+        id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomtypeName != null" >
+        roomtype_name = #{roomtypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomArea != null" >
+        room_area = #{roomArea,jdbcType=VARCHAR},
+      </if>
+      <if test="rtBedType != null" >
+        rt_bed_type = #{rtBedType,jdbcType=VARCHAR},
+      </if>
+      <if test="bedType != null" >
+        bed_type = #{bedType,jdbcType=VARCHAR},
+      </if>
+      <if test="bedSize != null" >
+        bed_size = #{bedSize,jdbcType=VARCHAR},
+      </if>
+      <if test="bathroomType != null" >
+        bathroom_type = #{bathroomType,jdbcType=VARCHAR},
+      </if>
+      <if test="airConditioner != null" >
+        air_conditioner = #{airConditioner,jdbcType=VARCHAR},
+      </if>
+      <if test="washSupplies != null" >
+        wash_supplies = #{washSupplies,jdbcType=VARCHAR},
+      </if>
+      <if test="shoes != null" >
+        shoes = #{shoes,jdbcType=VARCHAR},
+      </if>
+      <if test="tv != null" >
+        tv = #{tv,jdbcType=VARCHAR},
+      </if>
+      <if test="broadband != null" >
+        broadband = #{broadband,jdbcType=VARCHAR},
+      </if>
+      <if test="wifi != null" >
+        wifi = #{wifi,jdbcType=VARCHAR},
+      </if>
+      <if test="freeWater != null" >
+        free_water = #{freeWater,jdbcType=VARCHAR},
+      </if>
+      <if test="floorBoard != null" >
+        floor_board = #{floorBoard,jdbcType=VARCHAR},
+      </if>
+      <if test="freeTea != null" >
+        free_tea = #{freeTea,jdbcType=VARCHAR},
+      </if>
+      <if test="desk != null" >
+        desk = #{desk,jdbcType=VARCHAR},
+      </if>
+      <if test="computer != null" >
+        computer = #{computer,jdbcType=VARCHAR},
+      </if>
+      <if test="fridge != null" >
+        fridge = #{fridge,jdbcType=VARCHAR},
+      </if>
+      <if test="codeCase != null" >
+        code_case = #{codeCase,jdbcType=VARCHAR},
+      </if>
+      <if test="coffee != null" >
+        coffee = #{coffee,jdbcType=VARCHAR},
+      </if>
+      <if test="electricKettle != null" >
+        electric_kettle = #{electricKettle,jdbcType=VARCHAR},
+      </if>
+      <if test="hairDrier != null" >
+        hair_drier = #{hairDrier,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNum != null" >
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="hasWindow != null" >
+        has_window = #{hasWindow,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null" >
+        floor = #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="liveNum != null" >
+        live_num = #{liveNum,jdbcType=INTEGER},
+      </if>
+      <if test="canAddBed != null" >
+        can_add_bed = #{canAddBed,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
