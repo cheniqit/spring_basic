@@ -300,6 +300,9 @@
 
         <profile>
             <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>local</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -329,11 +332,11 @@
                 <!-- 七牛获取文件路径 -->
                 <qiniu.download.address>https://dn-imke-pro.qbox.me</qiniu.download.address>
                 <!-- 七牛空间名称 -->
-                <qiniu.bucket>test</qiniu.bucket>
+                <qiniu.bucket>hotelpic</qiniu.bucket>
                 <!-- 七牛资源空间地址 -->
-                <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
+                <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
-                <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
+                <qiniu.resourceBucket>resource</qiniu.resourceBucket>
             </properties>
         </profile>
 
@@ -355,9 +358,6 @@
 
         <profile>
             <id>shanghai-simulation</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <label>simulation</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>

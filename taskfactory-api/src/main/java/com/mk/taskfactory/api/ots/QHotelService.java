@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.ots;
 
-import com.mk.taskfactory.api.dtos.HotelDayClickDto;
-import com.mk.taskfactory.api.dtos.QHotelDto;
+import com.mk.taskfactory.api.dtos.crawer.QHotelDto;
 
 import java.util.List;
 

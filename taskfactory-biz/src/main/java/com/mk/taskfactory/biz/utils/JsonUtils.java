@@ -4,7 +4,7 @@ package com.mk.taskfactory.biz.utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang.StringUtils;
+import com.mk.taskfactory.model.crawer.QHotel;
 
 import java.util.*;
 
@@ -26,6 +26,11 @@ public class JsonUtils {
         JSONArray jsonArray = JSONArray.parseArray(s);
         System.out.println(jsonArray.get(0));
         Object dd =jsonArray.get(0);
+        final QHotel qHotel = new QHotel();
+        qHotel.setAreaCode(22);
+        String  object1 = JSONObject.toJSONString(qHotel);
+        System.out.println(object1);
+
     }
     /* 将Json对象转换成Map
     *
@@ -58,6 +63,17 @@ public class JsonUtils {
             result.add(obj);
         }
         return result;
+
+    }
+
+    /* 将object对象转换成json
+  *
+  * @param object
+  * @return json对象
+  * @throws JSONException
+  */
+    public static String toJSONString(Object bean) throws JSONException {
+        return JSONArray.toJSONString(bean);
 
     }
 

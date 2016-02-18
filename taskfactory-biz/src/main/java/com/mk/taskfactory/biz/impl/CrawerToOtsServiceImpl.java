@@ -2,12 +2,9 @@ package com.mk.taskfactory.biz.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.mk.framework.manager.RedisCacheName;
-import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.CrawerToOtsService;
 import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
-import com.mk.taskfactory.api.dtos.QHotelDto;
 import com.mk.taskfactory.api.dtos.crawer.TExCommentImgDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 import com.mk.taskfactory.api.ots.OtsCommentImgService;
@@ -16,7 +13,6 @@ import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.PicUtils;
 import com.mk.taskfactory.biz.utils.QiniuUtils;
 import com.mk.taskfactory.common.Constants;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.Jedis;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -80,12 +75,17 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             }
 
             for (final TExCommentImgDto commentImg:commentImgList){
-                pool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        saveCommentImg(commentImg);
-                    }
-                });
+                TExCommentImgDto otsCommentImg = new TExCommentImgDto();
+                otsCommentImg.setId(commentImg.getId());
+                otsCommentImg = otsCommentImgService.getByPramas(otsCommentImg);
+                if (otsCommentImg == null || otsCommentImg.getSrc()==null) {
+                    pool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveCommentImg(commentImg);
+                        }
+                    });
+                }
 
             }
 
@@ -168,12 +168,17 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             }
 
             for (final TExHotelImageDto hotelImage:hotelImageList){
-                pool.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        saveHotelImage(hotelImage);
-                    }
-                });
+                TExHotelImageDto otsHotelImg = new TExHotelImageDto();
+                otsHotelImg.setId(hotelImage.getId());
+                otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
+                if (otsHotelImg == null || otsHotelImg.getSrc()==null) {
+                    pool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveHotelImage(hotelImage);
+                        }
+                    });
+                }
 
             }
 
@@ -238,6 +243,12 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         if (commentImgDto==null|| StringUtils.isEmpty(commentImgDto.getHotelSourceId())){
             return;
         }
+        TExCommentImgDto otsCommentImg = new TExCommentImgDto();
+        otsCommentImg.setId(commentImgDto.getId());
+        otsCommentImg = otsCommentImgService.getByPramas(otsCommentImg);
+        if (otsCommentImg == null || otsCommentImg.getSrc()==null) {
+            return;
+        }
         saveCommentImg(commentImgDto);
     }
     public void saveHotelImage(Long id) {
@@ -248,6 +259,12 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         hotelImageDto.setId(id);
         hotelImageDto = crawerHotelImageService.getByPramas(hotelImageDto);
         if (hotelImageDto==null|| StringUtils.isEmpty(hotelImageDto.getHotelSourceId())){
+            return;
+        }
+        TExHotelImageDto otsHotelImg = new TExHotelImageDto();
+        otsHotelImg.setId(hotelImageDto.getId());
+        otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
+        if (otsHotelImg == null || otsHotelImg.getSrc()==null) {
             return;
         }
         saveHotelImage(hotelImageDto);

@@ -1,6 +1,5 @@
 package com.mk.taskfactory.api.crawer;
 
-import com.mk.taskfactory.api.dtos.QHotelDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 
 import java.util.List;

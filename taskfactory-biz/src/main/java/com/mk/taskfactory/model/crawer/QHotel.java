@@ -1,9 +1,9 @@
-package com.mk.taskfactory.api.dtos;
+package com.mk.taskfactory.model.crawer;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class QHotelDto {
+public class QHotel {
     private Long id;
 
     private String sourceId;
@@ -82,9 +82,7 @@ public class QHotelDto {
 
     private String peripheral;
 
-    private Integer pageIndex;
-
-    private Integer pageSize;
+    private Integer hotelSource;
 
     public String getIntroduction() {
         return introduction;
@@ -398,19 +396,11 @@ public class QHotelDto {
         this.hotelType = hotelType;
     }
 
-    public Integer getPageIndex() {
-        return pageIndex;
+    public Integer getHotelSource() {
+        return hotelSource;
     }
 
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setHotelSource(Integer hotelSource) {
+        this.hotelSource = hotelSource;
     }
 }

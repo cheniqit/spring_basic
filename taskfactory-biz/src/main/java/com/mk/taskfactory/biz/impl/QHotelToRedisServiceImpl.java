@@ -4,14 +4,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.RedisUtil;
-import com.mk.taskfactory.api.PriceToRedisService;
 import com.mk.taskfactory.api.QHotelToRedisService;
-import com.mk.taskfactory.api.RoomSaleAgreementPriceService;
-import com.mk.taskfactory.api.dtos.QHotelDto;
-import com.mk.taskfactory.api.dtos.TRoomSaleAgreementPriceDto;
+import com.mk.taskfactory.api.dtos.crawer.QHotelDto;
 import com.mk.taskfactory.api.ots.QHotelService;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import org.apache.commons.lang.StringUtils;
+import com.mk.taskfactory.biz.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +45,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             return resultMap;
         }
         int pageSize=1000;
-        int pageCount=count/pageSize;
+        int pageCount=1/2;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
         for (int i=0;i<=pageCount;i++){
@@ -72,9 +69,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             logger.info(String.format("\n====================sourceId={}====================\n")
                                     ,hotelDto.getSourceId());
                             if (hotelDto.getSourceId()!=null){
-                                jedis.set(String.format("%s%s", RedisCacheName.QHOTE,
-                                        hotelDto.getSourceId()),
-                                        "1");
+                                hotelDto.setHotelSource(2);
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTELSOURCEID,
+                                        hotelDto.getSourceId()), JsonUtils.toJSONString(hotelDto)
+                                        );
+                                System.out.println(JsonUtils.toJSONString(hotelDto));
                             }
 
                         } catch (Exception e) {

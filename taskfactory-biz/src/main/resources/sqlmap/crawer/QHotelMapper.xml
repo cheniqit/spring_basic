@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QHotelMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.QHotel" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.QHotel" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
     <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
@@ -63,7 +63,7 @@
       </if>
     </where>
   </sql>
-  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" >
     select
     <include refid="Base_Column_List" />
     from q_hotel
@@ -73,12 +73,12 @@
       limit ${pageIndex} , ${pageSize}
     </if>
   </select>
-  <select id="count" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" resultType="java.lang.Integer" >
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" resultType="java.lang.Integer" >
     select count(*) from q_hotel
     <include refid="Base_Query_List" />
     ORDER BY id DESC
   </select>
-  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" >
     select
     <include refid="Base_Column_List" />
     from q_hotel
@@ -90,7 +90,7 @@
     delete from q_hotel
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" >
     insert into q_hotel (id, source_id, hotel_name, 
       hotel_contact_name, reg_time, dis_id, 
       detail_addr, longitude, latitude, 
@@ -121,7 +121,7 @@
       )
   </insert>
 
-  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.QHotelDto" >
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" >
     update q_hotel
     <set >
       <if test="sourceId != null" >

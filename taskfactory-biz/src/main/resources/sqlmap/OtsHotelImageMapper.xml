@@ -24,7 +24,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, city_name, city_url, hotel_source_id, hotel_name, hotel_address, big, url, tag, 
+    id, city_name, city_url, hotel_source_id, hotel_name, hotel_address, big, url, tag,
     src, ugc, osrc, cre_date, title, author, width, height, create_time, update_time
   </sql>
   <sql id="Base_Query_List">
@@ -81,13 +81,13 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto">
-    insert into t_ex_hotel_hotel_image (id, city_name, city_url, 
+    insert into t_ex_hotel_hotel_image (id, city_name, city_url,
       hotel_source_id, hotel_name, hotel_address, 
       big, url, tag, src, 
       ugc, osrc, cre_date, title, 
       author, width, height, 
       create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{cityUrl,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{cityName,jdbcType=VARCHAR}, #{cityUrl,jdbcType=VARCHAR},
       #{hotelSourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, #{hotelAddress,jdbcType=VARCHAR}, 
       #{big,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{src,jdbcType=VARCHAR}, 
       #{ugc,jdbcType=CHAR}, #{osrc,jdbcType=VARCHAR}, #{creDate,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 

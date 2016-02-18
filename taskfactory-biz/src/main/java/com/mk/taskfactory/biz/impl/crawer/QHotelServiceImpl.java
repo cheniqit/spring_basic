@@ -1,13 +1,9 @@
-package com.mk.taskfactory.biz.impl.ots;
+package com.mk.taskfactory.biz.impl.crawer;
 
-import com.mk.taskfactory.api.dtos.HotelDayClickDto;
-import com.mk.taskfactory.api.dtos.QHotelDto;
-import com.mk.taskfactory.api.ots.HotelDayClickService;
+import com.mk.taskfactory.api.dtos.crawer.QHotelDto;
 import com.mk.taskfactory.api.ots.QHotelService;
-import com.mk.taskfactory.biz.mapper.ots.HotelDayClickMapper;
-import com.mk.taskfactory.biz.mapper.ots.QHotelMapper;
-import com.mk.taskfactory.model.HotelDayClick;
-import com.mk.taskfactory.model.QHotel;
+import com.mk.taskfactory.biz.mapper.crawer.QHotelMapper;
+import com.mk.taskfactory.model.crawer.QHotel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

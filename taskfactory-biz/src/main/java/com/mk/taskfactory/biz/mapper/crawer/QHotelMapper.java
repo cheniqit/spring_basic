@@ -1,8 +1,8 @@
-package com.mk.taskfactory.biz.mapper.ots;
+package com.mk.taskfactory.biz.mapper.crawer;
 
 
-import com.mk.taskfactory.api.dtos.QHotelDto;
-import com.mk.taskfactory.model.QHotel;
+import com.mk.taskfactory.api.dtos.crawer.QHotelDto;
+import com.mk.taskfactory.model.crawer.QHotel;
 
 import java.util.List;
 

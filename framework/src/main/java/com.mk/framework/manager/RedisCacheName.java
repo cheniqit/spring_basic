@@ -142,4 +142,8 @@ public class RedisCacheName {
     public static final String INTELLIGENT_PHONE_ORDER_NUM = "INTELLIGENT_PHONE_ORDER_NUM_";
     /***去哪儿酒店信息***/
     public static final String QHOTE = "QHOTE_";
+    /***酒店信息***/
+    public static final String HOTELSOURCEID = "HOTEL_SOURCE_ID_";
+    /***城市酒店信息***/
+    public static final String CITYHOTELSET = "CITY_HOTEL_SET_";
 }
