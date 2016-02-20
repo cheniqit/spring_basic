@@ -43,7 +43,7 @@ public class QiniuUtils {
 		if (null == key) {
 			key = QiniuUtils.uploadOnce(bytes,fileName, bucket);
 		}
-
+		bytes = null;
 
 		return key;
 	}
@@ -110,6 +110,7 @@ public class QiniuUtils {
 
 		//
 		Response res = uploadManager.put(bytes, fileName, token);
+		bytes = null;
 		HashMap map = res.jsonToObject(HashMap.class);
 		map.put("fileName",fileName);
 		return map;

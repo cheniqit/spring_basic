@@ -182,19 +182,15 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 continue;
             }
 
-            for (final TExHotelImageDto hotelImage:hotelImageList){
+            for ( TExHotelImageDto hotelImage:hotelImageList){
                 TExHotelImageDto otsHotelImg = new TExHotelImageDto();
                 otsHotelImg.setId(hotelImage.getId());
                 otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
                 if (otsHotelImg == null || StringUtils.isEmpty(otsHotelImg.getBig())) {
                     try{
                         try{
-                            pool.execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                   saveHotelImage(hotelImage);
-                                }
-                            });
+                            SaveHotelImageThread saveHotelImageThread = new SaveHotelImageThread(hotelImage);
+                            pool.execute(saveHotelImageThread);
                         }catch (RejectedExecutionException e){
 
                             Thread.currentThread().sleep(1000l);
@@ -218,6 +214,17 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
+    class SaveHotelImageThread implements Runnable{
+        private TExHotelImageDto hotelImage;
+        SaveHotelImageThread(TExHotelImageDto hotelImage){
+            this.hotelImage = hotelImage;
+        }
+        @Override
+        public void run() {
+            saveHotelImage(hotelImage);
+        }
+    }
     public void saveHotelImage(TExHotelImageDto hotelImage){
         TExHotelImageDto saveBean = new TExHotelImageDto();
         BeanUtils.copyProperties(hotelImage, saveBean);
@@ -232,8 +239,10 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         try {
             BufferedImage bigImg = PicUtils.cutPic(hotelImage.getBig());
             String bigFileName = strUuid +bigImg.getWidth()+ ".jpg";
+
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             ImageIO.write(bigImg, "jpg", bao);
+            bigImg = null;
             //上传切图
             bigImgKey = QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
             bao.close();
@@ -247,6 +256,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             String smallFileName = strUuid +smallImg.getWidth()+ ".jpg";
             ByteArrayOutputStream smallBao = new ByteArrayOutputStream();
             ImageIO.write(smallImg, "jpg", smallBao);
+            smallImg = null;
             String smallImgKey = QiniuUtils.uploadAndTry(smallBao.toByteArray(), smallFileName, Constants.QINIU_BUCKET);
             smallBao.close();
             if (StringUtils.isNotEmpty(smallImgKey)){
