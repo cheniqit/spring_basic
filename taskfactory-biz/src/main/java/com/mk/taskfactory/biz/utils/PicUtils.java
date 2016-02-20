@@ -58,16 +58,28 @@ public class PicUtils {
      * @return
      */
     public static BufferedImage getImageFromNetByUrl(String strUrl){
+        InputStream inStream = null;
+
         try {
             URL url = new URL(strUrl);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(5 * 1000);
-            InputStream inStream = conn.getInputStream();//通过输入流获取图片数据
+            inStream =  conn.getInputStream();//通过输入流获取图片数据
             BufferedImage sourceImg = ImageIO.read(inStream);
+
+            inStream.close();
             return sourceImg;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            if (null != inStream){
+                try {
+                    inStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }

@@ -200,6 +200,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
 
                         }
                     }catch (InterruptedException e1){
+                        e1.printStackTrace();
                     }
                 }
 
