@@ -1,5 +1,6 @@
 package com.mk.taskfactory.biz.utils;
 
+import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 import com.mk.taskfactory.common.Constants;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
@@ -13,7 +14,18 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class QiniuUtils {
-	
+
+	private  QiniuUtils(){
+
+	}
+
+	private static class  QiniuUploadManager{
+		public static UploadManager instance = new UploadManager();
+	}
+
+	public static UploadManager getInstance(){
+		return QiniuUploadManager.instance;
+	}
 	private static final Logger logger = LoggerFactory.getLogger(QiniuUtils.class);
 
 	/**
@@ -74,7 +86,7 @@ public class QiniuUtils {
 		if(StringUtils.isEmpty(bucket)) {
 			bucket = Constants.QINIU_BUCKET;
 		}
-		UploadManager uploadManager = new UploadManager();
+		UploadManager uploadManager = getInstance();
 		String key = Constants.QINIU_ACCESS_KEY;
 		if (null == key) {
 			throw new IOException("获取七牛上传凭证异常");
@@ -98,7 +110,7 @@ public class QiniuUtils {
 		if(StringUtils.isEmpty(bucket)) {
 			bucket = Constants.QINIU_BUCKET;
 		}
-		UploadManager uploadManager = new UploadManager();
+		UploadManager uploadManager = getInstance();
 		String key = Constants.QINIU_ACCESS_KEY;
 		if (null == key) {
 			throw new IOException("获取七牛上传凭证异常");

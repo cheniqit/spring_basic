@@ -171,7 +171,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=180;i<=pageCount;i++){
+        for (int i=236;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             hotelImageDto.setPageSize(pageSize);
@@ -225,6 +225,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             saveHotelImage(hotelImage);
         }
     }
+
     public void saveHotelImage(TExHotelImageDto hotelImage){
         TExHotelImageDto saveBean = new TExHotelImageDto();
         BeanUtils.copyProperties(hotelImage, saveBean);
@@ -242,9 +243,8 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
 
             ByteArrayOutputStream bao = new ByteArrayOutputStream();
             ImageIO.write(bigImg, "jpg", bao);
-            bigImg = null;
             //上传切图
-            bigImgKey =null;// QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
+            bigImgKey = QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
             bao.close();
             if (StringUtils.isNotEmpty(bigImgKey)){
                 saveBean.setBig(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+bigFileName);
@@ -256,8 +256,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             String smallFileName = strUuid +smallImg.getWidth()+ ".jpg";
             ByteArrayOutputStream smallBao = new ByteArrayOutputStream();
             ImageIO.write(smallImg, "jpg", smallBao);
-            smallImg = null;
-            String smallImgKey = null;// QiniuUtils.uploadAndTry(smallBao.toByteArray(), smallFileName, Constants.QINIU_BUCKET);
+            String smallImgKey = QiniuUtils.uploadAndTry(smallBao.toByteArray(), smallFileName, Constants.QINIU_BUCKET);
             smallBao.close();
             if (StringUtils.isNotEmpty(smallImgKey)){
                 saveBean.setUrl(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+smallFileName);
@@ -266,7 +265,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             }
             saveBean.setCreateTime(new Date());
             saveBean.setUpdateTime(null);
-            //otsHotelImageService.save(saveBean);
+            otsHotelImageService.save(saveBean);
         }catch (Exception e) {
             e.printStackTrace();
         }
