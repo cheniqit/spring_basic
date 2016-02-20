@@ -45,7 +45,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
     @Autowired
     private OtsHotelImageService otsHotelImageService;
 
-    private static ExecutorService pool = Executors.newFixedThreadPool(600);
+    private static ExecutorService pool = Executors.newFixedThreadPool(200);
 
 
     public Map<String,Object> commentImg(){
@@ -157,7 +157,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=58;i<=pageCount;i++){
+        for (int i=68;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             hotelImageDto.setPageSize(pageSize);
