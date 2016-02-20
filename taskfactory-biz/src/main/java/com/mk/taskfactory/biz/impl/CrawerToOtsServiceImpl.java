@@ -7,6 +7,7 @@ import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
 import com.mk.taskfactory.api.dtos.crawer.TExCommentImgDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
+import com.mk.taskfactory.api.ots.CityService;
 import com.mk.taskfactory.api.ots.OtsCommentImgService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.biz.utils.DateUtils;
@@ -78,7 +79,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 TExCommentImgDto otsCommentImg = new TExCommentImgDto();
                 otsCommentImg.setId(commentImg.getId());
                 otsCommentImg = otsCommentImgService.getByPramas(otsCommentImg);
-                if (otsCommentImg == null || otsCommentImg.getSrc()==null) {
+                if (otsCommentImg == null || StringUtils.isEmpty(otsCommentImg.getUrl())) {
                     pool.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -171,7 +172,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 TExHotelImageDto otsHotelImg = new TExHotelImageDto();
                 otsHotelImg.setId(hotelImage.getId());
                 otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
-                if (otsHotelImg == null || otsHotelImg.getSrc()==null) {
+                if (otsHotelImg == null || StringUtils.isEmpty(otsHotelImg.getBig())) {
                     pool.execute(new Runnable() {
                         @Override
                         public void run() {

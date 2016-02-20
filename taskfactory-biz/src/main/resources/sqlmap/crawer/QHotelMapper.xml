@@ -71,6 +71,9 @@
       <if test="priceValid != null">
         AND price_valid = #{priceValid}
       </if>
+      <if test="cityCode != null">
+        AND city_code = #{cityCode}
+      </if>
     </where>
   </sql>
   <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelDto" >

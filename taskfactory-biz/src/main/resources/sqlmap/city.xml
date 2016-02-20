@@ -47,4 +47,11 @@
         `code` = #{code}
         limit 1
     </select>
+    <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TCityDto" >
+        select
+        <include refid="Base_Column_List" />
+        from t_city
+        <include refid="Base_Query_List" />
+        ORDER BY `code` DESC
+    </select>
 </mapper>

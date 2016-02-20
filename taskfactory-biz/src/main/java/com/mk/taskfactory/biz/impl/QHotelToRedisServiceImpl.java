@@ -6,9 +6,11 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.crawer.*;
+import com.mk.taskfactory.api.dtos.TCityDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
 import com.mk.taskfactory.api.dtos.crawer.*;
+import com.mk.taskfactory.api.ots.CityService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.biz.mapper.crawer.ValidPriceMapper;
@@ -56,6 +58,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private HotelMapper hotelMapper;
     @Autowired
     private ValidPriceMapper validPriceMapper;
+    @Autowired
+    private CityService cityService;
     private static ExecutorService pool = Executors.newFixedThreadPool(40);
 
 
@@ -975,6 +979,80 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info(String.format("\n====================validPriceRoomTypeToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> cityHotelSetToRedis(TCityDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("cityHotelSetToRedis","cityHotelSet同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================cityHotelSetToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        List<TCityDto> cityDtoList = cityService.qureyByPramas(dto);
+        if (CollectionUtils.isEmpty(cityDtoList)){
+            logger.info(String.format("\n====================cityList is empty====================\n"));
+            resultMap.put("message","cityList is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+
+        for (final TCityDto bean:cityDtoList){
+            pool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Jedis jedis = null;
+                    try {
+                        jedis =  RedisUtil.getJedis();
+                        logger.info(String.format("\n====================cityCode={}&cityName={}====================\n")
+                                ,bean.getCode(),bean.getCityName());
+                        if (StringUtils.isEmpty(bean.getCode())){
+                            return;
+                        }
+                        List<QHotelDto> returnList = new ArrayList<QHotelDto>();
+                        QHotelDto qHotelDto = new QHotelDto();
+                        qHotelDto.setCityCode(Integer.valueOf(bean.getCode()));
+                        List<QHotelDto> qHotelDtoList = hotelService.qureyByPramas(qHotelDto);
+                        for (QHotelDto qBean : qHotelDtoList){
+                            qBean.setHotelSource(2);
+                            returnList.add(qBean);
+                        }
+                        THotelDto tHotelDto = new THotelDto();
+                        tHotelDto.setCityCode(bean.getCode());
+                        List<THotel> tHotelDtoList = hotelMapper.queryTHotel(tHotelDto);
+                        for (THotel tHotel : tHotelDtoList){
+                            QHotelDto temQHotel = new QHotelDto();
+                            BeanUtils.copyProperties(tHotel,temQHotel);
+                            temQHotel.setHotelSource(1);
+                            returnList.add(temQHotel);
+                        }
+
+                        if (!CollectionUtils.isEmpty(returnList)){
+                            jedis.set(String.format("%s%s", RedisCacheName.CITYHOTELSET,
+                                    bean.getCode()), JsonUtils.toJSONString(returnList));
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("validPriceRoomTypeToRedis::error::cityCode:"+bean.getCode());
+                        logger.error("validPriceRoomTypeToRedis::error{}{}",bean.getCode(),e.getMessage());
+                    }finally {
+                        if(null != jedis){
+                            jedis.close();
+                        }
+
+                    }
+
+                }
+            });
+
+        }
+
+        Cat.logEvent("cityHotelSetToRedis", "cityHotelSet同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================cityHotelSetToRedis  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

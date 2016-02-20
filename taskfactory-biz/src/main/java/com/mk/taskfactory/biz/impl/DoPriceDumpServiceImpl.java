@@ -8,6 +8,7 @@ import com.mk.taskfactory.api.dtos.ods.TRoomPriceContrastDto;
 import com.mk.taskfactory.api.dtos.ods.TRoomTypePriceDumpDto;
 import com.mk.taskfactory.api.ods.RoomPriceContrastService;
 import com.mk.taskfactory.api.ods.RoomTypePriceDumpService;
+import com.mk.taskfactory.api.ots.CityService;
 import com.mk.taskfactory.api.ots.SyServDictItemService;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.FreeMarkerTemplateUtils;
@@ -23,7 +24,6 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
