@@ -68,7 +68,7 @@ public class PicUtils {
             inStream =  conn.getInputStream();//通过输入流获取图片数据
             BufferedImage sourceImg = ImageIO.read(inStream);
 
-            inStream.close();
+            //inStream.close();
             return sourceImg;
         } catch (Exception e) {
             e.printStackTrace();
