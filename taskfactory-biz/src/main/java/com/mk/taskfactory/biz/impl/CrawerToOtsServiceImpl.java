@@ -172,7 +172,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=348;i<=pageCount;i++){
+        for (int i=379;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             hotelImageDto.setPageSize(pageSize);
