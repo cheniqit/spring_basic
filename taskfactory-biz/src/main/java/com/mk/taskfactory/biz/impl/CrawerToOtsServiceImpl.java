@@ -130,6 +130,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             ImageIO.write(bigImg, "jpg", bao);
             //上传切图
             bigImgKey = QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
+            bao.close();
             if (StringUtils.isNotEmpty(bigImgKey)){
                 saveBean.setUrl(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+bigFileName);
 
@@ -141,6 +142,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             ByteArrayOutputStream smallBao = new ByteArrayOutputStream();
             ImageIO.write(smallImg, "jpg", smallBao);
             String smallImgKey = QiniuUtils.uploadAndTry(smallBao.toByteArray(), smallFileName, Constants.QINIU_BUCKET);
+            smallBao.close();
             if (StringUtils.isNotEmpty(smallImgKey)){
                 saveBean.setSmallUrl(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+smallFileName);
             }else {
@@ -190,12 +192,12 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                             pool.execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    saveHotelImage(hotelImage);
+                                   saveHotelImage(hotelImage);
                                 }
                             });
                         }catch (RejectedExecutionException e){
 
-                            TimeUnit.SECONDS.sleep(1);
+                            Thread.currentThread().sleep(1000l);
 
 
                         }
@@ -234,6 +236,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             ImageIO.write(bigImg, "jpg", bao);
             //上传切图
             bigImgKey = QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
+            bao.close();
             if (StringUtils.isNotEmpty(bigImgKey)){
                 saveBean.setBig(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+bigFileName);
 
@@ -245,6 +248,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             ByteArrayOutputStream smallBao = new ByteArrayOutputStream();
             ImageIO.write(smallImg, "jpg", smallBao);
             String smallImgKey = QiniuUtils.uploadAndTry(smallBao.toByteArray(), smallFileName, Constants.QINIU_BUCKET);
+            smallBao.close();
             if (StringUtils.isNotEmpty(smallImgKey)){
                 saveBean.setUrl(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+smallFileName);
             }else {
