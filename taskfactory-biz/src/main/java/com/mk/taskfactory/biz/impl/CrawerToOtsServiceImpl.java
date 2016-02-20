@@ -26,8 +26,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 @Service
 public class CrawerToOtsServiceImpl implements CrawerToOtsService {
@@ -45,7 +44,9 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
     @Autowired
     private OtsHotelImageService otsHotelImageService;
 
-    private static ExecutorService pool = Executors.newFixedThreadPool(64);
+    private static ExecutorService pool = new ThreadPoolExecutor(64,64,0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<Runnable>(1024)
+            );
 
 
     public Map<String,Object> commentImg(){
@@ -80,12 +81,23 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 otsCommentImg.setId(commentImg.getId());
                 otsCommentImg = otsCommentImgService.getByPramas(otsCommentImg);
                 if (otsCommentImg == null || StringUtils.isEmpty(otsCommentImg.getUrl())) {
-                    pool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveCommentImg(commentImg);
+                    try{
+                        try{
+                            pool.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveCommentImg(commentImg);
+                                }
+                            });
+                        }catch (RejectedExecutionException e){
+
+                                TimeUnit.SECONDS.sleep(1);
+
+
                         }
-                    });
+                    }catch (InterruptedException e1){
+                    }
+
                 }
 
             }
@@ -173,12 +185,22 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 otsHotelImg.setId(hotelImage.getId());
                 otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
                 if (otsHotelImg == null || StringUtils.isEmpty(otsHotelImg.getBig())) {
-                    pool.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            saveHotelImage(hotelImage);
+                    try{
+                        try{
+                            pool.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    saveHotelImage(hotelImage);
+                                }
+                            });
+                        }catch (RejectedExecutionException e){
+
+                            TimeUnit.SECONDS.sleep(1);
+
+
                         }
-                    });
+                    }catch (InterruptedException e1){
+                    }
                 }
 
             }
