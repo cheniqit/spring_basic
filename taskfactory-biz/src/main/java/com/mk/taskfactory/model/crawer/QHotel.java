@@ -74,6 +74,16 @@ public class QHotel {
 
     private Integer hotelType;
 
+    private Integer confidence;
+
+    private String dataSource;
+
+    private String priceValid;
+
+    private Date createTime;
+
+    private Date updateTime;
+
     private String introduction;
 
     private String traffic;
@@ -402,5 +412,45 @@ public class QHotel {
 
     public void setHotelSource(Integer hotelSource) {
         this.hotelSource = hotelSource;
+    }
+
+    public Integer getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(Integer confidence) {
+        this.confidence = confidence;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public String getPriceValid() {
+        return priceValid;
+    }
+
+    public void setPriceValid(String priceValid) {
+        this.priceValid = priceValid;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

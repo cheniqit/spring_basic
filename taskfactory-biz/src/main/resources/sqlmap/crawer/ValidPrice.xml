@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.ValidPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="roomtype_id" property="roomTypeId" jdbcType="BIGINT" />
+  </resultMap>
+  <select id="qureyValidPriceHotel" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
+    select hotel_id
+    from valid_price_hotel
+    ORDER BY hotel_id asc
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="countValidPriceHotel"  resultType="java.lang.Integer" >
+    select count(*) from valid_price_hotel
+  </select>
+  <select id="qureyValidPriceRoomType" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
+    select hotel_id
+    from valid_price_roomtype
+    ORDER BY hotel_id asc
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="countValidPriceRoomtype"  resultType="java.lang.Integer" >
+    select count(*) from valid_price_roomtype
+  </select>
+</mapper>

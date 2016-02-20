@@ -142,8 +142,33 @@ public class RedisCacheName {
     public static final String INTELLIGENT_PHONE_ORDER_NUM = "INTELLIGENT_PHONE_ORDER_NUM_";
     /***去哪儿酒店信息***/
     public static final String QHOTE = "QHOTE_";
-    /***酒店信息***/
+    /***酒店来源***/
     public static final String HOTELSOURCEID = "HOTEL_SOURCE_ID_";
+    /***酒店信息***/
+    public static final String HOTELJSONINFO= "HOTEL_JSON_INFO_";
+    /***酒店评价***/
+    public static final String HOTELCOMMENTINFO= "HOTEL_COMMENT_INFO_";
+    /***酒店评价详情***/
+    public static final String HOTELCOMMENTDETAILINFO= "HOTEL_COMMENT_DETAIL_INFO_";
+    /***设施基础数据***/
+    public static final String FACILITYINFO= "FACILITY_INFO_";
+    /***酒店图片***/
+    public static final String HOTEL_PICTURE_INFOS_ET= "HOTEL_PICTURE_INFO_SET_";
+    /***酒店设施***/
+    public static final String HOTELFACILITYINFOSET= "HOTEL_FACILITY_INFO_SET_";
+    /***酒店房型***/
+    public static final String HOTELROOMTYPEINFO= "HOTEL_ROOMTYPE_INFO_";
+    /***酒店房型***/
+    public static final String HOTELROOMTYPEINFOSET= "HOTEL_ROOMTYPE_INFO_SET_";
+    /***酒店周边***/
+    public static final String HOTELSURROUNDINFOSET= "HOTEL_SURROUND_INFO_SET_";
     /***城市酒店信息***/
     public static final String CITYHOTELSET = "CITY_HOTEL_SET_";
+    /***乐住设施基础信息***/
+    public static final String LEZHUFACILITY= "LEZHU_FACILITY_";
+    /***乐住有效价格酒店***/
+    public static final String LEZHU_VAILD_PRICE_HOTEL_INFO= "LEZHU_VAILD_PRICE_HOTEL_INFO_";
+    /***乐住有效价格房型***/
+    public static final String LEZHU_VAILD_PRICE_ROOMTYPE_INFO= "LEZHU_VAILD_PRICE_ROOMTYPE_INFO_";
+
 }

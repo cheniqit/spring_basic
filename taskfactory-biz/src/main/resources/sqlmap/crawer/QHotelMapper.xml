@@ -37,6 +37,10 @@
     <result column="area_name" property="areaName" jdbcType="VARCHAR" />
     <result column="qt_phone" property="qtPhone" jdbcType="VARCHAR" />
     <result column="hotel_type" property="hotelType" jdbcType="INTEGER" />
+    <result column="data_source" property="dataSource" jdbcType="VARCHAR" />
+    <result column="price_valid" property="priceValid" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="introduction" property="introduction" jdbcType="LONGVARCHAR" />
     <result column="traffic" property="traffic" jdbcType="LONGVARCHAR" />
     <result column="hotel_pic" property="hotelPic" jdbcType="LONGVARCHAR" />
@@ -48,7 +52,7 @@
     pms, visible, online, id_card_front, id_card_back, retention_time, default_leave_time, 
     need_wait, hotel_phone, is_new_pms, priority, rulecode, isthreshold, pms_opt_time, 
     prov_code, city_code, dis_code, area_code, area_name, qt_phone, hotel_type,
-    introduction, traffic, hotel_pic, peripheral
+    introduction, traffic, hotel_pic, peripheral,confidence,data_source, price_valid, create_time, update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -60,6 +64,12 @@
       </if>
       <if test="hotelName != null">
         AND hotel_name = #{hotelName}
+      </if>
+      <if test="dataSource != null">
+        AND data_source = #{dataSource}
+      </if>
+      <if test="priceValid != null">
+        AND price_valid = #{priceValid}
       </if>
     </where>
   </sql>
@@ -103,7 +113,8 @@
       pms_opt_time, prov_code, city_code, 
       dis_code, area_code, area_name, 
       qt_phone, hotel_type, introduction, 
-      traffic, hotel_pic, peripheral
+      traffic, hotel_pic, peripheral,data_source, price_valid, create_time,
+      update_time
       )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
       #{hotelContactName,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, #{disId,jdbcType=INTEGER}, 
@@ -117,7 +128,9 @@
       #{pmsOptTime,jdbcType=BIGINT}, #{provCode,jdbcType=INTEGER}, #{cityCode,jdbcType=INTEGER}, 
       #{disCode,jdbcType=INTEGER}, #{areaCode,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, 
       #{qtPhone,jdbcType=VARCHAR}, #{hotelType,jdbcType=INTEGER}, #{introduction,jdbcType=LONGVARCHAR}, 
-      #{traffic,jdbcType=LONGVARCHAR}, #{hotelPic,jdbcType=LONGVARCHAR}, #{peripheral,jdbcType=LONGVARCHAR}
+      #{traffic,jdbcType=LONGVARCHAR}, #{hotelPic,jdbcType=LONGVARCHAR}, #{peripheral,jdbcType=LONGVARCHAR},
+      #{dataSource,jdbcType=VARCHAR}, #{priceValid,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
 
@@ -238,8 +251,19 @@
       <if test="peripheral != null" >
         peripheral = #{peripheral,jdbcType=LONGVARCHAR},
       </if>
+      <if test="dataSource != null" >
+        data_source = #{dataSource,jdbcType=VARCHAR},
+      </if>
+      <if test="priceValid != null" >
+        price_valid = #{priceValid,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-
 </mapper>

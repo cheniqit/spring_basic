@@ -26,8 +26,21 @@
 	<tx:annotation-driven proxy-target-class="true"/>
 
    <context:property-placeholder location="classpath:db.properties"/>
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
 		<property name="url" value="${mysql.jdbc.url}"/>
 		<property name="username" value="${mysql.jdbc.username}"/>
 		<property name="password" value="${mysql.jdbc.password}"/>
@@ -72,8 +85,20 @@
 
 <!---     cps 数据源  -->
 
-	<bean id="dataSourceCPS" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSourceCPS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${cps.mysql.jdbc.url}"/>
 		<property name="username" value="${cps.mysql.jdbc.username}"/>
 		<property name="password" value="${cps.mysql.jdbc.password}"/>
@@ -98,8 +123,20 @@
 
 	<!---     ods 数据源  -->
 
-	<bean id="dataSourceOds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSourceOds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${ods.mysql.jdbc.url}"/>
 		<property name="username" value="${ods.mysql.jdbc.username}"/>
 		<property name="password" value="${ods.mysql.jdbc.password}"/>
@@ -121,8 +158,20 @@
 	</bean>
 	<!---     crawer 数据源  -->
 
-	<bean id="dataSourceCrawer" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<bean id="dataSourceCrawer" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="10"/>
+
+		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${crawer.mysql.jdbc.url}"/>
 		<property name="username" value="${crawer.mysql.jdbc.username}"/>
 		<property name="password" value="${crawer.mysql.jdbc.password}"/>

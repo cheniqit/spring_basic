@@ -62,55 +62,55 @@
         <property name="maxUploadSize" value="10485760" />
     </bean>
 
-    <!--上线任务-->
-    <bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTask" method="run" cron="0 50 19 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;上线任务&ndash;&gt;-->
+    <!--<bean id="validRateTask" class="com.mk.taskfactory.task.ReFreshChannelTask" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="validRateTask" method="run" cron="0 50 19 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTask" method="run" cron="0 50 13 * * ?"/>
-    </task:scheduled-tasks>
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="validRateTask" method="run" cron="0 50 13 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--下线任务-->
-    <bean id="dateReback" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTaskService" method="dateReback" cron="0 1 2 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;下线任务&ndash;&gt;-->
+    <!--<bean id="dateReback" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="validRateTaskService" method="dateReback" cron="0 1 2 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--初始化线任务-->
-    <bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 17 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;初始化线任务&ndash;&gt;-->
+    <!--<bean id="validRateTaskService" class="com.mk.taskfactory.biz.impl.ValidRateTaskServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="validRateTaskService" method="validRateTaskRun" cron="0 0 17 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
 
-    <bean id="cpsOrderDetailTaskServiceImpl" class="com.mk.taskfactory.biz.cps.impl.CpsOrderDetailTaskServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="cpsOrderDetailTaskServiceImpl" method="cpsOrderProduce" cron="0 0 0/1 * * ?"/>
-    </task:scheduled-tasks>
+    <!--<bean id="cpsOrderDetailTaskServiceImpl" class="com.mk.taskfactory.biz.cps.impl.CpsOrderDetailTaskServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="cpsOrderDetailTaskServiceImpl" method="cpsOrderProduce" cron="0 0 0/1 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--dump room price-->
-    <bean id="doPriceDumpServiceImpl" class="com.mk.taskfactory.biz.impl.DoPriceDumpServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="doPriceDumpServiceImpl" method="jobRun" cron="0 0 7 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;dump room price&ndash;&gt;-->
+    <!--<bean id="doPriceDumpServiceImpl" class="com.mk.taskfactory.biz.impl.DoPriceDumpServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="doPriceDumpServiceImpl" method="jobRun" cron="0 0 7 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--每整点固化动态价格-->
-    <bean id="dynamicPriceServiceImpl" class="com.mk.taskfactory.biz.impl.DynamicPriceServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="dynamicPriceServiceImpl" method="dynamicPriceToLog" cron="0 0 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;每整点固化动态价格&ndash;&gt;-->
+    <!--<bean id="dynamicPriceServiceImpl" class="com.mk.taskfactory.biz.impl.DynamicPriceServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="dynamicPriceServiceImpl" method="dynamicPriceToLog" cron="0 0 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--每整点固化PMS库存和价格-->
-    <bean id="pmsDynamicInfoServiceImpl" class="com.mk.taskfactory.biz.impl.PmsDynamicInfoServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="pmsDynamicInfoServiceImpl" method="pmsDynamicToLog" cron="0 0 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;每整点固化PMS库存和价格&ndash;&gt;-->
+    <!--<bean id="pmsDynamicInfoServiceImpl" class="com.mk.taskfactory.biz.impl.PmsDynamicInfoServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="pmsDynamicInfoServiceImpl" method="pmsDynamicToLog" cron="0 0 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <!--每天早上七点还原动态库存-->
-    <bean id="priceToRedisServiceImpl" class="com.mk.taskfactory.biz.impl.PriceToRedisServiceImpl" />
-    <task:scheduled-tasks>
-        <task:scheduled ref="priceToRedisServiceImpl" method="updateDealCountToRedis" cron="0 0 7 * * ?"/>
-    </task:scheduled-tasks>
+    <!--&lt;!&ndash;每天早上七点还原动态库存&ndash;&gt;-->
+    <!--<bean id="priceToRedisServiceImpl" class="com.mk.taskfactory.biz.impl.PriceToRedisServiceImpl" />-->
+    <!--<task:scheduled-tasks>-->
+        <!--<task:scheduled ref="priceToRedisServiceImpl" method="updateDealCountToRedis" cron="0 0 7 * * ?"/>-->
+    <!--</task:scheduled-tasks>-->
 </beans>
