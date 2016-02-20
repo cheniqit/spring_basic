@@ -45,7 +45,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
     @Autowired
     private OtsHotelImageService otsHotelImageService;
 
-    private static ExecutorService pool = Executors.newFixedThreadPool(200);
+    private static ExecutorService pool = Executors.newFixedThreadPool(100);
 
 
     public Map<String,Object> commentImg(){
