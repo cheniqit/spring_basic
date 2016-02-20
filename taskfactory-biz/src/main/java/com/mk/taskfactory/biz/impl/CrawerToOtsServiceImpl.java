@@ -44,10 +44,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
     @Autowired
     private OtsHotelImageService otsHotelImageService;
 
-//    private static ExecutorService pool = new ThreadPoolExecutor(64,64,0L, TimeUnit.MILLISECONDS,
-//            new LinkedBlockingQueue<Runnable>(1024)
-//            );
-    private static ExecutorService pool = Executors.newFixedThreadPool(64);
+    private static ExecutorService pool = Executors.newFixedThreadPool(4);
 
 
     public Map<String,Object> commentImg(){
@@ -172,7 +169,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=379;i<=pageCount;i++){
+        for (int i=474;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             hotelImageDto.setPageSize(pageSize);
@@ -183,24 +180,17 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
                 continue;
             }
 
-            for ( TExHotelImageDto hotelImage:hotelImageList){
+            for (final TExHotelImageDto hotelImage:hotelImageList){
                 TExHotelImageDto otsHotelImg = new TExHotelImageDto();
                 otsHotelImg.setId(hotelImage.getId());
                 otsHotelImg = otsHotelImageService.getByPramas(otsHotelImg);
                 if (otsHotelImg == null || StringUtils.isEmpty(otsHotelImg.getBig())) {
-                    try{
-                        try{
-                            SaveHotelImageThread saveHotelImageThread = new SaveHotelImageThread(hotelImage);
-                            pool.execute(saveHotelImageThread);
-                        }catch (RejectedExecutionException e){
-
-                            Thread.currentThread().sleep(1000l);
-
-
+                    pool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            saveHotelImage(hotelImage);
                         }
-                    }catch (InterruptedException e1){
-                        e1.printStackTrace();
-                    }
+                    });
                 }
 
             }
@@ -214,17 +204,6 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
         return resultMap;
-    }
-
-    class SaveHotelImageThread implements Runnable{
-        private TExHotelImageDto hotelImage;
-        SaveHotelImageThread(TExHotelImageDto hotelImage){
-            this.hotelImage = hotelImage;
-        }
-        @Override
-        public void run() {
-            saveHotelImage(hotelImage);
-        }
     }
 
     public void saveHotelImage(TExHotelImageDto hotelImage){
