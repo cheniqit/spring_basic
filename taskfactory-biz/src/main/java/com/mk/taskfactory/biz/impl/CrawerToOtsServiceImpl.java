@@ -47,7 +47,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
 
-    public Map<String,Object> commentImg(){
+    public Map<String,Object> commentImg(Integer start){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("commentImg","同步commentImg信息到Ots",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
@@ -61,9 +61,12 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         }
         int pageSize=1000;
         int pageCount=count/pageSize;
+        if(start==null){
+            start=0;
+        }
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=0;i<=pageCount;i++){
+        for (int i=start;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             commentImgDto.setPageSize(pageSize);
@@ -153,7 +156,7 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             e.printStackTrace();
         }
     }
-    public Map<String,Object> hotelImage(){
+    public Map<String,Object> hotelImage(Integer start){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("hotelImage","同步hotelImage信息到Ots",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
@@ -167,9 +170,13 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
         }
         int pageSize=1000;
         int pageCount=count/pageSize;
+        if(start==null){
+            start=0;
+        }
+
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=474;i<=pageCount;i++){
+        for (int i=start;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             hotelImageDto.setPageSize(pageSize);

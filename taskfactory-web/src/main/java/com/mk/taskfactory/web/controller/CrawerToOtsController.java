@@ -27,14 +27,14 @@ public class CrawerToOtsController {
 
     @RequestMapping(value = "/commentimg", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> commentImg() {
-        Map<String,Object> result=crawerToOtsService.commentImg();
+    public ResponseEntity<Map<String, Object>> commentImg(Integer start) {
+        Map<String,Object> result=crawerToOtsService.commentImg(start);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
     @RequestMapping(value = "/hotelimage", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> hotelImage() {
-        Map<String,Object> result=crawerToOtsService.hotelImage();
+    public ResponseEntity<Map<String, Object>> hotelImage(Integer start) {
+        Map<String,Object> result=crawerToOtsService.hotelImage(start);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
     @RequestMapping(value = "/saveCommentImg", method = RequestMethod.POST)
