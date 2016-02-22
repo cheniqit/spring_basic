@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QHotelRoomtypeMinPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.QHotelRoomtypeMinPrice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="qn_hotel_id" property="qnHotelId" jdbcType="VARCHAR" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="roomtype_id" property="roomtypeId" jdbcType="VARCHAR" />
+    <result column="roomtype_key" property="roomtypeKey" jdbcType="VARCHAR" />
+    <result column="roomtype_name" property="roomtypeName" jdbcType="VARCHAR" />
+    <result column="min_price" property="minPrice" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, qn_hotel_id,hotel_name, roomtype_id, roomtype_key,roomtype_name,min_price, update_time
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="qnHotelId != null">
+        AND qn_hotel_id = #{qnHotelId}
+      </if>
+      <if test="roomtypeId != null">
+        AND roomtype_id = #{roomtypeId}
+      </if>
+      <if test="roomtypeKey != null">
+        AND roomtype_key = #{roomtypeKey}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel_roomtype_minprice
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" resultType="java.lang.Integer" >
+    select count(*) from q_hotel_roomtype_minprice
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_hotel_roomtype_minprice
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from q_hotel_roomtype_minprice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
+    insert into q_hotel_roomtype_minprice (id, qn_hotel_id, roomtype_id, 
+      min_price, update_time, hotel_name, 
+      roomtype_key, roomtype_name)
+    values (#{id,jdbcType=BIGINT}, #{qnHotelId,jdbcType=VARCHAR}, #{roomtypeId,jdbcType=VARCHAR}, 
+      #{minPrice,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
+      #{roomtypeKey,jdbcType=VARCHAR}, #{roomtypeName,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
+    update q_hotel_roomtype_minprice
+    <set >
+      <if test="qnHotelId != null" >
+        qn_hotel_id = #{qnHotelId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomtypeId != null" >
+        roomtype_id = #{roomtypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="minPrice != null" >
+        min_price = #{minPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomtypeKey != null" >
+        roomtype_key = #{roomtypeKey,jdbcType=VARCHAR},
+      </if>
+      <if test="roomtypeName != null" >
+        roomtype_name = #{roomtypeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

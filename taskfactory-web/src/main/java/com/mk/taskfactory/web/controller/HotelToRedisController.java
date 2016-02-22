@@ -122,4 +122,19 @@ public class HotelToRedisController {
         Map<String, Object> result = qHotelToRedisService.hotelScoreToRedis(dto);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/qHotelRoomTypeMinPriceToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> qHotelRoomTypeMinPriceToRedis(QHotelRoomtypeMinPriceDto dto) {
+        Map<String, Object> result = qHotelToRedisService.qHotelRoomTypeMinPriceToRedis(dto);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/otaPriceToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> otaPriceToRedis(QHotelDto dto) {
+        Map<String, Object> result = qHotelToRedisService.otaPriceToRedis(dto);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
 }

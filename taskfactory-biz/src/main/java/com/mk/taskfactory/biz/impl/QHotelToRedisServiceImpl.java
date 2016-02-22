@@ -65,6 +65,10 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private CityService cityService;
     @Autowired
     private HotelScoreMapper hotelScoreMapper;
+    @Autowired
+    private QHotelRoomTypeMinPriceService minPriceService;
+    @Autowired
+    private RoomTypePriceService roomTypePriceService;
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
 
@@ -1115,6 +1119,158 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info(String.format("\n====================hotelScoreToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> qHotelRoomTypeMinPriceToRedis(QHotelRoomtypeMinPriceDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("qHotelRoomTypeMinPriceToRedis","QHotelRoomTypeMinPrice同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================qHotelRoomTypeMinPriceToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = minPriceService.count(dto);
+        if (count<=0){
+            resultMap.put("message","QHotelRoomTypePrice count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<QHotelRoomtypeMinPriceDto> minPriceDtoList = minPriceService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(minPriceDtoList)){
+                logger.info(String.format("\n====================minPriceDtoList is empty====================\n"));
+                continue;
+            }
+
+            for (final QHotelRoomtypeMinPriceDto minPriceDto:minPriceDtoList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================hotelId={}&roomTypeId====================\n")
+                                    ,minPriceDto.getQnHotelId(),minPriceDto.getRoomtypeId());
+                            if (minPriceDto.getRoomtypeId()!=null){
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,
+                                        minPriceDto.getRoomtypeId()), JsonUtils.toJSONString(minPriceDto));
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("validPriceRoomTypeToRedis::error::hotelId:"+minPriceDto.getQnHotelId());
+                            logger.error("validPriceRoomTypeToRedis::error{}{}",minPriceDto.getQnHotelId(),e.getMessage());
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("qHotelRoomTypeMinPriceToRedis", "HotelRoomTypeMinPrice同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================qHotelRoomTypeMinPriceToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> otaPriceToRedis(QHotelDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("otaPriceToRedis","OTAPrice同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================otaPriceToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        dto.setPriceValid("T");
+        int count = hotelService.count(dto);
+        if (count<=0){
+            resultMap.put("message","QHotel count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<QHotelDto> hotelList = hotelService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(hotelList)){
+                logger.info(String.format("\n====================hotelList is empty====================\n"));
+                continue;
+            }
+
+            for (final QHotelDto hotelDto:hotelList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================hotelId={}====================\n")
+                                    ,hotelDto.getId());
+                            if (hotelDto.getSourceId()!=null){
+                                QHotelRoomtypeDto hotelRoomtype = new QHotelRoomtypeDto();
+                                hotelRoomtype.setHotelSourceId(hotelDto.getSourceId());
+                                List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
+                                if (CollectionUtils.isEmpty(hotelRoomtypeList)){
+                                    return;
+                                }
+                                int p=0;
+                                for (QHotelRoomtypeDto roomtypeDto:hotelRoomtypeList){
+                                    RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+                                    roomTypePriceDto.setHotelSourceId(roomtypeDto.getHotelSourceId());
+                                    roomTypePriceDto.setRoomTypeKey(roomtypeDto.getRoomtypeKey());
+                                    roomTypePriceDto=roomTypePriceService.getLastMinOtaPrice(roomTypePriceDto);
+                                    if (roomTypePriceDto==null||roomTypePriceDto.getPrice()==null){
+                                        continue;
+                                    }
+                                    jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_OTA_PRICE,
+                                            roomtypeDto.getId()), roomTypePriceDto.getPrice().toString()
+                                    );
+                                }
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("qHotelRoomTypeSetToRedis::error::sourceId:"+hotelDto.getSourceId());
+                            logger.error("qHotelRoomTypeSetToRedis::error{}{}",hotelDto.getSourceId(),e.getMessage());
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("otaPriceToRedis", "OTAPrice同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================otaPriceToRedis  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

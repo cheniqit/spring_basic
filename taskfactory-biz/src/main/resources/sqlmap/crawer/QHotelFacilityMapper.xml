@@ -84,7 +84,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="qureyJionFacility" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelFacilityDto" >
-    select  a.id,a.hotel_id,a.source_id,b.ots_id from q_hotel_facility a LEFT JOIN q_facility b
+    select  a.id,a.hotel_id,a.source_id,b.ots_id from q_hotel_facility a INNER JOIN q_facility b
     on a.fac_id = b.id and b.visible='T' and b.ots_id !='0'
     <where>
       <if test="hotelId != null">
@@ -100,7 +100,7 @@
     </if>
   </select>
   <select id="coutJionFacility" resultType="java.lang.Integer" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelFacilityDto" >
-    select  count(*) from q_hotel_facility a LEFT JOIN q_facility b
+    select  count(*) from q_hotel_facility a INNER JOIN q_facility b
     on a.fac_id = b.id and b.visible='T' and b.ots_id !='0'
     <where>
       <if test="hotelId != null">
