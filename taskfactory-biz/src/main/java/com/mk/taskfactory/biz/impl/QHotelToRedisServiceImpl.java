@@ -953,9 +953,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         Jedis jedis = null;
                         try {
                             jedis =  RedisUtil.getJedis();
-                            logger.info(String.format("\n====================hotelId={}====================\n")
-                                    ,validPriceHotel.getHotelId());
-                            if (validPriceHotel.getHotelId()!=null){
+                            logger.info(String.format("\n====================roomTypeId={}====================\n")
+                                    ,validPriceHotel.getRoomTypeId());
+                            if (validPriceHotel.getRoomTypeId()!=null){
                                 jedis.set(String.format("%s%s", RedisCacheName.LEZHU_VAILD_PRICE_ROOMTYPE_INFO,
                                         validPriceHotel.getRoomTypeId()), "1");
 
