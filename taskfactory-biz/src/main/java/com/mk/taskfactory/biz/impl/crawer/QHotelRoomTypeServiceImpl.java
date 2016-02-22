@@ -8,6 +8,7 @@ import com.mk.taskfactory.biz.mapper.crawer.QHotelMapper;
 import com.mk.taskfactory.biz.mapper.crawer.QHotelRoomtypeMapper;
 import com.mk.taskfactory.model.crawer.QHotel;
 import com.mk.taskfactory.model.crawer.QHotelRoomtype;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,9 @@ public class QHotelRoomTypeServiceImpl implements QHotelRoomTypeService {
         return mapper.count(bean);
     }
     public QHotelRoomtypeDto getRoomtypeImg(QHotelRoomtypeDto bean){
+        if (StringUtils.isEmpty(bean.getHotelSourceId())||StringUtils.isEmpty(bean.getRoomtypeKey())){
+            return null;
+        }
         return buildDto(mapper.getRoomtypeImg(bean));
     }
     private QHotelRoomtypeDto buildDto(QHotelRoomtype bean) {
