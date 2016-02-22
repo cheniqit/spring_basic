@@ -69,7 +69,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private QHotelRoomTypeMinPriceService minPriceService;
     @Autowired
     private RoomTypePriceService roomTypePriceService;
-    private static ExecutorService pool = Executors.newFixedThreadPool(40);
+    private static ExecutorService pool = Executors.newFixedThreadPool(20);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
@@ -583,7 +583,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=222;i<=pageCount;i++){
+        for (int i=224;i<=pageCount;i++){
             logger.info(String.format("\n====================pages={}&pageIndex={}====================\n")
                     ,i,i*pageSize);
             dto.setPageSize(pageSize);
