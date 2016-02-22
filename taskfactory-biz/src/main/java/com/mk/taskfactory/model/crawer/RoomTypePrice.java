@@ -16,7 +16,7 @@ public class RoomTypePrice {
 
 	private BigDecimal price;
 	
-	private BigDecimal oprice;
+	private BigDecimal oPrice;
 
 	private BigDecimal realPrice;
 
@@ -78,20 +78,20 @@ public class RoomTypePrice {
 		this.hotelSourceId = hotelSourceId;
 	}
 
-	public BigDecimal getOprice() {
-		return oprice;
-	}
-
-	public void setOprice(BigDecimal oprice) {
-		this.oprice = oprice;
-	}
-
 	public BigDecimal getPrice() {
 		return price;
 	}
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public BigDecimal getoPrice() {
+		return oPrice;
+	}
+
+	public void setoPrice(BigDecimal oPrice) {
+		this.oPrice = oPrice;
 	}
 
 	public BigDecimal getRealPrice() {
@@ -173,5 +173,4 @@ public class RoomTypePrice {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-
 }
