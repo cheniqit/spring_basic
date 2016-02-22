@@ -17,9 +17,9 @@
     select count(*) from valid_price_hotel
   </select>
   <select id="qureyValidPriceRoomType" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
-    select hotel_id
+    select roomtype_id
     from valid_price_roomtype
-    ORDER BY hotel_id asc
+    ORDER BY roomtype_id asc
     <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
       limit ${pageIndex} , ${pageSize}
     </if>
