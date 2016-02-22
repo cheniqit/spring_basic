@@ -69,7 +69,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private QHotelRoomTypeMinPriceService minPriceService;
     @Autowired
     private RoomTypePriceService roomTypePriceService;
-    private static ExecutorService pool = Executors.newFixedThreadPool(40);
+    private static ExecutorService pool = Executors.newFixedThreadPool(20);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
