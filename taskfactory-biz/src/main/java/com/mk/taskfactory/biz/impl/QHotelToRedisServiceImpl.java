@@ -65,7 +65,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private CityService cityService;
     @Autowired
     private HotelScoreMapper hotelScoreMapper;
-    private static ExecutorService pool = Executors.newFixedThreadPool(40);
+    private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
