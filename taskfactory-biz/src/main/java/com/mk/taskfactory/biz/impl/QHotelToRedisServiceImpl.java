@@ -69,7 +69,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private QHotelRoomTypeMinPriceService minPriceService;
     @Autowired
     private RoomTypePriceService roomTypePriceService;
-    private static ExecutorService pool = Executors.newFixedThreadPool(64);
+    private static ExecutorService pool = Executors.newFixedThreadPool(20);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
@@ -383,6 +383,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelFacilityToRedis","QHotelFacility同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelFacilityToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        dto.setPriceValid("T");
 
         int count = hotelService.count(dto);
         if (count<=0){
@@ -662,7 +663,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelSurroundToRedis","QHotelSurround同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelSurroundToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-
+        dto.setPriceValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -1022,6 +1023,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         qHotelDto.setCityCode(Integer.valueOf(bean.getCode()));
                         List<QHotelDto> qHotelDtoList = hotelService.qureyByPramas(qHotelDto);
                         for (QHotelDto qBean : qHotelDtoList){
+                            logger.info(String.format("\n====================cityCode={}&hotelId={}====================\n")
+                                    ,bean.getCode(),qBean.getId());
                             qBean.setHotelSource(2);
                             jedis.sadd(String.format("%s%s", RedisCacheName.CITYHOTELSET,
                                     bean.getCode()), JsonUtils.toJSONString(qBean));
@@ -1035,6 +1038,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             temQHotel.setHotelSource(1);
                             jedis.sadd(String.format("%s%s", RedisCacheName.CITYHOTELSET,
                                     bean.getCode()), JsonUtils.toJSONString(temQHotel));
+                            logger.info(String.format("\n====================cityCode={}&hotelId={}====================\n")
+                                    ,bean.getCode(),tHotel.getId());
                         }
 
 
