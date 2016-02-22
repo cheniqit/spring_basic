@@ -1,7 +1,6 @@
 package com.mk.taskfactory.model.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QCommentDetail {
     private Long id;
@@ -14,7 +13,7 @@ public class QCommentDetail {
 
     private String score;
 
-    private Date createTime;
+    private String createTime;
 
     private BigDecimal grade;
 
@@ -22,9 +21,9 @@ public class QCommentDetail {
 
     private String userName;
 
-    private Date initDate;
+    private String initDate;
 
-    private Date updateDate;
+    private String updateDate;
 
     public Long getId() {
         return id;
@@ -66,11 +65,11 @@ public class QCommentDetail {
         this.score = score == null ? null : score.trim();
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -98,19 +97,19 @@ public class QCommentDetail {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public Date getInitDate() {
+    public String getInitDate() {
         return initDate;
     }
 
-    public void setInitDate(Date initDate) {
+    public void setInitDate(String initDate) {
         this.initDate = initDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 }

@@ -153,7 +153,7 @@ public class RedisCacheName {
     /***设施基础数据***/
     public static final String FACILITYINFO= "FACILITY_INFO_";
     /***酒店图片***/
-    public static final String HOTEL_PICTURE_INFOS_ET= "HOTEL_PICTURE_INFO_SET_";
+    public static final String HOTEL_PICTURE_INFOS_SET= "HOTEL_PICTURE_INFO_SET_";
     /***酒店设施***/
     public static final String HOTELFACILITYINFOSET= "HOTEL_FACILITY_INFO_SET_";
     /***酒店房型***/
@@ -170,5 +170,7 @@ public class RedisCacheName {
     public static final String LEZHU_VAILD_PRICE_HOTEL_INFO= "LEZHU_VAILD_PRICE_HOTEL_INFO_";
     /***乐住有效价格房型***/
     public static final String LEZHU_VAILD_PRICE_ROOMTYPE_INFO= "LEZHU_VAILD_PRICE_ROOMTYPE_INFO_";
+    /***酒店评分***/
+    public static final String HOTEL_SCORE_INFO= "HOTEL_SCORE_INFO_";
 
 }

@@ -1,5 +1,6 @@
 package com.mk.taskfactory.api;
 
+import com.mk.taskfactory.api.dtos.HotelScoreDto;
 import com.mk.taskfactory.api.dtos.TCityDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
@@ -22,5 +23,7 @@ public interface QHotelToRedisService {
     public Map<String,Object> validPriceHotelToRedis();
     public Map<String,Object> validPriceRoomTypeToRedis();
     public Map<String,Object> cityHotelSetToRedis(TCityDto dto);
+    public Map<String,Object> hotelScoreToRedis(HotelScoreDto dto);
+
 }
 

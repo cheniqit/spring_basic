@@ -6,6 +6,7 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.crawer.*;
+import com.mk.taskfactory.api.dtos.HotelScoreDto;
 import com.mk.taskfactory.api.dtos.TCityDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
@@ -15,8 +16,10 @@ import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.biz.mapper.crawer.ValidPriceMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
+import com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
+import com.mk.taskfactory.model.HotelScore;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.api.dtos.crawer.ValidPrice;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +63,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private ValidPriceMapper validPriceMapper;
     @Autowired
     private CityService cityService;
+    @Autowired
+    private HotelScoreMapper hotelScoreMapper;
     private static ExecutorService pool = Executors.newFixedThreadPool(40);
 
 
@@ -121,18 +126,17 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     }
                                     mark++;
                                 }
-                                List<HotelImgDto> hotelImgDtoList = new ArrayList<HotelImgDto>();
                                 for (TExHotelImageDto imageDto:hotelImageDtoList){
                                     HotelImgDto hotelImgDto = new HotelImgDto();
                                     BeanUtils.copyProperties(imageDto, hotelImgDto);
                                     if (mark>0){
                                         break;
                                     }
-                                    hotelImgDtoList.add(hotelImgDto);
+
+                                    jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
+                                            hotelDto.getId()), JsonUtils.toJSONString(hotelImgDto)
+                                    );
                                 }
-                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_ET,
-                                        hotelDto.getId()), JsonUtils.toJSONString(hotelImgDtoList)
-                                );
 
                             }
 
@@ -413,20 +417,18 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 if (CollectionUtils.isEmpty(hotelFacilityDtoList)){
                                     return;
                                 }
-                                Set<String> resultSet = new HashSet<String>();
                                 for (QHotelFacilityDto facilityDto:hotelFacilityDtoList){
                                     if (StringUtils.isEmpty(facilityDto.getOtsId())){
                                         continue;
                                     }
-                                    resultSet.add(jedis.get(String.format("%s%s", RedisCacheName.LEZHUFACILITY,
-                                            facilityDto.getOtsId())));
+                                    String facility=jedis.get(String.format("%s%s", RedisCacheName.LEZHUFACILITY,
+                                            facilityDto.getOtsId()));
+                                    jedis.sadd(String.format("%s%s", RedisCacheName.HOTELFACILITYINFOSET,
+                                            hotelDto.getId()), facility
+                                    );
                                 }
-                                if (CollectionUtils.isEmpty(resultSet)){
-                                    return;
-                                }
-                                jedis.set(String.format("%s%s", RedisCacheName.HOTELFACILITYINFOSET,
-                                        hotelDto.getId()), JsonUtils.toJSONString(resultSet)
-                                );
+
+
                             }
 
                         } catch (Exception e) {
@@ -499,7 +501,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 if (CollectionUtils.isEmpty(hotelRoomtypeList)){
                                     return;
                                 }
-                                List<RoomtypeToRedisDto> roomtypeToRedisDtoList = new ArrayList<RoomtypeToRedisDto>();
                                 int p=0;
                                 for (QHotelRoomtypeDto roomtypeDto:hotelRoomtypeList){
                                     RoomtypeToRedisDto bean = new RoomtypeToRedisDto();
@@ -513,10 +514,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         hotelImageDto.setTag("客房");
                                         List<TExHotelImageDto> hotelImageDtoList=otsHotelImageService.qureyByPramas(hotelImageDto);
                                         if (!CollectionUtils.isEmpty(hotelImageDtoList)){
-                                            if (hotelImageDtoList.size()>=p){
+                                            if (hotelImageDtoList.size()<=p){
                                                 p=0;
                                             }
                                             hotelImageDto=hotelImageDtoList.get(p);
+                                            p++;
                                         }
                                     }else {
                                         hotelImageDto.setId(getImgBean.getId());
@@ -525,14 +527,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     BeanUtils.copyProperties(roomtypeDto, bean);
                                     bean.setImageUrl(hotelImageDto.getBig());
                                     bean.setSmallImageUrl(hotelImageDto.getUrl());
-                                    roomtypeToRedisDtoList.add(bean);
+                                    jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
+                                            hotelDto.getId()), JsonUtils.toJSONString(bean)
+                                    );
                                 }
-                                if (CollectionUtils.isEmpty(roomtypeToRedisDtoList)){
-                                    return;
-                                }
-                                jedis.set(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
-                                        hotelDto.getId()), JsonUtils.toJSONString(roomtypeToRedisDtoList)
-                                );
+
                             }
 
                         } catch (Exception e) {
@@ -803,7 +802,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 continue;
             }
 
-            for (final THotel hotelDto:hotelList){
+            for (final THotel hotel:hotelList){
                 pool.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -811,21 +810,21 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         try {
                             jedis =  RedisUtil.getJedis();
                             logger.info(String.format("\n====================hotelId={}====================\n")
-                                    ,hotelDto.getId());
-                            if (hotelDto.getId()!=null){
-                                QHotelDto qHotelDto = new QHotelDto();
-                                BeanUtils.copyProperties(hotelDto, qHotelDto);
-                                qHotelDto.setHotelSource(1);
+                                    ,hotel.getId());
+                            if (hotel.getId()!=null){
+                                THotelDto tHotelDto = new THotelDto();
+                                BeanUtils.copyProperties(hotel, tHotelDto);
+                                tHotelDto.setHotelSource(1);
                                 jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
-                                        hotelDto.getId()), JsonUtils.toJSONString(qHotelDto)
+                                        hotel.getId()), JsonUtils.toJSONString(tHotelDto)
                                 );
 
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            System.out.println("tHotelToRedis::error::hotelid:"+hotelDto.getId());
-                            logger.error("tHotelToRedis::error{}{}",hotelDto.getId(),e.getMessage());
+                            System.out.println("tHotelToRedis::error::hotelid:"+hotel.getId());
+                            logger.error("tHotelToRedis::error{}{}",hotel.getId(),e.getMessage());
                         }finally {
                             if(null != jedis){
                                 jedis.close();
@@ -1009,13 +1008,13 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         if (StringUtils.isEmpty(bean.getCode())){
                             return;
                         }
-                        List<QHotelDto> returnList = new ArrayList<QHotelDto>();
                         QHotelDto qHotelDto = new QHotelDto();
                         qHotelDto.setCityCode(Integer.valueOf(bean.getCode()));
                         List<QHotelDto> qHotelDtoList = hotelService.qureyByPramas(qHotelDto);
                         for (QHotelDto qBean : qHotelDtoList){
                             qBean.setHotelSource(2);
-                            returnList.add(qBean);
+                            jedis.sadd(String.format("%s%s", RedisCacheName.CITYHOTELSET,
+                                    bean.getCode()), JsonUtils.toJSONString(qBean));
                         }
                         THotelDto tHotelDto = new THotelDto();
                         tHotelDto.setCityCode(bean.getCode());
@@ -1024,14 +1023,10 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             QHotelDto temQHotel = new QHotelDto();
                             BeanUtils.copyProperties(tHotel,temQHotel);
                             temQHotel.setHotelSource(1);
-                            returnList.add(temQHotel);
+                            jedis.sadd(String.format("%s%s", RedisCacheName.CITYHOTELSET,
+                                    bean.getCode()), JsonUtils.toJSONString(temQHotel));
                         }
 
-                        if (!CollectionUtils.isEmpty(returnList)){
-                            jedis.set(String.format("%s%s", RedisCacheName.CITYHOTELSET,
-                                    bean.getCode()), JsonUtils.toJSONString(returnList));
-
-                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1053,6 +1048,73 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info(String.format("\n====================cityHotelSetToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> hotelScoreToRedis(HotelScoreDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("hotelScoreToRedis","hotelScore同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================hotelScoreToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = hotelScoreMapper.countTHotelScore(dto);
+        if (count<=0){
+            resultMap.put("message","HotelScore count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<HotelScore> hotelScoreList = hotelScoreMapper.queryTHotelScore(dto);
+            if (CollectionUtils.isEmpty(hotelScoreList)){
+                logger.info(String.format("\n====================hotelScoreList is empty====================\n"));
+                continue;
+            }
+
+            for (final HotelScore hotelScore:hotelScoreList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================hotelId={}====================\n")
+                                    ,hotelScore.getHotelId());
+                            if (hotelScore.getHotelId()!=null){
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
+                                        hotelScore.getHotelId()), hotelScore.getGrade());
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("validPriceRoomTypeToRedis::error::hotelId:"+hotelScore.getHotelId());
+                            logger.error("validPriceRoomTypeToRedis::error{}{}",hotelScore.getHotelId(),e.getMessage());
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("hotelScoreToRedis", "HotelScore同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================hotelScoreToRedis  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

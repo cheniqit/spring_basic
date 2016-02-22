@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.dtos.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QCommentDto {
     private Long id;
@@ -22,9 +21,9 @@ public class QCommentDto {
 
     private Long mediumTotal;
 
-    private Date initDate;
+    private String initDate;
 
-    private Date updateDate;
+    private String updateDate;
 
     private Integer pageIndex;
 
@@ -102,19 +101,25 @@ public class QCommentDto {
         this.mediumTotal = mediumTotal;
     }
 
-    public Date getInitDate() {
+    public String getInitDate() {
         return initDate;
     }
 
-    public void setInitDate(Date initDate) {
+    public void setInitDate(String initDate) {
+        if(initDate!=null&&initDate.length()>19){
+            initDate=initDate.substring(0,19);
+        }
         this.initDate = initDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
+        if(updateDate!=null&&updateDate.length()>19){
+            updateDate=updateDate.substring(0,19);
+        }
         this.updateDate = updateDate;
     }
 

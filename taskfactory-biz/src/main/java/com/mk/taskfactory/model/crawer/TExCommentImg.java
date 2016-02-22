@@ -1,6 +1,5 @@
 package com.mk.taskfactory.model.crawer;
 
-import java.util.Date;
 
 public class TExCommentImg {
     private Long id;
@@ -21,9 +20,9 @@ public class TExCommentImg {
 
     private String src;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     public Long getId() {
         return id;
@@ -97,19 +96,19 @@ public class TExCommentImg {
         this.src = src;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

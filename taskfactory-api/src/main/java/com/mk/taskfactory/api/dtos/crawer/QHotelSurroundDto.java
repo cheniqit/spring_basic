@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.dtos.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QHotelSurroundDto {
     private String hotelId;
@@ -16,7 +15,7 @@ public class QHotelSurroundDto {
 
     private Long distance;
 
-    private Date updateTime;
+    private String updateTime;
 
     private Integer pageIndex;
 
@@ -70,11 +69,14 @@ public class QHotelSurroundDto {
         this.distance = distance;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
+        if(updateTime!=null&&updateTime.length()>19){
+            updateTime=updateTime.substring(0,19);
+        }
         this.updateTime = updateTime;
     }
 

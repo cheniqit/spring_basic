@@ -2,6 +2,7 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.QHotelToRedisService;
+import com.mk.taskfactory.api.dtos.HotelScoreDto;
 import com.mk.taskfactory.api.dtos.TCityDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
@@ -113,6 +114,12 @@ public class HotelToRedisController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> cityHotelSetToRedis(TCityDto dto) {
         Map<String, Object> result = qHotelToRedisService.cityHotelSetToRedis(dto);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/hotelScoreToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> hotelScoreToRedis(HotelScoreDto dto) {
+        Map<String, Object> result = qHotelToRedisService.hotelScoreToRedis(dto);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 }

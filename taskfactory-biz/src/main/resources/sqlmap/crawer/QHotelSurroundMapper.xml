@@ -8,7 +8,7 @@
     <result column="longitude" property="longitude" jdbcType="DECIMAL" />
     <result column="latitude" property="latitude" jdbcType="DECIMAL" />
     <result column="distance" property="distance" jdbcType="BIGINT" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     hotel_id, surround_type, surround_name, longitude, latitude, distance, update_time
@@ -59,7 +59,7 @@
       update_time)
     values (#{hotelId,jdbcType=VARCHAR}, #{surroundType,jdbcType=VARCHAR}, #{surroundName,jdbcType=VARCHAR}, 
       #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, #{distance,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=VARCHAR})
   </insert>
   <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelSurroundDto" >
     update q_hotel_surround
@@ -80,7 +80,7 @@
         distance = #{record.distance,jdbcType=BIGINT},
       </if>
       <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+        update_time = #{record.updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where hotel_id = #{hotelId,jdbcType=BIGINT}

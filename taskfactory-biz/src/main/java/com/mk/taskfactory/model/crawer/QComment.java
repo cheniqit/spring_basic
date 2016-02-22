@@ -1,7 +1,6 @@
 package com.mk.taskfactory.model.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QComment {
     private Long id;
@@ -22,9 +21,9 @@ public class QComment {
 
     private Long mediumTotal;
 
-    private Date initDate;
+    private String initDate;
 
-    private Date updateDate;
+    private String updateDate;
 
     public Long getId() {
         return id;
@@ -98,19 +97,19 @@ public class QComment {
         this.mediumTotal = mediumTotal;
     }
 
-    public Date getInitDate() {
+    public String getInitDate() {
         return initDate;
     }
 
-    public void setInitDate(Date initDate) {
+    public void setInitDate(String initDate) {
         this.initDate = initDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
     }
 }

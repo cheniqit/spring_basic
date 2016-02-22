@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.dtos.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QHotelDto {
     private Long id;
@@ -12,7 +11,7 @@ public class QHotelDto {
 
     private String hotelContactName;
 
-    private Date regTime;
+    private String regTime;
 
     private Integer disId;
 
@@ -22,9 +21,9 @@ public class QHotelDto {
 
     private BigDecimal latitude;
 
-    private Date openTime;
+    private String openTime;
 
-    private Date repairTime;
+    private String repairTime;
 
     private Integer roomNum;
 
@@ -80,9 +79,9 @@ public class QHotelDto {
 
     private String priceValid;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     private String introduction;
 
@@ -162,11 +161,14 @@ public class QHotelDto {
         this.hotelContactName = hotelContactName == null ? null : hotelContactName.trim();
     }
 
-    public Date getRegTime() {
+    public String getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(Date regTime) {
+    public void setRegTime(String regTime) {
+        if(regTime!=null&&regTime.length()>19){
+            regTime=regTime.substring(0,19);
+        }
         this.regTime = regTime;
     }
 
@@ -202,19 +204,25 @@ public class QHotelDto {
         this.latitude = latitude;
     }
 
-    public Date getOpenTime() {
+    public String getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(Date openTime) {
+    public void setOpenTime(String openTime) {
+        if(openTime!=null&&openTime.length()>19){
+            openTime=openTime.substring(0,19);
+        }
         this.openTime = openTime;
     }
 
-    public Date getRepairTime() {
+    public String getRepairTime() {
         return repairTime;
     }
 
-    public void setRepairTime(Date repairTime) {
+    public void setRepairTime(String repairTime) {
+        if(repairTime!=null&&repairTime.length()>19){
+            repairTime=repairTime.substring(0,19);
+        }
         this.repairTime = repairTime;
     }
 
@@ -458,19 +466,25 @@ public class QHotelDto {
         this.priceValid = priceValid;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
+        if(createTime!=null&&createTime.length()>19){
+            createTime=createTime.substring(0,19);
+        }
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
+        if(updateTime!=null&&updateTime.length()>19){
+            updateTime=updateTime.substring(0,19);
+        }
         this.updateTime = updateTime;
     }
 }

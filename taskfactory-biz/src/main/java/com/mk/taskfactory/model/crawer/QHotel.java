@@ -1,7 +1,6 @@
 package com.mk.taskfactory.model.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QHotel {
     private Long id;
@@ -12,7 +11,7 @@ public class QHotel {
 
     private String hotelContactName;
 
-    private Date regTime;
+    private String regTime;
 
     private Integer disId;
 
@@ -22,9 +21,9 @@ public class QHotel {
 
     private BigDecimal latitude;
 
-    private Date openTime;
+    private String openTime;
 
-    private Date repairTime;
+    private String repairTime;
 
     private Integer roomNum;
 
@@ -80,9 +79,9 @@ public class QHotel {
 
     private String priceValid;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     private String introduction;
 
@@ -158,11 +157,11 @@ public class QHotel {
         this.hotelContactName = hotelContactName == null ? null : hotelContactName.trim();
     }
 
-    public Date getRegTime() {
+    public String getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(Date regTime) {
+    public void setRegTime(String regTime) {
         this.regTime = regTime;
     }
 
@@ -198,19 +197,19 @@ public class QHotel {
         this.latitude = latitude;
     }
 
-    public Date getOpenTime() {
+    public String getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(Date openTime) {
+    public void setOpenTime(String openTime) {
         this.openTime = openTime;
     }
 
-    public Date getRepairTime() {
+    public String getRepairTime() {
         return repairTime;
     }
 
-    public void setRepairTime(Date repairTime) {
+    public void setRepairTime(String repairTime) {
         this.repairTime = repairTime;
     }
 
@@ -438,19 +437,19 @@ public class QHotel {
         this.priceValid = priceValid;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }

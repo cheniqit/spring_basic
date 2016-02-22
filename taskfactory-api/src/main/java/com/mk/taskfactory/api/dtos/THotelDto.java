@@ -40,8 +40,10 @@ public class THotelDto {
     private Integer hotelType;
     private String cityCode;
     private Integer cityId;
-    private Integer pageIndex; // ¿ªÊ¼ÐÐÊý
-    private Integer pageSize; // Ã¿Ò³ÏÔÊ¾ÊýÁ¿
+    private Integer pageIndex; // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
+    private Integer pageSize; // Ã¿Ò³ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+    private Integer hotelSource;
+
     public Integer getId() {
         return id;
     }
@@ -368,5 +370,13 @@ public class THotelDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getHotelSource() {
+        return hotelSource;
+    }
+
+    public void setHotelSource(Integer hotelSource) {
+        this.hotelSource = hotelSource;
     }
 }

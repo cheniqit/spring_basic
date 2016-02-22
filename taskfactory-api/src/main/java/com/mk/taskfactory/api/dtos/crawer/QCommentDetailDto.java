@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.dtos.crawer;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class QCommentDetailDto {
     private Long id;
@@ -14,7 +13,7 @@ public class QCommentDetailDto {
 
     private String score;
 
-    private Date createTime;
+    private String createTime;
 
     private BigDecimal grade;
 
@@ -22,9 +21,9 @@ public class QCommentDetailDto {
 
     private String userName;
 
-    private Date initDate;
+    private String initDate;
 
-    private Date updateDate;
+    private String updateDate;
 
     private Integer pageIndex;
 
@@ -70,11 +69,14 @@ public class QCommentDetailDto {
         this.score = score == null ? null : score.trim();
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
+        if(createTime!=null&&createTime.length()>19){
+            createTime=createTime.substring(0,19);
+        }
         this.createTime = createTime;
     }
 
@@ -102,19 +104,25 @@ public class QCommentDetailDto {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public Date getInitDate() {
+    public String getInitDate() {
         return initDate;
     }
 
-    public void setInitDate(Date initDate) {
+    public void setInitDate(String initDate) {
+        if(initDate!=null&&initDate.length()>19){
+            initDate=initDate.substring(0,19);
+        }
         this.initDate = initDate;
     }
 
-    public Date getUpdateDate() {
+    public String getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(String updateDate) {
+        if(updateDate!=null&&updateDate.length()>19){
+            updateDate=updateDate.substring(0,19);
+        }
         this.updateDate = updateDate;
     }
 

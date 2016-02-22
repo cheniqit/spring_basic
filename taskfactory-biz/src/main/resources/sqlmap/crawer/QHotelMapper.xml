@@ -6,13 +6,13 @@
     <result column="source_id" property="sourceId" jdbcType="VARCHAR" />
     <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
     <result column="hotel_contact_name" property="hotelContactName" jdbcType="VARCHAR" />
-    <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
+    <result column="reg_time" property="regTime" jdbcType="VARCHAR" />
     <result column="dis_id" property="disId" jdbcType="INTEGER" />
     <result column="detail_addr" property="detailAddr" jdbcType="VARCHAR" />
     <result column="longitude" property="longitude" jdbcType="DECIMAL" />
     <result column="latitude" property="latitude" jdbcType="DECIMAL" />
-    <result column="open_time" property="openTime" jdbcType="TIMESTAMP" />
-    <result column="repair_time" property="repairTime" jdbcType="TIMESTAMP" />
+    <result column="open_time" property="openTime" jdbcType="VARCHAR" />
+    <result column="repair_time" property="repairTime" jdbcType="VARCHAR" />
     <result column="room_num" property="roomNum" jdbcType="INTEGER" />
     <result column="business_license_front" property="businessLicenseFront" jdbcType="VARCHAR" />
     <result column="business_license_back" property="businessLicenseBack" jdbcType="VARCHAR" />
@@ -39,8 +39,8 @@
     <result column="hotel_type" property="hotelType" jdbcType="INTEGER" />
     <result column="data_source" property="dataSource" jdbcType="VARCHAR" />
     <result column="price_valid" property="priceValid" jdbcType="CHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="LONGVARCHAR" />
     <result column="traffic" property="traffic" jdbcType="LONGVARCHAR" />
     <result column="hotel_pic" property="hotelPic" jdbcType="LONGVARCHAR" />
@@ -120,9 +120,9 @@
       update_time
       )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
-      #{hotelContactName,jdbcType=VARCHAR}, #{regTime,jdbcType=TIMESTAMP}, #{disId,jdbcType=INTEGER}, 
+      #{hotelContactName,jdbcType=VARCHAR}, #{regTime,jdbcType=VARCHAR}, #{disId,jdbcType=INTEGER}, 
       #{detailAddr,jdbcType=VARCHAR}, #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, 
-      #{openTime,jdbcType=TIMESTAMP}, #{repairTime,jdbcType=TIMESTAMP}, #{roomNum,jdbcType=INTEGER}, 
+      #{openTime,jdbcType=VARCHAR}, #{repairTime,jdbcType=VARCHAR}, #{roomNum,jdbcType=INTEGER}, 
       #{businessLicenseFront,jdbcType=VARCHAR}, #{businessLicenseBack,jdbcType=VARCHAR}, 
       #{pms,jdbcType=VARCHAR}, #{visible,jdbcType=CHAR}, #{online,jdbcType=CHAR}, #{idCardFront,jdbcType=VARCHAR}, 
       #{idCardBack,jdbcType=VARCHAR}, #{retentionTime,jdbcType=CHAR}, #{defaultLeaveTime,jdbcType=CHAR}, 
@@ -132,8 +132,8 @@
       #{disCode,jdbcType=INTEGER}, #{areaCode,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, 
       #{qtPhone,jdbcType=VARCHAR}, #{hotelType,jdbcType=INTEGER}, #{introduction,jdbcType=LONGVARCHAR}, 
       #{traffic,jdbcType=LONGVARCHAR}, #{hotelPic,jdbcType=LONGVARCHAR}, #{peripheral,jdbcType=LONGVARCHAR},
-      #{dataSource,jdbcType=VARCHAR}, #{priceValid,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP}
+      #{dataSource,jdbcType=VARCHAR}, #{priceValid,jdbcType=CHAR}, #{createTime,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=VARCHAR}
       )
   </insert>
 
@@ -150,7 +150,7 @@
         hotel_contact_name = #{hotelContactName,jdbcType=VARCHAR},
       </if>
       <if test="regTime != null" >
-        reg_time = #{regTime,jdbcType=TIMESTAMP},
+        reg_time = #{regTime,jdbcType=VARCHAR},
       </if>
       <if test="disId != null" >
         dis_id = #{disId,jdbcType=INTEGER},
@@ -165,10 +165,10 @@
         latitude = #{latitude,jdbcType=DECIMAL},
       </if>
       <if test="openTime != null" >
-        open_time = #{openTime,jdbcType=TIMESTAMP},
+        open_time = #{openTime,jdbcType=VARCHAR},
       </if>
       <if test="repairTime != null" >
-        repair_time = #{repairTime,jdbcType=TIMESTAMP},
+        repair_time = #{repairTime,jdbcType=VARCHAR},
       </if>
       <if test="roomNum != null" >
         room_num = #{roomNum,jdbcType=INTEGER},
@@ -261,10 +261,10 @@
         price_valid = #{priceValid,jdbcType=CHAR},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

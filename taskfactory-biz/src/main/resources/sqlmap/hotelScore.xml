@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.HotelMapper">
+    <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.HotelScore">
+        <id column="id" property="id" />
+        <result column="hotelId" property="hotelId" />
+        <result column="grade" property="grade" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, hotelId, hotelId
+    </sql>
+    <sql id="Base_Query_List" >
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="hotelId != null">
+                AND hotelId = #{hotelId}
+            </if>
+        </where>
+    </sql>
+    <select id="queryTHotelScore" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" >
+        select
+        id,<include refid="Base_Column_List" />
+        from t_hotel_score
+        <include refid="Base_Query_List" />
+        ORDER BY  id ASC
+        <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+            limit ${pageIndex} , ${pageSize}
+        </if>
+    </select>
+    <select id="countTHotelScore" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" resultType="java.lang.Integer" >
+        select count(*) from t_hotel_score
+        <include refid="Base_Query_List" />
+    </select>
+</mapper>
