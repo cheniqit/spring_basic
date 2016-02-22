@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ValidPriceMapper {
     public List<ValidPrice> qureyValidPriceHotel(ValidPrice bean);
-    public Integer countValidPriceHotel();
+    public Integer countValidPriceHotel(ValidPrice bean);
     public List<ValidPrice> qureyValidPriceRoomType(ValidPrice bean);
     public Integer countValidPriceRoomtype();
 }

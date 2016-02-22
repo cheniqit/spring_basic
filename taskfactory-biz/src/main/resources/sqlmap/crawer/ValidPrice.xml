@@ -5,16 +5,26 @@
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="roomtype_id" property="roomTypeId" jdbcType="BIGINT" />
   </resultMap>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="hotelId != null">
+         hotel_id = #{hotelId}
+      </if>
+    </where>
+  </sql>
   <select id="qureyValidPriceHotel" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
     select hotel_id
     from valid_price_hotel
+    <include refid="Base_Query_List" />
     ORDER BY hotel_id asc
     <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
       limit ${pageIndex} , ${pageSize}
     </if>
   </select>
-  <select id="countValidPriceHotel"  resultType="java.lang.Integer" >
+  <select id="countValidPriceHotel"  resultType="java.lang.Integer" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
     select count(*) from valid_price_hotel
+    <include refid="Base_Query_List" />
+
   </select>
   <select id="qureyValidPriceRoomType" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.ValidPrice" >
     select roomtype_id

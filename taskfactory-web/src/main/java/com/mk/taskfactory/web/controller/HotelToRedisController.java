@@ -91,7 +91,7 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/tHotelToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> tHotelToRedis(THotelDto bean) {
+    public ResponseEntity<Map<String, Object>> tHotelToRedis(ValidPrice bean) {
         Map<String, Object> result = qHotelToRedisService.tHotelToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }

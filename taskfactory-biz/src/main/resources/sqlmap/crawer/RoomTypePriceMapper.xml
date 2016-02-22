@@ -27,7 +27,6 @@
 		real_price, origin_price, show_price, ota_show_price,
 		wrapper_name, wrapper_id,
 		all_room_count, available_roomcount,
-		crawer_time,
 		create_time,
 		update_time
 	</sql>

@@ -88,4 +88,12 @@
         select count(*) from t_hotel
         <include refid="Base_Query_List" />
     </select>
+    <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.THotelDto" >
+        select
+        <include refid="Base_Column_List" />
+        from t_hotel
+        <include refid="Base_Query_List" />
+        ORDER BY id DESC
+        limit 1
+    </select>
 </mapper>
