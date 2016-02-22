@@ -69,7 +69,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private QHotelRoomTypeMinPriceService minPriceService;
     @Autowired
     private RoomTypePriceService roomTypePriceService;
-    private static ExecutorService pool = Executors.newFixedThreadPool(20);
+    private static ExecutorService pool = Executors.newFixedThreadPool(40);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
@@ -502,6 +502,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             if (hotelDto.getSourceId()!=null){
                                 QHotelRoomtypeDto hotelRoomtype = new QHotelRoomtypeDto();
                                 hotelRoomtype.setHotelSourceId(hotelDto.getSourceId());
+                                hotelRoomtype.setPriceValid("T");
                                 List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
                                 if (CollectionUtils.isEmpty(hotelRoomtypeList)){
                                     return;
@@ -583,8 +584,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
         for (int i=0;i<=pageCount;i++){
-            logger.info(String.format("\n====================pageIndex={}====================\n")
-                    ,i*pageSize);
+            logger.info(String.format("\n====================pages={}&pageIndex={}====================\n")
+                    ,i,i*pageSize);
             dto.setPageSize(pageSize);
             dto.setPageIndex(i*pageSize);
             List<QHotelRoomtypeDto> roomtypeDtoList = hotelRoomTypeService.qureyByPramas(dto);
@@ -1021,6 +1022,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }
                         QHotelDto qHotelDto = new QHotelDto();
                         qHotelDto.setCityCode(Integer.valueOf(bean.getCode()));
+                        qHotelDto.setPriceValid("T");
                         List<QHotelDto> qHotelDtoList = hotelService.qureyByPramas(qHotelDto);
                         for (QHotelDto qBean : qHotelDtoList){
                             logger.info(String.format("\n====================cityCode={}&hotelId={}====================\n")
@@ -1033,7 +1035,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         tHotelDto.setCityCode(bean.getCode());
                         List<THotel> tHotelDtoList = hotelMapper.queryTHotel(tHotelDto);
                         for (THotel tHotel : tHotelDtoList){
-                            QHotelDto temQHotel = new QHotelDto();
+                            if (StringUtils.isEmpty(jedis.get(String.format("%s%s", RedisCacheName.LEZHU_VAILD_PRICE_HOTEL_INFO,
+                                    tHotel.getId())))){
+                                continue;
+                            }
+                            THotelDto temQHotel = new THotelDto();
                             BeanUtils.copyProperties(tHotel,temQHotel);
                             temQHotel.setHotelSource(1);
                             jedis.sadd(String.format("%s%s", RedisCacheName.CITYHOTELSET,

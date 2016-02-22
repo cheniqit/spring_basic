@@ -59,6 +59,9 @@
       <if test="roomtypeName != null">
         AND roomtype_name = #{roomtypeName}
       </if>
+      <if test="priceValid != null">
+        AND price_valid = #{priceValid}
+      </if>
     </where>
   </sql>
 
