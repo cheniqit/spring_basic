@@ -1161,7 +1161,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     ,minPriceDto.getQnHotelId(),minPriceDto.getRoomtypeId());
                             if (minPriceDto.getRoomtypeId()!=null){
                                 jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,
-                                        minPriceDto.getRoomtypeId()), JsonUtils.toJSONString(minPriceDto));
+                                        minPriceDto.getRoomtypeId()), minPriceDto.getMinPrice());
 
                             }
 
