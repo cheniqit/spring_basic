@@ -21,6 +21,10 @@ public class QHotelFacility {
 
     private String otsId;
 
+    private String createTime;
+
+    private String updateTime;
+
     public Integer getId() {
         return id;
     }
@@ -99,5 +103,21 @@ public class QHotelFacility {
 
     public void setOtsId(String otsId) {
         this.otsId = otsId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

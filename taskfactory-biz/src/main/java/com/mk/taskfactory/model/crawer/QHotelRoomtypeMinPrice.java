@@ -3,12 +3,13 @@ package com.mk.taskfactory.model.crawer;
 
 public class QHotelRoomtypeMinPrice {
     private Long id;
-    private String qnHotelId;
+    private Long qnHotelId;
     private String hotelName;
-    private String roomtypeId;
+    private Long roomtypeId;
     private String roomtypeKey;
     private String roomtypeName;
     private String minPrice;
+    private String createTime;
     private String updateTime;
 
     public Long getId() {
@@ -19,11 +20,11 @@ public class QHotelRoomtypeMinPrice {
         this.id = id;
     }
 
-    public String getQnHotelId() {
+    public Long getQnHotelId() {
         return qnHotelId;
     }
 
-    public void setQnHotelId(String qnHotelId) {
+    public void setQnHotelId(Long qnHotelId) {
         this.qnHotelId = qnHotelId;
     }
 
@@ -35,11 +36,11 @@ public class QHotelRoomtypeMinPrice {
         this.hotelName = hotelName;
     }
 
-    public String getRoomtypeId() {
+    public Long getRoomtypeId() {
         return roomtypeId;
     }
 
-    public void setRoomtypeId(String roomtypeId) {
+    public void setRoomtypeId(Long roomtypeId) {
         this.roomtypeId = roomtypeId;
     }
 
@@ -69,6 +70,14 @@ public class QHotelRoomtypeMinPrice {
 
     public String getUpdateTime() {
         return updateTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public void setUpdateTime(String updateTime) {

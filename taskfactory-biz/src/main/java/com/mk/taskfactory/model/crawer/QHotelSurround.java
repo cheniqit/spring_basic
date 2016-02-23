@@ -16,6 +16,8 @@ public class QHotelSurround {
 
     private Long distance;
 
+    private String createTime;
+
     private Date updateTime;
 
     public String getHotelId() {
@@ -68,6 +70,14 @@ public class QHotelSurround {
 
     public Date getUpdateTime() {
         return updateTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public void setUpdateTime(Date updateTime) {

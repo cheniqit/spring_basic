@@ -34,13 +34,15 @@
     <result column="live_num" property="liveNum" jdbcType="INTEGER" />
     <result column="can_add_bed" property="canAddBed" jdbcType="VARCHAR" />
     <result column="price_valid" property="priceValid" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hotel_id, hotel_source_id, roomtype_key, roomtype_name, room_area, rt_bedtype,
     bed_type, bed_size, bathroom_type, air_conditioner, wash_supplies, shoes, tv, broadband,
     wifi, free_water, floor_board, free_tea, desk, computer, fridge, code_case, coffee,
     electric_kettle, hair_drier, room_num, has_window, floor, live_num, can_add_bed,
-    price_valid
+    price_valid,create_time,update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -190,6 +192,12 @@
       </if>
       <if test="priceValid != null" >
         price_valid = #{priceValid,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

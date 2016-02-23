@@ -2,15 +2,15 @@ package com.mk.taskfactory.api.dtos.crawer;
 
 public class QHotelRoomtypeMinPriceDto {
     private Long id;
-    private String qnHotelId;
+    private Long qnHotelId;
     private String hotelName;
-    private String roomtypeId;
+    private Long roomtypeId;
     private String roomtypeKey;
     private String roomtypeName;
     private String minPrice;
+    private String createTime;
     private String updateTime;
     private Integer pageIndex;
-
     private Integer pageSize;
 
     public Long getId() {
@@ -21,11 +21,11 @@ public class QHotelRoomtypeMinPriceDto {
         this.id = id;
     }
 
-    public String getQnHotelId() {
+    public Long getQnHotelId() {
         return qnHotelId;
     }
 
-    public void setQnHotelId(String qnHotelId) {
+    public void setQnHotelId(Long qnHotelId) {
         this.qnHotelId = qnHotelId;
     }
 
@@ -37,11 +37,11 @@ public class QHotelRoomtypeMinPriceDto {
         this.hotelName = hotelName;
     }
 
-    public String getRoomtypeId() {
+    public Long getRoomtypeId() {
         return roomtypeId;
     }
 
-    public void setRoomtypeId(String roomtypeId) {
+    public void setRoomtypeId(Long roomtypeId) {
         this.roomtypeId = roomtypeId;
     }
 
@@ -67,6 +67,17 @@ public class QHotelRoomtypeMinPriceDto {
 
     public void setMinPrice(String minPrice) {
         this.minPrice = minPrice;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        if(createTime!=null&&createTime.length()>19){
+            createTime=createTime.substring(0,19);
+        }
+        this.createTime = createTime;
     }
 
     public String getUpdateTime() {

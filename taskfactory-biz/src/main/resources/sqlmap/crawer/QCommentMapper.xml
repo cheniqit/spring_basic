@@ -11,12 +11,12 @@
     <result column="good_total" property="goodTotal" jdbcType="BIGINT" />
     <result column="bad_total" property="badTotal" jdbcType="BIGINT" />
     <result column="medium_total" property="mediumTotal" jdbcType="BIGINT" />
-    <result column="init_date" property="initDate" jdbcType="VARCHAR" />
-    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, comment_id, hotel_id, hotel_name, score, grade, good_total, bad_total, medium_total, 
-    init_date, update_date
+    create_time, update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -68,11 +68,11 @@
     insert into q_comment (id, comment_id, hotel_id, 
       hotel_name, score, grade, 
       good_total, bad_total, medium_total, 
-      init_date, update_date)
+      create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
       #{hotelName,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, #{grade,jdbcType=DECIMAL}, 
       #{goodTotal,jdbcType=BIGINT}, #{badTotal,jdbcType=BIGINT}, #{mediumTotal,jdbcType=BIGINT}, 
-      #{initDate,jdbcType=VARCHAR}, #{updateDate,jdbcType=VARCHAR})
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
   </insert>
   <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QCommentDto" >
     update q_comment
@@ -101,11 +101,11 @@
       <if test="mediumTotal != null" >
         medium_total = #{mediumTotal,jdbcType=BIGINT},
       </if>
-      <if test="initDate != null" >
-        init_date = #{initDate,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
       </if>
-      <if test="updateDate != null" >
-        update_date = #{updateDate,jdbcType=VARCHAR},
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

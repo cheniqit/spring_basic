@@ -11,6 +11,12 @@ public class QFacilityDto {
 
     private String visible;
 
+    private String otsId;
+
+    private String createTime;
+
+    private String updateTime;
+
     private Integer pageIndex;
 
     private Integer pageSize;
@@ -69,5 +75,35 @@ public class QFacilityDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getOtsId() {
+        return otsId;
+    }
+
+    public void setOtsId(String otsId) {
+        this.otsId = otsId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        if(createTime!=null&&createTime.length()>19){
+            createTime=createTime.substring(0,19);
+        }
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        if(updateTime!=null&&updateTime.length()>19){
+            updateTime=updateTime.substring(0,19);
+        }
+        this.updateTime = updateTime;
     }
 }

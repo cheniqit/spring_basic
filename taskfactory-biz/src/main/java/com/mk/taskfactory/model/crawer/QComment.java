@@ -21,9 +21,9 @@ public class QComment {
 
     private Long mediumTotal;
 
-    private String initDate;
+    private String createTime;
 
-    private String updateDate;
+    private String updateTime;
 
     public Long getId() {
         return id;
@@ -97,19 +97,19 @@ public class QComment {
         this.mediumTotal = mediumTotal;
     }
 
-    public String getInitDate() {
-        return initDate;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setInitDate(String initDate) {
-        this.initDate = initDate;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
-    public String getUpdateDate() {
-        return updateDate;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

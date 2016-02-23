@@ -11,6 +11,12 @@ public class QFacility {
 
     private String visible;
 
+    private String otsId;
+
+    private String createTime;
+
+    private String updateTime;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +55,29 @@ public class QFacility {
 
     public void setVisible(String visible) {
         this.visible = visible == null ? null : visible.trim();
+    }
+
+    public String getOtsId() {
+        return otsId;
+    }
+
+    public void setOtsId(String otsId) {
+        this.otsId = otsId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

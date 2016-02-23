@@ -21,9 +21,9 @@ public class QCommentDto {
 
     private Long mediumTotal;
 
-    private String initDate;
+    private String createTime;
 
-    private String updateDate;
+    private String updateTime;
 
     private Integer pageIndex;
 
@@ -101,26 +101,26 @@ public class QCommentDto {
         this.mediumTotal = mediumTotal;
     }
 
-    public String getInitDate() {
-        return initDate;
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setInitDate(String initDate) {
-        if(initDate!=null&&initDate.length()>19){
-            initDate=initDate.substring(0,19);
+    public void setCreateTime(String createTime) {
+        if(createTime!=null&&createTime.length()>19){
+            createTime=createTime.substring(0,19);
         }
-        this.initDate = initDate;
+        this.createTime = createTime;
     }
 
-    public String getUpdateDate() {
-        return updateDate;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdateDate(String updateDate) {
-        if(updateDate!=null&&updateDate.length()>19){
-            updateDate=updateDate.substring(0,19);
+    public void setUpdateTime(String updateTime) {
+        if(updateTime!=null&&updateTime.length()>19){
+            updateTime=updateTime.substring(0,19);
         }
-        this.updateDate = updateDate;
+        this.updateTime = updateTime;
     }
 
     public Integer getPageIndex() {

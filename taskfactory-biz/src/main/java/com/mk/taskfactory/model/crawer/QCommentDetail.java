@@ -21,9 +21,7 @@ public class QCommentDetail {
 
     private String userName;
 
-    private String initDate;
-
-    private String updateDate;
+    private String updateTime;
 
     public Long getId() {
         return id;
@@ -97,19 +95,11 @@ public class QCommentDetail {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getInitDate() {
-        return initDate;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setInitDate(String initDate) {
-        this.initDate = initDate;
-    }
-
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

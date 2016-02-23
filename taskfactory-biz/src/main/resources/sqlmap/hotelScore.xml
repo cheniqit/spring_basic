@@ -8,7 +8,7 @@
     </resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, hotelId
+        id, hotelId, grade
     </sql>
     <sql id="Base_Query_List" >
         <where>
@@ -22,7 +22,7 @@
     </sql>
     <select id="queryTHotelScore" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" >
         select
-        id,<include refid="Base_Column_List" />
+        <include refid="Base_Column_List" />
         from t_hotel_score
         <include refid="Base_Query_List" />
         ORDER BY  id ASC

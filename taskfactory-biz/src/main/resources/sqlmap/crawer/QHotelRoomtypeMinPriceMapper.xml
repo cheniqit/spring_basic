@@ -3,17 +3,18 @@
 <mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QHotelRoomtypeMinPriceMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.QHotelRoomtypeMinPrice" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="qn_hotel_id" property="qnHotelId" jdbcType="VARCHAR" />
+    <result column="qn_hotel_id" property="qnHotelId" jdbcType="BIGINT" />
     <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
-    <result column="roomtype_id" property="roomtypeId" jdbcType="VARCHAR" />
+    <result column="roomtype_id" property="roomtypeId" jdbcType="BIGINT" />
     <result column="roomtype_key" property="roomtypeKey" jdbcType="VARCHAR" />
     <result column="roomtype_name" property="roomtypeName" jdbcType="VARCHAR" />
     <result column="min_price" property="minPrice" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, qn_hotel_id,hotel_name, roomtype_id, roomtype_key,roomtype_name,min_price, update_time
+    id, qn_hotel_id,hotel_name, roomtype_id, roomtype_key,roomtype_name,min_price,create_time, update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -61,10 +62,10 @@
   <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
     insert into q_hotel_roomtype_minprice (id, qn_hotel_id, roomtype_id, 
       min_price, update_time, hotel_name, 
-      roomtype_key, roomtype_name)
+      roomtype_key, roomtype_name,create_time)
     values (#{id,jdbcType=BIGINT}, #{qnHotelId,jdbcType=VARCHAR}, #{roomtypeId,jdbcType=VARCHAR}, 
       #{minPrice,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
-      #{roomtypeKey,jdbcType=VARCHAR}, #{roomtypeName,jdbcType=VARCHAR})
+      #{roomtypeKey,jdbcType=VARCHAR}, #{roomtypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR})
   </insert>
   
   <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelRoomtypeMinPriceDto" >
@@ -90,6 +91,9 @@
       </if>
       <if test="roomtypeName != null" >
         roomtype_name = #{roomtypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

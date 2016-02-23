@@ -1109,8 +1109,10 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             jedis =  RedisUtil.getJedis();
                             logger.info(String.format("\n====================hotelId={}====================\n")
                                     ,hotelScore.getHotelId());
-                            if (hotelScore.getHotelId()!=null){
-                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
+                            if (hotelScore.getHotelId()!=null&&StringUtils.isNotEmpty(hotelScore.getGrade())){
+                                jedis.del(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
+                                        hotelScore.getHotelId()));
+                                jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
                                         hotelScore.getHotelId()), hotelScore.getGrade());
 
                             }

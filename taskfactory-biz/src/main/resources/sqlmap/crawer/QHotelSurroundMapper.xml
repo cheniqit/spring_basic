@@ -8,10 +8,11 @@
     <result column="longitude" property="longitude" jdbcType="DECIMAL" />
     <result column="latitude" property="latitude" jdbcType="DECIMAL" />
     <result column="distance" property="distance" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    hotel_id, surround_type, surround_name, longitude, latitude, distance, update_time
+    hotel_id, surround_type, surround_name, longitude, latitude, distance, create_time,update_time
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -56,31 +57,34 @@
   <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelSurroundDto" >
     insert into q_hotel_surround (hotel_id, surround_type, surround_name, 
       longitude, latitude, distance, 
-      update_time)
+      create_time,update_time)
     values (#{hotelId,jdbcType=VARCHAR}, #{surroundType,jdbcType=VARCHAR}, #{surroundName,jdbcType=VARCHAR}, 
       #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, #{distance,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=VARCHAR})
+      #{createTime,jdbcType=VARCHAR},#{updateTime,jdbcType=VARCHAR})
   </insert>
   <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.crawer.QHotelSurroundDto" >
     update q_hotel_surround
     <set >
-      <if test="record.surroundType != null" >
-        surround_type = #{record.surroundType,jdbcType=VARCHAR},
+      <if test="surroundType != null" >
+        surround_type = #{surroundType,jdbcType=VARCHAR},
       </if>
-      <if test="record.surroundName != null" >
-        surround_name = #{record.surroundName,jdbcType=VARCHAR},
+      <if test="surroundName != null" >
+        surround_name = #{surroundName,jdbcType=VARCHAR},
       </if>
-      <if test="record.longitude != null" >
-        longitude = #{record.longitude,jdbcType=DECIMAL},
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DECIMAL},
       </if>
-      <if test="record.latitude != null" >
-        latitude = #{record.latitude,jdbcType=DECIMAL},
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DECIMAL},
       </if>
-      <if test="record.distance != null" >
-        distance = #{record.distance,jdbcType=BIGINT},
+      <if test="distance != null" >
+        distance = #{distance,jdbcType=BIGINT},
       </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where hotel_id = #{hotelId,jdbcType=BIGINT}
