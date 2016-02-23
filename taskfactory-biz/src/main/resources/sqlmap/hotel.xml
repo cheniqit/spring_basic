@@ -50,7 +50,7 @@
         WHERE a.id=#{id}
     </select>
     <sql id="Base_Column_List" >
-        hotelName,hotelContactName, regTime, disId, detailAddr, longitude, latitude, openTime,
+        id,hotelName,hotelContactName, regTime, disId, detailAddr, longitude, latitude, openTime,
         repairTime, roomNum, introduction, traffic, hotelPic, peripheral, businessLicenseFront, businessLicenseBack, pms, visible, online, idCardFront
         , idCardBack, retentionTime, defaultLeaveTime, needWait, hotelPhone, isNewPms, priority, ruleCode, isthreshold, pmsOptTime, provCode, disCode
         , areaCode, areaName, qtPhone, hotelType, cityCode
@@ -76,7 +76,7 @@
     </sql>
     <select id="queryTHotel" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.THotelDto" >
         select
-        id,<include refid="Base_Column_List" />
+        <include refid="Base_Column_List" />
         from t_hotel
         <include refid="Base_Query_List" />
         ORDER BY  id ASC
