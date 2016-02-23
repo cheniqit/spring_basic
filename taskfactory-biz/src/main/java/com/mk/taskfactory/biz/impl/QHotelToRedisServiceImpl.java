@@ -14,6 +14,7 @@ import com.mk.taskfactory.api.dtos.crawer.*;
 import com.mk.taskfactory.api.ots.CityService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
+import com.mk.taskfactory.biz.mapper.crawer.TmpMappingRoomTypeIdMapper;
 import com.mk.taskfactory.biz.mapper.crawer.ValidPriceMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper;
@@ -22,6 +23,7 @@ import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.model.HotelScore;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.api.dtos.crawer.ValidPrice;
+import com.mk.taskfactory.model.crawer.TmpMappingRoomTypeId;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private QHotelRoomTypeMinPriceService minPriceService;
     @Autowired
     private RoomTypePriceService roomTypePriceService;
+    @Autowired
+    private TmpMappingRoomTypeIdMapper tmpMappingRoomTypeIdMapper;
     private static ExecutorService pool = Executors.newFixedThreadPool(20);
 
 
@@ -479,7 +483,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=67;i<=pageCount;i++){
+        for (int i=0;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             dto.setPageSize(pageSize);
@@ -583,7 +587,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=224;i<=pageCount;i++){
+        for (int i=0;i<=pageCount;i++){
             logger.info(String.format("\n====================pages={}&pageIndex={}====================\n")
                     ,i,i*pageSize);
             dto.setPageSize(pageSize);
@@ -1110,8 +1114,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             logger.info(String.format("\n====================hotelId={}====================\n")
                                     ,hotelScore.getHotelId());
                             if (hotelScore.getHotelId()!=null&&StringUtils.isNotEmpty(hotelScore.getGrade())){
-                                jedis.del(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
-                                        hotelScore.getHotelId()));
                                 jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
                                         hotelScore.getHotelId()), hotelScore.getGrade());
 
@@ -1290,6 +1292,81 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info(String.format("\n====================otaPriceToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> roomtypeOldIdToNew(Integer start){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("roomtypeOldIdToNew","RoomTypeOldIdToNew同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================roomtypeOldIdToNew begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = tmpMappingRoomTypeIdMapper.count();
+        if (count<=0){
+            resultMap.put("message","count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================page={}&pageIndex={}====================\n")
+                    ,i,i*pageSize);
+            TmpMappingRoomTypeId tmpMappingRoomTypeId = new TmpMappingRoomTypeId();
+            tmpMappingRoomTypeId.setPageSize(pageSize);
+            tmpMappingRoomTypeId.setPageIndex(i*pageSize);
+            List<TmpMappingRoomTypeId> list = tmpMappingRoomTypeIdMapper.qureyByPramas(tmpMappingRoomTypeId);
+            if (CollectionUtils.isEmpty(list)){
+                logger.info(String.format("\n====================list is empty====================\n"));
+                continue;
+            }
+
+            for (final TmpMappingRoomTypeId dataBean:list){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================oldId={}&newId={}====================\n")
+                                    ,dataBean.getOldId(),dataBean.getNewId());
+                            if (dataBean.getOldId()==null||dataBean.getNewId()==null){
+                                return;
+                            }
+                            QHotelRoomtypeDto hotelRoomtype = jedis.;
+                            hotelRoomtype.setHotelSourceId(hotelDto.getSourceId());
+                            List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
+                            if (CollectionUtils.isEmpty(hotelRoomtypeList)){
+                                return;
+                            }
+
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("roomtypeOldIdToNew::error::sourceId:"+hotelDto.getSourceId());
+                            logger.error("roomtypeOldIdToNew::error{}{}",hotelDto.getSourceId(),e.getMessage());
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("roomtypeOldIdToNew", "RoomTypeOldIdToNew同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================roomtypeOldIdToNew  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
