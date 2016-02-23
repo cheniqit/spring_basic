@@ -50,7 +50,7 @@
         WHERE a.id=#{id}
     </select>
     <sql id="Base_Column_List" >
-        hotelContactName, regTime, disId, detailAddr, longitude, latitude, openTime,
+        hotelName,hotelContactName, regTime, disId, detailAddr, longitude, latitude, openTime,
         repairTime, roomNum, introduction, traffic, hotelPic, peripheral, businessLicenseFront, businessLicenseBack, pms, visible, online, idCardFront
         , idCardBack, retentionTime, defaultLeaveTime, needWait, hotelPhone, isNewPms, priority, ruleCode, isthreshold, pmsOptTime, provCode, disCode
         , areaCode, areaName, qtPhone, hotelType, cityCode

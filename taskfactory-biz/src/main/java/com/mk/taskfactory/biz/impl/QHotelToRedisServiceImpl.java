@@ -831,6 +831,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 }
                                 BeanUtils.copyProperties(hotel, tHotelDto);
                                 tHotelDto.setHotelSource(1);
+                                tHotelDto.setSourceId(tHotelDto.getId().toString());
                                 jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                         hotel.getId()), JsonUtils.toJSONString(tHotelDto)
                                 );

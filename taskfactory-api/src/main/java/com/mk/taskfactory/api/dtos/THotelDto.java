@@ -43,6 +43,7 @@ public class THotelDto {
     private Integer pageIndex; // ��ʼ����
     private Integer pageSize; // ÿҳ��ʾ����
     private Integer hotelSource;
+    private String sourceId;
 
     public Integer getId() {
         return id;
@@ -378,5 +379,13 @@ public class THotelDto {
 
     public void setHotelSource(Integer hotelSource) {
         this.hotelSource = hotelSource;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 }
