@@ -208,8 +208,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         Jedis jedis = null;
                         try {
                             jedis =  RedisUtil.getJedis();
-                            logger.info(String.format("\n====================hotelId={}====================\n")
-                                    ,commentDto.getHotelId());
+                            logger.info(String.format("\n====================commentId={}&hotelId={}====================\n")
+                                    ,commentDto.getId(),commentDto.getHotelId());
                             if (commentDto.getHotelId()!=null){
                                 jedis.set(String.format("%s%s", RedisCacheName.HOTELCOMMENTINFO,
                                         commentDto.getHotelId()), JsonUtils.toJSONString(commentDto)
@@ -482,7 +482,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=42;i<=pageCount;i++){
+        for (int i=0;i<=pageCount;i++){
             logger.info(String.format("\n====================pageIndex={}====================\n")
                     ,i*pageSize);
             dto.setPageSize(pageSize);
@@ -1339,18 +1339,35 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             if (dataBean.getOldId()==null||dataBean.getNewId()==null){
                                 return;
                             }
-                            String roomtypeStr =jedis.get(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
-                            if (StringUtils.isEmpty(roomtypeStr)){
+//                            String roomtypeStr =jedis.get(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
+//                            if (StringUtils.isEmpty(roomtypeStr)){
+//                                return;
+//                            }
+//                            RoomtypeToRedisDto saveBean = new RoomtypeToRedisDto();
+//                            saveBean=JsonUtils.formatJson(roomtypeStr,RoomtypeToRedisDto.class);
+//                            if (saveBean.getId()==null){
+//                                return;
+//                            }
+//                            saveBean.setId(dataBean.getNewId());
+//                            jedis.del(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
+//                            jedis.set(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getNewId()),JsonUtils.toJSONString(saveBean));
+//
+//                            String minPrice =jedis.get(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
+//                            if (StringUtils.isEmpty(minPrice)){
+//                                return;
+//                            }
+//                            jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,
+//                                    dataBean.getNewId()), minPrice);
+//                            jedis.del(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
+
+                            String otsPrice =jedis.get(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_OTA_PRICE,dataBean.getOldId()));
+
+                            if (StringUtils.isEmpty(otsPrice)){
                                 return;
                             }
-                            RoomtypeToRedisDto saveBean = new RoomtypeToRedisDto();
-                            saveBean=JsonUtils.formatJson(roomtypeStr,RoomtypeToRedisDto.class);
-                            if (saveBean.getId()==null){
-                                return;
-                            }
-                            saveBean.setId(dataBean.getNewId());
-                            jedis.del(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
-                            jedis.set(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getNewId()),JsonUtils.toJSONString(saveBean));
+                            jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_OTA_PRICE,
+                                    dataBean.getNewId()), otsPrice);
+                            jedis.del(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_OTA_PRICE,dataBean.getOldId()));
 
                             String minPrice =jedis.get(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
                             if (StringUtils.isEmpty(minPrice)){
@@ -1359,7 +1376,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,
                                     dataBean.getNewId()), minPrice);
                             jedis.del(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }finally {
