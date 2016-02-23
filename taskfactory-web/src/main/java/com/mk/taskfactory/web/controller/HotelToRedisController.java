@@ -137,4 +137,23 @@ public class HotelToRedisController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/roomtypeOldIdToNew", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> roomtypeOldIdToNew(Integer start) {
+        Map<String, Object> result = qHotelToRedisService.roomtypeOldIdToNew(start);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/temMappingRoomTypeToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> temMappingRoomTypeToRedis(Integer start) {
+        Map<String, Object> result = qHotelToRedisService.temMappingRoomTypeToRedis(start);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/roomtypeSetOldIdToNew", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> roomtypeSetOldIdToNew(QHotelDto bean) {
+        Map<String, Object> result = qHotelToRedisService.roomtypeSetOldIdToNew(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
 }

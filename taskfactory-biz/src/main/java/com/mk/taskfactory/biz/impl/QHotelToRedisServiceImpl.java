@@ -1312,7 +1312,10 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         int pageCount=count/pageSize;
         logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
                 ,count,pageSize,pageCount);
-        for (int i=0;i<=pageCount;i++){
+        if (start==null){
+            start=0;
+        }
+        for (int i=start;i<=pageCount;i++){
             logger.info(String.format("\n====================page={}&pageIndex={}====================\n")
                     ,i,i*pageSize);
             TmpMappingRoomTypeId tmpMappingRoomTypeId = new TmpMappingRoomTypeId();
@@ -1336,20 +1339,29 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             if (dataBean.getOldId()==null||dataBean.getNewId()==null){
                                 return;
                             }
-                            QHotelRoomtypeDto hotelRoomtype = jedis.;
-                            hotelRoomtype.setHotelSourceId(hotelDto.getSourceId());
-                            List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
-                            if (CollectionUtils.isEmpty(hotelRoomtypeList)){
+                            String roomtypeStr =jedis.get(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
+                            if (StringUtils.isEmpty(roomtypeStr)){
                                 return;
                             }
+                            RoomtypeToRedisDto saveBean = new RoomtypeToRedisDto();
+                            saveBean=JsonUtils.formatJson(roomtypeStr,RoomtypeToRedisDto.class);
+                            if (saveBean.getId()==null){
+                                return;
+                            }
+                            saveBean.setId(dataBean.getNewId());
+                            jedis.del(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getOldId()));
+                            jedis.set(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFO,dataBean.getNewId()),JsonUtils.toJSONString(saveBean));
 
-
-
+                            String minPrice =jedis.get(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
+                            if (StringUtils.isEmpty(minPrice)){
+                                return;
+                            }
+                            jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,
+                                    dataBean.getNewId()), minPrice);
+                            jedis.del(String.format("%s%s",RedisCacheName.HOTEL_ROOMTYPE_MIN_PRICE,dataBean.getOldId()));
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            System.out.println("roomtypeOldIdToNew::error::sourceId:"+hotelDto.getSourceId());
-                            logger.error("roomtypeOldIdToNew::error{}{}",hotelDto.getSourceId(),e.getMessage());
                         }finally {
                             if(null != jedis){
                                 jedis.close();
@@ -1367,6 +1379,157 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
         logger.info(String.format("\n====================roomtypeOldIdToNew  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> temMappingRoomTypeToRedis(Integer start){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        logger.info(String.format("\n====================temMappingRoomTypeToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = tmpMappingRoomTypeIdMapper.count();
+        if (count<=0){
+            resultMap.put("message","count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        if (start==null){
+            start=0;
+        }
+        for (int i=start;i<=pageCount;i++){
+            logger.info(String.format("\n====================page={}&pageIndex={}====================\n")
+                    ,i,i*pageSize);
+            TmpMappingRoomTypeId tmpMappingRoomTypeId = new TmpMappingRoomTypeId();
+            tmpMappingRoomTypeId.setPageSize(pageSize);
+            tmpMappingRoomTypeId.setPageIndex(i*pageSize);
+            List<TmpMappingRoomTypeId> list = tmpMappingRoomTypeIdMapper.qureyByPramas(tmpMappingRoomTypeId);
+            if (CollectionUtils.isEmpty(list)){
+                logger.info(String.format("\n====================list is empty====================\n"));
+                continue;
+            }
+
+            for (final TmpMappingRoomTypeId dataBean:list){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================oldId={}&newId={}====================\n")
+                                    ,dataBean.getOldId(),dataBean.getNewId());
+                            if (dataBean.getOldId()==null||dataBean.getNewId()==null){
+                                return;
+                            }
+
+                            jedis.set(String.format("%s%s","TMP_MAPPING_ROOMTYE_ID_",dataBean.getOldId()),dataBean.getNewId().toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+    public Map<String,Object> roomtypeSetOldIdToNew(QHotelDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("roomtypeSetOldIdToNew","RoomTypeSet同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================roomtypeSetOldIdToNew begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        dto.setPriceValid("T");
+        final int count = hotelService.count(dto);
+        if (count<=0){
+            resultMap.put("message"," count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<QHotelDto> hotelList = hotelService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(hotelList)){
+                logger.info(String.format("\n====================hotelList is empty====================\n"));
+                continue;
+            }
+
+            for (final QHotelDto hotelDto:hotelList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================hotelId={}====================\n")
+                                    ,hotelDto.getId());
+                            if (hotelDto.getSourceId()!=null){
+                                Set<String> roomtypeSet =jedis.smembers(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFOSET,hotelDto.getId()));
+                                if (CollectionUtils.isEmpty(roomtypeSet)){
+                                    return;
+                                }
+                                for (String roomtypeStr:roomtypeSet){
+                                    if (StringUtils.isEmpty(roomtypeStr)){
+                                        continue;
+                                    }
+                                RoomtypeToRedisDto saveBean = new RoomtypeToRedisDto();
+                                saveBean=JsonUtils.formatJson(roomtypeStr,RoomtypeToRedisDto.class);
+                                if (saveBean.getId()==null){
+                                    return;
+                                }
+                                    String newId=jedis.get(String.format("%s%s","TMP_MAPPING_ROOMTYE_ID_",saveBean.getId()));
+                                    if (StringUtils.isEmpty(newId)){
+                                        continue;
+                                    }
+                                    logger.info(String.format("\n====================oldId={}&newId====================\n")
+                                            ,saveBean.getId(),newId);
+                                saveBean.setId(Long.valueOf(newId));
+
+                                jedis.sadd(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFOSET,newId),JsonUtils.toJSONString(saveBean));
+
+
+                                }
+                                jedis.del(String.format("%s%s",RedisCacheName.HOTELROOMTYPEINFOSET,hotelDto.getId()));
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("roomtypeSetOldIdToNew", "RoomTypeSet同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================roomtypeSetOldIdToNew  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

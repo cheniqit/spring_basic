@@ -26,6 +26,9 @@ public interface QHotelToRedisService {
     public Map<String,Object> hotelScoreToRedis(HotelScoreDto dto);
     public Map<String,Object> qHotelRoomTypeMinPriceToRedis(QHotelRoomtypeMinPriceDto dto);
     public Map<String,Object> otaPriceToRedis(QHotelDto dto);
+    public Map<String,Object> roomtypeOldIdToNew(Integer start);
+    public Map<String,Object> temMappingRoomTypeToRedis(Integer start);
+    public Map<String,Object> roomtypeSetOldIdToNew(QHotelDto dto);
 
 }
 
