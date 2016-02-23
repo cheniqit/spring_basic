@@ -11,6 +11,6 @@ import java.util.List;
 @MyBatisRepository
 public interface UMemberMapper {
     public List<UMember> selectCpsUserByComeFrom(HashMap hm);
-
+    public UMember selectByMid(UMember bean);
 
 }

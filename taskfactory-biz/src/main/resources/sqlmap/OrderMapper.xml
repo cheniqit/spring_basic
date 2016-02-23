@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.Order" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="room_type_name" property="roomTypeName" jdbcType="VARCHAR" />
+    <result column="room_unit_price" property="roomUnitPrice" jdbcType="VARCHAR" />
+    <result column="method" property="method" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="cancel_reason_code" property="cancelReasonCode" jdbcType="INTEGER" />
+    <result column="m_id" property="mId" jdbcType="BIGINT" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="contacts_phone" property="contactsPhone" jdbcType="VARCHAR" />
+    <result column="begin_time" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="day_number" property="dayNumber" jdbcType="INTEGER" />
+    <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
+    <result column="pay_price" property="payPrice" jdbcType="DECIMAL" />
+    <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="hidden" property="hidden" jdbcType="CHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+    <result column="ots_room_type_id" property="otsRoomTypeId" jdbcType="BIGINT" />
+    <result column="cancel_reason" property="cancelReason" jdbcType="LONGVARCHAR" />
+    <result column="note" property="note" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, order_no, hotel_id, hotel_name, city_code, room_type_id, room_type_name, room_unit_price,
+    method, `type`, status, cancel_reason_code, m_id, contacts, contacts_phone, begin_time,
+    end_time, day_number, order_price, pay_price, pay_status, pay_time, hidden, create_time,
+    update_time, create_by, update_by, is_vaild, ots_room_type_id,cancel_reason, note
+  </sql>
+
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="orderNo != null">
+        AND order_no = #{orderNo}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="cityCode != null">
+        AND city_code = #{cityCode}
+      </if>
+      <if test="roomTypeId != null">
+        AND room_type_id = #{roomTypeId}
+      </if>
+      <if test="type != null">
+        AND `type` = #{type}
+      </if>
+      <if test="mId != null">
+        AND m_id = #{mId}
+      </if>
+      <if test="hidden != null">
+        AND hidden = #{hidden}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.OrderDto" >
+    select
+    <include refid="Base_Column_List" />
+    from `order`
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.OrderDto" resultType="java.lang.Integer" >
+    select count(*) from `order`
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.OrderDto" >
+    select
+    <include refid="Base_Column_List" />
+    from `order`
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from `order`
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.OrderDto" >
+    insert into `order` (id, order_no, hotel_id,
+      hotel_name, city_code, room_type_id,
+      room_type_name, room_unit_price, method,
+      `type`, status, cancel_reason_code,
+      m_id, contacts, contacts_phone,
+      begin_time, end_time, day_number,
+      order_price, pay_price, pay_status,
+      pay_time, hidden, create_time,
+      update_time, create_by, update_by,
+      is_vaild, ots_room_type_id, cancel_reason,
+      note)
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{hotelId,jdbcType=BIGINT},
+      #{hotelName,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{roomTypeId,jdbcType=BIGINT},
+      #{roomTypeName,jdbcType=VARCHAR}, #{roomUnitPrice,jdbcType=VARCHAR}, #{method,jdbcType=INTEGER},
+      #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{cancelReasonCode,jdbcType=INTEGER},
+      #{mId,jdbcType=BIGINT}, #{contacts,jdbcType=VARCHAR}, #{contactsPhone,jdbcType=VARCHAR},
+      #{beginTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{dayNumber,jdbcType=INTEGER},
+      #{orderPrice,jdbcType=DECIMAL}, #{payPrice,jdbcType=DECIMAL}, #{payStatus,jdbcType=INTEGER},
+      #{payTime,jdbcType=TIMESTAMP}, #{hidden,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
+      #{isVaild,jdbcType=CHAR}, #{otsRoomTypeId,jdbcType=BIGINT}, #{cancelReason,jdbcType=LONGVARCHAR},
+      #{note,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.OrderDto" >
+    update `order`
+    <set >
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeName != null" >
+        room_type_name = #{roomTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="roomUnitPrice != null" >
+        room_unit_price = #{roomUnitPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null" >
+        method = #{method,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="cancelReasonCode != null" >
+        cancel_reason_code = #{cancelReasonCode,jdbcType=INTEGER},
+      </if>
+      <if test="mId != null" >
+        m_id = #{mId,jdbcType=BIGINT},
+      </if>
+      <if test="contacts != null" >
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="contactsPhone != null" >
+        contacts_phone = #{contactsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dayNumber != null" >
+        day_number = #{dayNumber,jdbcType=INTEGER},
+      </if>
+      <if test="orderPrice != null" >
+        order_price = #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payPrice != null" >
+        pay_price = #{payPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="payStatus != null" >
+        pay_status = #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hidden != null" >
+        hidden = #{hidden,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=CHAR},
+      </if>
+      <if test="otsRoomTypeId != null" >
+        ots_room_type_id = #{otsRoomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="cancelReason != null" >
+        cancel_reason = #{cancelReason,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

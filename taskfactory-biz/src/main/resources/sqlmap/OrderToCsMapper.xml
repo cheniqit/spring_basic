@@ -95,5 +95,15 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-
+  <select id="qureySendList" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.OrderDto" >
+    select
+    <include refid="Base_Column_List" />
+    from `order_to_cs`
+    where status in(10,30)
+    and `count` &lt;= #{count,jdbcType=INTEGER}
+    and is_vaild='T'
+     <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+  </select>
 </mapper>

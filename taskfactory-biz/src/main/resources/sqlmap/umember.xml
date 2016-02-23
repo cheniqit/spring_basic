@@ -14,4 +14,10 @@
         from  u_member
         where  comefrom =  #{comefrom}
     </select>
+    <select id="selectByMid"  resultMap="BaseCpsUsertMap"  parameterType="com.mk.taskfactory.biz.umember.model.UMember">
+        select
+        mid,loginName,phone,comefrom,comefromtype
+        from  u_member
+        where  mid =  #{mid}
+    </select>
 </mapper>

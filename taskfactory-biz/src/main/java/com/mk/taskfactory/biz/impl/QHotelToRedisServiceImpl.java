@@ -75,7 +75,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private TmpMappingRoomTypeIdMapper tmpMappingRoomTypeIdMapper;
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
-
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("qHotelToRedis","QHotel同步到Radis",Event.SUCCESS,

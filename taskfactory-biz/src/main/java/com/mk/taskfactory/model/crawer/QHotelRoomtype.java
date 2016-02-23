@@ -65,6 +65,10 @@ public class QHotelRoomtype {
 
     private String priceValid;
 
+    private String createTime;
+
+    private String updateTime;
+
     public Long getId() {
         return id;
     }
@@ -319,5 +323,21 @@ public class QHotelRoomtype {
 
     public void setPriceValid(String priceValid) {
         this.priceValid = priceValid == null ? null : priceValid.trim();
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

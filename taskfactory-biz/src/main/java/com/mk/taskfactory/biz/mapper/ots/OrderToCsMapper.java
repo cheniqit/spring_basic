@@ -14,4 +14,6 @@ public interface OrderToCsMapper {
     public Integer delete(Integer id);
     public Integer updateById(OrderToCsDto bean);
     public Integer count(OrderToCsDto bean);
+    public List<OrderToCs> qureySendList(OrderToCsDto bean);
+
 }
