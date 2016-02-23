@@ -73,7 +73,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private RoomTypePriceService roomTypePriceService;
     @Autowired
     private TmpMappingRoomTypeIdMapper tmpMappingRoomTypeIdMapper;
-    private static ExecutorService pool = Executors.newFixedThreadPool(20);
+    private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
 
     public Map<String,Object> qHotelToRedis(QHotelDto dto){
