@@ -57,11 +57,15 @@ public class JsonUtils {
    * @return List对象
    * @throws JSONException
    */
-    public static List<Object> jsonToList(String jsonString) throws JSONException {
-        JSONArray jsonArray = JSONArray.parseArray(jsonString);
+    public static List<Object> jsonToList(String jsonString){
         List<Object> result = new ArrayList<Object>();
-        for (Object obj:jsonArray.toArray()){
-            result.add(obj);
+        try{
+            JSONArray jsonArray =JSONArray.parseArray(jsonString);
+            for (Object obj:jsonArray.toArray()){
+                result.add(obj);
+            }
+        }catch (JSONException e){
+            return null;
         }
         return result;
 
@@ -74,7 +78,13 @@ public class JsonUtils {
   * @throws JSONException
   */
     public static String toJSONString(Object bean) throws JSONException {
-        return JSONArray.toJSONString(bean);
+        String result =null;
+        try{
+            result =JSONArray.toJSONString(bean);
+        }catch (JSONException e){
+            return null;
+        }
+        return result;
 
     }
 

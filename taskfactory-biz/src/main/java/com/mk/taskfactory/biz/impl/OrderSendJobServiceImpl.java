@@ -16,9 +16,7 @@ import com.mk.taskfactory.api.ots.OtsCommentImgService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.biz.mapper.ots.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
-import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.PicUtils;
-import com.mk.taskfactory.biz.utils.QiniuUtils;
+import com.mk.taskfactory.biz.utils.*;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.Order;
 import com.mk.taskfactory.model.OrderToCsBean;
@@ -67,6 +65,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         List<OrderToCsBean> beanList = new ArrayList<OrderToCsBean>();
         logger.info(String.format("\n====================send size={}====================\n")
                 ,orderToCsDtoList.size());
+        Map<Long,OrderToCsDto> orderMap = new HashMap<Long, OrderToCsDto>();
         for (OrderToCsDto orderToCsDto:orderToCsDtoList){
             OrderDto order = new OrderDto();
             order.setId(orderToCsDto.getOrderId());
@@ -85,11 +84,55 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             setBean.setLiveUserPhone(order.getContactsPhone());
             setBean.setOrderUserPhone(member.getPhone());
             beanList.add(setBean);
+            orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
         }
-        Cat.logEvent("commentImg", "同步commentImg信息到Ots", Event.SUCCESS,
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("orders", JsonUtils.toJSONString(beanList));
+        String postResult= HttpUtils.doPost(Constants.CS_URL + "addorders", params);
+        if (StringUtils.isEmpty(postResult)){
+            resultMap.put("message","请求失败");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        logger.info(postResult);
+        Map<String,String> returnMap = JsonUtils.jsonToMap(postResult);
+        if(CollectionUtils.isEmpty(returnMap)){
+            resultMap.put("message","解析返回结果失败");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        if (StringUtils.isEmpty(returnMap.get("success"))&&returnMap.get("success")=="false"){
+            resultMap.put("message",returnMap.get("errormsg"));
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        List<Object> failList = JsonUtils.jsonToList(postResult);
+        if(CollectionUtils.isEmpty(failList)){
+            resultMap.put("message","解析返回结果失败");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        Map<Long,String> failMap = new HashMap<Long, String>();
+        for (Object obj:failList){
+            if (obj!=null){
+                failMap.put(Long.valueOf(obj.toString()),"1");
+            }
+        }
+        for (Long key:orderMap.keySet()) {
+            OrderToCsDto updateBean = orderMap.get(key);
+            if (StringUtils.isNotEmpty(failMap.get(updateBean.getOrderId()))){
+                updateBean.setStatus(30);
+            }else {
+                updateBean.setStatus(20);
+            }
+            updateBean.setCount(updateBean.getCount()+1);
+            updateBean.setExecuteTime(new Date());
+            orderToCsService.updateById(updateBean);
+        }
+        Cat.logEvent("orderSendToCs", "orderSendToCs", Event.SUCCESS,
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
-        logger.info(String.format("\n====================commentImg  endTime={}====================\n")
+        logger.info(String.format("\n====================orderSendToCs  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
