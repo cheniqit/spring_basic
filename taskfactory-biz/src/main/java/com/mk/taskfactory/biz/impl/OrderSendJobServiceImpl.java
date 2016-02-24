@@ -139,5 +139,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
-
+    public void  bookingOkJob(){
+        HttpUtils.get_data(Constants.OTS_URL + "/order/testjob","GET");
+    }
 }

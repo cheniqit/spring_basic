@@ -1,10 +1,9 @@
 package com.mk.taskfactory.biz.utils;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 import org.apache.http.HttpResponse;
@@ -123,6 +122,27 @@ public class HttpUtils {
         String result = sendHttpClientPost(path, params, timeout, "utf-8");
         System.out.println("-result->>" + result);
 
+    }
+
+    public static String get_data(String url, String method) {
+        try {
+            URL httpUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) httpUrl.openConnection();
+            conn.setDoOutput(true);
+            conn.setConnectTimeout(10000);
+            conn.setRequestMethod(method);
+            conn.setRequestProperty("Content-type", "text/html");
+            conn.setRequestProperty("Accept-Charset", "utf-8");
+            conn.setRequestProperty("contentType", "utf-8");
+            conn.connect();
+
+            //返回
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String result = reader.readLine();
+            return result.trim();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
