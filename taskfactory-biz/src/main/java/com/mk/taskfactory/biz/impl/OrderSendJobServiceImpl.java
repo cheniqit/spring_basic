@@ -49,7 +49,10 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 
     @Autowired
     private UMemberMapper memberMapper;
-
+    public void  orderSendToCs(){
+        OrderToCsDto bean = new OrderToCsDto();
+        orderSendToCs(bean);
+    }
     public Map<String,Object> orderSendToCs(OrderToCsDto bean){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("orderSendToCs","orderSendToCs",Event.SUCCESS,

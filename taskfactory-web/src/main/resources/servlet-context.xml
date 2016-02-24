@@ -113,4 +113,10 @@
     <!--<task:scheduled-tasks>-->
         <!--<task:scheduled ref="priceToRedisServiceImpl" method="updateDealCountToRedis" cron="0 0 7 * * ?"/>-->
     <!--</task:scheduled-tasks>-->
+
+    <!--每一分钟发送订单-->
+    <bean id="orderSendJobServiceImpl" class="com.mk.taskfactory.biz.impl.OrderSendJobServiceImpl" />
+    <task:scheduled-tasks>
+    <task:scheduled ref="orderSendJobServiceImpl" method="orderSendToCs" cron="0 0/1 * * * ?"/>
+    </task:scheduled-tasks>
 </beans>
