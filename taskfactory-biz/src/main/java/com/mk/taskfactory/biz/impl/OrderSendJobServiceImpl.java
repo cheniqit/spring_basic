@@ -107,17 +107,15 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             return resultMap;
         }
         List<Object> failList = JsonUtils.jsonToList(postResult);
-        if(CollectionUtils.isEmpty(failList)){
-            resultMap.put("message","解析返回结果失败");
-            resultMap.put("SUCCESS", false);
-            return resultMap;
-        }
         Map<Long,String> failMap = new HashMap<Long, String>();
-        for (Object obj:failList){
-            if (obj!=null){
-                failMap.put(Long.valueOf(obj.toString()),"1");
+        if(!CollectionUtils.isEmpty(failList)){
+            for (Object obj:failList){
+                if (obj!=null){
+                    failMap.put(Long.valueOf(obj.toString()),"1");
+                }
             }
         }
+
         for (Long key:orderMap.keySet()) {
             OrderToCsDto updateBean = orderMap.get(key);
             if (StringUtils.isNotEmpty(failMap.get(updateBean.getOrderId()))){
