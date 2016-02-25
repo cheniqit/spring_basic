@@ -139,13 +139,13 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 for (TExHotelImageDto imageDto:hotelImageDtoList){
                                     HotelImgDto hotelImgDto = new HotelImgDto();
                                     BeanUtils.copyProperties(imageDto, hotelImgDto);
-                                    if (mark>0){
-                                        break;
-                                    }
 
                                     jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
                                             hotelDto.getId()), JsonUtils.toJSONString(hotelImgDto)
                                     );
+                                    if (mark>0){
+                                        break;
+                                    }
                                 }
 
                             }
