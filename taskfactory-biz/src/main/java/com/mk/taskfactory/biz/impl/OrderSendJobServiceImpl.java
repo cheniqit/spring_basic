@@ -91,7 +91,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         }
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
-        String postResult= HttpUtils.doPost(Constants.CS_URL + "addorders", params);
+        String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/addorders", params);
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
