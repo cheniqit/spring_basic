@@ -30,6 +30,7 @@ public interface QHotelToRedisService {
     public Map<String,Object> temMappingRoomTypeToRedis(Integer start);
     public Map<String,Object> roomtypeSetOldIdToNew(QHotelDto dto);
     public Map<String,Object> tQunarHotelScoreToRedis(QHotelDto dto);
+    public Map<String,Object> onlineCityToRedis(TCityDto dto);
 
 }
 

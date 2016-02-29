@@ -1635,4 +1635,84 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
+    public Map<String,Object> onlineCityToRedis(TCityDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("onlineCityToRedis","OnlineCity同步到Radis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================onlineCityToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        List<TCityDto> cityDtoList = cityService.qureyByPramas(dto);
+        if (CollectionUtils.isEmpty(cityDtoList)){
+            logger.info(String.format("\n====================hotelList is empty====================\n"));
+            resultMap.put("message","hotelList is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+
+        for (final TCityDto cityDto:cityDtoList){
+            pool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Jedis jedis = null;
+                    try {
+                        jedis =  RedisUtil.getJedis();
+
+                        if (cityDto.getCode()==null) {
+                            logger.info(String.format("\n====================cityCode isEmpty====================\n"));
+                            return;
+                        }
+                        logger.info(String.format("\n====================cityName={}&cityCode={}====================\n")
+                        ,cityDto.getCityName(),cityDto.getCode());
+                        QHotelDto qHotelDto = new QHotelDto();
+                        qHotelDto.setCityCode(Integer.valueOf(cityDto.getCode()));
+                        qHotelDto = hotelService.getByPramas(qHotelDto);
+                        if (qHotelDto!=null&&qHotelDto.getId()!=null){
+                            logger.info(String.format("\n====================set cityCode={} by qunar====================\n")
+                            ,cityDto.getCode());
+                            jedis.set(String.format("%s%s", RedisCacheName.CITY_INFO,
+                                    cityDto.getCode()), JsonUtils.toJSONString(cityDto)
+                            );
+                            return;
+                        }
+                        THotelDto tHotelDto = new THotelDto();
+                        tHotelDto.setCityCode(cityDto.getCode());
+                        THotel tHotel = hotelMapper.getByPramas(tHotelDto);
+                        if (tHotel!=null&&tHotel.getId()!=null){
+                            logger.info(String.format("\n====================set cityCode={} by lezhu====================\n")
+                                    ,cityDto.getCode());
+                            jedis.set(String.format("%s%s", RedisCacheName.CITY_INFO,
+                                    cityDto.getCode()), JsonUtils.toJSONString(cityDto)
+                            );
+                            return;
+                        }else {
+                            logger.info(String.format("\n====================remove cityCode={}====================\n")
+                                    ,cityDto.getCode());
+                            jedis.del(String.format("%s%s", RedisCacheName.CITY_INFO,
+                                    cityDto.getCode())
+                            );
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }finally {
+                        if(null != jedis){
+                            jedis.close();
+                        }
+
+                    }
+
+                }
+            });
+
+        }
+
+        Cat.logEvent("onlineCityToRedis", "OnlineCity同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================onlineCityToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
 }

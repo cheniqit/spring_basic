@@ -176,4 +176,6 @@ public class RedisCacheName {
     public static final String HOTEL_ROOMTYPE_MIN_PRICE= "HOTEL_ROOMTYPE_MIN_PRICE_";
     /***酒店房型OTA价格***/
     public static final String HOTEL_ROOMTYPE_OTA_PRICE= "HOTEL_ROOMTYPE_OTA_PRICE_";
+    /***城市信息***/
+    public static final String CITY_INFO= "CITY_INFO_";
 }

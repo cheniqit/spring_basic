@@ -161,5 +161,11 @@ public class HotelToRedisController {
         Map<String, Object> result = qHotelToRedisService.tQunarHotelScoreToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
+    @RequestMapping(value = "/onlineCityToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityDto bean) {
+        Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
 
 }
