@@ -69,6 +69,8 @@ public class QHotelRoomtypeDto {
 
     private Integer pageSize;
 
+    private String roomTypeValid;
+
     public Long getId() {
         return id;
     }
@@ -339,5 +341,13 @@ public class QHotelRoomtypeDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getRoomTypeValid() {
+        return roomTypeValid;
+    }
+
+    public void setRoomTypeValid(String roomTypeValid) {
+        this.roomTypeValid = roomTypeValid;
     }
 }

@@ -80,7 +80,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelToRedis","QHotel同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -387,7 +387,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelFacilityToRedis","QHotelFacility同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelFacilityToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
 
         int count = hotelService.count(dto);
         if (count<=0){
@@ -472,7 +472,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelRoomTypeSetToRedis","QHotelRoomTypeSet同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelRoomTypeSetToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -506,7 +506,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             if (hotelDto.getSourceId()!=null){
                                 QHotelRoomtypeDto hotelRoomtype = new QHotelRoomtypeDto();
                                 hotelRoomtype.setHotelSourceId(hotelDto.getSourceId());
-                                hotelRoomtype.setPriceValid("T");
+                                hotelRoomtype.setRoomTypeValid("T");
                                 List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
                                 if (CollectionUtils.isEmpty(hotelRoomtypeList)){
                                     logger.info(String.format("\n====================hotelRoomtypeList isEmpty====================\n"));
@@ -577,7 +577,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelRoomtypeToRedis","QHotelRoomtype同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelRoomtypeToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelRoomTypeService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -669,7 +669,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("qHotelSurroundToRedis","QHotelSurround同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelSurroundToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -1031,7 +1031,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }
                         QHotelDto qHotelDto = new QHotelDto();
                         qHotelDto.setCityCode(Integer.valueOf(bean.getCityCode()));
-                        qHotelDto.setPriceValid("T");
+                        qHotelDto.setRoomTypeValid("T");
                         List<QHotelDto> qHotelDtoList = hotelService.qureyByPramas(qHotelDto);
                         for (QHotelDto qBean : qHotelDtoList){
                             logger.info(String.format("\n====================cityCode={}&hotelId={}====================\n")
@@ -1222,7 +1222,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("otaPriceToRedis","OTAPrice同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================otaPriceToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");
@@ -1474,7 +1474,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("roomtypeSetOldIdToNew","RoomTypeSet同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================roomtypeSetOldIdToNew begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         final int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message"," count is 0");
@@ -1565,7 +1565,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("tQunarHotelScoreToRedis","TQunarHotelScore同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================tQunarHotelScoreToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        dto.setPriceValid("T");
+        dto.setRoomTypeValid("T");
         int count = hotelService.count(dto);
         if (count<=0){
             resultMap.put("message","QHotel count is 0");

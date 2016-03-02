@@ -45,6 +45,7 @@
     <result column="traffic" property="traffic" jdbcType="LONGVARCHAR" />
     <result column="hotel_pic" property="hotelPic" jdbcType="LONGVARCHAR" />
     <result column="peripheral" property="peripheral" jdbcType="LONGVARCHAR" />
+    <result column="roomtype_valid" property="roomTypeValid" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, source_id, hotel_name, hotel_contact_name, reg_time, dis_id, detail_addr, longitude, 
@@ -52,7 +53,7 @@
     pms, visible, online, id_card_front, id_card_back, retention_time, default_leave_time, 
     need_wait, hotel_phone, is_new_pms, priority, rulecode, isthreshold, pms_opt_time, 
     prov_code, city_code, dis_code, area_code, area_name, qt_phone, hotel_type,
-    introduction, traffic, hotel_pic, peripheral,confidence,data_source, price_valid, create_time, update_time
+    introduction, traffic, hotel_pic, peripheral,confidence,data_source, price_valid, create_time, update_time,roomtype_valid
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -73,6 +74,9 @@
       </if>
       <if test="cityCode != null">
         AND city_code = #{cityCode}
+      </if>
+      <if test="roomTypeValid != null">
+        AND roomtype_valid = #{roomTypeValid}
       </if>
     </where>
   </sql>
@@ -117,7 +121,7 @@
       dis_code, area_code, area_name, 
       qt_phone, hotel_type, introduction, 
       traffic, hotel_pic, peripheral,data_source, price_valid, create_time,
-      update_time
+      update_time,roomtype_valid
       )
     values (#{id,jdbcType=BIGINT}, #{sourceId,jdbcType=VARCHAR}, #{hotelName,jdbcType=VARCHAR}, 
       #{hotelContactName,jdbcType=VARCHAR}, #{regTime,jdbcType=VARCHAR}, #{disId,jdbcType=INTEGER}, 
@@ -133,7 +137,7 @@
       #{qtPhone,jdbcType=VARCHAR}, #{hotelType,jdbcType=INTEGER}, #{introduction,jdbcType=LONGVARCHAR}, 
       #{traffic,jdbcType=LONGVARCHAR}, #{hotelPic,jdbcType=LONGVARCHAR}, #{peripheral,jdbcType=LONGVARCHAR},
       #{dataSource,jdbcType=VARCHAR}, #{priceValid,jdbcType=CHAR}, #{createTime,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=VARCHAR}
+      #{updateTime,jdbcType=VARCHAR}, #{roomTypeValid,jdbcType=CHAR}
       )
   </insert>
 
@@ -265,6 +269,9 @@
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTypeValid != null" >
+        roomtype_valid = #{roomTypeValid,jdbcType=CHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
