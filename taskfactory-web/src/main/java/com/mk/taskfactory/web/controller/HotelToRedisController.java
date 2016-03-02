@@ -2,10 +2,7 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.QHotelToRedisService;
-import com.mk.taskfactory.api.dtos.HotelScoreDto;
-import com.mk.taskfactory.api.dtos.TCityDto;
-import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.THotelDto;
+import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.dtos.crawer.*;
 import com.mk.taskfactory.model.TFacility;
 import com.mk.taskfactory.model.crawer.QComment;
@@ -112,7 +109,7 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/cityHotelSetToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> cityHotelSetToRedis(TCityDto dto) {
+    public ResponseEntity<Map<String, Object>> cityHotelSetToRedis(TCityListDto dto) {
         Map<String, Object> result = qHotelToRedisService.cityHotelSetToRedis(dto);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
@@ -163,7 +160,7 @@ public class HotelToRedisController {
     }
     @RequestMapping(value = "/onlineCityToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityDto bean) {
+    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityListDto bean) {
         Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
