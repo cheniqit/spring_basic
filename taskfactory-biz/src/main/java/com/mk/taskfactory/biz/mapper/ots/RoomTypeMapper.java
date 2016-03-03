@@ -16,5 +16,8 @@ public interface RoomTypeMapper {
     public List<TRoomType> findByName(TRoomTypeDto bean);
     public List<TRoomType> queryJionThotel(TRoomTypeDto bean);
     public Integer count();
+    public List<TRoomType> qureyByPramas(TRoomTypeDto bean);
+    public TRoomType getByPramas(TRoomTypeDto bean);
+    public Integer count(TRoomTypeDto bean);
 
 }

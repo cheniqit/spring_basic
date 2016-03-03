@@ -16,7 +16,7 @@ public interface QHotelToRedisService {
     public Map<String,Object> qHotelRoomtypeToRedis(QHotelRoomtypeDto dto);
     public Map<String,Object> qHotelSurroundSetToRedis(QHotelDto dto);
     public Map<String,Object> tFacilityToRedis(TFacilityDto dto);
-    public Map<String,Object> tHotelToRedis(ValidPrice dto);
+    public Map<String,Object> tHotelToRedis(ValidRoomType dto);
     public Map<String,Object> validPriceHotelToRedis();
     public Map<String,Object> validPriceRoomTypeToRedis();
     public Map<String,Object> cityHotelSetToRedis(TCityListDto dto);
