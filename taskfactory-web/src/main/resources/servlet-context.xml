@@ -121,5 +121,12 @@
      <task:scheduled ref="orderSendJobServiceImpl" method="bookingOkJob" cron="0 0 3 * * ?"/>
     </task:scheduled-tasks>
 
-
+    <!--redis刷新-->
+    <bean id="jobStartServiceImpl" class="com.mk.taskfactory.biz.impl.JobStartServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="jobStartServiceImpl" method="tQunarHotelScoreToRedis" cron="0 0 4 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 0 4 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeMinPriceToRedis" cron="0 5 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 0 2 * * ?"/>
+    </task:scheduled-tasks>
 </beans>
