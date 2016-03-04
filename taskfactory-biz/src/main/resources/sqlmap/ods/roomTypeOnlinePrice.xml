@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ods.RoomTypeOnlinePriceMapper">
+
+    <resultMap id="resultMap" type="com.mk.taskfactory.model.ods.TRoomTypeOnlinePrice">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="hotelId" property="hotel_id" jdbcType="BIGINT"/>
+        <result column="roomTypeId" property="room_type_id" jdbcType="BIGINT"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="createTime" property="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.mk.taskfactory.model.ods.TRoomTypeOnlinePrice" useGeneratedKeys="true" keyProperty="id">
+        insert into online_hotel_price(hotel_id, room_type_id, price, create_time)
+        values (#{hotelId}, #{roomTypeId}, #{price}, NOW())
+    </insert>
+
+    <delete id="deleteByCreateDate" parameterType="java.lang.String">
+        DELETE FROM online_hotel_price WHERE create_time &gt;= #{todayDateStr}
+    </delete>
+</mapper>
