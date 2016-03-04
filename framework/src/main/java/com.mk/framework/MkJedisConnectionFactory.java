@@ -59,7 +59,7 @@ public class MkJedisConnectionFactory implements InitializingBean, DisposableBea
 	private JedisShardInfo shardInfo;
 	private String hostName = "localhost";
 	private int port = Protocol.DEFAULT_PORT;
-	private int timeout = Protocol.DEFAULT_TIMEOUT;
+	private int timeout = 5000;//Protocol.DEFAULT_TIMEOUT;
 	private String password;
 	private boolean usePool = true;
 	private Pool<Jedis> pool;

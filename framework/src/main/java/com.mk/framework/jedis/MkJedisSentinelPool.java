@@ -20,7 +20,7 @@ public class MkJedisSentinelPool extends Pool<Jedis> {
 
 	protected GenericObjectPoolConfig poolConfig;
 
-	protected int timeout = Protocol.DEFAULT_TIMEOUT;
+	protected int timeout = 5000;//Protocol.DEFAULT_TIMEOUT;
 
 	protected String password;
 
