@@ -12,6 +12,7 @@ import com.mk.taskfactory.api.dtos.TCityListDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
 import com.mk.taskfactory.api.dtos.crawer.*;
+import com.mk.taskfactory.api.ods.RoomTypePricePorterService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
@@ -43,6 +44,9 @@ public class JobStartServiceImpl {
 
     @Autowired
     private QHotelToRedisService qHotelToRedisService;
+
+    @Autowired
+    private RoomTypePricePorterService roomTypePricePorterService;
 
     public void qHotelToRedis(){
         QHotelDto dto = new QHotelDto();
@@ -123,5 +127,9 @@ public class JobStartServiceImpl {
     public void onlineCityToRedis(){
         TCityListDto dto = new TCityListDto();
         qHotelToRedisService.onlineCityToRedis(dto);
+    }
+
+    public void roomTypeOnlinePricePorter(){
+        roomTypePricePorterService.doExecute();
     }
 }

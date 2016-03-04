@@ -128,5 +128,6 @@
         <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 0 4 * * ?"/>
         <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeMinPriceToRedis" cron="0 5 2 * * ?"/>
         <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 0 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="roomTypeOnlinePricePorter" cron="0 0 2 * * ?"/>
     </task:scheduled-tasks>
 </beans>
