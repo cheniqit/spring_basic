@@ -69,6 +69,8 @@ public class QHotelRoomtype {
 
     private String updateTime;
 
+    private String roomTypeValid;
+
     public Long getId() {
         return id;
     }
@@ -339,5 +341,13 @@ public class QHotelRoomtype {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRoomTypeValid() {
+        return roomTypeValid;
+    }
+
+    public void setRoomTypeValid(String roomTypeValid) {
+        this.roomTypeValid = roomTypeValid;
     }
 }

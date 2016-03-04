@@ -1,6 +1,6 @@
 package com.mk.taskfactory.api.dtos.crawer;
 
-public class ValidPrice {
+public class ValidRoomType {
     private Long hotelId;
 
     private Long roomTypeId;

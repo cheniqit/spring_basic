@@ -87,6 +87,24 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public Integer count(){
         return  roomTypeMapper.count();
     }
+    public List<TRoomTypeDto> qureyByPramas(TRoomTypeDto bean){
+        List<TRoomType> list = roomTypeMapper.qureyByPramas(bean);
+        if (CollectionUtils.isEmpty(list)){
+            return  null;
+        }
+        List<TRoomTypeDto> resultList = new ArrayList<TRoomTypeDto>();
+
+        for (TRoomType model : list) {
+            resultList.add(buildDto(model));
+        }
+        return resultList;
+    }
+    public TRoomTypeDto getByPramas(TRoomTypeDto bean){
+        return buildDto(roomTypeMapper.getByPramas(bean));
+    }
+    public Integer count(TRoomTypeDto bean){
+        return roomTypeMapper.count(bean);
+    }
     private TRoomTypeDto buildDto(TRoomType bean) {
         if (bean==null){
             return new TRoomTypeDto();

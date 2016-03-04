@@ -2,13 +2,8 @@ package com.mk.taskfactory.web.controller;
 
 
 import com.mk.taskfactory.api.QHotelToRedisService;
-import com.mk.taskfactory.api.dtos.HotelScoreDto;
-import com.mk.taskfactory.api.dtos.TCityDto;
-import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.THotelDto;
+import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.dtos.crawer.*;
-import com.mk.taskfactory.model.TFacility;
-import com.mk.taskfactory.model.crawer.QComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -91,7 +86,7 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/tHotelToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> tHotelToRedis(ValidPrice bean) {
+    public ResponseEntity<Map<String, Object>> tHotelToRedis(ValidRoomType bean) {
         Map<String, Object> result = qHotelToRedisService.tHotelToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
@@ -112,7 +107,7 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/cityHotelSetToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> cityHotelSetToRedis(TCityDto dto) {
+    public ResponseEntity<Map<String, Object>> cityHotelSetToRedis(TCityListDto dto) {
         Map<String, Object> result = qHotelToRedisService.cityHotelSetToRedis(dto);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
@@ -159,6 +154,12 @@ public class HotelToRedisController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> tQunarHotelScoreToRedis(QHotelDto bean) {
         Map<String, Object> result = qHotelToRedisService.tQunarHotelScoreToRedis(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/onlineCityToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityListDto bean) {
+        Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

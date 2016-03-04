@@ -113,4 +113,20 @@
     <!--<task:scheduled-tasks>-->
         <!--<task:scheduled ref="priceToRedisServiceImpl" method="updateDealCountToRedis" cron="0 0 7 * * ?"/>-->
     <!--</task:scheduled-tasks>-->
+
+    <!--每一分钟发送订单-->
+    <bean id="orderSendJobServiceImpl" class="com.mk.taskfactory.biz.impl.OrderSendJobServiceImpl" />
+    <task:scheduled-tasks>
+    <task:scheduled ref="orderSendJobServiceImpl" method="orderSendToCs" cron="0 0/1 * * * ?"/>
+     <task:scheduled ref="orderSendJobServiceImpl" method="bookingOkJob" cron="0 0 3 * * ?"/>
+    </task:scheduled-tasks>
+
+    <!--redis刷新-->
+    <bean id="jobStartServiceImpl" class="com.mk.taskfactory.biz.impl.JobStartServiceImpl" />
+    <task:scheduled-tasks>
+        <task:scheduled ref="jobStartServiceImpl" method="tQunarHotelScoreToRedis" cron="0 0 4 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 0 4 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeMinPriceToRedis" cron="0 5 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 0 2 * * ?"/>
+    </task:scheduled-tasks>
 </beans>

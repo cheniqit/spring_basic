@@ -14,4 +14,7 @@ public interface RoomTypeService {
     public TRoomTypeDto findByName(TRoomTypeDto bean) throws Exception;
     public List<TRoomTypeDto> queryJionThotel(TRoomTypeDto bean);
     public Integer count();
+    public List<TRoomTypeDto> qureyByPramas(TRoomTypeDto bean);
+    public TRoomTypeDto getByPramas(TRoomTypeDto bean);
+    public Integer count(TRoomTypeDto bean);
 }

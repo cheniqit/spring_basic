@@ -49,7 +49,10 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 
     @Autowired
     private UMemberMapper memberMapper;
-
+    public void  orderSendToCs(){
+        OrderToCsDto bean = new OrderToCsDto();
+        orderSendToCs(bean);
+    }
     public Map<String,Object> orderSendToCs(OrderToCsDto bean){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("orderSendToCs","orderSendToCs",Event.SUCCESS,
@@ -88,7 +91,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         }
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
-        String postResult= HttpUtils.doPost(Constants.CS_URL + "addorders", params);
+        String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/addorders", params);
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
@@ -136,5 +139,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
-
+    public void  bookingOkJob(){
+        HttpUtils.get_data(Constants.OTS_URL + "/order/testjob","GET");
+    }
 }

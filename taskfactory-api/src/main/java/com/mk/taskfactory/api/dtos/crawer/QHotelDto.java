@@ -97,6 +97,8 @@ public class QHotelDto {
 
     private Integer pageSize;
 
+    private String roomTypeValid;
+
     public String getIntroduction() {
         return introduction;
     }
@@ -486,5 +488,13 @@ public class QHotelDto {
             updateTime=updateTime.substring(0,19);
         }
         this.updateTime = updateTime;
+    }
+
+    public String getRoomTypeValid() {
+        return roomTypeValid;
+    }
+
+    public void setRoomTypeValid(String roomTypeValid) {
+        this.roomTypeValid = roomTypeValid;
     }
 }

@@ -93,6 +93,9 @@ public class QHotel {
 
     private Integer hotelSource;
 
+    private String roomTypeValid;
+
+
     public String getIntroduction() {
         return introduction;
     }
@@ -451,5 +454,13 @@ public class QHotel {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRoomTypeValid() {
+        return roomTypeValid;
+    }
+
+    public void setRoomTypeValid(String roomTypeValid) {
+        this.roomTypeValid = roomTypeValid;
     }
 }

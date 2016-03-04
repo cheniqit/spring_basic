@@ -318,7 +318,7 @@
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://dev-ots.imike.cn/ots</ots.url>
-                <cs.url>http://192.168.81.142:8080/custom/</cs.url>
+                <cs.url>http://192.168.81.142:8080</cs.url>
                 <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
@@ -447,10 +447,6 @@
             </properties>
         </profile>
 
-
-
-
-
         <profile>
             <id>bgp-simulation</id>
             <properties>
@@ -470,7 +466,7 @@
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://huidu.imike.cn/ots</ots.url>
-                <cs.url>http://dev-ots.imike.cn/ots</cs.url>
+                <cs.url>http://customer.imike.cn/customer</cs.url>
                 <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
                 <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
@@ -519,7 +515,7 @@
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://huidu.imike.cn/ots</ots.url>
-                <cs.url>http://dev-ots.imike.cn/ots</cs.url>
+                <cs.url>http://customer.imike.cn/customer</cs.url>
                 <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
                 <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
@@ -564,7 +560,7 @@
                 <crawer.jdbc.password>Imike-writer</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://ots.imike.com/ots</ots.url>
-                <cs.url>http://dev-ots.imike.cn/ots</cs.url>
+                <cs.url>http://customer.imike.com/customer</cs.url>
                 <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
