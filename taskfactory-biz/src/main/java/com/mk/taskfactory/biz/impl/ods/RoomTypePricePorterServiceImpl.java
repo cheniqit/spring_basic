@@ -180,9 +180,14 @@ public class RoomTypePricePorterServiceImpl implements RoomTypePricePorterServic
             return map;
         }
 
+        logger.info("cityInfoSet size is:" + cityInfoSet.size());
         try {
             for (String cityInfo : cityInfoSet) {
-                String cityCode = JsonUtils.jsonToMap(cityInfo).get("cityCode");
+                Map<String, String> cityMap = JsonUtils.jsonToMap(cityInfo);
+                logger.info("cityId=" + cityMap.get("id") + ", cityCode=" + cityMap.get("cityCode")
+                        + ", cityName=" + cityMap.get("cityName"));
+
+                String cityCode = cityMap.get("cityCode");
                 Set<String> hotelInfoSet = jedis.smembers(RedisCacheName.CITYHOTELSET + cityCode);
                 if (CollectionUtils.isEmpty(hotelInfoSet)) {
                     continue;
