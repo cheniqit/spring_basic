@@ -1315,7 +1315,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     logger.info(String.format("\n====================hotelId={}&roomTypeId={}&price={}====================\n")
                                             ,hotelDto.getId(),roomtypeDto.getId(),roomTypePriceDto.getPrice());
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_OTA_PRICE,
-                                            roomtypeDto.getId()), roomTypePriceDto.getPrice().toString()
+                                            roomtypeDto.getId()), roomTypePriceDto.getOriginPrice().toString()
                                     );
                                 }
 
