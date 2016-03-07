@@ -195,6 +195,7 @@ public class RoomTypePricePorterServiceImpl implements RoomTypePricePorterServic
 
                 for (String hotelInfo : hotelInfoSet) {
                     String hotelId = JsonUtils.jsonToMap(hotelInfo).get("id");
+                    logger.info("cityId=" + cityMap.get("id") + ", hotelId=" + hotelId);
                     Set<String> roomTypeSet = jedis.smembers(RedisCacheName.HOTELROOMTYPEINFOSET + hotelId);
                     if (CollectionUtils.isEmpty(roomTypeSet)) {
                         continue;
