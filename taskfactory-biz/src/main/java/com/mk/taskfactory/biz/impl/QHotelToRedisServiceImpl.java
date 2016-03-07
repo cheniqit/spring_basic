@@ -17,7 +17,9 @@ import com.mk.taskfactory.biz.mapper.crawer.ValidRoomTypeMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
+import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
+import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.HotelScore;
 import com.mk.taskfactory.model.THotel;
 import com.mk.taskfactory.api.dtos.crawer.ValidRoomType;
@@ -1185,6 +1187,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", Constants.token);
+        String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexerjob/addhotelids", params);
+        logger.info(String.format("\n===================={}====================\n")
+                , postResult);
         return resultMap;
     }
     public Map<String,Object> qHotelRoomTypeMinPriceToRedis(QHotelRoomtypeMinPriceDto dto){

@@ -138,7 +138,7 @@
         <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 18 3 * * ?"/>
         <task:scheduled ref="jobStartServiceImpl" method="cityHotelSetToRedis" cron="0 25 3 * * ?"/>
         <task:scheduled ref="jobStartServiceImpl" method="tQunarHotelScoreToRedis" cron="0 35 3 * * ?"/>
-        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 40 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 40 3 * * ?"/> <!--刷新索引-->
         <task:scheduled ref="jobStartServiceImpl" method="roomTypeOnlinePricePorter" cron="0 0 2 * * ?"/>
     </task:scheduled-tasks>
 </beans>
