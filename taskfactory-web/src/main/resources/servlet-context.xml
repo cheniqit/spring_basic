@@ -124,10 +124,21 @@
     <!--redis刷新-->
     <bean id="jobStartServiceImpl" class="com.mk.taskfactory.biz.impl.JobStartServiceImpl" />
     <task:scheduled-tasks>
-        <task:scheduled ref="jobStartServiceImpl" method="tQunarHotelScoreToRedis" cron="0 0 4 * * ?"/>
-        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 0 4 * * ?"/>
-        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeMinPriceToRedis" cron="0 5 2 * * ?"/>
-        <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 0 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="onlineCityToRedis" cron="0 5 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qFacilityToRedis" cron="0 15 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="tFacilityToRedis" cron="0 17 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="validPriceHotelToRedis" cron="0 19 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="validPriceRoomTypeToRedis" cron="0 21 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelToRedis" cron="0 23 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeSetToRedis" cron="0 30 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomtypeToRedis" cron="0 40 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="tHotelToRedis" cron="0 50 2 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelFacilityToRedis" cron="0 10 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="qHotelRoomTypeMinPriceToRedis" cron="0 15 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="otaPriceToRedis" cron="0 18 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="cityHotelSetToRedis" cron="0 25 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="tQunarHotelScoreToRedis" cron="0 35 3 * * ?"/>
+        <task:scheduled ref="jobStartServiceImpl" method="hotelScoreToRedis" cron="0 40 3 * * ?"/> <!--刷新索引-->
         <task:scheduled ref="jobStartServiceImpl" method="roomTypeOnlinePricePorter" cron="0 0 2 * * ?"/>
     </task:scheduled-tasks>
 </beans>

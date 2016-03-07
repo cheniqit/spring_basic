@@ -143,7 +143,7 @@ public class RedisCacheName {
     /***去哪儿酒店信息***/
     public static final String QHOTE = "QHOTE_";
     /***酒店来源***/
-    public static final String HOTELSOURCEID = "HOTEL_SOURCE_ID_";
+    public static final String HOTEL_SOURCE = "HOTEL_SOURCE_";
     /***酒店信息***/
     public static final String HOTELJSONINFO= "HOTEL_JSON_INFO_";
     /***酒店评价***/

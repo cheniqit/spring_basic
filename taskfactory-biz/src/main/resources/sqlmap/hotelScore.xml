@@ -3,12 +3,12 @@
 <mapper namespace="com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper">
     <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.HotelScore">
         <id column="id" property="id" />
-        <result column="hotelId" property="hotelId" />
+        <result column="hotel_id" property="hotelId" />
         <result column="grade" property="grade" />
     </resultMap>
 
     <sql id="Base_Column_List" >
-        id, hotelId, grade
+        id, hotel_id, grade
     </sql>
     <sql id="Base_Query_List" >
         <where>
@@ -16,14 +16,14 @@
                 id = #{id}
             </if>
             <if test="hotelId != null">
-                AND hotelId = #{hotelId}
+                AND hotel_id = #{hotelId}
             </if>
         </where>
     </sql>
     <select id="queryTHotelScore" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" >
         select
         <include refid="Base_Column_List" />
-        from t_hotel_score
+        from hotel_score
         <include refid="Base_Query_List" />
         ORDER BY  id ASC
         <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
@@ -31,7 +31,7 @@
         </if>
     </select>
     <select id="countTHotelScore" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" resultType="java.lang.Integer" >
-        select count(*) from t_hotel_score
+        select count(*) from hotel_score
         <include refid="Base_Query_List" />
     </select>
 </mapper>
