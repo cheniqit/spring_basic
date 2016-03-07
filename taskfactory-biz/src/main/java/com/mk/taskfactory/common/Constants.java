@@ -19,7 +19,7 @@ public class Constants {
 
     public static final Integer PROMO_NOT_START = 0;
 
-    public static String token = new PropertiesUtil().getValue("common.properties", "ots.token");
+    public static String token = "!@#$%Admin)(*&^";
     public static String OTS_URL = new PropertiesUtil().getValue("common.properties", "ots.url");
     public static String CS_URL = new PropertiesUtil().getValue("common.properties", "cs.url");
     public static String OTS_HUIDU = new PropertiesUtil().getValue("common.properties", "ots.huidu");
