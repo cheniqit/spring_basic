@@ -89,6 +89,11 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             beanList.add(setBean);
             orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
         }
+        if (CollectionUtils.isEmpty(beanList)){
+            resultMap.put("message","beanList is empty");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
         String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/addorders", params);
