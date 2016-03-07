@@ -110,6 +110,10 @@ public class RoomTypePricePorterServiceImpl implements RoomTypePricePorterServic
 
                                 if (StringUtils.isNotBlank(jsonStr)) {
                                     BigDecimal price = JsonUtils.parseObject(jsonStr).getBigDecimal("price");
+                                    if (price == null || price.doubleValue() <= 0 || price.doubleValue() >= 10000) {
+                                        return;
+                                    }
+
                                     try {
                                         roomTypeOnlinePriceMapper.insert(new TRoomTypeOnlinePrice(new BigInteger(hotelId), new BigInteger(roomTypeId), price));
                                     } catch (Exception e) {
