@@ -195,8 +195,15 @@ public class RoomTypePricePorterServiceImpl implements RoomTypePricePorterServic
 
                 for (String hotelInfo : hotelInfoSet) {
                     String hotelId = JsonUtils.jsonToMap(hotelInfo).get("id");
-                    logger.info("cityId=" + cityMap.get("id") + ", hotelId=" + hotelId);
-                    Set<String> roomTypeSet = jedis.smembers(RedisCacheName.HOTELROOMTYPEINFOSET + hotelId);
+//                    logger.info("cityId=" + cityMap.get("id") + ", hotelId=" + hotelId);
+                    Set<String> roomTypeSet;
+                    try {
+                        roomTypeSet = jedis.smembers(RedisCacheName.HOTELROOMTYPEINFOSET + hotelId);
+                    } catch (Exception e) {
+                        logger.error("smembers roomTypeSet exception - cityId=" + cityMap.get("id") + ", hotelId=" + hotelId, e);
+                        continue;
+                    }
+
                     if (CollectionUtils.isEmpty(roomTypeSet)) {
                         continue;
                     }
