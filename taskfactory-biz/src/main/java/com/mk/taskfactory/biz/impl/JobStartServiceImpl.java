@@ -129,7 +129,4 @@ public class JobStartServiceImpl {
         qHotelToRedisService.onlineCityToRedis(dto);
     }
 
-    public void roomTypeOnlinePricePorter(){
-        roomTypePricePorterService.doExecute();
-    }
 }
