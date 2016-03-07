@@ -23,7 +23,7 @@
     <select id="queryTHotelScore" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" >
         select
         <include refid="Base_Column_List" />
-        from t_hotel_score
+        from hotel_score
         <include refid="Base_Query_List" />
         ORDER BY  id ASC
         <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
@@ -31,7 +31,7 @@
         </if>
     </select>
     <select id="countTHotelScore" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" resultType="java.lang.Integer" >
-        select count(*) from t_hotel_score
+        select count(*) from hotel_score
         <include refid="Base_Query_List" />
     </select>
 </mapper>
