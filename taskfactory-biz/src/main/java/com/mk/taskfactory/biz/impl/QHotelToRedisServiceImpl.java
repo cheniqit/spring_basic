@@ -118,7 +118,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                             hotelDto.getId()), JsonUtils.toJSONString(hotelDto)
                                     );
-
+                                    jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
+                                            hotelDto.getId()), "2"
+                                    );
                                     TExHotelImageDto hotelImageDto = new TExHotelImageDto();
                                     hotelImageDto.setHotelSourceId(hotelDto.getSourceId());
                                     hotelImageDto.setTag("外观");
@@ -862,7 +864,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                         hotel.getId()), JsonUtils.toJSONString(tHotelDto)
                                 );
-
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
+                                        hotel.getId()), "1"
+                                );
                             }
 
                         } catch (Exception e) {
@@ -1152,7 +1156,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             logger.info(String.format("\n====================hotelId={}====================\n")
                                     ,hotelScore.getHotelId());
                             if (hotelScore.getHotelId()!=null&&StringUtils.isNotEmpty(hotelScore.getGrade())){
-                                jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
                                         hotelScore.getHotelId()), hotelScore.getGrade());
 
                             }
@@ -1639,7 +1643,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 if (qunarHotelDto==null||qunarHotelDto.getCommentScore()==null){
                                     logger.info("\n====================qunarHotelDto==null|| commentScore==null====================\n");
                                 }
-                                jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
+                                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SCORE_INFO,
                                         hotelDto.getId()), qunarHotelDto.getCommentScore().toString()
                                 );
 
