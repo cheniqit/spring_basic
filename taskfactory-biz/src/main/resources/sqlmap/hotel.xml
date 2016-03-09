@@ -96,4 +96,13 @@
         ORDER BY id DESC
         limit 1
     </select>
+    <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.THotelDto" >
+        update t_hotel
+        <set >
+            <if test="priority != null" >
+                priority = #{priority,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

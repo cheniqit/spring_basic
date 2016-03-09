@@ -1,33 +1,22 @@
 package com.mk.taskfactory.api;
 
-import com.mk.taskfactory.api.dtos.*;
-import com.mk.taskfactory.api.dtos.crawer.*;
+import com.mk.taskfactory.api.dtos.TCityListDto;
+import com.mk.taskfactory.api.dtos.TFacilityDto;
+import com.mk.taskfactory.api.dtos.ods.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
+import com.mk.taskfactory.api.dtos.ods.OnlineHotelRoomTypeDto;
 
 import java.util.Map;
 
 public interface QHotelToRedisService {
 
-    public Map<String,Object> qHotelToRedis(QHotelDto dto);
-    public Map<String,Object> qCommentToRedis(QCommentDto dto);
-    public Map<String,Object> qCommentDetailToRedis(QCommentDetailDto dto);
-    public Map<String,Object> qFacilityToRedis(QFacilityDto dto);
-    public Map<String,Object> qHotelFacilityToRedis(QHotelDto dto);
-    public Map<String,Object> qHotelRoomTypeSetToRedis(QHotelDto dto);
-    public Map<String,Object> qHotelRoomtypeToRedis(QHotelRoomtypeDto dto);
-    public Map<String,Object> qHotelSurroundSetToRedis(QHotelDto dto);
-    public Map<String,Object> tFacilityToRedis(TFacilityDto dto);
-    public Map<String,Object> tHotelToRedis(ValidRoomType dto);
-    public Map<String,Object> validPriceHotelToRedis();
-    public Map<String,Object> validPriceRoomTypeToRedis();
-    public Map<String,Object> cityHotelSetToRedis(TCityListDto dto);
-    public Map<String,Object> hotelScoreToRedis(HotelScoreDto dto);
-    public Map<String,Object> qHotelRoomTypeMinPriceToRedis(QHotelRoomtypeMinPriceDto dto);
-    public Map<String,Object> otaPriceToRedis(QHotelDto dto);
-    public Map<String,Object> roomtypeOldIdToNew(Integer start);
-    public Map<String,Object> temMappingRoomTypeToRedis(Integer start);
-    public Map<String,Object> roomtypeSetOldIdToNew(QHotelDto dto);
-    public Map<String,Object> tQunarHotelScoreToRedis(QHotelDto dto);
-    public Map<String,Object> onlineCityToRedis(TCityListDto dto);
-
+    public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto);//5
+    public Map<String,Object> roomTypePicMappingToRedis(OnlineHotelDto dto);//4
+    public Map<String,Object> onlineRoomTypeToRedis(OnlineHotelRoomTypeDto dto);//6
+    public Map<String,Object> tFacilityToRedis(TFacilityDto dto);//1
+    public Map<String,Object> cityHotelSetToRedis(TCityListDto dto);//7
+    public void indexerjob();//8
+    public Map<String,Object> onlineCityToRedis(TCityListDto dto);//2
+    public Map<String,Object> hotelPriorityToRedis(OnlineHotelPriorityDto dto);//3
 }
 

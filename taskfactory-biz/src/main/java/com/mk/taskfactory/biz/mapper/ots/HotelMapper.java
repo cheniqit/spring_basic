@@ -13,5 +13,6 @@ public interface HotelMapper {
     public List<THotel> queryTHotel(THotelDto bean);
     public Integer countTHotel(THotelDto bean);
     public THotel getByPramas(THotelDto bean);
+    public Integer updateById(THotelDto bean);
 
 }

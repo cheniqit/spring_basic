@@ -73,19 +73,20 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             OrderDto order = new OrderDto();
             order.setId(orderToCsDto.getOrderId());
             order = orderService.getByPramas(order);
-            if (order==null){
+            if (order==null||order.getId()==null){
                 continue;
             }
             UMember member = new UMember();
             member.setMid(order.getmId());
             member = memberMapper.selectByMid(member);
-            if (member==null){
+            if (member==null||member.getMid()==null){
                 continue;
             }
             OrderToCsBean setBean = new OrderToCsBean();
             setBean.setOrderId(order.getId());
             setBean.setLiveUserPhone(order.getContactsPhone());
             setBean.setOrderUserPhone(member.getPhone());
+            setBean.setCreateTime(DateUtils.format_yMdHms(order.getCreateTime()));
             beanList.add(setBean);
             orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
         }

@@ -10,6 +10,8 @@ public class OrderToCsBean {
 
     private String orderUserPhone;
 
+    private String createTime;
+
     public Long getOrderId() {
         return orderId;
     }
@@ -32,5 +34,13 @@ public class OrderToCsBean {
 
     public void setOrderUserPhone(String orderUserPhone) {
         this.orderUserPhone = orderUserPhone;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

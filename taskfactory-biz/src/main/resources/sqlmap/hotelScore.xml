@@ -34,4 +34,12 @@
         select count(*) from hotel_score
         <include refid="Base_Query_List" />
     </select>
+    <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelScoreDto" >
+        select
+        <include refid="Base_Column_List" />
+        from hotel_score
+        <include refid="Base_Query_List" />
+        ORDER BY id DESC
+        limit 1
+    </select>
 </mapper>

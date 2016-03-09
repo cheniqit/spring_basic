@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ods.OnlineHotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ods.OnlineHotel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="comefromtype" property="comefromtype" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+    <result column="city_code" property="cityCode" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hotel_id, comefromtype, create_time, update_time, is_vaild,city_code
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="comefromtype != null">
+        AND comefromtype = #{comefromtype}
+      </if>
+      <if test="strUpdateTime != null">
+        AND update_time > #{strUpdateTime}
+      </if>
+      <if test="isVaild != null">
+        AND is_vaild = #{isVaild}
+      </if>
+      <if test="cityCode != null">
+        AND city_code = #{cityCode}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+    select
+    <include refid="Base_Column_List" />
+    from online_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" resultType="java.lang.Integer" >
+    select count(*) from online_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+    select
+    <include refid="Base_Column_List" />
+    from online_hotel
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from online_hotel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+    insert into online_hotel (id, hotel_id, comefromtype,
+    create_time, update_time, is_vaild,city_code
+    )
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{comefromtype,jdbcType=INTEGER},
+    #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isVaild,jdbcType=CHAR}, #{cityCode,jdbcType=INTEGER}
+    )
+  </insert>
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+    update online_hotel
+    <set >
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="comefromtype != null" >
+        comefromtype = #{comefromtype,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=CHAR},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

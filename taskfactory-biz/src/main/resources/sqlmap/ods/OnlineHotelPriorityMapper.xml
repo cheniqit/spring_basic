@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.taskfactory.biz.mapper.ods.OnlineHotelPriorityMapper">
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ods.OnlineHotelPriority">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="hotel_id" jdbcType="BIGINT" property="hotelId" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="comefromtype" jdbcType="INTEGER" property="comefromtype" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hotel_id, priority, comefromtype, create_time, update_time
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="comefromtype != null">
+        AND comefromtype = #{comefromtype}
+      </if>
+      <if test="strUpdateTime != null">
+        AND update_time > #{strUpdateTime}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto" >
+    select
+    <include refid="Base_Column_List" />
+    from online_hotel_priority
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto" resultType="java.lang.Integer" >
+    select count(*) from online_hotel_priority
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto" >
+    select
+    <include refid="Base_Column_List" />
+    from online_hotel_priority
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from online_hotel_priority
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto">
+    insert into online_hotel_priority (id, hotel_id, priority, 
+      comefromtype, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{priority,jdbcType=INTEGER}, 
+      #{comefromtype,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto">
+    update online_hotel_priority
+    <set>
+      <if test="hotelId != null">
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="comefromtype != null">
+        comefromtype = #{comefromtype,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
