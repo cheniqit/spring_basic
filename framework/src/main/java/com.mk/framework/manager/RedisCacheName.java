@@ -185,6 +185,6 @@ public class RedisCacheName {
     /***酒店权重***/
     public static final String HOTEL_PRIORITY= "HOTEL_PRIORITY_";
     /***房型图片mapping***/
-    public static final String roomType_pic_mapping= "ROOMTYPE_PIC_MAPPING";
+    public static final String roomType_pic_mapping= "ROOMTYPE_PIC_MAPPING_";
 }
 

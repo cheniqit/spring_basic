@@ -2,14 +2,14 @@ package com.mk.taskfactory.api.enums;
 
 public enum HotelSourceEnum {
 
-    LEZHU("LEZHU","1","乐住"),
-    OTA("OTA","2","OTA");
+    LEZHU("LEZHU",1,"乐住"),
+    OTA("OTA",2,"OTA");
 
     private String id;
-    private String code;
+    private Integer code;
     private String desc;
 
-    HotelSourceEnum(String id, String code, String desc) {
+    HotelSourceEnum(String id, Integer code, String desc) {
         this.id = id;
         this.code = code;
         this.desc=desc;
@@ -49,11 +49,11 @@ public enum HotelSourceEnum {
         this.desc = desc;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 }

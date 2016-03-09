@@ -140,12 +140,12 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     if (qHotelDto == null || qHotelDto.getId() == null) {
                                         return;
                                     }
-                                    qHotelDto.setHotelSource(Integer.valueOf(HotelSourceEnum.OTA.getCode()));
+                                    qHotelDto.setHotelSource(HotelSourceEnum.OTA.getCode());
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                             qHotelDto.getId()), JsonUtils.toJSONString(qHotelDto)
                                     );
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
-                                            qHotelDto.getId()), HotelSourceEnum.OTA.getCode()
+                                            qHotelDto.getId()), HotelSourceEnum.OTA.getCode().toString()
                                     );
                                     qHotelFacilityToRedis(onlineHotelDto);
                                     tQunarHotelScoreToRedis(onlineHotelDto);
@@ -188,13 +188,13 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         return;
                                     }
                                     BeanUtils.copyProperties(hotel, tHotelDto);
-                                    tHotelDto.setHotelSource(Integer.valueOf(HotelSourceEnum.LEZHU.getCode()));
+                                    tHotelDto.setHotelSource(HotelSourceEnum.LEZHU.getCode());
                                     tHotelDto.setSourceId(tHotelDto.getId().toString());
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                             hotel.getId()), JsonUtils.toJSONString(tHotelDto)
                                     );
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
-                                            hotel.getId()), HotelSourceEnum.LEZHU.getCode()
+                                            hotel.getId()), HotelSourceEnum.LEZHU.getCode().toString()
                                     );
                                     hotelScoreToRedis(onlineHotelDto);
                                 }
@@ -268,13 +268,13 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 pool.execute(new Runnable() {
                     @Override
                     public void run() {
-                        Jedis jedis = null;
-                        try {
-                            jedis =  RedisUtil.getJedis();
-                            logger.info(String.format("\n====================id={}&hotelId={}====================\n")
-                                    ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
-                            if (onlineHotelDto.getHotelId()!=null) {
-                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())) {
+                        logger.info(String.format("\n====================id={}&hotelId={}====================\n")
+                                ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
+                        if (onlineHotelDto.getHotelId()!=null) {
+                            if (HotelSourceEnum.OTA.getCode()==onlineHotelDto.getComefromtype()) {
+                                Jedis jedis = null;
+                                try {
+                                    jedis =  RedisUtil.getJedis();
                                     QHotelRoomtypeDto hotelRoomtype = new QHotelRoomtypeDto();
                                     hotelRoomtype.setHotelId(onlineHotelDto.getHotelId());
                                     List<QHotelRoomtypeDto> hotelRoomtypeList = hotelRoomTypeService.qureyByPramas(hotelRoomtype);
@@ -316,17 +316,18 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                             );
                                         }
                                     }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }finally {
+                                    if(null != jedis){
+                                        jedis.close();
+                                    }
+
                                 }
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }finally {
-                            if(null != jedis){
-                                jedis.close();
-                            }
-
                         }
+
+
 
                     }
                 });
@@ -404,7 +405,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     );
                                 }
 
-                                if (HotelSourceEnum.OTA.getCode().equals(hotelSource)) {
+                                if (HotelSourceEnum.OTA.getCode()==Integer.valueOf(hotelSource)) {
                                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
                                     qHotelRoomtype.setId(roomTypeDto.getRoomTypeId());
                                     qHotelRoomtype = hotelRoomTypeService.getRoomtypeImg(qHotelRoomtype);
@@ -850,7 +851,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             jedis.set(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
                                     hotelPriorityDto.getHotelId()), hotelPriorityDto.getPriority().toString()
                             );
-                             if (HotelSourceEnum.OTA.getCode().equals(hotelPriorityDto.getComefromtype())) {
+                             if (HotelSourceEnum.OTA.getCode()==hotelPriorityDto.getComefromtype()) {
                                  QHotelDto qHotelDto =new QHotelDto();
                                  qHotelDto.setId(hotelPriorityDto.getHotelId());
                                  qHotelDto = hotelService.getByPramas(qHotelDto);
