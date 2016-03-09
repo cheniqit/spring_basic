@@ -408,7 +408,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 if (HotelSourceEnum.OTA.getCode()==Integer.valueOf(hotelSource)) {
                                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
                                     qHotelRoomtype.setId(roomTypeDto.getRoomTypeId());
-                                    qHotelRoomtype = hotelRoomTypeService.getRoomtypeImg(qHotelRoomtype);
+                                    qHotelRoomtype = hotelRoomTypeService.getByPramas(qHotelRoomtype);
                                     if (qHotelRoomtype == null || qHotelRoomtype.getId() == null) {
                                         logger.info(String.format("\n====================qHotelRoomtype isEmpty====================\n"));
                                         return;
