@@ -848,7 +848,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             if (hotelPriorityDto.getHotelId()==null||hotelPriorityDto.getPriority()==null) {
                                 return;
                             }
-                            jedis.set(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
+                            jedis.set(String.format("%s%s", RedisCacheName.HOTEL_PRIORITY,
                                     hotelPriorityDto.getHotelId()), hotelPriorityDto.getPriority().toString()
                             );
                              if (HotelSourceEnum.OTA.getCode()==hotelPriorityDto.getComefromtype()) {
