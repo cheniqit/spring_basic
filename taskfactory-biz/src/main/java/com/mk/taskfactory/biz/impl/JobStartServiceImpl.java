@@ -47,4 +47,5 @@ public class JobStartServiceImpl {
     public void indexerjob(){
         qHotelToRedisService.indexerjob();
     }
+
 }
