@@ -441,14 +441,14 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     bean.setSmallImageUrl(hotelImageDto.getUrl());
                                     if("T".equals(roomTypeDto.getIsVaild())) {
                                         jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
-                                                roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
+                                                roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
                                         );
                                         jedis.set(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
                                                 roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
                                         );
                                     }else{
                                         jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
-                                                roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
+                                                roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
                                         );
                                         jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                 roomTypeDto.getRoomTypeId())
