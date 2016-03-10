@@ -24,7 +24,7 @@
         AND comefromtype = #{comefromtype}
       </if>
       <if test="strUpdateTime != null">
-        AND update_time > #{strUpdateTime}
+        AND update_time >= #{strUpdateTime}
       </if>
     </where>
   </sql>

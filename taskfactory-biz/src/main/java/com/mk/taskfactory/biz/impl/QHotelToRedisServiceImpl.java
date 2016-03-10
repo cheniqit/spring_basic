@@ -98,10 +98,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("onlineHotelToRedis","OnlineHotel同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================qHotelToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        Calendar   cal   =   Calendar.getInstance();
-        cal.add(Calendar.DATE,   -1);
-        String updateTime= DateUtils.format_yMd(cal.getTime());
-        dto.setStrUpdateTime(updateTime);
         int count = onlineHotelService.count(dto);
         if (count<=0){
             resultMap.put("message","OnlineHotel count is 0");
@@ -239,10 +235,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     public Map<String,Object> roomTypePicMappingToRedis(OnlineHotelDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         logger.info(String.format("\n====================roomTypePicMappingToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        Calendar   cal   =   Calendar.getInstance();
-        cal.add(Calendar.DATE,   -1);
-        String updateTime= DateUtils.format_yMd(cal.getTime());
-        dto.setStrUpdateTime(updateTime);
         int count = onlineHotelService.count(dto);
         if (count<=0){
             resultMap.put("message","OnlineHotel count is 0");
@@ -347,10 +339,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         Cat.logEvent("onlineRoomTypeToRedis","OnlineRoomType同步到Radis",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
         logger.info(String.format("\n====================onlineRoomTypeToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        Calendar   cal   =   Calendar.getInstance();
-        cal.add(Calendar.DATE,   -1);
-        String updateTime= DateUtils.format_yMd(cal.getTime());
-        dto.setStrUpdateTime(updateTime);
         int count = onlineHotelRoomTypeService.count(dto);
         if (count<=0){
             resultMap.put("message","OnlineHotelRoomType count is 0");
@@ -811,10 +799,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     public Map<String,Object> hotelPriorityToRedis(OnlineHotelPriorityDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         logger.info(String.format("\n====================hotelPriorityToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
-        Calendar   cal   =   Calendar.getInstance();
-        cal.add(Calendar.DATE,   -1);
-        String updateTime= DateUtils.format_yMd(cal.getTime());
-        dto.setStrUpdateTime(updateTime);
         int count = onlineHotelPriorityService.count(dto);
         if (count<=0){
             resultMap.put("message","OnlineHotelPriority count is 0");
