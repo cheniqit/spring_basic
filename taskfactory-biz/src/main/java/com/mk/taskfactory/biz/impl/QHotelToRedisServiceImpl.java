@@ -196,11 +196,13 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 }
                             }else{
                                     jedis.del(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
-                                            onlineHotelDto.getId()));
+                                            onlineHotelDto.getHotelId()));
                                     jedis.del(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
-                                            onlineHotelDto.getId())
+                                            onlineHotelDto.getHotelId())
                                     );
-
+                                     jedis.del(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
+                                            onlineHotelDto.getHotelId())
+                                    );
                             }
 
                         } catch (Exception e) {
