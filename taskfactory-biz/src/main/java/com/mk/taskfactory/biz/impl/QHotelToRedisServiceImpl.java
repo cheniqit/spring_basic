@@ -443,7 +443,18 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         );
                                     }
 
+                                }else {
+                                    if ("T".equals(roomTypeDto.getIsVaild())) {
+                                        jedis.set(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
+                                                roomTypeDto.getRoomTypeId()), "1"
+                                        );
+                                    } else {
+                                        jedis.del(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
+                                                roomTypeDto.getRoomTypeId())
+                                        );
+                                    }
                                 }
+
                             }
 
 

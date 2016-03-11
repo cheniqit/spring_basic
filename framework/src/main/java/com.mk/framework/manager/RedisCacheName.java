@@ -186,5 +186,7 @@ public class RedisCacheName {
     public static final String HOTEL_PRIORITY= "HOTEL_PRIORITY_";
     /***房型图片mapping***/
     public static final String roomType_pic_mapping= "ROOMTYPE_PIC_MAPPING_";
+    /***乐住房型上线标识***/
+    public static final String LEZHU_ONLINE_ROOMTYPE= "LEZHU_ONLINE_ROOMTYPE_";
 }
 
