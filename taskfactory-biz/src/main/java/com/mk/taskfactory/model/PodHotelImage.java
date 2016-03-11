@@ -1,4 +1,4 @@
-package com.mk.taskfactory.model.ods;
+package com.mk.taskfactory.model;
 
 import java.util.Date;
 
