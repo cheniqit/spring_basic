@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.taskfactory.api.*;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.enums.ValidEnum;
+import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.mapper.ots.RoomSaleConfigInfoMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;

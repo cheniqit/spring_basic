@@ -20,6 +20,7 @@ import com.mk.taskfactory.api.ods.OnlineHotelService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
+import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
 import com.mk.taskfactory.biz.mapper.crawer.TmpMappingRoomTypeIdMapper;
 import com.mk.taskfactory.biz.mapper.crawer.ValidRoomTypeMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
@@ -91,6 +92,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private OnlineHotelRoomTypeService onlineHotelRoomTypeService;
     @Autowired
     private OnlineHotelPriorityService onlineHotelPriorityService;
+    @Autowired
+    private HotelRemoteService hotelRemoteService;
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
     public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto){
@@ -194,15 +197,18 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     );
                                     hotelScoreToRedis(onlineHotelDto);
                                 }
+                                hotelRemoteService.hotelInit(onlineHotelDto.getHotelId().toString());
                             }else{
-                                    jedis.del(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
-                                            onlineHotelDto.getHotelId()));
-                                    jedis.del(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
-                                            onlineHotelDto.getHotelId())
-                                    );
-                                     jedis.del(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
-                                            onlineHotelDto.getHotelId())
-                                    );
+                                jedis.del(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
+                                        onlineHotelDto.getHotelId()));
+                                jedis.del(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
+                                        onlineHotelDto.getHotelId())
+                                );
+                                 jedis.del(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
+                                        onlineHotelDto.getHotelId())
+                                );
+                                hotelRemoteService.indexerDrop(onlineHotelDto.getHotelId().toString());
+
                             }
 
                         } catch (Exception e) {
@@ -729,9 +735,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
 
     }
     public void indexerjob(){
-        Map<String, String> params=new HashMap<String, String>();
-        params.put("token", Constants.token);
-        String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexerjob/addhotelids", params);
+        String postResult= hotelRemoteService.indexerjob();
         logger.info(String.format("\n===================={}====================\n")
                 , postResult);
     }

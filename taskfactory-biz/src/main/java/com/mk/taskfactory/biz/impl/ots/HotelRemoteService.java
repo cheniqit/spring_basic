@@ -1,6 +1,7 @@
-package com.mk.taskfactory.biz.impl;
+package com.mk.taskfactory.biz.impl.ots;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mk.taskfactory.biz.impl.ValidRateTaskLogicServiceImpl;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
@@ -56,7 +57,29 @@ public class HotelRemoteService {
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
         return postResult;
     }
-
+    /******单个刷索引*******/
+    public String hotelInit(String hotelId){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", Constants.token);
+        params.put("hotelid", hotelId);
+        String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
+        return postResult;
+    }
+    /******全量刷索引*******/
+    public String indexerjob(){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", Constants.token);
+        String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexerjob/addhotelids", params);
+        return postResult;
+    }
+    /******单个更新索引*******/
+    public String indexerDrop(String hotelId){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", Constants.token);
+        params.put("hotelid", hotelId);
+        String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/drop", params);
+        return postResult;
+    }
     public String updatemikeprices(String token, String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);
