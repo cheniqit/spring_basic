@@ -5,11 +5,15 @@ import com.dianping.cat.message.Event;
 import com.mk.taskfactory.api.CrawerToOtsService;
 import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
+import com.mk.taskfactory.api.crawer.CrawlPodHotelImageService;
+import com.mk.taskfactory.api.dtos.PodHotelImageDto;
+import com.mk.taskfactory.api.dtos.crawer.CrawlPodHotelImageDto;
 import com.mk.taskfactory.api.dtos.crawer.TExCommentImgDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 import com.mk.taskfactory.api.ots.CityService;
 import com.mk.taskfactory.api.ots.OtsCommentImgService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
+import com.mk.taskfactory.api.ots.PodHotelImageService;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.PicUtils;
 import com.mk.taskfactory.biz.utils.QiniuUtils;
@@ -43,6 +47,12 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
 
     @Autowired
     private OtsHotelImageService otsHotelImageService;
+
+    @Autowired
+    private CrawlPodHotelImageService crawlPodHotelImageService;
+
+    @Autowired
+    private PodHotelImageService podHotelImageService;
 
     private static ExecutorService pool = Executors.newFixedThreadPool(16);
 
@@ -292,5 +302,90 @@ public class CrawerToOtsServiceImpl implements CrawerToOtsService {
             return;
         }
         saveHotelImage(hotelImageDto);
+    }
+
+    public Map<String,Object> podHotelImage(CrawlPodHotelImageDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        logger.info(String.format("\n====================podHotelImage begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        Integer count = crawlPodHotelImageService.count(dto);
+        if (count==null||count<=0){
+            resultMap.put("message","CrawlPod count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        int start=0;
+        if(dto.getPageIndex()!=null){
+            start=dto.getPageIndex();
+        }
+
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=start;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<CrawlPodHotelImageDto> dataList = crawlPodHotelImageService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(dataList)){
+                logger.info(String.format("\n====================dataList is empty====================\n"));
+                continue;
+            }
+
+            for (final CrawlPodHotelImageDto forBean:dataList){
+                PodHotelImageDto podHotelImageDto = new PodHotelImageDto();
+                podHotelImageDto.setId(forBean.getId());
+                podHotelImageDto = podHotelImageService.getByPramas(podHotelImageDto);
+                if (podHotelImageDto == null || StringUtils.isEmpty(podHotelImageDto.getBig())) {
+                    pool.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            savePodHotelImage(forBean);
+                        }
+                    });
+                }
+
+            }
+
+        }
+        logger.info(String.format("\n====================podHotelImage  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+
+    public void savePodHotelImage(CrawlPodHotelImageDto dto){
+        PodHotelImageDto saveBean = new PodHotelImageDto();
+        BeanUtils.copyProperties(dto, saveBean);
+        //上传7牛
+        String bigImgKey = null;
+        //uuid 文件名
+        UUID uuid = UUID.randomUUID();
+        String strUuid = uuid.toString();
+        logger.info(String.format("\n========picture.upload:hotelSourceId:%s========\n",
+                        dto.getId()));
+        try {
+            BufferedImage bigImg = PicUtils.getImageFromNetByUrl(dto.getBig());
+            String bigFileName = strUuid +bigImg.getWidth()+ ".jpg";
+
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ImageIO.write(bigImg, "jpg", bao);
+            //上传切图
+            bigImgKey = QiniuUtils.uploadAndTry(bao.toByteArray(), bigFileName, Constants.QINIU_BUCKET);
+            bao.close();
+            if (StringUtils.isNotEmpty(bigImgKey)){
+                saveBean.setBig(Constants.QINIU_DOWNLOAD_ADDRESS+"/"+bigFileName);
+
+            }else {
+                saveBean.setBig(null);
+            }
+            saveBean.setCreateTime(new Date());
+            saveBean.setUpdateTime(null);
+            podHotelImageService.save(saveBean);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

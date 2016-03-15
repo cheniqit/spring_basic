@@ -4,6 +4,7 @@ package com.mk.taskfactory.web.controller;
 import com.mk.taskfactory.api.BookClickService;
 import com.mk.taskfactory.api.CrawerToOtsService;
 import com.mk.taskfactory.api.dtos.HotelHourClickDto;
+import com.mk.taskfactory.api.dtos.crawer.CrawlPodHotelImageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,5 +54,12 @@ public class CrawerToOtsController {
         result.put("msg","SUCCESS");
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
-
+    @RequestMapping(value = "/podHotelImage", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> podHotelImage(CrawlPodHotelImageDto dto) {
+        Map<String,Object> result = new HashMap<String, Object>();
+        crawerToOtsService.podHotelImage(dto);
+        result.put("msg","SUCCESS");
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
 }

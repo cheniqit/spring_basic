@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
+    <result column="room_type_key" property="roomTypeKey" jdbcType="VARCHAR" />
     <result column="big" property="big" jdbcType="VARCHAR" />
     <result column="url" property="url" jdbcType="VARCHAR" />
     <result column="tag" property="tag" jdbcType="VARCHAR" />
@@ -24,6 +25,9 @@
       </if>
       <if test="hotelSourceId != null">
         AND hotel_source_id = #{hotelSourceId}
+      </if>
+      <if test="roomTypeKey != null">
+        AND room_type_key = #{roomTypeKey}
       </if>
       <if test="tag != null">
         AND tag = #{tag}
@@ -59,10 +63,10 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.CrawlPodHotelImageDto" >
-    insert into crawl_pod_hotel_image (id, hotel_id, hotel_source_id, 
+    insert into crawl_pod_hotel_image (id, hotel_id, hotel_source_id, room_type_key,
       big, url, tag, create_time, 
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, #{hotelSourceId,jdbcType=VARCHAR}, #{roomTypeKey,jdbcType=VARCHAR},
       #{big,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -74,6 +78,9 @@
       </if>
       <if test="hotelSourceId != null" >
         hotel_source_id = #{hotelSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomTypeKey != null" >
+        room_type_key = #{roomTypeKey,jdbcType=VARCHAR},
       </if>
       <if test="big != null" >
         big = #{big,jdbcType=VARCHAR},

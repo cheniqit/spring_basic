@@ -9,6 +9,8 @@ public class CrawlPodHotelImage {
 
     private String hotelSourceId;
 
+    private String roomTypeKey;
+
     private String big;
 
     private String url;
@@ -81,5 +83,13 @@ public class CrawlPodHotelImage {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRoomTypeKey() {
+        return roomTypeKey;
+    }
+
+    public void setRoomTypeKey(String roomTypeKey) {
+        this.roomTypeKey = roomTypeKey;
     }
 }

@@ -9,6 +9,8 @@ public class CrawlPodHotelImageDto {
 
     private String hotelSourceId;
 
+    private String roomTypeKey;
+
     private String big;
 
     private String url;
@@ -102,5 +104,13 @@ public class CrawlPodHotelImageDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getRoomTypeKey() {
+        return roomTypeKey;
+    }
+
+    public void setRoomTypeKey(String roomTypeKey) {
+        this.roomTypeKey = roomTypeKey;
     }
 }
