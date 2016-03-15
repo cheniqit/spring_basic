@@ -62,7 +62,7 @@ public class HotelRemoteService {
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", Constants.token);
         params.put("hotelid", hotelId);
-        String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
+        String postResult=HttpUtils.doPost(Constants.OTS_URL + "/indexer/inithotel", params);
         return postResult;
     }
     /******全量刷索引*******/
