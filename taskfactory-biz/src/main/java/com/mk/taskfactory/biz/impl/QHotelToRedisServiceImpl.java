@@ -446,7 +446,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                 roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
                                         );
-                                        jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
+                                        jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
                                                 roomTypeDto.getRoomTypeId())
                                         );
                                     }
@@ -600,6 +600,27 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         }
 
         for (final TCityListDto bean:cityDtoList){
+            Jedis jedis = null;
+            try {
+                jedis =  RedisUtil.getJedis();
+                logger.info(String.format("\n====================cityCode={}&cityName={}====================\n")
+                        ,bean.getCityCode(),bean.getCityName());
+                jedis.del(String.format("%s%s", RedisCacheName.CITYHOTELSET,
+                        bean.getCityCode()));
+                if ("F".equals(bean.getValid())){
+                    logger.info(String.format("\n====================cityCode={} valid=F continue====================\n")
+                            ,bean.getCityCode(),bean.getCityName());
+                    continue;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                if(null != jedis){
+                    jedis.close();
+                }
+
+            }
             pool.execute(new Runnable() {
                 @Override
                 public void run() {
@@ -609,11 +630,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         logger.info(String.format("\n====================cityCode={}&cityName={}====================\n")
                                 ,bean.getCityCode(),bean.getCityName());
                         if (StringUtils.isEmpty(bean.getCityCode())){
-                            return;
-                        }
-                        if ("F".equals(bean.getValid())){
-                            jedis.del(String.format("%s%s", RedisCacheName.CITYHOTELSET,
-                                    bean.getCityCode()));
                             return;
                         }
                         OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
@@ -751,7 +767,19 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+        Jedis jedis = null;
+        try {
+            jedis =  RedisUtil.getJedis();
+            jedis.del(String.format("%s", RedisCacheName.CITY_INFO_SET));
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(null != jedis){
+                jedis.close();
+            }
+
+        }
         for (final TCityListDto cityDto:cityDtoList){
             pool.execute(new Runnable() {
                 @Override
@@ -783,8 +811,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }else {
                             logger.info(String.format("\n====================remove cityCode={}====================\n")
                                     ,cityDto.getCityCode());
-                            jedis.srem(String.format("%s", RedisCacheName.CITY_INFO_SET), JsonUtils.toJSONString(cityDto)
-                            );
                             cityListDto.setValid("F");
                             cityListService.updateById(cityListDto);
                         }
