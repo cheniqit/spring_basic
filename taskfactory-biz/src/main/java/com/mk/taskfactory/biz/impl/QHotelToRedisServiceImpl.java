@@ -409,7 +409,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
                                             continue;
                                         }
-                                        if (roomtypeToRedisDto.getId()==roomTypeDto.getRoomTypeId()){
+                                        if (roomtypeToRedisDto.getId().equals(roomTypeDto.getRoomTypeId())){
                                             jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                     roomTypeDto.getHotelId()), roomType
                                             );
@@ -1953,5 +1953,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
 //        resultMap.put("SUCCESS", true);
 //        return resultMap;
 //    }
+
 
 }
