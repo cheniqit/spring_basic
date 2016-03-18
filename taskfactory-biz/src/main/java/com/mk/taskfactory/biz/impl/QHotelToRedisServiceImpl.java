@@ -690,6 +690,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         hotelScoreDto.setHotelId(dto.getHotelId());
         HotelScore hotelScore = hotelScoreMapper.getByPramas(hotelScoreDto);
         if (hotelScore==null||hotelScore.getHotelId()==null){
+            logger.info(String.format("====================hotelId={} hotelScore is null===================="),dto.getHotelId());
             return;
         }
         Jedis jedis = null;
