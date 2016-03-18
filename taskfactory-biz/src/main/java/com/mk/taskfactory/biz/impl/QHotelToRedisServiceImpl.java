@@ -132,6 +132,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             logger.info(String.format("\n====================id={}&hotelId={}====================\n")
                                     ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
                             if (onlineHotelDto.getHotelId()!=null&&"T".equals(onlineHotelDto.getIsVaild())) {
+                                hotelScoreToRedis(onlineHotelDto);
                                 if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())) {
                                     QHotelDto qHotelDto = new QHotelDto();
                                     qHotelDto.setId(onlineHotelDto.getHotelId());
@@ -147,7 +148,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                             qHotelDto.getId()), HotelSourceEnum.OTA.getCode().toString()
                                     );
                                     qHotelFacilityToRedis(onlineHotelDto);
-                                    tQunarHotelScoreToRedis(onlineHotelDto);
                                     TExHotelImageDto hotelImageDto = new TExHotelImageDto();
                                     hotelImageDto.setHotelSourceId(qHotelDto.getSourceId());
                                     hotelImageDto.setTag("外观");
@@ -195,7 +195,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
                                             hotel.getId()), HotelSourceEnum.LEZHU.getCode().toString()
                                     );
-                                    hotelScoreToRedis(onlineHotelDto);
+
                                 }
                                 hotelRemoteService.hotelInit(onlineHotelDto.getHotelId().toString());
                             }else{
