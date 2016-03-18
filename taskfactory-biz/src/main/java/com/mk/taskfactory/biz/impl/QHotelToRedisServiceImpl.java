@@ -402,6 +402,18 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 }
 
                                 if (HotelSourceEnum.OTA.getCode()==Integer.valueOf(hotelSource)) {
+                                    Set<String> hotelRoomTypeSet = jedis.smembers(RedisCacheName.HOTELROOMTYPEINFOSET);
+                                    for (String roomType: hotelRoomTypeSet){
+                                        RoomtypeToRedisDto roomtypeToRedisDto = JsonUtils.formatJson(roomType,RoomtypeToRedisDto.class);
+                                        if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
+                                            continue;
+                                        }
+                                        if (roomtypeToRedisDto.getId()==roomTypeDto.getRoomTypeId()){
+                                            jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
+                                                    roomTypeDto.getHotelId()), roomType
+                                            );
+                                        }
+                                    }
                                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
                                     qHotelRoomtype.setId(roomTypeDto.getRoomTypeId());
                                     qHotelRoomtype = hotelRoomTypeService.getByPramas(qHotelRoomtype);
@@ -443,9 +455,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                                 roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
                                         );
                                     }else{
-                                        jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
-                                                roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
-                                        );
                                         jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
                                                 roomTypeDto.getRoomTypeId())
                                         );

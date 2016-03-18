@@ -97,4 +97,5 @@ public class HomeController {
         Cat.logEvent("initHotel ", "刷新索引" + hotelId.toString() + "  date=" + DateUtils.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
         this.validRateTaskService.initHotel(isInitValid,hotelId);
     }
+
 }
