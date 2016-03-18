@@ -402,7 +402,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 }
 
                                 if (HotelSourceEnum.OTA.getCode()==Integer.valueOf(hotelSource)) {
-                                    Set<String> hotelRoomTypeSet = jedis.smembers(RedisCacheName.HOTELROOMTYPEINFOSET);
+                                    Set<String> hotelRoomTypeSet = jedis.smembers(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
+                                            roomTypeDto.getHotelId()));
                                     for (String roomType: hotelRoomTypeSet){
                                         RoomtypeToRedisDto roomtypeToRedisDto = JsonUtils.formatJson(roomType,RoomtypeToRedisDto.class);
                                         if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
