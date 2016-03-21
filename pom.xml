@@ -557,7 +557,7 @@
                 <crawer.jdbc.user>imike-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>Imike-writer</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://ots.imike.com/ots</ots.url>
+                <ots.url>http://api.imike.com/ots</ots.url>
                 <cs.url>http://customer.imike.com/customer</cs.url>
                 <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
