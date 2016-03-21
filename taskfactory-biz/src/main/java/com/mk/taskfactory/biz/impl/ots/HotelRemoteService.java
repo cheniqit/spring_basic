@@ -80,6 +80,13 @@ public class HotelRemoteService {
         String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/drop", params);
         return postResult;
     }
+    /******刷新城市列表*******/
+    public String initcity(){
+        Map<String, String> params=new HashMap<String, String>();
+        params.put("token", Constants.token);
+        String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/initcity", params);
+        return postResult;
+    }
     public String updatemikeprices(String token, String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);

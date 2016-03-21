@@ -852,6 +852,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
 
     public Map<String,Object> hotelPriorityToRedis(OnlineHotelPriorityDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
+        hotelRemoteService.initcity();//刷新城市列表  此代码和job时间先后顺序有关
         logger.info(String.format("\n====================hotelPriorityToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
         int count = onlineHotelPriorityService.count(dto);
         if (count<=0){
