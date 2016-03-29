@@ -2,9 +2,7 @@ package com.mk.taskfactory.biz.mapper.ots;
 
 
 import com.mk.taskfactory.api.dtos.TCityListDto;
-import com.mk.taskfactory.api.dtos.crawer.QHotelDto;
 import com.mk.taskfactory.model.TCityList;
-import com.mk.taskfactory.model.crawer.QHotel;
 
 import java.util.List;
 

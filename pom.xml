@@ -311,6 +311,9 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
@@ -428,6 +431,9 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
                 <ots.url>http://smlt-ots.imike.cn/ots</ots.url>
                 <!-- 七牛获取文件路径 -->
@@ -459,6 +465,9 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
@@ -508,6 +517,11 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
+
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
@@ -553,6 +567,11 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
+
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>imike-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>Imike-writer</crawer.jdbc.password>

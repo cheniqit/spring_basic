@@ -1,13 +1,9 @@
 package com.mk.taskfactory.biz.impl.ots;
 
-import com.mk.taskfactory.api.crawer.QFacilityService;
 import com.mk.taskfactory.api.dtos.TCityListDto;
-import com.mk.taskfactory.api.dtos.crawer.QFacilityDto;
 import com.mk.taskfactory.api.ots.TCityListService;
-import com.mk.taskfactory.biz.mapper.crawer.QFacilityMapper;
 import com.mk.taskfactory.biz.mapper.ots.TCityListMapper;
 import com.mk.taskfactory.model.TCityList;
-import com.mk.taskfactory.model.crawer.QFacility;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

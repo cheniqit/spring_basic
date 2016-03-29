@@ -27,6 +27,8 @@ public class RoomtypeToRedisDto {
 
     private String smallImageUrl;
 
+    private String isPromo;
+
     public Long getId() {
         return id;
     }
@@ -129,5 +131,13 @@ public class RoomtypeToRedisDto {
 
     public void setSmallImageUrl(String smallImageUrl) {
         this.smallImageUrl = smallImageUrl;
+    }
+
+    public String getIsPromo() {
+        return isPromo;
+    }
+
+    public void setIsPromo(String isPromo) {
+        this.isPromo = isPromo;
     }
 }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ht.QComment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="comment_id" property="commentId" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="DECIMAL" />
+    <result column="good_total" property="goodTotal" jdbcType="BIGINT" />
+    <result column="bad_total" property="badTotal" jdbcType="BIGINT" />
+    <result column="medium_total" property="mediumTotal" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, comment_id, hotel_id, hotel_name, score, grade, good_total, bad_total, medium_total, 
+    create_time, update_time
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="commentId != null">
+        AND comment_id = #{commentId}
+      </if>
+      <if test="hotelId != null">
+        AND hotel_id = #{hotelId}
+      </if>
+      <if test="hotelName != null">
+        AND hotel_name = #{hotelName}
+      </if>
+      <if test="grade != null">
+        AND grade = #{grade}
+      </if>
+    </where>
+  </sql>
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QCommentDetailDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_comment
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ht.QCommentDetailDto" resultType="java.lang.Integer" >
+    select count(*) from q_comment
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelFacilityDto" >
+    select
+    <include refid="Base_Column_List" />
+    from q_comment
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from q_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.ht.QCommentDto" >
+    insert into q_comment (id, comment_id, hotel_id, 
+      hotel_name, score, grade, 
+      good_total, bad_total, medium_total, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{commentId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
+      #{hotelName,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, #{grade,jdbcType=DECIMAL}, 
+      #{goodTotal,jdbcType=BIGINT}, #{badTotal,jdbcType=BIGINT}, #{mediumTotal,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ht.QCommentDto" >
+    update q_comment
+    <set >
+      <if test="commentId != null" >
+        comment_id = #{commentId,jdbcType=BIGINT},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=DECIMAL},
+      </if>
+      <if test="goodTotal != null" >
+        good_total = #{goodTotal,jdbcType=BIGINT},
+      </if>
+      <if test="badTotal != null" >
+        bad_total = #{badTotal,jdbcType=BIGINT},
+      </if>
+      <if test="mediumTotal != null" >
+        medium_total = #{mediumTotal,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

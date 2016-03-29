@@ -1,7 +1,6 @@
 package com.mk.taskfactory.api.ots;
 
 import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.crawer.QFacilityDto;
 
 import java.util.List;
 
