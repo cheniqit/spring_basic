@@ -1,5 +1,7 @@
 package com.mk.taskfactory.model.ods;
 
+import java.math.BigDecimal;
+
 public class QHotelRoomtype {
     private Long id;
 
@@ -70,6 +72,10 @@ public class QHotelRoomtype {
     private String updateTime;
 
     private String roomTypeValid;
+
+    private BigDecimal price;
+
+    private String isPromo;
 
     public Long getId() {
         return id;
@@ -349,5 +355,21 @@ public class QHotelRoomtype {
 
     public void setRoomTypeValid(String roomTypeValid) {
         this.roomTypeValid = roomTypeValid;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getIsPromo() {
+        return isPromo;
+    }
+
+    public void setIsPromo(String isPromo) {
+        this.isPromo = isPromo;
     }
 }

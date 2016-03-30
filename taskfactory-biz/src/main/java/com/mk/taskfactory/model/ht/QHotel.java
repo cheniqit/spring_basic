@@ -95,6 +95,9 @@ public class QHotel {
 
     private String roomTypeValid;
 
+    private BigDecimal dynamicPrice;
+
+    private BigDecimal originPrice;
 
     public String getIntroduction() {
         return introduction;
@@ -462,5 +465,21 @@ public class QHotel {
 
     public void setRoomTypeValid(String roomTypeValid) {
         this.roomTypeValid = roomTypeValid;
+    }
+
+    public BigDecimal getDynamicPrice() {
+        return dynamicPrice;
+    }
+
+    public void setDynamicPrice(BigDecimal dynamicPrice) {
+        this.dynamicPrice = dynamicPrice;
+    }
+
+    public BigDecimal getOriginPrice() {
+        return originPrice;
+    }
+
+    public void setOriginPrice(BigDecimal originPrice) {
+        this.originPrice = originPrice;
     }
 }

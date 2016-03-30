@@ -1,5 +1,7 @@
 package com.mk.taskfactory.api.dtos.ods;
 
+import java.math.BigDecimal;
+
 public class QHotelRoomtypeDto {
     private Long id;
 
@@ -70,6 +72,8 @@ public class QHotelRoomtypeDto {
     private Integer pageSize;
 
     private String roomTypeValid;
+
+    private BigDecimal price;
 
     private String isPromo;
 
@@ -359,5 +363,13 @@ public class QHotelRoomtypeDto {
 
     public void setIsPromo(String isPromo) {
         this.isPromo = isPromo;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

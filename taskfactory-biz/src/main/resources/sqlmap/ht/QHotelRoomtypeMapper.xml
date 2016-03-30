@@ -37,6 +37,7 @@
     <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     <result column="roomtype_valid" property="roomTypeValid" jdbcType="CHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="is_promo" property="isPromo" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -44,7 +45,7 @@
     bed_type, bed_size, bathroom_type, air_conditioner, wash_supplies, shoes, tv, broadband,
     wifi, free_water, floor_board, free_tea, desk, computer, fridge, code_case, coffee,
     electric_kettle, hair_drier, room_num, has_window, floor, live_num, can_add_bed,
-    price_valid,create_time,update_time,roomtype_valid
+    price_valid,create_time,update_time,roomtype_valid,price,is_promo
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -68,6 +69,9 @@
       </if>
       <if test="roomTypeValid != null">
         AND roomtype_valid = #{roomTypeValid}
+      </if>
+      <if test="isPromo != null">
+        AND is_promo = #{isPromo}
       </if>
     </where>
   </sql>
@@ -206,6 +210,12 @@
       </if>
       <if test="roomTypeValid != null" >
         roomtype_valid = #{roomTypeValid,jdbcType=CHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="isPromo != null" >
+        is_promo = #{isPromo,jdbcType=CHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
