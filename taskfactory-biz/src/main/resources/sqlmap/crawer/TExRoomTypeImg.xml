@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.TQunarHotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ht.QHotelRoomtype" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
+    <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
+    <result column="roomtype_key" property="roomtypeKey" jdbcType="VARCHAR" />
+    <result column="roomtype_name" property="roomtypeName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getRoomtypeImg" resultType="java.lang.Integer" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
+    select b.id from t_ex_roomtype_img a inner join t_ex_hotel_hotel_image b
+    on a.baseUrl = b.osrc
+    <where>
+      <if test="id != null">
+        a.id = #{id}
+      </if>
+      <if test="hotelSourceId != null">
+        AND a.hotel_source_id = #{hotelSourceId}
+      </if>
+      <if test="roomtypeKey != null">
+        AND roomtype_key = #{roomtypeKey}
+      </if>
+      <if test="roomtypeName != null">
+        AND roomtype_name = #{roomtypeName}
+      </if>
+    </where>
+    limit 1
+  </select>
+</mapper>

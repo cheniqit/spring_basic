@@ -221,23 +221,4 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="getRoomtypeImg" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
-    select b.id from t_ex_roomtype_img a inner join t_ex_hotel_hotel_image b
-    on a.baseUrl = b.osrc
-    <where>
-      <if test="id != null">
-        a.id = #{id}
-      </if>
-      <if test="hotelSourceId != null">
-        AND a.hotel_source_id = #{hotelSourceId}
-      </if>
-      <if test="roomtypeKey != null">
-        AND roomtype_key = #{roomtypeKey}
-      </if>
-      <if test="roomtypeName != null">
-        AND roomtype_name = #{roomtypeName}
-      </if>
-    </where>
-     limit 1
-  </select>
 </mapper>

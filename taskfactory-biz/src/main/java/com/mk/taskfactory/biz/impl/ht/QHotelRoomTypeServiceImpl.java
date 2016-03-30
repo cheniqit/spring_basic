@@ -45,12 +45,6 @@ public class QHotelRoomTypeServiceImpl implements QHotelRoomTypeService {
     public Integer count(QHotelRoomtypeDto bean){
         return mapper.count(bean);
     }
-    public QHotelRoomtypeDto getRoomtypeImg(QHotelRoomtypeDto bean){
-        if (StringUtils.isEmpty(bean.getHotelSourceId())||StringUtils.isEmpty(bean.getRoomtypeKey())){
-            return null;
-        }
-        return buildDto(mapper.getRoomtypeImg(bean));
-    }
     private QHotelRoomtypeDto buildDto(QHotelRoomtype bean) {
         if (bean==null){
             return new QHotelRoomtypeDto();
