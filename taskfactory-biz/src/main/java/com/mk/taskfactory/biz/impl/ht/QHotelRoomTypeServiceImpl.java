@@ -3,7 +3,7 @@ package com.mk.taskfactory.biz.impl.ht;
 import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 import com.mk.taskfactory.api.ht.QHotelRoomTypeService;
 import com.mk.taskfactory.biz.mapper.ht.QHotelRoomtypeMapper;
-import com.mk.taskfactory.model.ods.QHotelRoomtype;
+import com.mk.taskfactory.model.ht.QHotelRoomtype;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

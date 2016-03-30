@@ -1,7 +1,7 @@
 package com.mk.taskfactory.biz.mapper.ht;
 
 import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
-import com.mk.taskfactory.model.ods.QHotelRoomtype;
+import com.mk.taskfactory.model.ht.QHotelRoomtype;
 
 import java.util.List;
 
