@@ -8,5 +8,5 @@ import com.mk.taskfactory.model.ht.QHotelRoomtype;
 import java.util.List;
 
 public interface TExRoomTypeImgMapper {
-    public QHotelRoomtype getRoomtypeImg(QHotelRoomtypeDto bean);
+    public Integer getRoomtypeImg(QHotelRoomtypeDto bean);
 }

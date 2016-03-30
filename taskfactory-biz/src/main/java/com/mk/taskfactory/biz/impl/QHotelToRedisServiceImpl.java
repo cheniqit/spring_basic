@@ -33,6 +33,7 @@ import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
 import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
+import com.mk.taskfactory.biz.mapper.crawer.TExRoomTypeImgMapper;
 import com.mk.taskfactory.biz.mapper.crawer.TmpMappingRoomTypeIdMapper;
 import com.mk.taskfactory.biz.mapper.crawer.ValidRoomTypeMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
@@ -102,6 +103,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private OnlineHotelPriorityService onlineHotelPriorityService;
     @Autowired
     private HotelRemoteService hotelRemoteService;
+    @Autowired
+    private TExRoomTypeImgMapper roomTypeImgMapper;
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
     public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto){
@@ -371,8 +374,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         TExHotelImageDto hotelImageDto = new TExHotelImageDto();
                                         getImgBean.setHotelSourceId(roomtypeDto.getHotelSourceId());
                                         getImgBean.setRoomtypeKey(roomtypeDto.getRoomtypeKey());
-                                        getImgBean = hotelRoomTypeService.getRoomtypeImg(getImgBean);
-                                        if (getImgBean == null || getImgBean.getId() == null) {
+                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+                                        if (imgId == null) {
                                             hotelImageDto.setHotelSourceId(roomtypeDto.getHotelSourceId());
                                             hotelImageDto.setTag("客房");
                                             List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
@@ -506,8 +509,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     if (StringUtils.isEmpty(picId)) {
                                         getImgBean.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
                                         getImgBean.setRoomtypeKey(qHotelRoomtype.getRoomtypeKey());
-                                        getImgBean = hotelRoomTypeService.getRoomtypeImg(getImgBean);
-                                        if (getImgBean == null || getImgBean.getId() == null) {
+                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+                                        if (imgId == null) {
                                             hotelImageDto.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
                                             hotelImageDto.setTag("客房");
                                             List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);

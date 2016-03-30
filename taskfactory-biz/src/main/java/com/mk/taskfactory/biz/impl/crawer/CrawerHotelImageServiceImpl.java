@@ -46,12 +46,6 @@ public class CrawerHotelImageServiceImpl implements CrawerHotelImageService {
     public Integer count(TExHotelImageDto bean){
         return mapper.count(bean);
     }
-    public QHotelRoomtypeDto getRoomtypeImg(QHotelRoomtypeDto bean){
-        if (StringUtils.isEmpty(bean.getHotelSourceId())||StringUtils.isEmpty(bean.getRoomtypeKey())){
-            return null;
-        }
-        return buildDto(mapper.getRoomtypeImg(bean));
-    }
     private TExHotelImageDto buildDto(TExHotelImage bean) {
         if (bean==null){
             return new TExHotelImageDto();

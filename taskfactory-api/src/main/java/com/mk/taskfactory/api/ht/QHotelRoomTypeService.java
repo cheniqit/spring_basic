@@ -11,6 +11,5 @@ public interface QHotelRoomTypeService {
     public Integer delete(Integer id);
     public Integer updateById(QHotelRoomtypeDto bean);
     public Integer count(QHotelRoomtypeDto bean);
-    public QHotelRoomtypeDto getRoomtypeImg(QHotelRoomtypeDto bean);
 
 }
