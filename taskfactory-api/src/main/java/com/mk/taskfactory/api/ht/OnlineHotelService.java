@@ -1,6 +1,6 @@
-package com.mk.taskfactory.api.ods;
+package com.mk.taskfactory.api.ht;
 
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
 
 import java.util.List;
 

@@ -1,21 +1,24 @@
-package com.mk.taskfactory.model.ods;
+package com.mk.taskfactory.model.ht;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class OnlineHotel {
+public class OnlineHotelRoomType {
     private Long id;
 
     private Long hotelId;
 
-    private Integer comefromtype;
+    private Long roomTypeId;
+
+    private BigDecimal price;
+
+    private String isOtaPrice;
 
     private Date createTime;
 
     private Date updateTime;
 
     private String isVaild;
-
-    private Integer cityCode;
 
     public Long getId() {
         return id;
@@ -33,12 +36,20 @@ public class OnlineHotel {
         this.hotelId = hotelId;
     }
 
-    public Integer getComefromtype() {
-        return comefromtype;
+    public Long getRoomTypeId() {
+        return roomTypeId;
     }
 
-    public void setComefromtype(Integer comefromtype) {
-        this.comefromtype = comefromtype;
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Date getCreateTime() {
@@ -65,11 +76,11 @@ public class OnlineHotel {
         this.isVaild = isVaild == null ? null : isVaild.trim();
     }
 
-    public Integer getCityCode() {
-        return cityCode;
+    public String getIsOtaPrice() {
+        return isOtaPrice;
     }
 
-    public void setCityCode(Integer cityCode) {
-        this.cityCode = cityCode;
+    public void setIsOtaPrice(String isOtaPrice) {
+        this.isOtaPrice = isOtaPrice;
     }
 }

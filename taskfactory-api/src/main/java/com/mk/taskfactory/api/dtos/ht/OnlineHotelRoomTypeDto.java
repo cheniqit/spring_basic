@@ -1,9 +1,9 @@
-package com.mk.taskfactory.model.ods;
+package com.mk.taskfactory.api.dtos.ht;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class OnlineHotelRoomType {
+public class OnlineHotelRoomTypeDto {
     private Long id;
 
     private Long hotelId;
@@ -19,6 +19,12 @@ public class OnlineHotelRoomType {
     private Date updateTime;
 
     private String isVaild;
+
+    private String strUpdateTime;
+
+    private Integer pageIndex;
+
+    private Integer pageSize;
 
     public Long getId() {
         return id;
@@ -74,6 +80,30 @@ public class OnlineHotelRoomType {
 
     public void setIsVaild(String isVaild) {
         this.isVaild = isVaild == null ? null : isVaild.trim();
+    }
+
+    public Integer getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getStrUpdateTime() {
+        return strUpdateTime;
+    }
+
+    public void setStrUpdateTime(String strUpdateTime) {
+        this.strUpdateTime = strUpdateTime;
     }
 
     public String getIsOtaPrice() {

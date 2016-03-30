@@ -1,7 +1,7 @@
-package com.mk.taskfactory.biz.mapper.ods;
+package com.mk.taskfactory.biz.mapper.ht;
 
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelRoomTypeDto;
-import com.mk.taskfactory.model.ods.OnlineHotelRoomType;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
+import com.mk.taskfactory.model.ht.OnlineHotelRoomType;
 import java.util.List;
 
 public interface OnlineHotelRoomTypeMapper {

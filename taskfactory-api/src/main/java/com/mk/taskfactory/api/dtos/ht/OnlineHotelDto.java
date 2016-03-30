@@ -1,26 +1,23 @@
-package com.mk.taskfactory.api.dtos.ods;
+package com.mk.taskfactory.api.dtos.ht;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-public class OnlineHotelRoomTypeDto {
+public class OnlineHotelDto {
     private Long id;
 
     private Long hotelId;
 
-    private Long roomTypeId;
-
-    private BigDecimal price;
-
-    private String isOtaPrice;
+    private Integer comefromtype;
 
     private Date createTime;
 
     private Date updateTime;
 
+    private String strUpdateTime;
+
     private String isVaild;
 
-    private String strUpdateTime;
+    private Integer cityCode;
 
     private Integer pageIndex;
 
@@ -42,20 +39,12 @@ public class OnlineHotelRoomTypeDto {
         this.hotelId = hotelId;
     }
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
+    public Integer getComefromtype() {
+        return comefromtype;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setComefromtype(Integer comefromtype) {
+        this.comefromtype = comefromtype;
     }
 
     public Date getCreateTime() {
@@ -106,11 +95,11 @@ public class OnlineHotelRoomTypeDto {
         this.strUpdateTime = strUpdateTime;
     }
 
-    public String getIsOtaPrice() {
-        return isOtaPrice;
+    public Integer getCityCode() {
+        return cityCode;
     }
 
-    public void setIsOtaPrice(String isOtaPrice) {
-        this.isOtaPrice = isOtaPrice;
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.taskfactory.biz.mapper.ods.OnlineHotelMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ods.OnlineHotel" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ht.OnlineHotelMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ht.OnlineHotel" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="comefromtype" property="comefromtype" jdbcType="INTEGER" />
@@ -35,7 +35,7 @@
       </if>
     </where>
   </sql>
-  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelDto" >
     select
     <include refid="Base_Column_List" />
     from online_hotel
@@ -45,12 +45,12 @@
       limit ${pageIndex} , ${pageSize}
     </if>
   </select>
-  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" resultType="java.lang.Integer" >
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelDto" resultType="java.lang.Integer" >
     select count(*) from online_hotel
     <include refid="Base_Query_List" />
     ORDER BY id DESC
   </select>
-  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelDto" >
     select
     <include refid="Base_Column_List" />
     from online_hotel
@@ -62,7 +62,7 @@
     delete from online_hotel
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelDto" >
     insert into online_hotel (id, hotel_id, comefromtype,
     create_time, update_time, is_vaild,city_code
     )
@@ -70,7 +70,7 @@
     #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{isVaild,jdbcType=CHAR}, #{cityCode,jdbcType=INTEGER}
     )
   </insert>
-  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ods.OnlineHotelDto" >
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelDto" >
     update online_hotel
     <set >
       <if test="hotelId != null" >

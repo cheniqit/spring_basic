@@ -1,8 +1,8 @@
-package com.mk.taskfactory.api.dtos.ods;
+package com.mk.taskfactory.model.ht;
 
 import java.util.Date;
 
-public class OnlineHotelDto {
+public class OnlineHotel {
     private Long id;
 
     private Long hotelId;
@@ -13,15 +13,9 @@ public class OnlineHotelDto {
 
     private Date updateTime;
 
-    private String strUpdateTime;
-
     private String isVaild;
 
     private Integer cityCode;
-
-    private Integer pageIndex;
-
-    private Integer pageSize;
 
     public Long getId() {
         return id;
@@ -69,30 +63,6 @@ public class OnlineHotelDto {
 
     public void setIsVaild(String isVaild) {
         this.isVaild = isVaild == null ? null : isVaild.trim();
-    }
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getStrUpdateTime() {
-        return strUpdateTime;
-    }
-
-    public void setStrUpdateTime(String strUpdateTime) {
-        this.strUpdateTime = strUpdateTime;
     }
 
     public Integer getCityCode() {

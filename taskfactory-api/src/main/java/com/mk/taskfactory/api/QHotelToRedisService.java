@@ -2,9 +2,9 @@ package com.mk.taskfactory.api;
 
 import com.mk.taskfactory.api.dtos.TCityListDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelRoomTypeDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
 
 import java.util.Map;
 

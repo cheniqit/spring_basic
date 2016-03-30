@@ -1,9 +1,9 @@
-package com.mk.taskfactory.biz.impl.ods;
+package com.mk.taskfactory.biz.impl.ht;
 
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelDto;
-import com.mk.taskfactory.api.ods.OnlineHotelService;
-import com.mk.taskfactory.biz.mapper.ods.OnlineHotelMapper;
-import com.mk.taskfactory.model.ods.OnlineHotel;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
+import com.mk.taskfactory.api.ht.OnlineHotelService;
+import com.mk.taskfactory.biz.mapper.ht.OnlineHotelMapper;
+import com.mk.taskfactory.model.ht.OnlineHotel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
