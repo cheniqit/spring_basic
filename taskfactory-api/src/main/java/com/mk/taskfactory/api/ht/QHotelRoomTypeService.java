@@ -1,6 +1,6 @@
-package com.mk.taskfactory.api.ods;
+package com.mk.taskfactory.api.ht;
 
-import com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto;
+import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 
 import java.util.List;
 

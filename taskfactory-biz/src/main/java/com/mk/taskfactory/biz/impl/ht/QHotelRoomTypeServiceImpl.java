@@ -1,7 +1,7 @@
-package com.mk.taskfactory.biz.impl.ods;
+package com.mk.taskfactory.biz.impl.ht;
 
-import com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto;
-import com.mk.taskfactory.api.ods.QHotelRoomTypeService;
+import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
+import com.mk.taskfactory.api.ht.QHotelRoomTypeService;
 import com.mk.taskfactory.biz.mapper.ht.QHotelRoomtypeMapper;
 import com.mk.taskfactory.model.ods.QHotelRoomtype;
 import org.apache.commons.lang.StringUtils;

@@ -76,7 +76,7 @@
     </where>
   </sql>
 
-  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto" >
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
     select
     <include refid="Base_Column_List" />
     from q_hotel_roomtype
@@ -86,12 +86,12 @@
       limit ${pageIndex} , ${pageSize}
     </if>
   </select>
-  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto" resultType="java.lang.Integer" >
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" resultType="java.lang.Integer" >
     select count(*) from q_hotel_roomtype
     <include refid="Base_Query_List" />
     ORDER BY id DESC
   </select>
-  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto" >
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
     select
     <include refid="Base_Column_List" />
     from q_hotel_roomtype
@@ -103,7 +103,7 @@
     delete from q_hotel_roomtype
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto" >
+  <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
     update q_hotel_roomtype
     <set >
       <if test="id != null" >
@@ -221,7 +221,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="getRoomtypeImg" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ods.QHotelRoomtypeDto" >
+  <select id="getRoomtypeImg" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto" >
     select b.id from t_ex_roomtype_img a inner join t_ex_hotel_hotel_image b
     on a.baseUrl = b.osrc
     <where>

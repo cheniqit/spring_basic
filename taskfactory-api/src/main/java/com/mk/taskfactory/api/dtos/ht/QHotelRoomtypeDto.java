@@ -1,4 +1,4 @@
-package com.mk.taskfactory.api.dtos.ods;
+package com.mk.taskfactory.api.dtos.ht;
 
 import java.math.BigDecimal;
 
