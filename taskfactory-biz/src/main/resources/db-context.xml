@@ -180,7 +180,7 @@
 	</bean>
 
 	<bean id="sqlSessionFactoryHt" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSourceOds"/>
+		<property name="dataSource" ref="dataSourceHt"/>
 		<property name="mapperLocations" value="classpath:/sqlmap/ht/*.xml"/>
 
 	</bean>
