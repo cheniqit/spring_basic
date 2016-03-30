@@ -23,6 +23,7 @@ public class OnlineHotelDto {
 
     private Integer pageSize;
 
+
     public Long getId() {
         return id;
     }
