@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.QHotelFacilityMapper" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ht.QHotelFacilityMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ht.QHotelFacility" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
