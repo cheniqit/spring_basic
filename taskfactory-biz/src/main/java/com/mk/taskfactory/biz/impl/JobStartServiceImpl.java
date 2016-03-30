@@ -42,6 +42,15 @@ public class JobStartServiceImpl {
         dto.setStrUpdateTime(updateTime);
         qHotelToRedisService.roomTypePicMappingToRedis(dto);
     }
+    public void hotelResourceToRedis(){
+        OnlineHotelDto dto = new OnlineHotelDto();
+        Calendar cal   =   Calendar.getInstance();
+        cal.add(Calendar.DATE,   -1);
+        String updateTime= DateUtils.format_yMd(cal.getTime());
+        dto.setStrUpdateTime(updateTime);
+        qHotelToRedisService.hotelResourceToRedis(dto);
+    }
+
     public void onlineHotelToRedis(){
         OnlineHotelDto dto = new OnlineHotelDto();
         Calendar cal   =   Calendar.getInstance();
