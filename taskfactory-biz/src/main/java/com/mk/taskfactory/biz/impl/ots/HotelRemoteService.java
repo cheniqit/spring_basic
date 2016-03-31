@@ -53,7 +53,7 @@ public class HotelRemoteService {
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);
         params.put("cityid", cityId);
-        params.put("hotelid", hotelId);
+        params.put("hotelId", hotelId);
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/init", params);
         return postResult;
     }
@@ -61,7 +61,7 @@ public class HotelRemoteService {
     public String hotelInit(String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", Constants.token);
-        params.put("hotelid", hotelId);
+        params.put("hotelId", hotelId);
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/indexerjob/addhotelids", params);
         return postResult;
     }
@@ -76,7 +76,7 @@ public class HotelRemoteService {
     public String indexerDrop(String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", Constants.token);
-        params.put("hotelid", hotelId);
+        params.put("hoteld", hotelId);
         String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/drop", params);
         return postResult;
     }
@@ -90,7 +90,7 @@ public class HotelRemoteService {
     public String updatemikeprices(String token, String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);
-        params.put("hotelid", hotelId);
+        params.put("hotelId", hotelId);
         String postResult=HttpUtils.doPost(Constants.OTS_URL + "/hotel/updatemikeprices", params);
         return postResult;
     }
