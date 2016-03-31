@@ -486,7 +486,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                             roomTypeDto.getHotelId()));
                                     for (String roomType: hotelRoomTypeSet){
                                         RoomtypeToRedisDto roomtypeToRedisDto = JsonUtils.formatJson(roomType,RoomtypeToRedisDto.class);
-                                        if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
+                                        if (roomtypeToRedisDto==null||roomtypeToRedisDto.getRoomTypeId()==null){
                                             continue;
                                         }
                                         if (roomtypeToRedisDto.getRoomTypeId().equals(roomTypeDto.getRoomTypeId())){
