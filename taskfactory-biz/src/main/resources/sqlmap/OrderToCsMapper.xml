@@ -6,6 +6,8 @@
     <result column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="count" property="count" jdbcType="INTEGER" />
+
+    <result column="scheduled_time" property="scheduledTime" jdbcType="TIMESTAMP" />
     <result column="execute_time" property="executeTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -13,7 +15,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, order_id, status, `count`, execute_time, create_time, update_time, is_vaild
+    id, order_id, status, `count`, scheduled_time, execute_time, create_time, update_time, is_vaild
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -61,10 +63,11 @@
   </delete>
   <insert id="save" parameterType="com.mk.taskfactory.api.dtos.OrderToCsDto" >
     insert into order_to_cs (id, order_id, status,
-      `count`, execute_time, create_time,
+      `count`, scheduled_time, execute_time, create_time,
       update_time, is_vaild)
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
-      #{count,jdbcType=INTEGER}, #{executeTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+      #{count,jdbcType=INTEGER}, #{scheduledTime,jdbcType=TIMESTAMP}, #{executeTime,jdbcType=TIMESTAMP},
+      #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{isVaild,jdbcType=CHAR})
   </insert>
 
@@ -99,7 +102,8 @@
     select
     <include refid="Base_Column_List" />
     from `order_to_cs`
-    where status in(10,30)
+    where scheduled_time &lt;= CURRENT_TIMESTAMP
+    and status in(10,30)
     and `count` &lt;= #{count,jdbcType=INTEGER}
     and is_vaild='T'
      <if test="orderId != null" >
