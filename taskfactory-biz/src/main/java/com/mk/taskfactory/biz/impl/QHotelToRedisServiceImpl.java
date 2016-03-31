@@ -366,7 +366,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     for (QHotelRoomtypeDto roomtypeDto : hotelRoomtypeList) {
                                         if ("F".equals(onlineHotelDto.getIsVaild())) {
                                             jedis.del(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
-                                                    roomtypeDto.getId())
+                                                    roomtypeDto.getRoomTypeId())
                                             );
                                             continue;
                                         }
@@ -496,7 +496,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         }
                                     }
                                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
-                                    qHotelRoomtype.setId(roomTypeDto.getRoomTypeId());
+                                    qHotelRoomtype.setRoomTypeId(roomTypeDto.getRoomTypeId());
                                     qHotelRoomtype = hotelRoomTypeService.getByPramas(qHotelRoomtype);
                                     if (qHotelRoomtype == null || qHotelRoomtype.getId() == null) {
                                         logger.info(String.format("\n====================qHotelRoomtype isEmpty====================\n"));
@@ -505,7 +505,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     RoomtypeToRedisDto bean = new RoomtypeToRedisDto();
                                     QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
                                     TExHotelImageDto hotelImageDto = new TExHotelImageDto();
-                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getId()));
+                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getRoomTypeId()));
                                     if (StringUtils.isEmpty(picId)) {
                                         getImgBean.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
                                         getImgBean.setRoomtypeKey(qHotelRoomtype.getRoomtypeKey());

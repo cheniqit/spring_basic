@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class QHotelRoomtypeDto {
     private Long id;
 
+    private Long roomTypeId;
+
     private Long hotelId;
 
     private String hotelSourceId;
@@ -371,5 +373,13 @@ public class QHotelRoomtypeDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Long getRoomTypeId() {
+        return roomTypeId;
+    }
+
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
 }

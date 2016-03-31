@@ -3,6 +3,7 @@
 <mapper namespace="com.mk.taskfactory.biz.mapper.ht.QHotelRoomtypeMapper" >
   <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.ht.QHotelRoomtype" >
     <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="roomtype_id" property="roomTypeId" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="hotel_source_id" property="hotelSourceId" jdbcType="VARCHAR" />
     <result column="roomtype_key" property="roomtypeKey" jdbcType="VARCHAR" />
@@ -41,7 +42,7 @@
     <result column="is_promo" property="isPromo" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, hotel_id, hotel_source_id, roomtype_key, roomtype_name, room_area, rt_bedtype,
+    id,roomtype_id, hotel_id, hotel_source_id, roomtype_key, roomtype_name, room_area, rt_bedtype,
     bed_type, bed_size, bathroom_type, air_conditioner, wash_supplies, shoes, tv, broadband,
     wifi, free_water, floor_board, free_tea, desk, computer, fridge, code_case, coffee,
     electric_kettle, hair_drier, room_num, has_window, floor, live_num, can_add_bed,
@@ -51,6 +52,9 @@
     <where>
       <if test="id != null">
         id = #{id}
+      </if>
+      <if test="roomTypeId != null">
+        AND roomtype_id = #{roomTypeId}
       </if>
       <if test="hotelId != null">
         AND hotel_id = #{hotelId}
@@ -108,6 +112,9 @@
     <set >
       <if test="id != null" >
         id = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        roomtype_id = #{roomTypeId,jdbcType=BIGINT},
       </if>
       <if test="hotelId != null" >
         hotel_id = #{hotelId,jdbcType=BIGINT},
