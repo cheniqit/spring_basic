@@ -11,6 +11,8 @@ public class OrderToCs {
 
     private Integer count;
 
+    private Date scheduledTime;
+
     private Date executeTime;
 
     private Date createTime;
@@ -82,4 +84,13 @@ public class OrderToCs {
     public void setIsVaild(String isVaild) {
         this.isVaild = isVaild == null ? null : isVaild.trim();
     }
+
+    public Date getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(Date scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
 }
