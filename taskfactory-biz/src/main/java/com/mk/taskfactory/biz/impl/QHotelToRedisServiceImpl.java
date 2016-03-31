@@ -489,7 +489,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
                                             continue;
                                         }
-                                        if (roomtypeToRedisDto.getId().equals(roomTypeDto.getRoomTypeId())){
+                                        if (roomtypeToRedisDto.getRoomTypeId().equals(roomTypeDto.getRoomTypeId())){
                                             jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                     roomTypeDto.getHotelId()), roomType
                                             );

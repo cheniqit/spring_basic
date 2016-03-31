@@ -3,6 +3,8 @@ package com.mk.taskfactory.api.dtos.crawer;
 public class RoomtypeToRedisDto {
     private Long id;
 
+    private Long roomTypeId;
+
     private Long hotelId;
 
     private String hotelSourceId;
@@ -139,5 +141,13 @@ public class RoomtypeToRedisDto {
 
     public void setIsPromo(String isPromo) {
         this.isPromo = isPromo;
+    }
+
+    public Long getRoomTypeId() {
+        return roomTypeId;
+    }
+
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
 }
