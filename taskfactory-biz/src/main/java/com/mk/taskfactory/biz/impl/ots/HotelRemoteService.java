@@ -76,7 +76,7 @@ public class HotelRemoteService {
     public String indexerDrop(String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", Constants.token);
-        params.put("hoteld", hotelId);
+        params.put("hotelid", hotelId);
         String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/drop", params);
         return postResult;
     }
