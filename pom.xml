@@ -540,6 +540,53 @@
         </profile>
 
         <profile>
+            <id>bgp-simulation3</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <label>product</label>
+                <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+                <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.user>liming</jdbc.user>
+                <jdbc.password>nhpL4RznJl</jdbc.password>
+                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
+                <cps.jdbc.user>liming</cps.jdbc.user>
+                <cps.jdbc.password>nhpL4RznJl</cps.jdbc.password>
+                <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
+                <ods.jdbc.user>biuser</ods.jdbc.user>
+                <ods.jdbc.password>biuser</ods.jdbc.password>
+                <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+                <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
+                <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
+                <ots.token>1qaz2wsx</ots.token>
+                <ots.url>http://huidu.imike.cn/ots</ots.url>
+                <cs.url>http://customer2.imike.cn/customer</cs.url>
+                <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
+                <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
+                <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
+                <jedis.pool.maxidl>20</jedis.pool.maxidl>
+                <jedis.pool.minidl>8</jedis.pool.minidl>
+                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <weChat.web.appid>wxf7d3b133a566825a</weChat.web.appid>
+                <weChat.web.secret>09f88e9c741c0be52de6ea789861f550</weChat.web.secret>
+                <weChat.web.scope>snsapi_login</weChat.web.scope>
+                <weChat.web.redirect_uri>http://www.imike.com/wechat/callback</weChat.web.redirect_uri>
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke-pro.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <!-- <qiniu.bucket>hotelpic</qiniu.bucket> -->
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <qiniu.bucket>test</qiniu.bucket>
+                <!-- 七牛资源空间地址 -->
+                <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
+                <!-- 七牛资源空间名称 -->
+                <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
+            </properties>
+        </profile>
+        <profile>
             <id>bgp-clu</id>
             <properties>
                 <label>product</label>
