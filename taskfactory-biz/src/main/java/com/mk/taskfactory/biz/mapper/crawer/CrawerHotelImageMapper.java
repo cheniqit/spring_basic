@@ -3,7 +3,9 @@ package com.mk.taskfactory.biz.mapper.crawer;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 import java.util.List;
 
+import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 import com.mk.taskfactory.model.crawer.TExHotelImage;
+import com.mk.taskfactory.model.ht.QHotelRoomtype;
 import org.apache.ibatis.annotations.Param;
 
 public interface CrawerHotelImageMapper {
@@ -13,4 +15,5 @@ public interface CrawerHotelImageMapper {
     public Integer delete(Integer id);
     public Integer updateById(TExHotelImageDto bean);
     public Integer count(TExHotelImageDto bean);
+
 }

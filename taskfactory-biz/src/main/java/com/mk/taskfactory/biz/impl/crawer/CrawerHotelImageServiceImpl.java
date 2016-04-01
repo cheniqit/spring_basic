@@ -2,8 +2,10 @@ package com.mk.taskfactory.biz.impl.crawer;
 
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
+import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 import com.mk.taskfactory.biz.mapper.crawer.CrawerHotelImageMapper;
 import com.mk.taskfactory.model.crawer.TExHotelImage;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

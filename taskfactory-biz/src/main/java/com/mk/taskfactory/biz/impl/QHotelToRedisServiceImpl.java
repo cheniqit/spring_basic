@@ -6,33 +6,42 @@ import com.mk.framework.manager.RedisCacheName;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.RoomTypeService;
-import com.mk.taskfactory.api.crawer.*;
-import com.mk.taskfactory.api.dtos.*;
-import com.mk.taskfactory.api.dtos.crawer.*;
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelDto;
+import com.mk.taskfactory.api.crawer.RoomTypePriceService;
+import com.mk.taskfactory.api.crawer.TQunarHotelService;
+import com.mk.taskfactory.api.dtos.HotelScoreDto;
+import com.mk.taskfactory.api.dtos.TCityListDto;
+import com.mk.taskfactory.api.dtos.TFacilityDto;
+import com.mk.taskfactory.api.dtos.THotelDto;
+import com.mk.taskfactory.api.dtos.crawer.HotelImgDto;
+import com.mk.taskfactory.api.dtos.crawer.RoomtypeToRedisDto;
+import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
+import com.mk.taskfactory.api.dtos.crawer.TQunarHotelDto;
+import com.mk.taskfactory.api.dtos.ht.QHotelDto;
+import com.mk.taskfactory.api.dtos.ht.QHotelFacilityDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
-import com.mk.taskfactory.api.dtos.ods.OnlineHotelRoomTypeDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
+import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 import com.mk.taskfactory.api.enums.HotelSourceEnum;
 import com.mk.taskfactory.api.enums.RoomTypePriceTypeEnum;
+import com.mk.taskfactory.api.ht.*;
 import com.mk.taskfactory.api.ods.OnlineHotelPriorityService;
-import com.mk.taskfactory.api.ods.OnlineHotelRoomTypeService;
-import com.mk.taskfactory.api.ods.OnlineHotelService;
+import com.mk.taskfactory.api.ht.OnlineHotelRoomTypeService;
+import com.mk.taskfactory.api.ht.OnlineHotelService;
+import com.mk.taskfactory.api.ht.QHotelRoomTypeService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
 import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
+import com.mk.taskfactory.biz.mapper.crawer.TExRoomTypeImgMapper;
 import com.mk.taskfactory.biz.mapper.crawer.TmpMappingRoomTypeIdMapper;
 import com.mk.taskfactory.biz.mapper.crawer.ValidRoomTypeMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
-import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
-import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.HotelScore;
 import com.mk.taskfactory.model.THotel;
-import com.mk.taskfactory.api.dtos.crawer.ValidRoomType;
-import com.mk.taskfactory.model.crawer.TmpMappingRoomTypeId;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +103,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private OnlineHotelPriorityService onlineHotelPriorityService;
     @Autowired
     private HotelRemoteService hotelRemoteService;
+    @Autowired
+    private TExRoomTypeImgMapper roomTypeImgMapper;
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
     public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto){
@@ -355,7 +366,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     for (QHotelRoomtypeDto roomtypeDto : hotelRoomtypeList) {
                                         if ("F".equals(onlineHotelDto.getIsVaild())) {
                                             jedis.del(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
-                                                    roomtypeDto.getId())
+                                                    roomtypeDto.getRoomTypeId())
                                             );
                                             continue;
                                         }
@@ -363,8 +374,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         TExHotelImageDto hotelImageDto = new TExHotelImageDto();
                                         getImgBean.setHotelSourceId(roomtypeDto.getHotelSourceId());
                                         getImgBean.setRoomtypeKey(roomtypeDto.getRoomtypeKey());
-                                        getImgBean = hotelRoomTypeService.getRoomtypeImg(getImgBean);
-                                        if (getImgBean == null || getImgBean.getId() == null) {
+                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+                                        if (imgId == null) {
                                             hotelImageDto.setHotelSourceId(roomtypeDto.getHotelSourceId());
                                             hotelImageDto.setTag("客房");
                                             List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
@@ -475,17 +486,17 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                             roomTypeDto.getHotelId()));
                                     for (String roomType: hotelRoomTypeSet){
                                         RoomtypeToRedisDto roomtypeToRedisDto = JsonUtils.formatJson(roomType,RoomtypeToRedisDto.class);
-                                        if (roomtypeToRedisDto==null||roomtypeToRedisDto.getId()==null){
+                                        if (roomtypeToRedisDto==null||roomtypeToRedisDto.getRoomTypeId()==null){
                                             continue;
                                         }
-                                        if (roomtypeToRedisDto.getId().equals(roomTypeDto.getRoomTypeId())){
+                                        if (roomtypeToRedisDto.getRoomTypeId().equals(roomTypeDto.getRoomTypeId())){
                                             jedis.srem(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                     roomTypeDto.getHotelId()), roomType
                                             );
                                         }
                                     }
                                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
-                                    qHotelRoomtype.setId(roomTypeDto.getRoomTypeId());
+                                    qHotelRoomtype.setRoomTypeId(roomTypeDto.getRoomTypeId());
                                     qHotelRoomtype = hotelRoomTypeService.getByPramas(qHotelRoomtype);
                                     if (qHotelRoomtype == null || qHotelRoomtype.getId() == null) {
                                         logger.info(String.format("\n====================qHotelRoomtype isEmpty====================\n"));
@@ -494,12 +505,12 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     RoomtypeToRedisDto bean = new RoomtypeToRedisDto();
                                     QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
                                     TExHotelImageDto hotelImageDto = new TExHotelImageDto();
-                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getId()));
+                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getRoomTypeId()));
                                     if (StringUtils.isEmpty(picId)) {
                                         getImgBean.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
                                         getImgBean.setRoomtypeKey(qHotelRoomtype.getRoomtypeKey());
-                                        getImgBean = hotelRoomTypeService.getRoomtypeImg(getImgBean);
-                                        if (getImgBean == null || getImgBean.getId() == null) {
+                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+                                        if (imgId == null) {
                                             hotelImageDto.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
                                             hotelImageDto.setTag("客房");
                                             List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);

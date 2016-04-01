@@ -1,9 +1,7 @@
 package com.mk.taskfactory.biz.mapper.ots;
 
 import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.crawer.QCommentDto;
 import com.mk.taskfactory.model.TFacility;
-import com.mk.taskfactory.model.crawer.QComment;
 
 import java.util.List;
 

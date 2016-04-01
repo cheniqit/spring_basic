@@ -156,6 +156,44 @@
 		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ods"/>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOds"></property>
 	</bean>
+
+
+	<!---     ht 数据源  -->
+
+	<bean id="dataSourceHt" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
+		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
+		<property name="initialSize" value="200" />
+		<property name="maxActive" value="2000" />
+		<!-- 超时等待时间以毫秒为单位  -->
+		<property name="maxWait" value="10000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="logAbandoned" value="true"/>
+		<!-- 设置自动回收超时连接 -->
+		<property name="removeAbandoned"  value="true"/>
+		<!-- 自动回收超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="100"/>
+
+		<property name="testOnBorrow" value="true" />
+		<property name="url" value="${ht.mysql.jdbc.url}"/>
+		<property name="username" value="${ht.mysql.jdbc.username}"/>
+		<property name="password" value="${ht.mysql.jdbc.password}"/>
+	</bean>
+
+	<bean id="sqlSessionFactoryHt" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceHt"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/ht/*.xml"/>
+
+	</bean>
+
+	<bean id="transactionManagerHt" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceHt"/>
+		<qualifier value="ods"/>
+	</bean>
+	<bean name="scannerConfigurerHt" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ht"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryHt"></property>
+	</bean>
+
 	<!---     crawer 数据源  -->
 
 	<bean id="dataSourceCrawer" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
