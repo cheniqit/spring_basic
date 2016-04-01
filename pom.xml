@@ -570,6 +570,11 @@
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
                 <ods.jdbc.user>biuser</ods.jdbc.user>
                 <ods.jdbc.password>biuser</ods.jdbc.password>
+
+                <ht.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ht?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ht.jdbc.url>
+                <ht.jdbc.user>biuser</ht.jdbc.user>
+                <ht.jdbc.password>biuser</ht.jdbc.password>
+                
                 <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
