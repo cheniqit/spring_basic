@@ -79,6 +79,8 @@ public class QHotelRoomtypeDto {
 
     private String isPromo;
 
+    private String roomPic;
+
     public Long getId() {
         return id;
     }
@@ -381,5 +383,13 @@ public class QHotelRoomtypeDto {
 
     public void setRoomTypeId(Long roomTypeId) {
         this.roomTypeId = roomTypeId;
+    }
+
+    public String getRoomPic() {
+        return roomPic;
+    }
+
+    public void setRoomPic(String roomPic) {
+        this.roomPic = roomPic;
     }
 }

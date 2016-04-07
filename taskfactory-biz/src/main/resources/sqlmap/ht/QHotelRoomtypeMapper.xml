@@ -40,13 +40,14 @@
     <result column="roomtype_valid" property="roomTypeValid" jdbcType="CHAR" />
     <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="is_promo" property="isPromo" jdbcType="CHAR" />
+    <result column="room_pic" property="roomPic" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id,roomtype_id, hotel_id, hotel_source_id, roomtype_key, roomtype_name, room_area, rt_bedtype,
     bed_type, bed_size, bathroom_type, air_conditioner, wash_supplies, shoes, tv, broadband,
     wifi, free_water, floor_board, free_tea, desk, computer, fridge, code_case, coffee,
     electric_kettle, hair_drier, room_num, has_window, floor, live_num, can_add_bed,
-    price_valid,create_time,update_time,roomtype_valid,price,is_promo
+    price_valid,create_time,update_time,roomtype_valid,price,is_promo,room_pic
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -223,6 +224,9 @@
       </if>
       <if test="isPromo != null" >
         is_promo = #{isPromo,jdbcType=CHAR},
+      </if>
+      <if test="roomPic != null" >
+        room_pic = #{roomPic,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
