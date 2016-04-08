@@ -156,35 +156,44 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                             qHotelDto.getId()), JsonUtils.toJSONString(qHotelDto)
                                     );
                                     qHotelFacilityToRedis(onlineHotelDto);
-                                    TExHotelImageDto hotelImageDto = new TExHotelImageDto();
-                                    hotelImageDto.setHotelSourceId(qHotelDto.getSourceId());
-                                    hotelImageDto.setTag("外观");
-                                    List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
-                                    int mark = 0;
-                                    if (CollectionUtils.isEmpty(hotelImageDtoList)) {
-                                        hotelImageDto.setTag("客房");
-                                        hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
-                                        if (CollectionUtils.isEmpty(hotelImageDtoList)) {
-                                            hotelImageDto.setTag("大厅");
-                                            hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
-                                            if (CollectionUtils.isEmpty(hotelImageDtoList)) {
-                                                logger.info(String.format("\n====================hotelImageDtoList is empty====================\n"));
-                                                return;
-                                            }
-                                        }
-                                        mark++;
-                                    }
-                                    for (TExHotelImageDto imageDto : hotelImageDtoList) {
+                                    if (StringUtils.isNotEmpty(qHotelDto.getHotelPic())) {
                                         HotelImgDto hotelImgDto = new HotelImgDto();
-                                        BeanUtils.copyProperties(imageDto, hotelImgDto);
-
+                                        hotelImgDto.setHotelSourceId(qHotelDto.getSourceId());
+                                        hotelImgDto.setBig(qHotelDto.getHotelPic());
+                                        hotelImgDto.setTag("外观");
                                         jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
                                                 qHotelDto.getId()), JsonUtils.toJSONString(hotelImgDto)
                                         );
-                                        if (mark > 0) {
-                                            break;
-                                        }
                                     }
+//                                    TExHotelImageDto hotelImageDto = new TExHotelImageDto();
+//                                    hotelImageDto.setHotelSourceId(qHotelDto.getSourceId());
+//                                    hotelImageDto.setTag("外观");
+//                                    List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
+//                                    int mark = 0;
+//                                    if (CollectionUtils.isEmpty(hotelImageDtoList)) {
+//                                        hotelImageDto.setTag("客房");
+//                                        hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
+//                                        if (CollectionUtils.isEmpty(hotelImageDtoList)) {
+//                                            hotelImageDto.setTag("大厅");
+//                                            hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
+//                                            if (CollectionUtils.isEmpty(hotelImageDtoList)) {
+//                                                logger.info(String.format("\n====================hotelImageDtoList is empty====================\n"));
+//                                                return;
+//                                            }
+//                                        }
+//                                        mark++;
+//                                    }
+//                                    for (TExHotelImageDto imageDto : hotelImageDtoList) {
+//                                        HotelImgDto hotelImgDto = new HotelImgDto();
+//                                        BeanUtils.copyProperties(imageDto, hotelImgDto);
+//
+//                                        jedis.sadd(String.format("%s%s", RedisCacheName.HOTEL_PICTURE_INFOS_SET,
+//                                                qHotelDto.getId()), JsonUtils.toJSONString(hotelImgDto)
+//                                        );
+//                                        if (mark > 0) {
+//                                            break;
+//                                        }
+//                                    }
                                 } else {
                                     THotelDto tHotelDto = new THotelDto();
                                     tHotelDto.setId(onlineHotelDto.getHotelId().intValue());
@@ -364,37 +373,37 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     }
                                     int p = 0;
                                     for (QHotelRoomtypeDto roomtypeDto : hotelRoomtypeList) {
-                                        if ("F".equals(onlineHotelDto.getIsVaild())) {
+                                        //if ("F".equals(onlineHotelDto.getIsVaild())) {
                                             jedis.del(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
                                                     roomtypeDto.getRoomTypeId())
                                             );
-                                            continue;
-                                        }
-                                        QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
-                                        TExHotelImageDto hotelImageDto = new TExHotelImageDto();
-                                        getImgBean.setHotelSourceId(roomtypeDto.getHotelSourceId());
-                                        getImgBean.setRoomtypeKey(roomtypeDto.getRoomtypeKey());
-                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
-                                        if (imgId == null) {
-                                            hotelImageDto.setHotelSourceId(roomtypeDto.getHotelSourceId());
-                                            hotelImageDto.setTag("客房");
-                                            List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
-                                            if (!CollectionUtils.isEmpty(hotelImageDtoList)) {
-                                                if (hotelImageDtoList.size() <= p) {
-                                                    p = 0;
-                                                }
-                                                hotelImageDto = hotelImageDtoList.get(p);
-                                                p++;
-                                            }
-                                        } else {
-                                            hotelImageDto.setId(getImgBean.getId());
-                                            hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
-                                        }
-                                        if (hotelImageDto != null && hotelImageDto.getId() != null) {
-                                            jedis.set(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
-                                                    roomtypeDto.getId()), hotelImageDto.getId().toString()
-                                            );
-                                        }
+                                         //   continue;
+                                        //}
+//                                        QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
+//                                        TExHotelImageDto hotelImageDto = new TExHotelImageDto();
+//                                        getImgBean.setHotelSourceId(roomtypeDto.getHotelSourceId());
+//                                        getImgBean.setRoomtypeKey(roomtypeDto.getRoomtypeKey());
+//                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+//                                        if (imgId == null) {
+//                                            hotelImageDto.setHotelSourceId(roomtypeDto.getHotelSourceId());
+//                                            hotelImageDto.setTag("客房");
+//                                            List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
+//                                            if (!CollectionUtils.isEmpty(hotelImageDtoList)) {
+//                                                if (hotelImageDtoList.size() <= p) {
+//                                                    p = 0;
+//                                                }
+//                                                hotelImageDto = hotelImageDtoList.get(p);
+//                                                p++;
+//                                            }
+//                                        } else {
+//                                            hotelImageDto.setId(getImgBean.getId());
+//                                            hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
+//                                        }
+//                                        if (hotelImageDto != null && hotelImageDto.getId() != null) {
+//                                            jedis.set(String.format("%s%s", RedisCacheName.roomType_pic_mapping,
+//                                                    roomtypeDto.getId()), hotelImageDto.getId().toString()
+//                                            );
+//                                        }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -503,31 +512,30 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         return;
                                     }
                                     RoomtypeToRedisDto bean = new RoomtypeToRedisDto();
-                                    QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
-                                    TExHotelImageDto hotelImageDto = new TExHotelImageDto();
-                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getRoomTypeId()));
-                                    if (StringUtils.isEmpty(picId)) {
-                                        getImgBean.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
-                                        getImgBean.setRoomtypeKey(qHotelRoomtype.getRoomtypeKey());
-                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
-                                        if (imgId == null) {
-                                            hotelImageDto.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
-                                            hotelImageDto.setTag("客房");
-                                            List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
-                                            if (!CollectionUtils.isEmpty(hotelImageDtoList)) {
-                                                hotelImageDto = hotelImageDtoList.get(0);
-                                            }
-                                        } else {
-                                            hotelImageDto.setId(getImgBean.getId());
-                                            hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
-                                        }
-                                    } else {
-                                        hotelImageDto.setId(new Long(picId));
-                                        hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
-                                    }
+//                                    QHotelRoomtypeDto getImgBean = new QHotelRoomtypeDto();
+//                                    TExHotelImageDto hotelImageDto = new TExHotelImageDto();
+//                                    String picId = jedis.get(String.format("%s%s", RedisCacheName.roomType_pic_mapping, qHotelRoomtype.getRoomTypeId()));
+//                                    if (StringUtils.isEmpty(picId)) {
+//                                        getImgBean.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
+//                                        getImgBean.setRoomtypeKey(qHotelRoomtype.getRoomtypeKey());
+//                                        Integer imgId = roomTypeImgMapper.getRoomtypeImg(getImgBean);
+//                                        if (imgId == null) {
+//                                            hotelImageDto.setHotelSourceId(qHotelRoomtype.getHotelSourceId());
+//                                            hotelImageDto.setTag("客房");
+//                                            List<TExHotelImageDto> hotelImageDtoList = otsHotelImageService.qureyByPramas(hotelImageDto);
+//                                            if (!CollectionUtils.isEmpty(hotelImageDtoList)) {
+//                                                hotelImageDto = hotelImageDtoList.get(0);
+//                                            }
+//                                        } else {
+//                                            hotelImageDto.setId(getImgBean.getId());
+//                                            hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
+//                                        }
+//                                    } else {
+//                                        hotelImageDto.setId(new Long(picId));
+//                                        hotelImageDto = otsHotelImageService.getByPramas(hotelImageDto);
+//                                    }
                                     BeanUtils.copyProperties(qHotelRoomtype, bean);
-                                    bean.setImageUrl(hotelImageDto.getBig());
-                                    bean.setSmallImageUrl(hotelImageDto.getUrl());
+                                    bean.setImageUrl(qHotelRoomtype.getRoomPic());
                                     if("T".equals(roomTypeDto.getIsVaild())) {
                                         jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                                 roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
