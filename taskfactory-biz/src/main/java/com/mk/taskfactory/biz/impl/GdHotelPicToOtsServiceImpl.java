@@ -43,7 +43,7 @@ public class GdHotelPicToOtsServiceImpl implements GdHotelPicToOtsService {
     @Autowired
     private OtsGdRoomPicMapper otsGdRoomPicMapper;
 
-    private static ExecutorService pool = Executors.newFixedThreadPool(256);
+    private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
 
     public Map<String,Object> hotelPhotos(Integer start){
