@@ -144,7 +144,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
                             if (onlineHotelDto.getHotelId()!=null&&"T".equals(onlineHotelDto.getIsVaild())) {
                                 hotelScoreToRedis(onlineHotelDto);
-                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())) {
+                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())||
+                                        HotelSourceEnum.GD.getCode().equals(onlineHotelDto.getComefromtype())) {
                                     QHotelDto qHotelDto = new QHotelDto();
                                     qHotelDto.setId(onlineHotelDto.getHotelId());
                                     qHotelDto = hotelService.getByPramas(qHotelDto);
@@ -285,7 +286,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             logger.info(String.format("\n====================id={}&hotelId={}====================\n")
                                     ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
                             if (onlineHotelDto.getHotelId()!=null&&"T".equals(onlineHotelDto.getIsVaild())) {
-                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())) {
+                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())
+                                        ||HotelSourceEnum.GD.getCode().equals(onlineHotelDto.getComefromtype())) {
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTEL_SOURCE,
                                             onlineHotelDto.getHotelId()), HotelSourceEnum.OTA.getCode().toString()
                                     );
@@ -360,7 +362,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         logger.info(String.format("\n====================id={}&hotelId={}====================\n")
                                 ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
                         if (onlineHotelDto.getHotelId()!=null) {
-                            if (HotelSourceEnum.OTA.getCode()==onlineHotelDto.getComefromtype()) {
+                            if (HotelSourceEnum.OTA.getCode()==onlineHotelDto.getComefromtype()
+                                    ||HotelSourceEnum.GD.getCode()==onlineHotelDto.getComefromtype()) {
                                 Jedis jedis = null;
                                 try {
                                     jedis =  RedisUtil.getJedis();
@@ -978,7 +981,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                             jedis.set(String.format("%s%s", RedisCacheName.HOTEL_PRIORITY,
                                     hotelPriorityDto.getHotelId()), hotelPriorityDto.getPriority().toString()
                             );
-                             if (HotelSourceEnum.OTA.getCode()==hotelPriorityDto.getComefromtype()) {
+                             if (HotelSourceEnum.OTA.getCode()==hotelPriorityDto.getComefromtype()
+                                     ||HotelSourceEnum.GD.getCode()==hotelPriorityDto.getComefromtype()) {
                                  QHotelDto qHotelDto =new QHotelDto();
                                  qHotelDto.setId(hotelPriorityDto.getHotelId());
                                  qHotelDto = hotelService.getByPramas(qHotelDto);

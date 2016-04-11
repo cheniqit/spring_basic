@@ -3,7 +3,8 @@ package com.mk.taskfactory.api.enums;
 public enum HotelSourceEnum {
 
     LEZHU("LEZHU",1,"乐住"),
-    OTA("OTA",2,"OTA");
+    OTA("OTA",2,"OTA"),
+    GD("GD",3,"高德");
 
     private String id;
     private Integer code;
