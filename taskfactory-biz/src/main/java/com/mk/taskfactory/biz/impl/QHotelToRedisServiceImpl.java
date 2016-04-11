@@ -13,22 +13,15 @@ import com.mk.taskfactory.api.dtos.TCityListDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.THotelDto;
 import com.mk.taskfactory.api.dtos.crawer.HotelImgDto;
+import com.mk.taskfactory.api.dtos.crawer.HotelRecommendToRedisDto;
 import com.mk.taskfactory.api.dtos.crawer.RoomtypeToRedisDto;
-import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
 import com.mk.taskfactory.api.dtos.crawer.TQunarHotelDto;
-import com.mk.taskfactory.api.dtos.ht.QHotelDto;
-import com.mk.taskfactory.api.dtos.ht.QHotelFacilityDto;
-import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.*;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
-import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
-import com.mk.taskfactory.api.dtos.ht.QHotelRoomtypeDto;
 import com.mk.taskfactory.api.enums.HotelSourceEnum;
 import com.mk.taskfactory.api.enums.RoomTypePriceTypeEnum;
 import com.mk.taskfactory.api.ht.*;
 import com.mk.taskfactory.api.ods.OnlineHotelPriorityService;
-import com.mk.taskfactory.api.ht.OnlineHotelRoomTypeService;
-import com.mk.taskfactory.api.ht.OnlineHotelService;
-import com.mk.taskfactory.api.ht.QHotelRoomTypeService;
 import com.mk.taskfactory.api.ots.FacilityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
@@ -99,6 +92,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private OnlineHotelService onlineHotelService;
     @Autowired
     private OnlineHotelRoomTypeService onlineHotelRoomTypeService;
+    @Autowired
+    private OnlineHotelRecommendService onlineHotelRecommendService;
     @Autowired
     private OnlineHotelPriorityService onlineHotelPriorityService;
     @Autowired
@@ -425,6 +420,117 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
 
         }
         logger.info(String.format("\n====================roomTypePicMappingToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+
+    @Override
+    public Map<String, Object> onlineHotelRecommendToRedis(OnlineHotelRecommendDto dto) {
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("onlineHotelRecommendToRedis","onlineHotelRecommend同步到Redis",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================onlineRoomTypeToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = onlineHotelRecommendService.count(dto);
+        if (count<=0){
+            resultMap.put("message","OnlineHotelRecommend count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<OnlineHotelRecommendDto> hotelRecommendDtoList = onlineHotelRecommendService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(hotelRecommendDtoList)){
+                logger.info(String.format("\n====================hotelRecommendDtoList is empty====================\n"));
+                continue;
+            }
+
+            for (final OnlineHotelRecommendDto hotelRecommendDto:hotelRecommendDtoList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================id={}&hotelId={}&roomTypeId={}====================\n")
+                                    ,hotelRecommendDto.getId(),hotelRecommendDto.getHotelId(),hotelRecommendDto.getRoomTypeId());
+                            if (hotelRecommendDto.getHotelId()!=null) {
+
+                                Set<String> hotelRecommendSet = jedis.smembers(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
+                                        hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId()));
+                                for (String hotelRecommendJson: hotelRecommendSet){
+                                    HotelRecommendToRedisDto hotelRecommendToRedisDto = JsonUtils.formatJson(hotelRecommendJson,HotelRecommendToRedisDto.class);
+                                    if (hotelRecommendToRedisDto==null||hotelRecommendToRedisDto.getRecRoomTypeId()==null || hotelRecommendToRedisDto.getRecHotelId() == null ){
+                                        continue;
+                                    }
+                                    if (hotelRecommendToRedisDto.getRecRoomTypeId().equals(hotelRecommendDto.getRecRoomTypeId())
+                                            && hotelRecommendToRedisDto.getRecHotelId().equals(hotelRecommendDto.getRecHotelId())){
+                                        jedis.srem(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
+                                                hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId())
+                                        );
+                                    }
+                                }
+
+                                OnlineHotelRecommendDto onlineHotelRecommendDto = new OnlineHotelRecommendDto();
+                                onlineHotelRecommendDto.setHotelId(hotelRecommendDto.getHotelId());
+                                onlineHotelRecommendDto.setRoomTypeId(hotelRecommendDto.getRoomTypeId());
+                                onlineHotelRecommendDto = onlineHotelRecommendService.getByPramas(onlineHotelRecommendDto);
+                                if (onlineHotelRecommendDto == null || onlineHotelRecommendDto.getId() == null) {
+                                    logger.info(String.format("\n====================onlineHotelRecommendDto isEmpty====================\n"));
+                                    return;
+                                }
+                                HotelRecommendToRedisDto bean = new HotelRecommendToRedisDto();
+
+                                BeanUtils.copyProperties(onlineHotelRecommendDto, bean);
+
+                                if("T".equals(hotelRecommendDto.getIsVaild())) {
+                                    jedis.sadd(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
+                                            hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
+                                    );
+
+                                }else{
+                                    jedis.del(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
+                                            hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId())
+                                    );
+                                }
+
+                            }else {
+                                if ("F".equals(hotelRecommendDto.getIsVaild())) {
+                                    jedis.del(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
+                                            hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId())
+                                    );
+                                }
+                            }
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("onlineHotelRecommendToRedis", "OnlineHotelRecommend同步到Redis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================onlineHotelRecommendToRedis  endTime={}====================\n")
                 , DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);

@@ -28,16 +28,16 @@
    <context:property-placeholder location="classpath:db.properties"/>
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="200" />
-		<property name="maxActive" value="2000" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
 		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="10000" />
+		<property name="maxWait" value="60000" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="logAbandoned" value="true"/>
 		<!-- 设置自动回收超时连接 -->
 		<property name="removeAbandoned"  value="true"/>
 		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="10"/>
+		<property name="removeAbandonedTimeout" value="30"/>
 
 		<property name="testOnBorrow" value="true" />
 		<property name="validationQuery" value="SELECT 1" />
@@ -87,16 +87,16 @@
 
 	<bean id="dataSourceCPS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="200" />
-		<property name="maxActive" value="2000" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
 		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="10000" />
+		<property name="maxWait" value="60000" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="logAbandoned" value="true"/>
 		<!-- 设置自动回收超时连接 -->
 		<property name="removeAbandoned"  value="true"/>
 		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="10"/>
+		<property name="removeAbandonedTimeout" value="20"/>
 
 		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${cps.mysql.jdbc.url}"/>
@@ -125,16 +125,16 @@
 
 	<bean id="dataSourceOds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="200" />
-		<property name="maxActive" value="2000" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
 		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="10000" />
+		<property name="maxWait" value="60000" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="logAbandoned" value="true"/>
 		<!-- 设置自动回收超时连接 -->
 		<property name="removeAbandoned"  value="true"/>
 		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="100"/>
+		<property name="removeAbandonedTimeout" value="20"/>
 
 		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${ods.mysql.jdbc.url}"/>
@@ -162,16 +162,16 @@
 
 	<bean id="dataSourceHt" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="200" />
-		<property name="maxActive" value="2000" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
 		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="10000" />
+		<property name="maxWait" value="60000" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="logAbandoned" value="true"/>
 		<!-- 设置自动回收超时连接 -->
 		<property name="removeAbandoned"  value="true"/>
 		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="100"/>
+		<property name="removeAbandonedTimeout" value="20"/>
 
 		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${ht.mysql.jdbc.url}"/>
@@ -198,16 +198,16 @@
 
 	<bean id="dataSourceCrawer" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
 		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="200" />
-		<property name="maxActive" value="2000" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
 		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="1000" />
+		<property name="maxWait" value="60000" />
 		<property name="poolPreparedStatements" value="true" />
 		<property name="logAbandoned" value="true"/>
 		<!-- 设置自动回收超时连接 -->
 		<property name="removeAbandoned"  value="true"/>
 		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="10"/>
+		<property name="removeAbandonedTimeout" value="20"/>
 
 		<property name="testOnBorrow" value="true" />
 		<property name="url" value="${crawer.mysql.jdbc.url}"/>
