@@ -461,7 +461,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             }
 
             for (OnlineHotelRoomTypeDto roomTypeDto:roomTypeDtoList){
-                pool.execute(new RoomTypeInfoRefreshThread(roomTypeDto));
+                synchronized (roomTypeDto) {
+                    pool.execute(new RoomTypeInfoRefreshThread(roomTypeDto));
+                }
             }
 
         }
