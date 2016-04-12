@@ -3,7 +3,7 @@ package com.mk.taskfactory.api.dtos.ht;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class OnlineHotelRoomTypeDto {
+public class OnlineHotelRoomTypeDto  implements Cloneable{
     private Long id;
 
     private Long hotelId;
@@ -112,5 +112,17 @@ public class OnlineHotelRoomTypeDto {
 
     public void setIsOtaPrice(String isOtaPrice) {
         this.isOtaPrice = isOtaPrice;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Object o = null;
+        try {
+            o=(OnlineHotelRoomTypeDto)super.clone();//Object 中的clone()识别出你要复制的是哪一个对象。
+        } catch(CloneNotSupportedException e) {
+            System.out.println(e.toString());
+        }
+
+        return o;
     }
 }

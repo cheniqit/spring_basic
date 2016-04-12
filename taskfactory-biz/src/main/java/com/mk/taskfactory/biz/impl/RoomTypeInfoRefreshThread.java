@@ -31,7 +31,11 @@ public class RoomTypeInfoRefreshThread implements Runnable{
     private OnlineHotelRoomTypeDto roomTypeDto;
 
     RoomTypeInfoRefreshThread(OnlineHotelRoomTypeDto roomTypeDto){
-        this.roomTypeDto = roomTypeDto;
+        try {
+            this.roomTypeDto = (OnlineHotelRoomTypeDto) roomTypeDto.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -151,4 +155,5 @@ public class RoomTypeInfoRefreshThread implements Runnable{
         }
 
     }
+
 }
