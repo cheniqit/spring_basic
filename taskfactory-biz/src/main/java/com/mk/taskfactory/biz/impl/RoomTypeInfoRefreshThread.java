@@ -24,7 +24,6 @@ import java.util.Set;
 /**
  * Created by kirinli on 16/4/12.
  */
-@Service
 public class RoomTypeInfoRefreshThread implements Runnable{
     private static Logger logger = LoggerFactory.getLogger(QHotelToRedisServiceImpl.class);
 
