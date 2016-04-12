@@ -98,7 +98,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private TExRoomTypeImgMapper roomTypeImgMapper;
-    private static ExecutorService pool = Executors.newFixedThreadPool(64);
+    private static ExecutorService pool = Executors.newFixedThreadPool(1);
 
     public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
@@ -461,9 +461,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             }
 
             for (OnlineHotelRoomTypeDto roomTypeDto:roomTypeDtoList){
-                synchronized (roomTypeDto) {
-                    pool.execute(new RoomTypeInfoRefreshThread(roomTypeDto));
-                }
+                pool.execute(new RoomTypeInfoRefreshThread(roomTypeDto));
             }
 
         }

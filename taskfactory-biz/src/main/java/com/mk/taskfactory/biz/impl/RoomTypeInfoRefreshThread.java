@@ -86,6 +86,7 @@ public class RoomTypeInfoRefreshThread implements Runnable{
 
                     QHotelRoomtypeDto qHotelRoomtype = new QHotelRoomtypeDto();
                     qHotelRoomtype.setRoomTypeId(roomTypeDto.getRoomTypeId());
+                    qHotelRoomtype.setHotelId(roomTypeDto.getHotelId());
                     qHotelRoomtype = hotelRoomTypeService.getByPramas(qHotelRoomtype);
                     if (qHotelRoomtype == null || qHotelRoomtype.getId() == null) {
                         logger.info(String.format("\n====================qHotelRoomtype isEmpty====================\n"));
