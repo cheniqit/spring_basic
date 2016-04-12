@@ -474,7 +474,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     if (hotelRecommendToRedisDto.getRecRoomTypeId().equals(hotelRecommendDto.getRecRoomTypeId())
                                             && hotelRecommendToRedisDto.getRecHotelId().equals(hotelRecommendDto.getRecHotelId())){
                                         jedis.srem(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
-                                                hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId())
+                                                hotelRecommendDto.getHotelId(), hotelRecommendDto.getRoomTypeId()),hotelRecommendJson
                                         );
                                     }
                                 }

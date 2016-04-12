@@ -28,6 +28,8 @@ public class OnlineHotelRecommendDto {
 
     private Integer pageSize;
 
+    private String strUpdateTime;
+
     public Long getId() {
         return id;
     }
@@ -122,5 +124,13 @@ public class OnlineHotelRecommendDto {
 
     public void setIsVaild(String isVaild) {
         this.isVaild = isVaild;
+    }
+
+    public String getStrUpdateTime() {
+        return strUpdateTime;
+    }
+
+    public void setStrUpdateTime(String strUpdateTime) {
+        this.strUpdateTime = strUpdateTime;
     }
 }

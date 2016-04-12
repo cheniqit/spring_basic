@@ -43,6 +43,9 @@
       <if test="isVaild != null">
         AND is_vaild = #{isVaild}
       </if>
+      <if test="strUpdateTime != null">
+        AND update_time >= #{strUpdateTime}
+      </if>
     </where>
   </sql>
   <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.ht.OnlineHotelRecommendDto" >
