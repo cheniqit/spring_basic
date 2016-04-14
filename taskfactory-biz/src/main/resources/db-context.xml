@@ -26,24 +26,25 @@
 	<tx:annotation-driven proxy-target-class="true"/>
 
    <context:property-placeholder location="classpath:db.properties"/>
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="2" />
-		<property name="maxActive" value="500" />
-		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="60000" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="logAbandoned" value="true"/>
-		<!-- 设置自动回收超时连接 -->
-		<property name="removeAbandoned"  value="true"/>
-		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="30"/>
 
-		<property name="testOnBorrow" value="true" />
-		<property name="validationQuery" value="SELECT 1" />
-		<property name="url" value="${mysql.jdbc.url}"/>
-		<property name="username" value="${mysql.jdbc.username}"/>
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
+
+		<property name="jdbcUrl" value="${mysql.jdbc.url}"/>
+		<property name="user" value="${mysql.jdbc.username}"/>
 		<property name="password" value="${mysql.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -85,23 +86,24 @@
 
 <!---     cps 数据源  -->
 
-	<bean id="dataSourceCPS" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="2" />
-		<property name="maxActive" value="500" />
-		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="60000" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="logAbandoned" value="true"/>
-		<!-- 设置自动回收超时连接 -->
-		<property name="removeAbandoned"  value="true"/>
-		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="20"/>
+	<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="testOnBorrow" value="true" />
-		<property name="url" value="${cps.mysql.jdbc.url}"/>
-		<property name="username" value="${cps.mysql.jdbc.username}"/>
+		<property name="jdbcUrl" value="${cps.mysql.jdbc.url}"/>
+		<property name="user" value="${cps.mysql.jdbc.username}"/>
 		<property name="password" value="${cps.mysql.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
 	<bean id="sqlSessionFactoryCPS" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -123,23 +125,24 @@
 
 	<!---     ods 数据源  -->
 
-	<bean id="dataSourceOds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="2" />
-		<property name="maxActive" value="500" />
-		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="60000" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="logAbandoned" value="true"/>
-		<!-- 设置自动回收超时连接 -->
-		<property name="removeAbandoned"  value="true"/>
-		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="20"/>
+	<bean id="dataSourceOds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="testOnBorrow" value="true" />
-		<property name="url" value="${ods.mysql.jdbc.url}"/>
-		<property name="username" value="${ods.mysql.jdbc.username}"/>
+		<property name="jdbcUrl" value="${ods.mysql.jdbc.url}"/>
+		<property name="user" value="${ods.mysql.jdbc.username}"/>
 		<property name="password" value="${ods.mysql.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
 	<bean id="sqlSessionFactoryOds" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -160,23 +163,24 @@
 
 	<!---     ht 数据源  -->
 
-	<bean id="dataSourceHt" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="2" />
-		<property name="maxActive" value="500" />
-		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="60000" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="logAbandoned" value="true"/>
-		<!-- 设置自动回收超时连接 -->
-		<property name="removeAbandoned"  value="true"/>
-		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="20"/>
+	<bean id="dataSourceHt" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="testOnBorrow" value="true" />
-		<property name="url" value="${ht.mysql.jdbc.url}"/>
-		<property name="username" value="${ht.mysql.jdbc.username}"/>
+		<property name="jdbcUrl" value="${ht.mysql.jdbc.url}"/>
+		<property name="user" value="${ht.mysql.jdbc.username}"/>
 		<property name="password" value="${ht.mysql.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
 	<bean id="sqlSessionFactoryHt" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -196,23 +200,24 @@
 
 	<!---     crawer 数据源  -->
 
-	<bean id="dataSourceCrawer" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" >
-		<property name="driverClassName" value="${mysql.jdbc.driverClassName}"/>
-		<property name="initialSize" value="2" />
-		<property name="maxActive" value="500" />
-		<!-- 超时等待时间以毫秒为单位  -->
-		<property name="maxWait" value="60000" />
-		<property name="poolPreparedStatements" value="true" />
-		<property name="logAbandoned" value="true"/>
-		<!-- 设置自动回收超时连接 -->
-		<property name="removeAbandoned"  value="true"/>
-		<!-- 自动回收超时时间(以秒数为单位) -->
-		<property name="removeAbandonedTimeout" value="20"/>
+	<bean id="dataSourceCrawer" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="testOnBorrow" value="true" />
-		<property name="url" value="${crawer.mysql.jdbc.url}"/>
-		<property name="username" value="${crawer.mysql.jdbc.username}"/>
+		<property name="jdbcUrl" value="${crawer.mysql.jdbc.url}"/>
+		<property name="user" value="${crawer.mysql.jdbc.username}"/>
 		<property name="password" value="${crawer.mysql.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="1800" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
 	<bean id="sqlSessionFactoryCrawer" class="org.mybatis.spring.SqlSessionFactoryBean">
