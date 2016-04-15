@@ -4,6 +4,7 @@ import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.dtos.TCityListDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRecommendDto;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
 import com.mk.taskfactory.biz.utils.DateUtils;
@@ -68,6 +69,16 @@ public class JobStartServiceImpl {
         dto.setStrUpdateTime(updateTime);
         qHotelToRedisService.onlineRoomTypeToRedis(dto);
     }
+
+    public void onlineHotelRecommendToRedis(){
+        OnlineHotelRecommendDto dto = new OnlineHotelRecommendDto();
+        Calendar   cal   =   Calendar.getInstance();
+        cal.add(Calendar.DATE,   -1);
+        String updateTime= DateUtils.format_yMd(cal.getTime());
+        dto.setStrUpdateTime(updateTime);
+        qHotelToRedisService.onlineHotelRecommendToRedis(dto);
+    }
+
     public void cityHotelSetToRedis(){
         TCityListDto dto = new TCityListDto();
         qHotelToRedisService.cityHotelSetToRedis(dto);

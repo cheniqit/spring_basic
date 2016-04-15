@@ -4,6 +4,7 @@ package com.mk.taskfactory.web.controller;
 import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRecommendDto;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,13 @@ public class HotelToRedisController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> onlineRoomTypeToRedis(OnlineHotelRoomTypeDto bean) {
         Map<String, Object> result = qHotelToRedisService.onlineRoomTypeToRedis(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/onlineHotelRecommendToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineHotelRecommendToRedis(OnlineHotelRecommendDto bean) {
+        Map<String, Object> result = qHotelToRedisService.onlineHotelRecommendToRedis(bean);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

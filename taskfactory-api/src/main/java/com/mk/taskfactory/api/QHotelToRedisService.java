@@ -3,6 +3,7 @@ package com.mk.taskfactory.api;
 import com.mk.taskfactory.api.dtos.TCityListDto;
 import com.mk.taskfactory.api.dtos.TFacilityDto;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelDto;
+import com.mk.taskfactory.api.dtos.ht.OnlineHotelRecommendDto;
 import com.mk.taskfactory.api.dtos.ods.OnlineHotelPriorityDto;
 import com.mk.taskfactory.api.dtos.ht.OnlineHotelRoomTypeDto;
 
@@ -19,5 +20,6 @@ public interface QHotelToRedisService {
     public Map<String,Object> onlineCityToRedis(TCityListDto dto);//2
     public Map<String,Object> hotelPriorityToRedis(OnlineHotelPriorityDto dto);//3
     public Map<String,Object> hotelResourceToRedis(OnlineHotelDto dto);//5
+    public Map<String,Object> onlineHotelRecommendToRedis(OnlineHotelRecommendDto dto);//10
 }
 
