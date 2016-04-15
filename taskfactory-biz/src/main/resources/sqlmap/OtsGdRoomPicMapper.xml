@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.OtsGdRoomPicMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.GdRoomPic" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="room_Id" property="roomId" jdbcType="BIGINT" />
+    <result column="room_type_Id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="url_type" property="urlType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+    <result column="platform_room_type_id" property="platformRoomTypeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, room_Id, room_type_Id, platform_room_type_id, url, url_type, create_time, update_time, create_by, update_by,
+    is_vaild
+  </sql>
+  <sql id="Base_Query_List">
+    <where>
+      <if test="id != null">
+        id = #{id}
+      </if>
+      <if test="roomId != null">
+        AND room_Id = #{roomId}
+      </if>
+      <if test="roomTypeId != null">
+        AND room_type_Id = #{roomTypeId}
+      </if>
+      <if test="isVaild != null">
+        AND is_vaild = #{isVaild}
+      </if>
+    </where>
+  </sql>
+
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.model.crawer.GdRoomPic" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_room_pic
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    <if test="pageIndex != null and pageIndex>-1 and pageSize!=null and pageSize>0" >
+      limit ${pageIndex} , ${pageSize}
+    </if>
+  </select>
+  <select id="count" parameterType="com.mk.taskfactory.model.crawer.GdRoomPic" resultType="java.lang.Integer" >
+    select count(*) from gd_room_pic
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+  </select>
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.model.crawer.GdRoomPic" >
+    select
+    <include refid="Base_Column_List" />
+    from gd_room_pic
+    <include refid="Base_Query_List" />
+    ORDER BY id DESC
+    limit 1
+  </select>
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from gd_room_pic
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.mk.taskfactory.model.crawer.GdRoomPic" >
+    insert into gd_room_pic (id, room_Id, room_type_Id, platform_room_type_id,
+    url, url_type, create_time,
+    update_time, create_by, update_by,
+    is_vaild)
+    values (#{id,jdbcType=BIGINT}, #{roomId,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{platformRoomTypeId,jdbcType=VARCHAR},
+    #{url,jdbcType=VARCHAR}, #{urlType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+    #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
+    #{isVaild,jdbcType=CHAR})
+  </insert>
+  <update id="updateById" parameterType="com.mk.taskfactory.model.crawer.GdRoomPic" >
+    update gd_room_pic
+    <set >
+      <if test="roomId != null" >
+        room_Id = #{roomId,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_Id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="urlType != null" >
+        url_type = #{urlType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isVaild != null" >
+        is_vaild = #{isVaild,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

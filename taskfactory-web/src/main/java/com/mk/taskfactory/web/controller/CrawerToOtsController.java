@@ -3,6 +3,7 @@ package com.mk.taskfactory.web.controller;
 
 import com.mk.taskfactory.api.BookClickService;
 import com.mk.taskfactory.api.CrawerToOtsService;
+import com.mk.taskfactory.api.GdHotelPicToOtsService;
 import com.mk.taskfactory.api.dtos.HotelHourClickDto;
 import com.mk.taskfactory.api.dtos.crawer.CrawlPodHotelImageDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class CrawerToOtsController {
 
     @Autowired
     private CrawerToOtsService crawerToOtsService;
+    @Autowired
+    private GdHotelPicToOtsService gdHotelPicToOtsService;
 
 
     @RequestMapping(value = "/commentimg", method = RequestMethod.GET)
@@ -60,6 +63,18 @@ public class CrawerToOtsController {
         Map<String,Object> result = new HashMap<String, Object>();
         crawerToOtsService.podHotelImage(dto);
         result.put("msg","SUCCESS");
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/hotelPhotos", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> hotelPhotos(Integer start) {
+        Map<String,Object> result=gdHotelPicToOtsService.hotelPhotos(start);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/roomPic", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> roomPic(Integer start) {
+        Map<String,Object> result=gdHotelPicToOtsService.roomPic(start);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 }

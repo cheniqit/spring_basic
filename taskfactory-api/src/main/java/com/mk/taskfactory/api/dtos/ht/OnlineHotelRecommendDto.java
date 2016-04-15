@@ -3,28 +3,32 @@ package com.mk.taskfactory.api.dtos.ht;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class OnlineHotelRoomTypeDto  implements Cloneable{
+public class OnlineHotelRecommendDto {
     private Long id;
 
     private Long hotelId;
 
     private Long roomTypeId;
 
-    private BigDecimal price;
+    private Long recHotelId;
 
-    private String isOtaPrice;
+    private Long recRoomTypeId;
+
+    private BigDecimal recPrice;
+
+    private Integer recSort;
+
+    private String isVaild;
 
     private Date createTime;
 
     private Date updateTime;
 
-    private String isVaild;
-
-    private String strUpdateTime;
-
     private Integer pageIndex;
 
     private Integer pageSize;
+
+    private String strUpdateTime;
 
     public Long getId() {
         return id;
@@ -50,12 +54,36 @@ public class OnlineHotelRoomTypeDto  implements Cloneable{
         this.roomTypeId = roomTypeId;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public Long getRecHotelId() {
+        return recHotelId;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setRecHotelId(Long recHotelId) {
+        this.recHotelId = recHotelId;
+    }
+
+    public Long getRecRoomTypeId() {
+        return recRoomTypeId;
+    }
+
+    public void setRecRoomTypeId(Long recRoomTypeId) {
+        this.recRoomTypeId = recRoomTypeId;
+    }
+
+    public BigDecimal getRecPrice() {
+        return recPrice;
+    }
+
+    public void setRecPrice(BigDecimal recPrice) {
+        this.recPrice = recPrice;
+    }
+
+    public Integer getRecSort() {
+        return recSort;
+    }
+
+    public void setRecSort(Integer recSort) {
+        this.recSort = recSort;
     }
 
     public Date getCreateTime() {
@@ -74,14 +102,6 @@ public class OnlineHotelRoomTypeDto  implements Cloneable{
         this.updateTime = updateTime;
     }
 
-    public String getIsVaild() {
-        return isVaild;
-    }
-
-    public void setIsVaild(String isVaild) {
-        this.isVaild = isVaild == null ? null : isVaild.trim();
-    }
-
     public Integer getPageIndex() {
         return pageIndex;
     }
@@ -98,31 +118,19 @@ public class OnlineHotelRoomTypeDto  implements Cloneable{
         this.pageSize = pageSize;
     }
 
+    public String getIsVaild() {
+        return isVaild;
+    }
+
+    public void setIsVaild(String isVaild) {
+        this.isVaild = isVaild;
+    }
+
     public String getStrUpdateTime() {
         return strUpdateTime;
     }
 
     public void setStrUpdateTime(String strUpdateTime) {
         this.strUpdateTime = strUpdateTime;
-    }
-
-    public String getIsOtaPrice() {
-        return isOtaPrice;
-    }
-
-    public void setIsOtaPrice(String isOtaPrice) {
-        this.isOtaPrice = isOtaPrice;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Object o = null;
-        try {
-            o=(OnlineHotelRoomTypeDto)super.clone();//Object 中的clone()识别出你要复制的是哪一个对象。
-        } catch(CloneNotSupportedException e) {
-            System.out.println(e.toString());
-        }
-
-        return o;
     }
 }
