@@ -97,7 +97,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         }
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
-        String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/addorders", params);
+        String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/order/addorders", params);
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
@@ -110,7 +110,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        if (StringUtils.isEmpty(returnMap.get("success"))&&returnMap.get("success")=="false"){
+        if (StringUtils.isEmpty(returnMap.get("success"))&& "false".equals(returnMap.get("success"))){
             resultMap.put("message",returnMap.get("errormsg"));
             resultMap.put("SUCCESS", false);
             return resultMap;
