@@ -36,7 +36,7 @@
 		<property name="minPoolSize" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="1800" />
+		<property name="maxIdleTime" value="5" />
 		<property name="idleConnectionTestPeriod" value="60" />
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
@@ -92,10 +92,10 @@
 		<property name="jdbcUrl" value="${cps.mysql.jdbc.url}"/>
 		<property name="user" value="${cps.mysql.jdbc.username}"/>
 		<property name="password" value="${cps.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="5" />
+		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="1800" />
+		<property name="maxIdleTime" value="500" />
 		<property name="idleConnectionTestPeriod" value="60" />
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
@@ -103,6 +103,8 @@
 		<property name="maxStatementsPerConnection" value="100"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="testConnectionOnCheckout" value="false"/>
+		<property name="testConnectionOnCheckin" value="true"/>
 		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
@@ -131,10 +133,10 @@
 		<property name="jdbcUrl" value="${ods.mysql.jdbc.url}"/>
 		<property name="user" value="${ods.mysql.jdbc.username}"/>
 		<property name="password" value="${ods.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="5" />
+		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="1800" />
+		<property name="maxIdleTime" value="5" />
 		<property name="idleConnectionTestPeriod" value="60" />
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
@@ -142,6 +144,8 @@
 		<property name="maxStatementsPerConnection" value="100"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="testConnectionOnCheckout" value="false"/>
+		<property name="testConnectionOnCheckin" value="true"/>
 		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
@@ -169,10 +173,10 @@
 		<property name="jdbcUrl" value="${ht.mysql.jdbc.url}"/>
 		<property name="user" value="${ht.mysql.jdbc.username}"/>
 		<property name="password" value="${ht.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="5" />
+		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="1800" />
+		<property name="maxIdleTime" value="5" />
 		<property name="idleConnectionTestPeriod" value="60" />
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
@@ -180,7 +184,10 @@
 		<property name="maxStatementsPerConnection" value="100"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="testConnectionOnCheckout" value="true"/>
+		<property name="testConnectionOnCheckin" value="true"/>
 		<property name="preferredTestQuery" value="SELECT 1"/>
+
 	</bean>
 
 	<bean id="sqlSessionFactoryHt" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -206,10 +213,10 @@
 		<property name="jdbcUrl" value="${crawer.mysql.jdbc.url}"/>
 		<property name="user" value="${crawer.mysql.jdbc.username}"/>
 		<property name="password" value="${crawer.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="5" />
+		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="1800" />
+		<property name="maxIdleTime" value="5" />
 		<property name="idleConnectionTestPeriod" value="60" />
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
@@ -217,6 +224,8 @@
 		<property name="maxStatementsPerConnection" value="100"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="testConnectionOnCheckout" value="true"/>
+		<property name="testConnectionOnCheckin" value="true"/>
 		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 

@@ -453,7 +453,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 continue;
             }
 
-            for (final OnlineHotelRecommendDto hotelRecommendDto:hotelRecommendDtoList){
+            for ( final OnlineHotelRecommendDto hotelRecommendDto:hotelRecommendDtoList){
                 pool.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -469,7 +469,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 for (String hotelRecommendJson: hotelRecommendSet){
                                     HotelRecommendToRedisDto hotelRecommendToRedisDto = JsonUtils.formatJson(hotelRecommendJson,HotelRecommendToRedisDto.class);
                                     if (hotelRecommendToRedisDto==null||hotelRecommendToRedisDto.getRecRoomTypeId()==null || hotelRecommendToRedisDto.getRecHotelId() == null ){
-                                        continue;
+                                        return;
                                     }
                                     if (hotelRecommendToRedisDto.getRecRoomTypeId().equals(hotelRecommendDto.getRecRoomTypeId())
                                             && hotelRecommendToRedisDto.getRecHotelId().equals(hotelRecommendDto.getRecHotelId())){
@@ -479,17 +479,10 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     }
                                 }
 
-                                OnlineHotelRecommendDto onlineHotelRecommendDto = new OnlineHotelRecommendDto();
-                                onlineHotelRecommendDto.setHotelId(hotelRecommendDto.getHotelId());
-                                onlineHotelRecommendDto.setRoomTypeId(hotelRecommendDto.getRoomTypeId());
-                                onlineHotelRecommendDto = onlineHotelRecommendService.getByPramas(onlineHotelRecommendDto);
-                                if (onlineHotelRecommendDto == null || onlineHotelRecommendDto.getId() == null) {
-                                    logger.info(String.format("\n====================onlineHotelRecommendDto isEmpty====================\n"));
-                                    return;
-                                }
+
                                 HotelRecommendToRedisDto bean = new HotelRecommendToRedisDto();
 
-                                BeanUtils.copyProperties(onlineHotelRecommendDto, bean);
+                                BeanUtils.copyProperties(hotelRecommendDto, bean);
 
                                 if("T".equals(hotelRecommendDto.getIsVaild())) {
                                     jedis.sadd(String.format("%s%s_%s", RedisCacheName.ONLINE_HOTEL_RECOMMEND,
