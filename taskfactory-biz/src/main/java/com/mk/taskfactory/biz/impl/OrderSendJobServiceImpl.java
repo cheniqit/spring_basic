@@ -57,19 +57,22 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("orderSendToCs","orderSendToCs",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
-        logger.info(String.format("\n====================orderSendToCs begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        logger.info("OrderSendJobServiceImpl.orderSendToCs start:{}",DateUtils.format_yMdHms(new Date()));
+
         bean.setCount(5);
         List<OrderToCsDto> orderToCsDtoList = orderToCsService.qureySendList(bean);
         if (CollectionUtils.isEmpty(orderToCsDtoList)){
+            logger.info("OrderSendJobServiceImpl.orderSendToCs orderToCsDtoList.size: 0 ");
             resultMap.put("message","orderToCsDtoList count is 0");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+        logger.info("OrderSendJobServiceImpl.orderSendToCs orderToCsDtoList.size: {} ", orderToCsDtoList.size());
+
         List<OrderToCsBean> beanList = new ArrayList<OrderToCsBean>();
-        logger.info(String.format("\n====================send size={}====================\n")
-                ,orderToCsDtoList.size());
         Map<Long,OrderToCsDto> orderMap = new HashMap<Long, OrderToCsDto>();
         for (OrderToCsDto orderToCsDto:orderToCsDtoList){
+            logger.info("OrderSendJobServiceImpl.orderSendToCs orderId:{} ", orderToCsDto.getOrderId());
             OrderDto order = new OrderDto();
             order.setId(orderToCsDto.getOrderId());
             order = orderService.getByPramas(order);
@@ -98,7 +101,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
         String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/order/addorders", params);
-
+        logger.info("OrderSendJobServiceImpl.orderSendToCs postResult:{} ", postResult);
 
         //记录返回值
         for (Long key:orderMap.keySet()) {
@@ -109,13 +112,13 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             updateBean.setResult(postResult);
             orderToCsService.updateById(updateBean);
         }
+        logger.info("OrderSendJobServiceImpl.orderSendToCs save result ");
 
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        logger.info(postResult);
         Map<String,String> returnMap = JsonUtils.jsonToMap(postResult);
         if(CollectionUtils.isEmpty(returnMap)){
             resultMap.put("message","解析返回结果失败");
@@ -127,6 +130,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+
         List<Object> failList = JsonUtils.jsonToList(postResult);
         Map<Long,String> failMap = new HashMap<Long, String>();
         if(!CollectionUtils.isEmpty(failList)){
@@ -148,11 +152,12 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 //            updateBean.setExecuteTime(new Date());
             orderToCsService.updateById(updateBean);
         }
+        logger.info("OrderSendJobServiceImpl.orderSendToCs update status ");
         Cat.logEvent("orderSendToCs", "orderSendToCs", Event.SUCCESS,
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
-        logger.info(String.format("\n====================orderSendToCs  endTime={}====================\n")
-                , DateUtils.format_yMdHms(new Date()));
+
+        logger.info("OrderSendJobServiceImpl.orderSendToCs end:{} ",DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
         return resultMap;
