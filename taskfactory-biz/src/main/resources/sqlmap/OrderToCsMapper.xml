@@ -12,10 +12,12 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+
+    <result column="result" property="result" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, order_id, status, `count`, scheduled_time, execute_time, create_time, update_time, is_vaild
+    id, order_id, status, `count`, scheduled_time, execute_time, create_time, update_time, is_vaild , result
   </sql>
   <sql id="Base_Query_List">
     <where>
@@ -68,7 +70,8 @@
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
       #{count,jdbcType=INTEGER}, #{scheduledTime,jdbcType=TIMESTAMP}, #{executeTime,jdbcType=TIMESTAMP},
       #{createTime,jdbcType=TIMESTAMP},
-      #{updateTime,jdbcType=TIMESTAMP}, #{isVaild,jdbcType=CHAR})
+      #{updateTime,jdbcType=TIMESTAMP}, #{isVaild,jdbcType=CHAR}),
+      #{result}
   </insert>
 
   <update id="updateById" parameterType="com.mk.taskfactory.api.dtos.OrderToCsDto" >
@@ -95,6 +98,11 @@
       <if test="isVaild != null" >
         is_vaild = #{isVaild,jdbcType=CHAR},
       </if>
+
+      <if test="result != null" >
+        result = #{result},
+      </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>

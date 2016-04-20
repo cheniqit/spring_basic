@@ -98,6 +98,18 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
         String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/order/addorders", params);
+
+
+        //记录返回值
+        for (Long key:orderMap.keySet()) {
+            OrderToCsDto updateBean = orderMap.get(key);
+
+            updateBean.setCount(updateBean.getCount()+1);
+            updateBean.setExecuteTime(new Date());
+            updateBean.setResult(postResult);
+            orderToCsService.updateById(updateBean);
+        }
+
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
@@ -132,8 +144,8 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             }else {
                 updateBean.setStatus(20);
             }
-            updateBean.setCount(updateBean.getCount()+1);
-            updateBean.setExecuteTime(new Date());
+//            updateBean.setCount(updateBean.getCount()+1);
+//            updateBean.setExecuteTime(new Date());
             orderToCsService.updateById(updateBean);
         }
         Cat.logEvent("orderSendToCs", "orderSendToCs", Event.SUCCESS,

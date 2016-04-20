@@ -19,9 +19,19 @@ public class OrderToCsDto {
 
     private String isVaild;
 
+    private String result;
+
     private Integer pageIndex;
 
     private Integer pageSize;
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 
     public Long getId() {
         return id;
