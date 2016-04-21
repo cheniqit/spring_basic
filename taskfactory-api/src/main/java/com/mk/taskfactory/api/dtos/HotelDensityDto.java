@@ -17,7 +17,7 @@ public class HotelDensityDto {
 
     private Integer pageSize;
 
-    private Integer count;
+    private Integer hotelCount;
 
     public Integer getId() {
         return id;
@@ -83,11 +83,11 @@ public class HotelDensityDto {
         this.pageSize = pageSize;
     }
 
-    public Integer getCount() {
-        return count;
+    public Integer getHotelCount() {
+        return hotelCount;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setHotelCount(Integer hotelCount) {
+        this.hotelCount = hotelCount;
     }
 }

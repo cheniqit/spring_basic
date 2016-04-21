@@ -12,6 +12,6 @@ public interface HotelDensityMapper {
     public Integer saveOrUpdate(HotelDensityDto bean);
     public Integer delete(Integer id);
     public Integer deleteByHotelId(String hotelId );
-    public Integer updateById(HotelDensityDto bean);
+    public Integer updateByHotelId(HotelDensityDto bean);
     public Integer count(HotelDensityDto bean);
 }

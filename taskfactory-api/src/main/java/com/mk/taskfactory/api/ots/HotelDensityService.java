@@ -11,6 +11,6 @@ public interface HotelDensityService {
     public Integer saveOrUpdate(HotelDensityDto bean);
     public Integer deleteByHotelId(String hotelId );
     public Integer delete(Integer id);
-    public Integer updateById(HotelDensityDto bean);
+    public Integer updateByHotelId(HotelDensityDto bean);
     public Integer count(HotelDensityDto bean);
 }

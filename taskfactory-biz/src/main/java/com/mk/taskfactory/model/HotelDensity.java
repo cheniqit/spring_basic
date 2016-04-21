@@ -13,6 +13,8 @@ public class HotelDensity {
 
     private Integer tenKm;
 
+    private Integer hotelCount;
+
     public Integer getId() {
         return id;
     }
@@ -59,5 +61,13 @@ public class HotelDensity {
 
     public void setTenKm(Integer tenKm) {
         this.tenKm = tenKm;
+    }
+
+    public Integer getHotelCount() {
+        return hotelCount;
+    }
+
+    public void setHotelCount(Integer hotelCount) {
+        this.hotelCount = hotelCount;
     }
 }

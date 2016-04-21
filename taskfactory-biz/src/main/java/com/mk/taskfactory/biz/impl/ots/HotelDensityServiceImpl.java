@@ -37,8 +37,8 @@ public class HotelDensityServiceImpl implements HotelDensityService {
     public Integer delete(Integer id){
         return mapper.delete(id);
     }
-    public Integer updateById(HotelDensityDto bean){
-        return mapper.updateById(bean);
+    public Integer updateByHotelId(HotelDensityDto bean){
+        return mapper.updateByHotelId(bean);
     }
     public Integer count(HotelDensityDto bean){
         return mapper.count(bean);

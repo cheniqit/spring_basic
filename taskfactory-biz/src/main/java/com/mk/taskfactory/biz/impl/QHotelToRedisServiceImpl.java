@@ -271,9 +271,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             }
 
             for (final OnlineHotelDto onlineHotelDto:onlineHotelDtoList){
-                pool.execute(new Runnable() {
-                    @Override
-                    public void run() {
+                //pool.execute(new Runnable() {
+                //    @Override
+                //    public void run() {
                         Jedis jedis = null;
                         try {
                             jedis =  RedisUtil.getJedis();
@@ -287,7 +287,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     qHotelDto.setId(onlineHotelDto.getHotelId());
                                     qHotelDto = hotelService.getByPramas(qHotelDto);
                                     if (qHotelDto == null || qHotelDto.getId() == null) {
-                                        return;
+                                        //return;
+                                        continue;
                                     }
                                     qHotelDto.setHotelSource(HotelSourceEnum.OTA.getCode());
 
@@ -298,7 +299,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     if (hotel == null || hotel.getId() == null) {
                                         logger.info(String.format("\n====================Hotel={}====================\n")
                                                 , hotel);
-                                        return;
+                                        //return;
+                                        continue;
                                     }
 
                                     BeanUtils.copyProperties(hotel, qHotelDto);
@@ -316,7 +318,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 hotelDensityDto.setFiveKm(countArround5Km);
                                 hotelDensityDto.setTenKm(countArround10Km);
 
-                                hotelDensityService.saveOrUpdate(hotelDensityDto);
+                                hotelDensityService.save(hotelDensityDto);
 
                             }
 
@@ -330,9 +332,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }
 
                     }
-                });
-
-            }
+            //    });
+            //
+            //}
 
         }
         Cat.logEvent("onlineHotelToRedis", "OnlineHotel同步到Radis", Event.SUCCESS,
