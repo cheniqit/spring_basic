@@ -41,7 +41,7 @@
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
 		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="maxStatementsPerConnection" value="1"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
 		<property name="preferredTestQuery" value="SELECT 1"/>
@@ -100,7 +100,7 @@
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
 		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="maxStatementsPerConnection" value="1"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
 		<property name="testConnectionOnCheckout" value="false"/>
@@ -141,7 +141,7 @@
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
 		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="maxStatementsPerConnection" value="1"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
 		<property name="testConnectionOnCheckout" value="false"/>
@@ -181,7 +181,7 @@
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
 		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="maxStatementsPerConnection" value="1"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
 		<property name="testConnectionOnCheckout" value="true"/>
@@ -221,7 +221,7 @@
 		<property name="acquireRetryAttempts" value="3" />
 		<property name="acquireRetryDelay" value="300" />
 		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="100"/>
+		<property name="maxStatementsPerConnection" value="1"/>
 		<property name="numHelperThreads" value="6"/>
 		<property name="maxAdministrativeTaskTime" value="5"/>
 		<property name="testConnectionOnCheckout" value="true"/>
