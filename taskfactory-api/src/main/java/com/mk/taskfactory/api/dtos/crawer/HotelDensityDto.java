@@ -1,4 +1,4 @@
-package com.mk.taskfactory.api.dtos;
+package com.mk.taskfactory.api.dtos.crawer;
 
 public class HotelDensityDto {
     private Integer id;

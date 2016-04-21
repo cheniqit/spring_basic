@@ -1,4 +1,4 @@
-package com.mk.taskfactory.model;
+package com.mk.taskfactory.model.crawer;
 
 public class HotelDensity {
     private Integer id;
@@ -7,9 +7,9 @@ public class HotelDensity {
 
     private Integer oneKm;
 
-    private String threeKm;
+    private Integer threeKm;
 
-    private String fiveKm;
+    private Integer fiveKm;
 
     private Integer tenKm;
 
@@ -39,19 +39,19 @@ public class HotelDensity {
         this.oneKm = oneKm;
     }
 
-    public String getThreeKm() {
+    public Integer getThreeKm() {
         return threeKm;
     }
 
-    public void setThreeKm(String threeKm) {
+    public void setThreeKm(Integer threeKm) {
         this.threeKm = threeKm;
     }
 
-    public String getFiveKm() {
+    public Integer getFiveKm() {
         return fiveKm;
     }
 
-    public void setFiveKm(String fiveKm) {
+    public void setFiveKm(Integer fiveKm) {
         this.fiveKm = fiveKm;
     }
 

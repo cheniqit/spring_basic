@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mk.taskfactory.biz.mapper.ots.HotelDensityMapper">
-  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.HotelDensity">
-    <id column="id" jdbcType="INTEGER" property="id" />
+<mapper namespace="com.mk.taskfactory.biz.mapper.crawer.HotelDensityMapper">
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.crawer.HotelDensity">
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="hotel_id" jdbcType="VARCHAR" property="hotelId" />
     <result column="one_km" jdbcType="BIGINT" property="oneKm" />
     <result column="three_km" jdbcType="BIGINT" property="threeKm" />
@@ -36,7 +36,7 @@
     </where>
   </sql>
 
-  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto" >
+  <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto" >
     select
     <include refid="Base_Column_List" />
     from t_hotel_density
@@ -46,12 +46,12 @@
       limit ${pageIndex} , ${pageSize}
     </if>
   </select>
-  <select id="count" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto" resultType="java.lang.Integer" >
+  <select id="count" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto" resultType="java.lang.Integer" >
     select count(*) from t_hotel_density
     <include refid="Base_Query_List" />
     ORDER BY id DESC
   </select>
-  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto" >
+  <select id="getByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto" >
     select
     <include refid="Base_Column_List" />
     from t_hotel_density
@@ -68,7 +68,7 @@
     delete from t_hotel_density
     where hotel_id = #{hotelId,jdbcType=VARCHAR}
   </delete>
-  <insert id="saveOrUpdate" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto" >
+  <insert id="saveOrUpdate" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto" >
     <selectKey keyProperty="hotelCount" resultType="int" order="BEFORE">
       select count(*) from t_hotel_density where hotel_id = #{hotelId}
     </selectKey>
@@ -86,11 +86,11 @@
       insert into t_hotel_density (id, hotel_id, one_km, three_km, five_km, ten_km) values(#{id},#{hotelId},#{oneKm}, #{threeKm}, #{fiveKm},#{tenKm}  )
     </if>
   </insert>
-  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto">
+  <insert id="save" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto">
      insert into t_hotel_density (id, hotel_id, one_km, three_km, five_km, ten_km) values(#{id},#{hotelId},#{oneKm}, #{threeKm}, #{fiveKm},#{tenKm}  )
   </insert>
 
-  <update id="updateByHotelId" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto"  >
+  <update id="updateByHotelId" parameterType="com.mk.taskfactory.api.dtos.crawer.HotelDensityDto"  >
      update t_hotel_density
       set hotel_id = #{hotelId},
           one_km = #{oneKm},

@@ -1,8 +1,8 @@
-package com.mk.taskfactory.biz.impl.ots;
+package com.mk.taskfactory.biz.impl.crawer;
 
-import com.mk.taskfactory.api.dtos.HotelDensityDto;
-import com.mk.taskfactory.api.ots.HotelDensityService;
-import com.mk.taskfactory.biz.mapper.ots.HotelDensityMapper;
+import com.mk.taskfactory.api.dtos.crawer.HotelDensityDto;
+import com.mk.taskfactory.api.crawer.HotelDensityService;
+import com.mk.taskfactory.biz.mapper.crawer.HotelDensityMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
