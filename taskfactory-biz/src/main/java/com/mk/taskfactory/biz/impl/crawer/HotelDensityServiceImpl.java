@@ -54,7 +54,19 @@ public class HotelDensityServiceImpl implements HotelDensityService {
 
     @Override
     public Integer saveOrUpdate(HotelDensityDto bean) {
-        return mapper.saveOrUpdate(bean);
+        Integer result = -1;
+        try {
+            Integer hotelCount = this.count(bean);
+            if (hotelCount != null && hotelCount > 0){
+                result =  updateByHotelId(bean);
+            }else {
+                result = save(bean);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     @Override

@@ -9,7 +9,6 @@ public interface HotelDensityMapper {
     public List<HotelDensityDto> qureyByPramas(HotelDensityDto bean);
     public HotelDensityDto getByPramas(HotelDensityDto bean);
     public Integer save(HotelDensityDto bean);
-    public Integer saveOrUpdate(HotelDensityDto bean);
     public Integer delete(Integer id);
     public Integer deleteByHotelId(String hotelId );
     public Integer updateByHotelId(HotelDensityDto bean);
