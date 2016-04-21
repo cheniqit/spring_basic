@@ -45,6 +45,16 @@ public class THotelDto {
     private Integer hotelSource;
     private String sourceId;
 
+    private String isOnline;
+
+    public String getIsOnline() {
+        return isOnline;
+    }
+
+    public void setIsOnline(String isOnline) {
+        this.isOnline = isOnline;
+    }
+
     public Integer getId() {
         return id;
     }
