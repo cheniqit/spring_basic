@@ -723,7 +723,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }
                         OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
                         onlineHotelDto.setCityCode(Integer.valueOf(bean.getCityCode()));
-                        onlineHotelDto.setIsVaild("T");
+//                        onlineHotelDto.setIsVaild("T");
                         List<OnlineHotelDto> onlineHotelDtoList = onlineHotelService.qureyByPramas(onlineHotelDto);
                         for (OnlineHotelDto qBean : onlineHotelDtoList){
                             logger.info(String.format("\n====================id={}&cityCode={}&hotelId={}====================\n")
