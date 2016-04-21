@@ -272,9 +272,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             }
 
             for (final OnlineHotelDto onlineHotelDto:onlineHotelDtoList){
-                //pool.execute(new Runnable() {
-                //    @Override
-                //    public void run() {
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
                         Jedis jedis = null;
                         try {
                             jedis =  RedisUtil.getJedis();
@@ -288,8 +288,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     qHotelDto.setId(onlineHotelDto.getHotelId());
                                     qHotelDto = hotelService.getByPramas(qHotelDto);
                                     if (qHotelDto == null || qHotelDto.getId() == null) {
-                                        //return;
-                                        continue;
+                                        return;
+                                        //continue;
                                     }
                                     qHotelDto.setHotelSource(HotelSourceEnum.OTA.getCode());
 
@@ -300,8 +300,8 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     if (hotel == null || hotel.getId() == null) {
                                         logger.info(String.format("\n====================Hotel={}====================\n")
                                                 , hotel);
-                                        //return;
-                                        continue;
+                                        return;
+                                        //continue;
                                     }
 
                                     BeanUtils.copyProperties(hotel, qHotelDto);
@@ -333,9 +333,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         }
 
                     }
-            //    });
-            //
-            //}
+                });
+
+            }
 
         }
         Cat.logEvent("onlineHotelToRedis", "OnlineHotel同步到Radis", Event.SUCCESS,
