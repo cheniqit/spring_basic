@@ -508,10 +508,10 @@
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></jdbc.url>
+                <jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/ots?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></jdbc.url>
                 <jdbc.user>liming</jdbc.user>
                 <jdbc.password>nhpL4RznJl</jdbc.password>
-                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></cps.jdbc.url>
+                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/cps?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></cps.jdbc.url>
                 <cps.jdbc.user>liming</cps.jdbc.user>
                 <cps.jdbc.password>nhpL4RznJl</cps.jdbc.password>
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></ods.jdbc.url>
@@ -522,7 +522,7 @@
                 <ht.jdbc.user>biuser</ht.jdbc.user>
                 <ht.jdbc.password>biuser</ht.jdbc.password>
 
-                <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></crawer.jdbc.url>
+                <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/crawer?zeroDateTimeBehavior=convertToNull&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&maxReconnects=10]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>
@@ -561,10 +561,10 @@
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
+                <jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></jdbc.url>
                 <jdbc.user>liming</jdbc.user>
                 <jdbc.password>nhpL4RznJl</jdbc.password>
-                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
+                <cps.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/cps?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></cps.jdbc.url>
                 <cps.jdbc.user>liming</cps.jdbc.user>
                 <cps.jdbc.password>nhpL4RznJl</cps.jdbc.password>
                 <ods.jdbc.url><![CDATA[jdbc:mysql://10.10.81.5:3306/ods?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ods.jdbc.url>
@@ -575,7 +575,7 @@
                 <ht.jdbc.user>biuser</ht.jdbc.user>
                 <ht.jdbc.password>biuser</ht.jdbc.password>
 
-                <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
+                <crawer.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/crawer?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></crawer.jdbc.url>
                 <crawer.jdbc.user>smlt-writer</crawer.jdbc.user>
                 <crawer.jdbc.password>j9bcyZ5U5LQp7xxEomsu</crawer.jdbc.password>
                 <ots.token>1qaz2wsx</ots.token>

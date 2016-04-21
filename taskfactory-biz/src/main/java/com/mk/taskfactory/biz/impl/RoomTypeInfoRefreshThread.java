@@ -112,7 +112,7 @@ public class RoomTypeInfoRefreshThread implements Runnable{
 //                                    }
                     BeanUtils.copyProperties(qHotelRoomtype, bean);
                     bean.setImageUrl(qHotelRoomtype.getRoomPic());
-                    bean.setIsOnline(roomTypeDto.getIsVaild());
+                    bean.setOnline(roomTypeDto.getIsVaild());
 
                     jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                             roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)

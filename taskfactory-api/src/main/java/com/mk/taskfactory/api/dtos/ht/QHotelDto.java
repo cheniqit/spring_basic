@@ -103,16 +103,6 @@ public class QHotelDto {
 
     private BigDecimal originPrice;
 
-    private String isOnline;
-
-    public String getIsOnline() {
-        return isOnline;
-    }
-
-    public void setIsOnline(String isOnline) {
-        this.isOnline = isOnline;
-    }
-
     public String getIntroduction() {
         return introduction;
     }

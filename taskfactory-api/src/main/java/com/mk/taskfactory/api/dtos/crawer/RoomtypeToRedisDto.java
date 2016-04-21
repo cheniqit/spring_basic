@@ -31,14 +31,14 @@ public class RoomtypeToRedisDto {
 
     private String isPromo;
 
-    private String isOnline;
+    private String online;
 
-    public String getIsOnline() {
-        return isOnline;
+    public String getOnline() {
+        return online;
     }
 
-    public void setIsOnline(String isOnline) {
-        this.isOnline = isOnline;
+    public void setOnline(String online) {
+        this.online = online;
     }
 
     public Long getId() {

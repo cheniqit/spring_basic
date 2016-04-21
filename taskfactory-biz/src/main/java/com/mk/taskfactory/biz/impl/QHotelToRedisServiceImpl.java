@@ -146,7 +146,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                         return;
                                     }
                                     qHotelDto.setHotelSource(HotelSourceEnum.OTA.getCode());
-                                    qHotelDto.setIsOnline(onlineHotelDto.getIsVaild());
+                                    qHotelDto.setOnline(onlineHotelDto.getIsVaild());
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                             qHotelDto.getId()), JsonUtils.toJSONString(qHotelDto)
                                     );
@@ -201,7 +201,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                     BeanUtils.copyProperties(hotel, tHotelDto);
                                     tHotelDto.setHotelSource(HotelSourceEnum.LEZHU.getCode());
                                     tHotelDto.setSourceId(tHotelDto.getId().toString());
-                                    tHotelDto.setIsOnline(onlineHotelDto.getIsVaild());
+                                    tHotelDto.setOnline(onlineHotelDto.getIsVaild());
                                     jedis.set(String.format("%s%s", RedisCacheName.HOTELJSONINFO,
                                             hotel.getId()), JsonUtils.toJSONString(tHotelDto)
                                     );
