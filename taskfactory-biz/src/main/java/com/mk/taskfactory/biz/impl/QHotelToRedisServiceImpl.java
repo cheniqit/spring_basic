@@ -319,7 +319,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                                 hotelDensityDto.setFiveKm(countArround5Km);
                                 hotelDensityDto.setTenKm(countArround10Km);
 
-                                hotelDensityService.save(hotelDensityDto);
+                                hotelDensityService.saveOrUpdate(hotelDensityDto);
 
                             }
 
