@@ -244,7 +244,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     }
 
 
-    public Map<String,Object> onlineHotelArroundCount(OnlineHotelDto dto){
+    public Map<String,Object> hotelArroundCount(OnlineHotelDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("onlineHotelArroundCount","onlineHotelArroundCount",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));

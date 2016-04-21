@@ -69,7 +69,7 @@
     where hotel_id = #{hotelId,jdbcType=VARCHAR}
   </delete>
   <insert id="saveOrUpdate" parameterType="com.mk.taskfactory.api.dtos.HotelDensityDto" >
-    <selectKey keyProperty="hotel_id" resultType="int" order="BEFORE">
+    <selectKey keyProperty="count" resultType="int" order="BEFORE">
       select count(*) from t_hotel_density where hotel_id = #{hotelId}
     </selectKey>
 

@@ -96,8 +96,8 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/hotelCount", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> hotelCount() {
-        qHotelToRedisService.indexerjob();
+    public ResponseEntity<Map<String, Object>> hotelCount(OnlineHotelDto bean) {
+        qHotelToRedisService.hotelArroundCount(bean);
         return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
     }
 

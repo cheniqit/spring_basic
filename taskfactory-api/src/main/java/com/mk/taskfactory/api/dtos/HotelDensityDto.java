@@ -17,6 +17,8 @@ public class HotelDensityDto {
 
     private Integer pageSize;
 
+    private Integer count;
+
     public Integer getId() {
         return id;
     }
@@ -79,5 +81,13 @@ public class HotelDensityDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
