@@ -1,12 +1,14 @@
 package com.mk.taskfactory.biz.impl.ots;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mk.taskfactory.api.dtos.ht.QHotelDto;
 import com.mk.taskfactory.biz.impl.ValidRateTaskLogicServiceImpl;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.utils.HttpUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.common.Constants;
 import com.mk.taskfactory.model.THotel;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +89,42 @@ public class HotelRemoteService {
         String postResult= HttpUtils.doPost(Constants.OTS_URL + "/indexer/initcity", params);
         return postResult;
     }
+
+    /******附件酒店列表*******/
+    public String hotelList(QHotelDto hotelDto, Integer range){
+        Map<String, String> params=new HashMap<String, String>();
+        String postResult= null;
+        try {
+            params.put("cityCode", hotelDto.getCityCode().toString());
+            params.put("searchType", "0");
+            params.put("userLongitude", hotelDto.getLongitude().toString());
+            params.put("userLatitude", hotelDto.getLatitude().toString());
+            params.put("pillowLongitude", hotelDto.getLongitude().toString());
+            params.put("pillowLatitude", hotelDto.getLatitude().toString());
+            params.put("range", range.toString());
+            params.put("page", "1");
+            params.put("limit", "1");
+
+            postResult = HttpUtils.doPost(Constants.OTS_URL + "/search/list", params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postResult;
+    }
+
+    public Integer hotelArroundCount(QHotelDto hotelDto, Integer range){
+        String hotelListJson = hotelList(hotelDto, range);
+        Integer count = -1;
+        if (StringUtils.isBlank(hotelListJson)){
+            return count;
+        }else {
+            JSONObject hotelListJsonObject = JSONObject.parseObject(hotelListJson);
+            count = hotelListJsonObject.getInteger("count");
+        }
+
+        return count;
+    }
+
     public String updatemikeprices(String token, String hotelId){
         Map<String, String> params=new HashMap<String, String>();
         params.put("token", token);

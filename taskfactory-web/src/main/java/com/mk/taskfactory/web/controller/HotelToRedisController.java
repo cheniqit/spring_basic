@@ -94,5 +94,12 @@ public class HotelToRedisController {
         return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/hotelCount", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> hotelCount() {
+        qHotelToRedisService.indexerjob();
+        return new ResponseEntity<Map<String, Object>>(HttpStatus.OK);
+    }
+
 
 }
