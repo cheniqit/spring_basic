@@ -19,6 +19,8 @@ public class OnlineHotelDto {
 
     private Integer cityCode;
 
+    private Integer disCode;
+
     private Integer pageIndex;
 
     private Integer pageSize;
@@ -102,5 +104,13 @@ public class OnlineHotelDto {
 
     public void setCityCode(Integer cityCode) {
         this.cityCode = cityCode;
+    }
+
+    public Integer getDisCode() {
+        return disCode;
+    }
+
+    public void setDisCode(Integer disCode) {
+        this.disCode = disCode;
     }
 }

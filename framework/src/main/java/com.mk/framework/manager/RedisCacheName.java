@@ -182,6 +182,10 @@ public class RedisCacheName {
     //public static final String CITY_INFO= "CITY_INFO_";
     /***城市信息SET集合***/
     public static final String CITY_INFO_SET= "CITY_INFO_SET";
+    /***城市下属区县信息SET集合***/
+    public static final String DISTRICT_INFO_SET= "DISTRICT_INFO_SET_";
+    /*** 区域基本信息 */
+    public static final String REGION_INFO = "REGION_INFO_";
     /***酒店权重***/
     public static final String HOTEL_PRIORITY= "HOTEL_PRIORITY_";
     /***房型图片mapping***/

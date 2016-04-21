@@ -8,7 +8,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
-    <result column="city_code" property="cityCode" jdbcType="INTEGER" />
+    <result column="dis_code" property="disCode" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hotel_id, comefromtype, create_time, update_time, is_vaild,city_code
@@ -32,6 +32,9 @@
       </if>
       <if test="cityCode != null">
         AND city_code = #{cityCode}
+      </if>
+      <if test="disCode != null">
+        AND dis_code = #{disCode}
       </if>
     </where>
   </sql>
@@ -94,4 +97,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryHasOnlineHotelByCityCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) from online_hotel oh inner join q_hotel qh where oh.`hotel_id` = qh.id and oh.`is_vaild` = 'T' and qh.`dis_code` = #{cityCode}
+  </select>
 </mapper>

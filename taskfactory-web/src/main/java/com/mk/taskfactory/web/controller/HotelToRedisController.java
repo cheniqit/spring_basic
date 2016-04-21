@@ -38,6 +38,13 @@ public class HotelToRedisController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/onlineDistrictSetToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineDistrictSetToRedis(TCityListDto bean) {
+        Map<String, Object> result = qHotelToRedisService.onlineDistrictSetToRedis(bean);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/hotelPriorityToRedis", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> hotelPriorityToRedis(OnlineHotelPriorityDto bean) {

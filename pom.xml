@@ -172,12 +172,6 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.1.1.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>redis.clients</groupId>
@@ -453,6 +447,9 @@
 
         <profile>
             <id>bgp-simulation</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -502,9 +499,7 @@
 
         <profile>
             <id>bgp-simulation2</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
@@ -555,9 +550,6 @@
 
         <profile>
             <id>bgp-simulation3</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>

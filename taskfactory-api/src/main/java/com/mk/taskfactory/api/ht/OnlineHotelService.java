@@ -11,4 +11,5 @@ public interface OnlineHotelService {
     public Integer delete(Integer id);
     public Integer updateById(OnlineHotelDto bean);
     public Integer count(OnlineHotelDto bean);
+    Integer queryHasOnlineHotelByCityCode(String cityCode);
 }

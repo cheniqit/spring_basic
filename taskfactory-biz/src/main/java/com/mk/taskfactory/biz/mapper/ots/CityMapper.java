@@ -12,6 +12,7 @@ import java.util.List;
 @MyBatisRepository
 public interface CityMapper {
     public TCity getByCode(String code);
+    TCity getByDistrictCode(String code);
     public List<TCity> qureyByPramas(TCityDto bean);
 
 }

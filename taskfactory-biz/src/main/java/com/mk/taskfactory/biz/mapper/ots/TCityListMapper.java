@@ -13,4 +13,5 @@ public interface TCityListMapper {
     public Integer delete(Integer id);
     public Integer updateById(TCityListDto bean);
     public Integer count(TCityListDto bean);
+    List<TCityList> getDistrictListByCityCode(String cityCode);
 }

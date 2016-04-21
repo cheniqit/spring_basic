@@ -8,10 +8,7 @@ import com.mk.taskfactory.api.QHotelToRedisService;
 import com.mk.taskfactory.api.RoomTypeService;
 import com.mk.taskfactory.api.crawer.RoomTypePriceService;
 import com.mk.taskfactory.api.crawer.TQunarHotelService;
-import com.mk.taskfactory.api.dtos.HotelScoreDto;
-import com.mk.taskfactory.api.dtos.TCityListDto;
-import com.mk.taskfactory.api.dtos.TFacilityDto;
-import com.mk.taskfactory.api.dtos.THotelDto;
+import com.mk.taskfactory.api.dtos.*;
 import com.mk.taskfactory.api.dtos.crawer.HotelImgDto;
 import com.mk.taskfactory.api.dtos.crawer.HotelRecommendToRedisDto;
 import com.mk.taskfactory.api.dtos.crawer.TQunarHotelDto;
@@ -27,11 +24,15 @@ import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
 import com.mk.taskfactory.biz.mapper.crawer.TExRoomTypeImgMapper;
 import com.mk.taskfactory.biz.mapper.crawer.TmpMappingRoomTypeIdMapper;
 import com.mk.taskfactory.biz.mapper.crawer.ValidRoomTypeMapper;
+import com.mk.taskfactory.biz.mapper.ots.CityMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelMapper;
 import com.mk.taskfactory.biz.mapper.ots.HotelScoreMapper;
+import com.mk.taskfactory.biz.mapper.ots.TCityListMapper;
 import com.mk.taskfactory.biz.utils.DateUtils;
 import com.mk.taskfactory.biz.utils.JsonUtils;
 import com.mk.taskfactory.model.HotelScore;
+import com.mk.taskfactory.model.TCity;
+import com.mk.taskfactory.model.TCityList;
 import com.mk.taskfactory.model.THotel;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -98,6 +99,11 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private TExRoomTypeImgMapper roomTypeImgMapper;
+    @Autowired
+    private CityMapper cityMapper;
+    @Autowired
+    private TCityListMapper tCityListMapper;
+
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
     public Map<String,Object> onlineHotelToRedis(OnlineHotelDto dto){
@@ -531,6 +537,40 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         return resultMap;
     }
 
+    @Override
+    public Map<String, Object> onlineDistrictSetToRedis(TCityListDto bean) {
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        //得到对应的市区值
+        bean.setLevel(2);
+        List<TCityList> cityListList = tCityListMapper.qureyByPramas(bean);
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+            for(TCityList cityList : cityListList){
+                List<TCityList> districtListByCityCode = tCityListMapper.getDistrictListByCityCode(cityList.getCode());
+                if(CollectionUtils.isEmpty(districtListByCityCode)){
+                    jedis.del(String.format("%s%s",RedisCacheName.DISTRICT_INFO_SET,cityList.getCode()));
+                    continue;
+                }
+                for(TCityList disCity : districtListByCityCode){
+                    jedis.sadd(String.format("%s%s",RedisCacheName.DISTRICT_INFO_SET,cityList.getCode()), JsonUtils.toJSONString(disCity));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("message","执行失败");
+            resultMap.put("SUCCESS", false);
+        }finally {
+            if(null != jedis){
+                jedis.close();
+            }
+
+        }
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+
     public Map<String,Object> onlineRoomTypeToRedis(OnlineHotelRoomTypeDto dto){
         Map<String,Object> resultMap=new HashMap<String,Object>();
 
@@ -877,31 +917,56 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                     try {
                         jedis =  RedisUtil.getJedis();
 
-                        if (cityDto.getCityCode()==null) {
+                        if (StringUtils.isBlank(cityDto.getCityCode())) {
                             logger.info(String.format("\n====================cityCode isEmpty====================\n"));
                             return;
                         }
                         logger.info(String.format("\n====================cityName={}&cityCode={}====================\n")
                                 ,cityDto.getCityName(),cityDto.getCityCode());
-                        OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
-                        onlineHotelDto.setCityCode(Integer.valueOf(cityDto.getCityCode()));
-                        onlineHotelDto.setIsVaild("T");
-                        onlineHotelDto = onlineHotelService.getByPramas(onlineHotelDto);
+
+                        boolean existsOnlineHotel = false;
+                        RegionInfoDto regionInfoDto = new RegionInfoDto();
+                        regionInfoDto.setLevel(cityDto.getLevel());
+
                         TCityListDto cityListDto = new TCityListDto();
                         cityListDto.setId(cityDto.getId());
-                        if (onlineHotelDto!=null&&onlineHotelDto.getId()!=null){
+                        if(3==cityDto.getLevel()){
+                            int count = onlineHotelService.queryHasOnlineHotelByCityCode(cityDto.getCityCode());
+                            if(count > 0){
+                                existsOnlineHotel = true;
+                                regionInfoDto.setDistCode(cityDto.getCityCode());
+                                regionInfoDto.setDistName(cityDto.getCityName());
+                                TCity tCity = cityMapper.getByDistrictCode(cityDto.getCityCode());
+                                regionInfoDto.setCityCode(tCity.getCode());
+                                regionInfoDto.setCityName(tCity.getQueryCityName());
+                            }
+                        }else{
+                            OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
+                            onlineHotelDto.setIsVaild("T");
+                            onlineHotelDto = onlineHotelService.getByPramas(onlineHotelDto);
+                            if (onlineHotelDto!=null&&onlineHotelDto.getId()!=null){
+                                existsOnlineHotel =true;
+                                regionInfoDto.setCityCode(cityDto.getCityCode());
+                                regionInfoDto.setCityName(cityDto.getCityName());
+                            }
+                        }
+                        if (existsOnlineHotel){
                             logger.info(String.format("\n====================set cityCode={}====================\n")
                                     ,cityDto.getCityCode());
                             jedis.sadd(String.format("%s", RedisCacheName.CITY_INFO_SET), JsonUtils.toJSONString(cityDto)
                             );
+                            //格式化
+                            jedis.set(String.format("%s%s", RedisCacheName.REGION_INFO, cityDto.getCityCode()), JsonUtils.toJSONString(regionInfoDto));
                             cityListDto.setValid("T");
                             cityListService.updateById(cityListDto);
+
                             return;
                         }else {
                             logger.info(String.format("\n====================remove cityCode={}====================\n")
                                     ,cityDto.getCityCode());
                             cityListDto.setValid("F");
                             cityListService.updateById(cityListDto);
+                            jedis.del(String.format("%s%s", RedisCacheName.REGION_INFO, cityListDto.getCityCode()));
                         }
 
                     } catch (Exception e) {
