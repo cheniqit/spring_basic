@@ -4,7 +4,7 @@ import com.mk.taskfactory.api.dtos.OrderRecommendInfoDto;
 
 import java.util.List;
 
-public interface OrderRecommandInfoService {
+public interface OrderRecommendInfoService {
 
     public List<OrderRecommendInfoDto> selectByNewOrderId(Long orderId);
 }

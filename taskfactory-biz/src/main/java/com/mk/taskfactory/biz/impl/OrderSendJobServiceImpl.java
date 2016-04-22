@@ -47,7 +47,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
     private OrderToCsLogService orderToCsLogService;
 
     @Autowired
-    private OrderRecommandInfoService orderRecommandInfoService;
+    private OrderRecommendInfoService orderRecommendInfoService;
 
     @Autowired
     private OrderService orderService;
@@ -95,7 +95,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 
             //
             String isRecommandOrder = "F";
-            List<OrderRecommendInfoDto> infoDtoList = orderRecommandInfoService.selectByNewOrderId(order.getId());
+            List<OrderRecommendInfoDto> infoDtoList = orderRecommendInfoService.selectByNewOrderId(order.getId());
             if (!infoDtoList.isEmpty()) {
                 isRecommandOrder = "T";
             }
