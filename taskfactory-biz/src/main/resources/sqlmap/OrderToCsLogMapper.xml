@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.taskfactory.biz.mapper.ots.OrderToCsLogMapper" >
+
+  <resultMap id="BaseResultMap" type="com.mk.taskfactory.model.OrderToCsLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="send" property="send" />
+    <result column="result" property="result" />
+    <result column="create_time" property="createTime" />
+    <result column="is_valid" property="isValid" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, send, result, create_time, is_valid
+  </sql>
+
+  <insert id="save" parameterType="com.mk.taskfactory.model.OrderToCsLog" useGeneratedKeys="true" keyProperty="id">
+    insert into order_to_cs_log (<include refid="Base_Column_List" />)
+    values (#{id}, #{send}, #{result}, #{createTime}, #{isValid})
+  </insert>
+
+</mapper>

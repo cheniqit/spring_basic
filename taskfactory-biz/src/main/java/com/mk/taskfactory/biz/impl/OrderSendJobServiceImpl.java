@@ -7,13 +7,12 @@ import com.mk.taskfactory.api.OrderSendJobService;
 import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
 import com.mk.taskfactory.api.dtos.OrderDto;
+import com.mk.taskfactory.api.dtos.OrderRecommendInfoDto;
 import com.mk.taskfactory.api.dtos.OrderToCsDto;
+import com.mk.taskfactory.api.dtos.OrderToCsLogDto;
 import com.mk.taskfactory.api.dtos.crawer.TExCommentImgDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
-import com.mk.taskfactory.api.ots.OrderService;
-import com.mk.taskfactory.api.ots.OrderToCsService;
-import com.mk.taskfactory.api.ots.OtsCommentImgService;
-import com.mk.taskfactory.api.ots.OtsHotelImageService;
+import com.mk.taskfactory.api.ots.*;
 import com.mk.taskfactory.biz.mapper.ots.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import com.mk.taskfactory.biz.utils.*;
@@ -43,6 +42,12 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 
     @Autowired
     private OrderToCsService orderToCsService;
+
+    @Autowired
+    private OrderToCsLogService orderToCsLogService;
+
+    @Autowired
+    private OrderRecommandInfoService orderRecommandInfoService;
 
     @Autowired
     private OrderService orderService;
@@ -79,16 +84,27 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             if (order==null||order.getId()==null){
                 continue;
             }
-            UMember member = new UMember();
-            member.setMid(order.getmId());
-            member = memberMapper.selectByMid(member);
-            if (member==null||member.getMid()==null){
-                continue;
+
+            //
+//            UMember member = new UMember();
+//            member.setMid(order.getmId());
+//            member = memberMapper.selectByMid(member);
+//            if (member==null||member.getMid()==null){
+//                continue;
+//            }
+
+            //
+            String isRecommandOrder = "F";
+            List<OrderRecommendInfoDto> infoDtoList = orderRecommandInfoService.selectByNewOrderId(order.getId());
+            if (!infoDtoList.isEmpty()) {
+                isRecommandOrder = "T";
             }
+
             OrderToCsBean setBean = new OrderToCsBean();
             setBean.setOrderId(order.getId());
             setBean.setLiveUserPhone(order.getContactsPhone());
-            setBean.setOrderUserPhone(member.getPhone());
+//            setBean.setOrderUserPhone(member.getPhone());
+            setBean.setIsRecommandOrder(isRecommandOrder);
             setBean.setCreateTime(DateUtils.format_yMdHms(order.getCreateTime()));
             beanList.add(setBean);
             orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
@@ -104,15 +120,27 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         logger.info("OrderSendJobServiceImpl.orderSendToCs postResult:{} ", postResult);
 
         //记录返回值
-        for (Long key:orderMap.keySet()) {
-            OrderToCsDto updateBean = orderMap.get(key);
+//        for (Long key:orderMap.keySet()) {
+//            OrderToCsDto updateBean = orderMap.get(key);
+//
+//            updateBean.setCount(updateBean.getCount()+1);
+//            updateBean.setExecuteTime(new Date());
+//            updateBean.setResult(postResult);
+//            orderToCsService.updateById(updateBean);
+//        }
 
-            updateBean.setCount(updateBean.getCount()+1);
-            updateBean.setExecuteTime(new Date());
-            updateBean.setResult(postResult);
-            orderToCsService.updateById(updateBean);
+        try {
+            OrderToCsLogDto logDto = new OrderToCsLogDto();
+            logDto.setSend(JsonUtils.toJSONString(beanList));
+            logDto.setResult(postResult);
+            logDto.setCreateTime(new Date());
+            logDto.setIsValid("T");
+            orderToCsLogService.save(logDto);
+            logger.info("OrderSendJobServiceImpl.orderSendToCs save result success");
+        } catch (Exception e) {
+            logger.info("OrderSendJobServiceImpl.orderSendToCs save result error :{}", e);
+            e.printStackTrace();
         }
-        logger.info("OrderSendJobServiceImpl.orderSendToCs save result ");
 
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
@@ -148,8 +176,8 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             }else {
                 updateBean.setStatus(20);
             }
-//            updateBean.setCount(updateBean.getCount()+1);
-//            updateBean.setExecuteTime(new Date());
+            updateBean.setCount(updateBean.getCount()+1);
+            updateBean.setExecuteTime(new Date());
             orderToCsService.updateById(updateBean);
         }
         logger.info("OrderSendJobServiceImpl.orderSendToCs update status ");
