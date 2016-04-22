@@ -22,6 +22,12 @@ public interface QHotelToRedisService {
     public Map<String,Object> hotelResourceToRedis(OnlineHotelDto dto);//5
     public Map<String,Object> onlineHotelRecommendToRedis(OnlineHotelRecommendDto dto);//10
 
-    Map<String,Object> onlineDistrictSetToRedis(TCityListDto bean);
+    Map<String, Object> onlineCitySetToRedis();
+
+    Map<String,Object> onlineDistrictSetToRedis();
+
+    Map<String,Object> onlineTownSetToRedis();
+
+    void initOnlineRegionInfo();
 }
 

@@ -1,5 +1,7 @@
 package com.mk.taskfactory.api.dtos;
 
+import java.math.BigDecimal;
+
 /**
  * Created by chenqi on 16/4/21.
  */
@@ -9,8 +11,12 @@ public class RegionInfoDto {
 
     private String distCode;
     private String distName;
+
     private String townCode;
     private String townName;
+
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private Integer level;
 
     public String getCityCode() {
@@ -59,6 +65,22 @@ public class RegionInfoDto {
 
     public void setTownName(String townName) {
         this.townName = townName;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
     }
 
     public Integer getLevel() {
