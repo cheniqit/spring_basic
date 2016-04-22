@@ -640,7 +640,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 regionInfoDto.setCityCode(tCity.getCode());
                 regionInfoDto.setCityName(tCity.getQueryCityName());
 
-                regionInfoDto.setDistCode(district.getDisname());
+                regionInfoDto.setDistName(district.getDisname());
                 regionInfoDto.setDistCode(district.getCode());
 
                 regionInfoDto.setLevel(RegionLevelEnum.district.getCode());
@@ -702,7 +702,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 regionInfoDto.setCityCode(tCity.getCode());
                 regionInfoDto.setCityName(tCity.getQueryCityName());
 
-                regionInfoDto.setDistCode(district.getDisname());
+                regionInfoDto.setDistName(district.getDisname());
                 regionInfoDto.setDistCode(district.getCode());
 
                 regionInfoDto.setTownCode(town.getTownCode());
