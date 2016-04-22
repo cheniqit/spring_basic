@@ -9,7 +9,17 @@ public class OrderToCsBean {
 
     private String isRecommandOrder;
 
+    private Integer orderStatus;
+
     private String createTime;
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public String getIsRecommandOrder() {
         return isRecommandOrder;

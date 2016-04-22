@@ -105,6 +105,8 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             setBean.setLiveUserPhone(order.getContactsPhone());
 //            setBean.setOrderUserPhone(member.getPhone());
             setBean.setIsRecommandOrder(isRecommandOrder);
+            setBean.setOrderStatus(order.getStatus());
+
             setBean.setCreateTime(DateUtils.format_yMdHms(order.getCreateTime()));
             beanList.add(setBean);
             orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
