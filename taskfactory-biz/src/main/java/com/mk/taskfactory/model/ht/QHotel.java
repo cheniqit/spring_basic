@@ -99,6 +99,25 @@ public class QHotel {
 
     private BigDecimal originPrice;
 
+    private String townCode;
+    private String surroundInfo;
+
+    public String getTownCode() {
+        return townCode;
+    }
+
+    public void setTownCode(String townCode) {
+        this.townCode = townCode;
+    }
+
+    public String getSurroundInfo() {
+        return surroundInfo;
+    }
+
+    public void setSurroundInfo(String surroundInfo) {
+        this.surroundInfo = surroundInfo;
+    }
+
     public String getIntroduction() {
         return introduction;
     }
