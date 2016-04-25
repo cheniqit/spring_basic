@@ -50,8 +50,8 @@ public class HotelToRedisController {
 
     @RequestMapping(value = "/onlineCityToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> onlineCityToRedis() {
-        Map<String, Object> result = qHotelToRedisService.onlineCitySetToRedis();
+    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityListDto dto) {
+        Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(dto);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

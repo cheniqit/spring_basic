@@ -544,8 +544,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
             delKeys(jedis, keys);
             keys = keys(jedis, RedisCacheName.REGION_INFO_SET);
             delKeys(jedis, keys);
-            keys = keys(jedis, RedisCacheName.CITY_INFO_SET);
-            delKeys(jedis, keys);
             keys = keys(jedis, RedisCacheName.CITY_DISTRICT_REGION_SET);
             delKeys(jedis, keys);
             keys = keys(jedis, RedisCacheName.DISTRICT_TOWN_REGION_SET);
@@ -598,7 +596,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                 regionInfoDto.setLatitude(tCity.getLatItude());
                 regionInfoDto.setLongitude(tCity.getLongItude());
                 jedis.sadd(String.format("%s",RedisCacheName.REGION_INFO_SET), JsonUtils.toJSONString(regionInfoDto));
-                jedis.sadd(String.format("%s",RedisCacheName.CITY_INFO_SET), JsonUtils.toJSONString(regionInfoDto));
 
                 jedis.set(String.format("%s%s",RedisCacheName.REGION_INFO, tCity.getCode()), JsonUtils.toJSONString(regionInfoDto));
             }
@@ -1060,7 +1057,6 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         try {
             jedis =  RedisUtil.getJedis();
             jedis.del(String.format("%s", RedisCacheName.CITY_INFO_SET));
-            jedis.del(String.format("%s", RedisCacheName.REGION_INFO_SET));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1091,47 +1087,29 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
 
                         TCityListDto cityListDto = new TCityListDto();
                         cityListDto.setId(cityDto.getId());
-                        if(RegionLevelEnum.district.getCode() ==cityDto.getLevel()){
-                            int count = onlineHotelService.queryHasOnlineHotelByCityCode(cityDto.getCityCode());
-                            if(count > 0){
-                                existsOnlineHotel = true;
-                                regionInfoDto.setDistCode(cityDto.getCityCode());
-                                regionInfoDto.setDistName(cityDto.getCityName());
-                                TCity tCity = cityMapper.getByDistrictCode(cityDto.getCityCode());
-                                regionInfoDto.setCityCode(tCity.getCode());
-                                regionInfoDto.setCityName(tCity.getQueryCityName());
-                            }
-                        }else{
-                            OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
-                            onlineHotelDto.setIsVaild("T");
-                            onlineHotelDto = onlineHotelService.getByPramas(onlineHotelDto);
-                            if (onlineHotelDto!=null&&onlineHotelDto.getId()!=null){
-                                existsOnlineHotel =true;
-                                regionInfoDto.setCityCode(cityDto.getCityCode());
-                                regionInfoDto.setCityName(cityDto.getCityName());
-                            }
+
+                        OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
+                        onlineHotelDto.setIsVaild("T");
+                        onlineHotelDto = onlineHotelService.getByPramas(onlineHotelDto);
+                        if (onlineHotelDto!=null&&onlineHotelDto.getId()!=null){
+                            existsOnlineHotel =true;
+                            regionInfoDto.setCityCode(cityDto.getCityCode());
+                            regionInfoDto.setCityName(cityDto.getCityName());
                         }
+
                         if (existsOnlineHotel){
                             logger.info(String.format("\n====================set cityCode={}====================\n")
                                     ,cityDto.getCityCode());
-                            if(RegionLevelEnum.city.getCode() == cityDto.getLevel()){
-                                jedis.sadd(String.format("%s", RedisCacheName.CITY_INFO_SET), JsonUtils.toJSONString(cityDto)
-                                );
-                            }
-                            jedis.sadd(String.format("%s", RedisCacheName.REGION_INFO_SET), JsonUtils.toJSONString(cityDto)
+                            jedis.sadd(String.format("%s", RedisCacheName.CITY_INFO_SET), JsonUtils.toJSONString(cityDto)
                             );
-                            //格式化
-                            jedis.set(String.format("%s%s", RedisCacheName.REGION_INFO, cityDto.getCityCode()), JsonUtils.toJSONString(regionInfoDto));
                             cityListDto.setValid("T");
                             cityListService.updateById(cityListDto);
-
                             return;
                         }else {
                             logger.info(String.format("\n====================remove cityCode={}====================\n")
                                     ,cityDto.getCityCode());
                             cityListDto.setValid("F");
                             cityListService.updateById(cityListDto);
-                            jedis.del(String.format("%s%s", RedisCacheName.REGION_INFO, cityListDto.getCityCode()));
                         }
 
                     } catch (Exception e) {
