@@ -2,6 +2,7 @@ package com.mk.taskfactory.biz.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.CrawerToOtsService;
 import com.mk.taskfactory.api.OrderSendJobService;
 import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
@@ -26,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -85,6 +87,22 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
                 continue;
             }
 
+            //判断消息状态是否在处理,若在处理中,跳过
+            Jedis jedis = null;
+            try {
+                jedis = RedisUtil.getJedis();
+                String cacheResult = jedis.get("care_sendToCs~" + order.getId());
+                if (null != cacheResult) {
+                    //消息状态处理中
+                    continue;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(null != jedis){
+                    jedis.close();
+                }
+            }
             //
 //            UMember member = new UMember();
 //            member.setMid(order.getmId());
