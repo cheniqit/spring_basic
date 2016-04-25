@@ -7,7 +7,7 @@ public class OrderToCsBean {
 
     private String orderUserPhone;
 
-    private String isRecommandOrder;
+    private String isRecommendOrder;
 
     private Integer orderStatus;
 
@@ -21,12 +21,12 @@ public class OrderToCsBean {
         this.orderStatus = orderStatus;
     }
 
-    public String getIsRecommandOrder() {
-        return isRecommandOrder;
+    public String getIsRecommendOrder() {
+        return isRecommendOrder;
     }
 
-    public void setIsRecommandOrder(String isRecommandOrder) {
-        this.isRecommandOrder = isRecommandOrder;
+    public void setIsRecommendOrder(String isRecommendOrder) {
+        this.isRecommendOrder = isRecommendOrder;
     }
 
     public Long getOrderId() {

@@ -94,17 +94,17 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
 //            }
 
             //
-            String isRecommandOrder = "F";
+            String isRecommendOrder = "F";
             List<OrderRecommendInfoDto> infoDtoList = orderRecommendInfoService.selectByNewOrderId(order.getId());
             if (!infoDtoList.isEmpty()) {
-                isRecommandOrder = "T";
+                isRecommendOrder = "T";
             }
 
             OrderToCsBean setBean = new OrderToCsBean();
             setBean.setOrderId(order.getId());
             setBean.setLiveUserPhone(order.getContactsPhone());
 //            setBean.setOrderUserPhone(member.getPhone());
-            setBean.setIsRecommandOrder(isRecommandOrder);
+            setBean.setIsRecommendOrder(isRecommendOrder);
             setBean.setOrderStatus(order.getStatus());
 
             setBean.setCreateTime(DateUtils.format_yMdHms(order.getCreateTime()));
@@ -161,7 +161,7 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             return resultMap;
         }
 
-        List<Object> failList = JsonUtils.jsonToList(postResult);
+        List<Object> failList = JsonUtils.jsonToList(returnMap.get("data"));
         Map<Long,String> failMap = new HashMap<Long, String>();
         if(!CollectionUtils.isEmpty(failList)){
             for (Object obj:failList){
