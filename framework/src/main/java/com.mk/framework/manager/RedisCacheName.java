@@ -178,10 +178,28 @@ public class RedisCacheName {
     //public static final String HOTEL_ROOMTYPE_OTA_PRICE= "HOTEL_ROOMTYPE_OTA_PRICE_";
     /***酒店房型动态价格***/
     public static final String HOTEL_ROOMTYPE_DYNAMIC_PRICE= "HOTEL_ROOMTYPE_DYNAMIC_PRICE_";
-    /***城市信息***/
-    //public static final String CITY_INFO= "CITY_INFO_";
-    /***城市信息SET集合***/
+    /**
+     * 区域基本信息
+     */
+    public static final String REGION_INFO = "REGION_INFO_";
+
+    /**
+     * 区域集合
+     */
+    public static final String REGION_INFO_SET = "REGION_INFO_SET";
+
+    /***城市集合***/
     public static final String CITY_INFO_SET= "CITY_INFO_SET";
+
+    /**
+     * 城市区县集合
+     */
+    public static final String CITY_DISTRICT_REGION_SET = "CITY_DISTRICT_REGION_SET_";
+
+    /**
+     * 区县乡镇街道信息
+     */
+    public static final String DISTRICT_TOWN_REGION_SET = "DISTRICT_TOWN_REGION_SET_";
     /***酒店权重***/
     public static final String HOTEL_PRIORITY= "HOTEL_PRIORITY_";
     /***房型图片mapping***/

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class TCityDto {
-    private BigInteger cityId;
+    private Integer cityId;
     private String code;
     private String cityName;
     private Integer proID;
@@ -18,11 +18,11 @@ public class TCityDto {
     private String queryCityName;
     private Integer level;
 
-    public BigInteger getCityId() {
+    public Integer getCityId() {
         return cityId;
     }
 
-    public void setCityId(BigInteger cityId) {
+    public void setCityId(Integer cityId) {
         this.cityId = cityId;
     }
 

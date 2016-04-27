@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -31,10 +32,40 @@ public class HotelToRedisController {
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/initOnlineRegionInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> initOnlineRegionInfo() {
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        try {
+            qHotelToRedisService.initOnlineRegionInfo();
+        }catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("message","执行失败");
+            resultMap.put("SUCCESS", false);
+        }
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/onlineCityToRedis", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityListDto bean) {
-        Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(bean);
+    public ResponseEntity<Map<String, Object>> onlineCityToRedis(TCityListDto dto) {
+        Map<String, Object> result = qHotelToRedisService.onlineCityToRedis(dto);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/onlineDistrictSetToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineDistrictSetToRedis() {
+        Map<String, Object> result = qHotelToRedisService.onlineDistrictSetToRedis();
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/onlineTownSetToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> onlineTownSetToRedis() {
+        Map<String, Object> result = qHotelToRedisService.onlineTownSetToRedis();
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 

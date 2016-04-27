@@ -47,6 +47,11 @@
         `code` = #{code}
         limit 1
     </select>
+    <select id="getByDistrictCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select <include refid="Base_Column_List" /> from t_city city
+        where exists(select 1 from t_district  di where di.`CityID` = city.cityid and  di.code = #{code})
+        limit 1
+    </select>
     <select id="qureyByPramas" resultMap="BaseResultMap" parameterType="com.mk.taskfactory.api.dtos.TCityDto" >
         select
         <include refid="Base_Column_List" />

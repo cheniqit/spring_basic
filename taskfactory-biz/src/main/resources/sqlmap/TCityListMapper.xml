@@ -45,6 +45,9 @@
       <if test="valid != null">
         AND valid = #{valid}
       </if>
+      <if test="level != null">
+        AND `level` = #{level}
+      </if>
     </where>
   </sql>
 
@@ -124,4 +127,10 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getDistrictListByCityCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT result.* from t_citylist cl
+      inner join  t_city city on city.code = cl.code and cl.valid = 'T' and cl.code= #{cityCode}
+      inner join t_district dis on dis.CityID = city.`cityid`
+      inner join t_citylist result on result.code = dis.code and result.valid = 'T' and result.`level` = 3
+  </select>
 </mapper>

@@ -52,4 +52,8 @@ public class OnlineHotelServiceImpl implements OnlineHotelService {
         BeanUtils.copyProperties(bean, resultDto);
         return resultDto;
     }
+
+    public Integer queryHasOnlineHotelByCityCode(String  cityCode){
+        return mapper.queryHasOnlineHotelByCityCode(cityCode);
+    }
 }
