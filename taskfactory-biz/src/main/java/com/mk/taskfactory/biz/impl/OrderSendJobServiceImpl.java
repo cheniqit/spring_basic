@@ -2,18 +2,18 @@ package com.mk.taskfactory.biz.impl;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.taskfactory.api.CrawerToOtsService;
 import com.mk.taskfactory.api.OrderSendJobService;
 import com.mk.taskfactory.api.crawer.CrawerCommentImgService;
 import com.mk.taskfactory.api.crawer.CrawerHotelImageService;
 import com.mk.taskfactory.api.dtos.OrderDto;
+import com.mk.taskfactory.api.dtos.OrderRecommendInfoDto;
 import com.mk.taskfactory.api.dtos.OrderToCsDto;
+import com.mk.taskfactory.api.dtos.OrderToCsLogDto;
 import com.mk.taskfactory.api.dtos.crawer.TExCommentImgDto;
 import com.mk.taskfactory.api.dtos.crawer.TExHotelImageDto;
-import com.mk.taskfactory.api.ots.OrderService;
-import com.mk.taskfactory.api.ots.OrderToCsService;
-import com.mk.taskfactory.api.ots.OtsCommentImgService;
-import com.mk.taskfactory.api.ots.OtsHotelImageService;
+import com.mk.taskfactory.api.ots.*;
 import com.mk.taskfactory.biz.mapper.ots.UMemberMapper;
 import com.mk.taskfactory.biz.umember.model.UMember;
 import com.mk.taskfactory.biz.utils.*;
@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -45,6 +46,12 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
     private OrderToCsService orderToCsService;
 
     @Autowired
+    private OrderToCsLogService orderToCsLogService;
+
+    @Autowired
+    private OrderRecommendInfoService orderRecommendInfoService;
+
+    @Autowired
     private OrderService orderService;
 
     @Autowired
@@ -57,35 +64,67 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         Map<String,Object> resultMap=new HashMap<String,Object>();
         Cat.logEvent("orderSendToCs","orderSendToCs",Event.SUCCESS,
                 "beginTime=" + DateUtils.format_yMdHms(new Date()));
-        logger.info(String.format("\n====================orderSendToCs begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        logger.info("OrderSendJobServiceImpl.orderSendToCs start:{}",DateUtils.format_yMdHms(new Date()));
+
         bean.setCount(5);
         List<OrderToCsDto> orderToCsDtoList = orderToCsService.qureySendList(bean);
         if (CollectionUtils.isEmpty(orderToCsDtoList)){
+            logger.info("OrderSendJobServiceImpl.orderSendToCs orderToCsDtoList.size: 0 ");
             resultMap.put("message","orderToCsDtoList count is 0");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
+        logger.info("OrderSendJobServiceImpl.orderSendToCs orderToCsDtoList.size: {} ", orderToCsDtoList.size());
+
         List<OrderToCsBean> beanList = new ArrayList<OrderToCsBean>();
-        logger.info(String.format("\n====================send size={}====================\n")
-                ,orderToCsDtoList.size());
         Map<Long,OrderToCsDto> orderMap = new HashMap<Long, OrderToCsDto>();
         for (OrderToCsDto orderToCsDto:orderToCsDtoList){
+            logger.info("OrderSendJobServiceImpl.orderSendToCs orderId:{} ", orderToCsDto.getOrderId());
             OrderDto order = new OrderDto();
             order.setId(orderToCsDto.getOrderId());
             order = orderService.getByPramas(order);
             if (order==null||order.getId()==null){
                 continue;
             }
-            UMember member = new UMember();
-            member.setMid(order.getmId());
-            member = memberMapper.selectByMid(member);
-            if (member==null||member.getMid()==null){
-                continue;
+
+            //判断消息状态是否在处理,若在处理中,跳过
+            Jedis jedis = null;
+            try {
+                jedis = RedisUtil.getJedis();
+                String cacheResult = jedis.get("care_sendToCs~" + order.getId());
+                if (null != cacheResult) {
+                    //消息状态处理中
+                    continue;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(null != jedis){
+                    jedis.close();
+                }
             }
+            //
+//            UMember member = new UMember();
+//            member.setMid(order.getmId());
+//            member = memberMapper.selectByMid(member);
+//            if (member==null||member.getMid()==null){
+//                continue;
+//            }
+
+            //
+            String isRecommendOrder = "F";
+            List<OrderRecommendInfoDto> infoDtoList = orderRecommendInfoService.selectByNewOrderId(order.getId());
+            if (!infoDtoList.isEmpty()) {
+                isRecommendOrder = "T";
+            }
+
             OrderToCsBean setBean = new OrderToCsBean();
             setBean.setOrderId(order.getId());
             setBean.setLiveUserPhone(order.getContactsPhone());
-            setBean.setOrderUserPhone(member.getPhone());
+//            setBean.setOrderUserPhone(member.getPhone());
+            setBean.setIsRecommendOrder(isRecommendOrder);
+            setBean.setOrderStatus(order.getStatus());
+
             setBean.setCreateTime(DateUtils.format_yMdHms(order.getCreateTime()));
             beanList.add(setBean);
             orderMap.put(orderToCsDto.getOrderId(),orderToCsDto);
@@ -98,12 +137,36 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
         Map<String, String> params=new HashMap<String, String>();
         params.put("orders", JsonUtils.toJSONString(beanList));
         String postResult= HttpUtils.doPost(Constants.CS_URL + "/custom/order/addorders", params);
+        logger.info("OrderSendJobServiceImpl.orderSendToCs postResult:{} ", postResult);
+
+        //记录返回值
+//        for (Long key:orderMap.keySet()) {
+//            OrderToCsDto updateBean = orderMap.get(key);
+//
+//            updateBean.setCount(updateBean.getCount()+1);
+//            updateBean.setExecuteTime(new Date());
+//            updateBean.setResult(postResult);
+//            orderToCsService.updateById(updateBean);
+//        }
+
+        try {
+            OrderToCsLogDto logDto = new OrderToCsLogDto();
+            logDto.setSend(JsonUtils.toJSONString(beanList));
+            logDto.setResult(postResult);
+            logDto.setCreateTime(new Date());
+            logDto.setIsValid("T");
+            orderToCsLogService.save(logDto);
+            logger.info("OrderSendJobServiceImpl.orderSendToCs save result success");
+        } catch (Exception e) {
+            logger.info("OrderSendJobServiceImpl.orderSendToCs save result error :{}", e);
+            e.printStackTrace();
+        }
+
         if (StringUtils.isEmpty(postResult)){
             resultMap.put("message","请求失败");
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        logger.info(postResult);
         Map<String,String> returnMap = JsonUtils.jsonToMap(postResult);
         if(CollectionUtils.isEmpty(returnMap)){
             resultMap.put("message","解析返回结果失败");
@@ -115,7 +178,8 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             resultMap.put("SUCCESS", false);
             return resultMap;
         }
-        List<Object> failList = JsonUtils.jsonToList(postResult);
+
+        List<Object> failList = JsonUtils.jsonToList(returnMap.get("data"));
         Map<Long,String> failMap = new HashMap<Long, String>();
         if(!CollectionUtils.isEmpty(failList)){
             for (Object obj:failList){
@@ -136,11 +200,12 @@ public class OrderSendJobServiceImpl implements OrderSendJobService {
             updateBean.setExecuteTime(new Date());
             orderToCsService.updateById(updateBean);
         }
+        logger.info("OrderSendJobServiceImpl.orderSendToCs update status ");
         Cat.logEvent("orderSendToCs", "orderSendToCs", Event.SUCCESS,
                 "endTime=" + DateUtils.format_yMdHms(new Date())
         );
-        logger.info(String.format("\n====================orderSendToCs  endTime={}====================\n")
-                , DateUtils.format_yMdHms(new Date()));
+
+        logger.info("OrderSendJobServiceImpl.orderSendToCs end:{} ",DateUtils.format_yMdHms(new Date()));
         resultMap.put("message","执行结束");
         resultMap.put("SUCCESS", true);
         return resultMap;

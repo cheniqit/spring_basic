@@ -12,6 +12,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_vaild" property="isVaild" jdbcType="CHAR" />
+
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -95,6 +96,7 @@
       <if test="isVaild != null" >
         is_vaild = #{isVaild,jdbcType=CHAR},
       </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>

@@ -59,15 +59,10 @@ public class RoomTypeInfoRefreshThread implements Runnable{
                 } else {
                     priceMap.put("type", RoomTypePriceTypeEnum.DYNAMIC.getCode().toString());
                 }
-                if("T".equals(roomTypeDto.getIsVaild())) {
-                    jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_DYNAMIC_PRICE,
-                            roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(priceMap)
-                    );
-                }else {
-                    jedis.del(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_DYNAMIC_PRICE,
-                            roomTypeDto.getRoomTypeId())
-                    );
-                }
+
+                jedis.set(String.format("%s%s", RedisCacheName.HOTEL_ROOMTYPE_DYNAMIC_PRICE,
+                        roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(priceMap)
+                );
 
                 if (HotelSourceEnum.OTA.getCode()==Integer.valueOf(hotelSource)) {
                     Set<String> hotelRoomTypeSet = jedis.smembers(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
@@ -117,29 +112,19 @@ public class RoomTypeInfoRefreshThread implements Runnable{
 //                                    }
                     BeanUtils.copyProperties(qHotelRoomtype, bean);
                     bean.setImageUrl(qHotelRoomtype.getRoomPic());
-                    if("T".equals(roomTypeDto.getIsVaild())) {
-                        jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
-                                roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
-                        );
-                        jedis.set(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
-                                roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
-                        );
-                    }else{
-                        jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
-                                roomTypeDto.getRoomTypeId())
-                        );
-                    }
+                    bean.setOnline(roomTypeDto.getIsVaild());
+
+                    jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
+                            roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
+                    );
+                    jedis.set(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
+                            roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
+                    );
 
                 }else {
-                    if ("T".equals(roomTypeDto.getIsVaild())) {
-                        jedis.set(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
-                                roomTypeDto.getRoomTypeId()), "1"
-                        );
-                    } else {
-                        jedis.del(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
-                                roomTypeDto.getRoomTypeId())
-                        );
-                    }
+                    jedis.set(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
+                            roomTypeDto.getRoomTypeId()), "1"
+                    );
                 }
 
             }

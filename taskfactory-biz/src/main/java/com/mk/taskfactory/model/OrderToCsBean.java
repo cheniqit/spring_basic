@@ -1,8 +1,5 @@
 package com.mk.taskfactory.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class OrderToCsBean {
     private Long orderId;
 
@@ -10,7 +7,27 @@ public class OrderToCsBean {
 
     private String orderUserPhone;
 
+    private String isRecommendOrder;
+
+    private Integer orderStatus;
+
     private String createTime;
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getIsRecommendOrder() {
+        return isRecommendOrder;
+    }
+
+    public void setIsRecommendOrder(String isRecommendOrder) {
+        this.isRecommendOrder = isRecommendOrder;
+    }
 
     public Long getOrderId() {
         return orderId;
