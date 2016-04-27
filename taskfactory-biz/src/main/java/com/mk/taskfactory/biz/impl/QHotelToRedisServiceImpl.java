@@ -9,6 +9,7 @@ import com.mk.taskfactory.api.RoomTypeService;
 import com.mk.taskfactory.api.crawer.RoomTypePriceService;
 import com.mk.taskfactory.api.crawer.TQunarHotelService;
 import com.mk.taskfactory.api.dtos.*;
+import com.mk.taskfactory.api.dtos.crawer.HotelDensityDto;
 import com.mk.taskfactory.api.dtos.crawer.HotelImgDto;
 import com.mk.taskfactory.api.dtos.crawer.HotelRecommendToRedisDto;
 import com.mk.taskfactory.api.dtos.crawer.TQunarHotelDto;
@@ -19,6 +20,7 @@ import com.mk.taskfactory.api.enums.RegionLevelEnum;
 import com.mk.taskfactory.api.ht.*;
 import com.mk.taskfactory.api.ods.OnlineHotelPriorityService;
 import com.mk.taskfactory.api.ots.FacilityService;
+import com.mk.taskfactory.api.crawer.HotelDensityService;
 import com.mk.taskfactory.api.ots.OtsHotelImageService;
 import com.mk.taskfactory.api.ots.TCityListService;
 import com.mk.taskfactory.biz.impl.ots.HotelRemoteService;
@@ -102,6 +104,9 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
     private DistrictMapper districtMapper;
     @Autowired
     private TownMapper townMapper;
+
+    @Autowired
+    private HotelDensityService hotelDensityService;
 
     private static ExecutorService pool = Executors.newFixedThreadPool(64);
 
@@ -245,6 +250,112 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
         resultMap.put("SUCCESS", true);
         return resultMap;
     }
+
+
+    public Map<String,Object> hotelArroundCount(OnlineHotelDto dto){
+        Map<String,Object> resultMap=new HashMap<String,Object>();
+        Cat.logEvent("onlineHotelArroundCount","onlineHotelArroundCount",Event.SUCCESS,
+                "beginTime=" + DateUtils.format_yMdHms(new Date()));
+        logger.info(String.format("\n====================qHotelToRedis begin time={}====================\n"),DateUtils.format_yMdHms(new Date()));
+        int count = onlineHotelService.count(dto);
+        if (count<=0){
+            resultMap.put("message","OnlineHotel count is 0");
+            resultMap.put("SUCCESS", false);
+            return resultMap;
+        }
+        int pageSize=1000;
+        int pageCount=count/pageSize;
+        logger.info(String.format("\n====================size={}&pageSize={}&pageCount={}====================\n")
+                ,count,pageSize,pageCount);
+        for (int i=0;i<=pageCount;i++){
+            logger.info(String.format("\n====================pageIndex={}====================\n")
+                    ,i*pageSize);
+            dto.setPageSize(pageSize);
+            dto.setPageIndex(i*pageSize);
+            List<OnlineHotelDto> onlineHotelDtoList = onlineHotelService.qureyByPramas(dto);
+            if (CollectionUtils.isEmpty(onlineHotelDtoList)){
+                logger.info(String.format("\n====================onlineHotelDtoList is empty====================\n"));
+                continue;
+            }
+
+            for (final OnlineHotelDto onlineHotelDto:onlineHotelDtoList){
+                pool.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Jedis jedis = null;
+                        try {
+                            jedis =  RedisUtil.getJedis();
+                            logger.info(String.format("\n====================id={}&hotelId={}====================\n")
+                                    ,onlineHotelDto.getId(),onlineHotelDto.getHotelId());
+                            if (onlineHotelDto.getHotelId()!=null) {
+                                QHotelDto qHotelDto = new QHotelDto();
+
+                                if (HotelSourceEnum.OTA.getCode().equals(onlineHotelDto.getComefromtype())||
+                                        HotelSourceEnum.GD.getCode().equals(onlineHotelDto.getComefromtype())) {
+                                    qHotelDto.setId(onlineHotelDto.getHotelId());
+                                    qHotelDto = hotelService.getByPramas(qHotelDto);
+                                    if (qHotelDto == null || qHotelDto.getId() == null) {
+                                        return;
+                                        //continue;
+                                    }
+                                    qHotelDto.setHotelSource(HotelSourceEnum.OTA.getCode());
+
+                                } else {
+                                    THotelDto tHotelDto = new THotelDto();
+                                    tHotelDto.setId(onlineHotelDto.getHotelId().intValue());
+                                    THotel hotel = hotelMapper.getByPramas(tHotelDto);
+                                    if (hotel == null || hotel.getId() == null) {
+                                        logger.info(String.format("\n====================Hotel={}====================\n")
+                                                , hotel);
+                                        return;
+                                        //continue;
+                                    }
+
+                                    BeanUtils.copyProperties(hotel, qHotelDto);
+
+
+                                }
+                                Integer countArround1Km = hotelRemoteService.hotelArroundCount(qHotelDto, 1000);
+                                Integer countArround3Km = hotelRemoteService.hotelArroundCount(qHotelDto, 3000);
+                                Integer countArround5Km = hotelRemoteService.hotelArroundCount(qHotelDto, 5000);
+                                Integer countArround10Km = hotelRemoteService.hotelArroundCount(qHotelDto, 10000);
+                                HotelDensityDto hotelDensityDto = new HotelDensityDto();
+                                hotelDensityDto.setHotelId(qHotelDto.getId().toString());
+                                hotelDensityDto.setOneKm(countArround1Km);
+                                hotelDensityDto.setThreeKm(countArround3Km);
+                                hotelDensityDto.setFiveKm(countArround5Km);
+                                hotelDensityDto.setTenKm(countArround10Km);
+
+                                hotelDensityService.saveOrUpdate(hotelDensityDto);
+
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }finally {
+                            if(null != jedis){
+                                jedis.close();
+                            }
+
+                        }
+
+                    }
+                });
+
+            }
+
+        }
+        Cat.logEvent("onlineHotelToRedis", "OnlineHotel同步到Radis", Event.SUCCESS,
+                "endTime=" + DateUtils.format_yMdHms(new Date())
+        );
+        logger.info(String.format("\n====================onlineHotelToRedis  endTime={}====================\n")
+                , DateUtils.format_yMdHms(new Date()));
+        resultMap.put("message","执行结束");
+        resultMap.put("SUCCESS", true);
+        return resultMap;
+    }
+
+
     /**
      * 酒店来源
      */
