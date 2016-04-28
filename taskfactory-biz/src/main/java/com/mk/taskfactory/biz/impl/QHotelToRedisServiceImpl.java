@@ -1201,6 +1201,7 @@ public class QHotelToRedisServiceImpl implements QHotelToRedisService {
                         cityListDto.setId(cityDto.getId());
 
                         OnlineHotelDto onlineHotelDto = new OnlineHotelDto();
+                        onlineHotelDto.setCityCode(Integer.valueOf(cityDto.getCityCode()));
                         onlineHotelDto.setIsVaild("T");
                         onlineHotelDto = onlineHotelService.getByPramas(onlineHotelDto);
                         if (onlineHotelDto!=null&&onlineHotelDto.getId()!=null){
