@@ -114,29 +114,29 @@ public class RoomTypeInfoRefreshThread implements Runnable{
                     bean.setImageUrl(qHotelRoomtype.getRoomPic());
                     bean.setOnline(roomTypeDto.getIsVaild());
 
-                    if("T".equals(roomTypeDto.getIsVaild())) {
+//                    if("T".equals(roomTypeDto.getIsVaild())) {
                         jedis.sadd(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFOSET,
                                 roomTypeDto.getHotelId()), JsonUtils.toJSONString(bean)
                         );
                         jedis.set(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
                                 roomTypeDto.getRoomTypeId()), JsonUtils.toJSONString(bean)
                         );
-                    }else{
-                        jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
-                                roomTypeDto.getRoomTypeId())
-                        );
-                    }
+//                    }else{
+//                        jedis.del(String.format("%s%s", RedisCacheName.HOTELROOMTYPEINFO,
+//                                roomTypeDto.getRoomTypeId())
+//                        );
+//                    }
 
                 }else {
-                    if ("T".equals(roomTypeDto.getIsVaild())) {
+//                    if ("T".equals(roomTypeDto.getIsVaild())) {
                         jedis.set(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
                                 roomTypeDto.getRoomTypeId()), "1"
                         );
-                    } else {
-                        jedis.del(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
-                                roomTypeDto.getRoomTypeId())
-                        );
-                    }
+//                    } else {
+//                        jedis.del(String.format("%s%s", RedisCacheName.LEZHU_ONLINE_ROOMTYPE,
+//                                roomTypeDto.getRoomTypeId())
+//                        );
+//                    }
                 }
 
             }
