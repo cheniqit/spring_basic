@@ -1,4 +1,4 @@
-package com.mk.hotel.controller;
+package com.mk.hotel.hotelinfo.controller;
 
 import com.mk.hotel.hotelinfo.exception.model.Hotel;
 import com.mk.hotel.hotelinfo.exception.service.HotelService;
