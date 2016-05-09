@@ -4,13 +4,10 @@ import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
-import com.mk.hotel.log.model.LogPush;
 import com.mk.hotel.log.service.impl.LogPushServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -26,11 +23,6 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public HotelDto findById(Long id) {
 
-        LogPush logPush = new LogPush();
-        logPush.setMsg("test");
-        logPush.setType(2l);
-        logPush.setCreateDate(new Date());
-        this.logPushService.save(logPush);
         Hotel hotel = hotelMapper.selectByPrimaryKey(id);
 
         HotelDto dto = new HotelDto();
