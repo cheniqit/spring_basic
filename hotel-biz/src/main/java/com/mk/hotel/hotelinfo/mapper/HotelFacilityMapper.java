@@ -1,8 +1,9 @@
-package com.mk.hotel.hotelinfo.exception.mapper;
+package com.mk.hotel.hotelinfo.mapper;
 
-import com.mk.hotel.hotelinfo.exception.model.HotelFacility;
-import com.mk.hotel.hotelinfo.exception.model.HotelFacilityExample;
 import java.util.List;
+
+import com.mk.hotel.hotelinfo.model.HotelFacility;
+import com.mk.hotel.hotelinfo.model.HotelFacilityExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface HotelFacilityMapper {

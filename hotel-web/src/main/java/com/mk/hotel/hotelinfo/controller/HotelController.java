@@ -1,7 +1,5 @@
 package com.mk.hotel.hotelinfo.controller;
 
-import com.mk.hotel.hotelinfo.exception.model.Hotel;
-import com.mk.hotel.hotelinfo.exception.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mk.hotel.hotelinfo.service.HotelService;
+import com.mk.hotel.hotelinfo.model.Hotel;
 
 import java.util.LinkedHashMap;
 

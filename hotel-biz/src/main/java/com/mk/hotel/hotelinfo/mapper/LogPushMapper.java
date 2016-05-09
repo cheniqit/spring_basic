@@ -1,8 +1,9 @@
-package com.mk.hotel.hotelinfo.exception.mapper;
+package com.mk.hotel.hotelinfo.mapper;
 
-import com.mk.hotel.hotelinfo.exception.model.LogPush;
-import com.mk.hotel.hotelinfo.exception.model.LogPushExample;
 import java.util.List;
+
+import com.mk.hotel.hotelinfo.model.LogPush;
+import com.mk.hotel.hotelinfo.model.LogPushExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface LogPushMapper {

@@ -1,8 +1,8 @@
-package com.mk.hotel.hotelinfo.exception.service.impl;
+package com.mk.hotel.hotelinfo.service.impl;
 
-import com.mk.hotel.hotelinfo.exception.mapper.HotelMapper;
-import com.mk.hotel.hotelinfo.exception.model.Hotel;
-import com.mk.hotel.hotelinfo.exception.service.HotelService;
+import com.mk.hotel.hotelinfo.mapper.HotelMapper;
+import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.hotelinfo.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
