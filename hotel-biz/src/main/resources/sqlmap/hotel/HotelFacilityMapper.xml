@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.mk.hotel.hotelinfo.exception.mapper.HotelFacilityMapper" >
-  <resultMap id="BaseResultMap" type="com.mk.hotel.hotelinfo.exception.model.HotelFacility" >
+<mapper namespace="com.mk.hotel.hotelinfo.mapper.HotelFacilityMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.hotel.hotelinfo.model.HotelFacility" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="facility_id" property="facilityId" jdbcType="BIGINT" />
@@ -72,7 +72,7 @@
   <sql id="Base_Column_List" >
     id, hotel_id, facility_id, create_date, create_by, update_date, update_by, is_valid
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacilityExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.hotelinfo.model.HotelFacilityExample" >
     select
     <if test="distinct" >
       distinct
@@ -97,13 +97,13 @@
     delete from hotel_facility
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacilityExample" >
+  <delete id="deleteByExample" parameterType="com.mk.hotel.hotelinfo.model.HotelFacilityExample" >
     delete from hotel_facility
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacility" >
+  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.HotelFacility" >
     insert into hotel_facility (id, hotel_id, facility_id, 
       create_date, create_by, update_date, 
       update_by, is_valid)
@@ -111,7 +111,7 @@
       #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacility" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.HotelFacility" >
     insert into hotel_facility
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -166,7 +166,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacilityExample" resultType="java.lang.Integer" >
+  <select id="countByExample" parameterType="com.mk.hotel.hotelinfo.model.HotelFacilityExample" resultType="java.lang.Integer" >
     select count(*) from hotel_facility
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
@@ -218,7 +218,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacility" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.hotelinfo.model.HotelFacility" >
     update hotel_facility
     <set >
       <if test="hotelId != null" >
@@ -245,7 +245,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.mk.hotel.hotelinfo.exception.model.HotelFacility" >
+  <update id="updateByPrimaryKey" parameterType="com.mk.hotel.hotelinfo.model.HotelFacility" >
     update hotel_facility
     set hotel_id = #{hotelId,jdbcType=BIGINT},
       facility_id = #{facilityId,jdbcType=BIGINT},
