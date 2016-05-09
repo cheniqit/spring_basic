@@ -78,7 +78,7 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.hotel.hotelinfo.exception.mapper"/>
+		<property name="basePackage" value="com.mk.hotel.hotelinfo.mapper"/>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 
