@@ -1,6 +1,6 @@
-package com.mk.hotel.service;
+package com.mk.hotel.hotelinfo.exception.service;
 
-import com.mk.hotel.model.Hotel;
+import com.mk.hotel.hotelinfo.exception.model.Hotel;
 
 /**
  * Created by chenqi on 16/5/9.

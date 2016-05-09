@@ -1,18 +1,17 @@
-package com.mk.hotel.model;
+package com.mk.hotel.hotelinfo.exception.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoomTypePriceExample {
+public class HotelFacilityExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public RoomTypePriceExample() {
+    public HotelFacilityExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -166,183 +165,123 @@ public class RoomTypePriceExample {
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdIsNull() {
-            addCriterion("room_type_id is null");
+        public Criteria andHotelIdIsNull() {
+            addCriterion("hotel_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdIsNotNull() {
-            addCriterion("room_type_id is not null");
+        public Criteria andHotelIdIsNotNull() {
+            addCriterion("hotel_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdEqualTo(Long value) {
-            addCriterion("room_type_id =", value, "roomTypeId");
+        public Criteria andHotelIdEqualTo(Long value) {
+            addCriterion("hotel_id =", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdNotEqualTo(Long value) {
-            addCriterion("room_type_id <>", value, "roomTypeId");
+        public Criteria andHotelIdNotEqualTo(Long value) {
+            addCriterion("hotel_id <>", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdGreaterThan(Long value) {
-            addCriterion("room_type_id >", value, "roomTypeId");
+        public Criteria andHotelIdGreaterThan(Long value) {
+            addCriterion("hotel_id >", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("room_type_id >=", value, "roomTypeId");
+        public Criteria andHotelIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("hotel_id >=", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdLessThan(Long value) {
-            addCriterion("room_type_id <", value, "roomTypeId");
+        public Criteria andHotelIdLessThan(Long value) {
+            addCriterion("hotel_id <", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdLessThanOrEqualTo(Long value) {
-            addCriterion("room_type_id <=", value, "roomTypeId");
+        public Criteria andHotelIdLessThanOrEqualTo(Long value) {
+            addCriterion("hotel_id <=", value, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdIn(List<Long> values) {
-            addCriterion("room_type_id in", values, "roomTypeId");
+        public Criteria andHotelIdIn(List<Long> values) {
+            addCriterion("hotel_id in", values, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdNotIn(List<Long> values) {
-            addCriterion("room_type_id not in", values, "roomTypeId");
+        public Criteria andHotelIdNotIn(List<Long> values) {
+            addCriterion("hotel_id not in", values, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdBetween(Long value1, Long value2) {
-            addCriterion("room_type_id between", value1, value2, "roomTypeId");
+        public Criteria andHotelIdBetween(Long value1, Long value2) {
+            addCriterion("hotel_id between", value1, value2, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andRoomTypeIdNotBetween(Long value1, Long value2) {
-            addCriterion("room_type_id not between", value1, value2, "roomTypeId");
+        public Criteria andHotelIdNotBetween(Long value1, Long value2) {
+            addCriterion("hotel_id not between", value1, value2, "hotelId");
             return (Criteria) this;
         }
 
-        public Criteria andDayIsNull() {
-            addCriterion("day is null");
+        public Criteria andFacilityIdIsNull() {
+            addCriterion("facility_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andDayIsNotNull() {
-            addCriterion("day is not null");
+        public Criteria andFacilityIdIsNotNull() {
+            addCriterion("facility_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDayEqualTo(Long value) {
-            addCriterion("day =", value, "day");
+        public Criteria andFacilityIdEqualTo(Long value) {
+            addCriterion("facility_id =", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotEqualTo(Long value) {
-            addCriterion("day <>", value, "day");
+        public Criteria andFacilityIdNotEqualTo(Long value) {
+            addCriterion("facility_id <>", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThan(Long value) {
-            addCriterion("day >", value, "day");
+        public Criteria andFacilityIdGreaterThan(Long value) {
+            addCriterion("facility_id >", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThanOrEqualTo(Long value) {
-            addCriterion("day >=", value, "day");
+        public Criteria andFacilityIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("facility_id >=", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThan(Long value) {
-            addCriterion("day <", value, "day");
+        public Criteria andFacilityIdLessThan(Long value) {
+            addCriterion("facility_id <", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThanOrEqualTo(Long value) {
-            addCriterion("day <=", value, "day");
+        public Criteria andFacilityIdLessThanOrEqualTo(Long value) {
+            addCriterion("facility_id <=", value, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayIn(List<Long> values) {
-            addCriterion("day in", values, "day");
+        public Criteria andFacilityIdIn(List<Long> values) {
+            addCriterion("facility_id in", values, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotIn(List<Long> values) {
-            addCriterion("day not in", values, "day");
+        public Criteria andFacilityIdNotIn(List<Long> values) {
+            addCriterion("facility_id not in", values, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayBetween(Long value1, Long value2) {
-            addCriterion("day between", value1, value2, "day");
+        public Criteria andFacilityIdBetween(Long value1, Long value2) {
+            addCriterion("facility_id between", value1, value2, "facilityId");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotBetween(Long value1, Long value2) {
-            addCriterion("day not between", value1, value2, "day");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceIsNull() {
-            addCriterion("price is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceIsNotNull() {
-            addCriterion("price is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceEqualTo(BigDecimal value) {
-            addCriterion("price =", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceNotEqualTo(BigDecimal value) {
-            addCriterion("price <>", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceGreaterThan(BigDecimal value) {
-            addCriterion("price >", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("price >=", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceLessThan(BigDecimal value) {
-            addCriterion("price <", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("price <=", value, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceIn(List<BigDecimal> values) {
-            addCriterion("price in", values, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceNotIn(List<BigDecimal> values) {
-            addCriterion("price not in", values, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("price between", value1, value2, "price");
-            return (Criteria) this;
-        }
-
-        public Criteria andPriceNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("price not between", value1, value2, "price");
+        public Criteria andFacilityIdNotBetween(Long value1, Long value2) {
+            addCriterion("facility_id not between", value1, value2, "facilityId");
             return (Criteria) this;
         }
 

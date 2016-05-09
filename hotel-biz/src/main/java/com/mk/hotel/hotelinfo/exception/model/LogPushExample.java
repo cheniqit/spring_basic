@@ -1,4 +1,4 @@
-package com.mk.hotel.model;
+package com.mk.hotel.hotelinfo.exception.model;
 
 import java.util.ArrayList;
 import java.util.Date;

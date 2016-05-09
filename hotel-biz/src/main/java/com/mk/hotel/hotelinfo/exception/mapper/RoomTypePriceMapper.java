@@ -1,7 +1,7 @@
-package com.mk.hotel.mapper;
+package com.mk.hotel.hotelinfo.exception.mapper;
 
-import com.mk.hotel.model.RoomTypePrice;
-import com.mk.hotel.model.RoomTypePriceExample;
+import com.mk.hotel.hotelinfo.exception.model.RoomTypePrice;
+import com.mk.hotel.hotelinfo.exception.model.RoomTypePriceExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

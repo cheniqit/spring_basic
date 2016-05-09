@@ -1,11 +1,11 @@
-package com.mk.hotel.model;
+package com.mk.hotel.hotelinfo.exception.model;
 
 import java.util.Date;
 
-public class RoomTypeFacility {
+public class HotelFacility {
     private Long id;
 
-    private Long roomTypeId;
+    private Long hotelId;
 
     private Long facilityId;
 
@@ -27,12 +27,12 @@ public class RoomTypeFacility {
         this.id = id;
     }
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
+    public Long getHotelId() {
+        return hotelId;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
     }
 
     public Long getFacilityId() {

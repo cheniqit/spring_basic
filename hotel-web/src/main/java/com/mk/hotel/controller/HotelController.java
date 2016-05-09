@@ -1,7 +1,7 @@
 package com.mk.hotel.controller;
 
-import com.mk.hotel.model.Hotel;
-import com.mk.hotel.service.HotelService;
+import com.mk.hotel.hotelinfo.exception.model.Hotel;
+import com.mk.hotel.hotelinfo.exception.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

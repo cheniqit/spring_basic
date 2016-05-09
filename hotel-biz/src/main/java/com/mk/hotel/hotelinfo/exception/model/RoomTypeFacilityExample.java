@@ -1,17 +1,17 @@
-package com.mk.hotel.model;
+package com.mk.hotel.hotelinfo.exception.model;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HotelFacilityExample {
+public class RoomTypeFacilityExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public HotelFacilityExample() {
+    public RoomTypeFacilityExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,63 +165,63 @@ public class HotelFacilityExample {
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIsNull() {
-            addCriterion("hotel_id is null");
+        public Criteria andRoomTypeIdIsNull() {
+            addCriterion("room_type_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIsNotNull() {
-            addCriterion("hotel_id is not null");
+        public Criteria andRoomTypeIdIsNotNull() {
+            addCriterion("room_type_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdEqualTo(Long value) {
-            addCriterion("hotel_id =", value, "hotelId");
+        public Criteria andRoomTypeIdEqualTo(Long value) {
+            addCriterion("room_type_id =", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotEqualTo(Long value) {
-            addCriterion("hotel_id <>", value, "hotelId");
+        public Criteria andRoomTypeIdNotEqualTo(Long value) {
+            addCriterion("room_type_id <>", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdGreaterThan(Long value) {
-            addCriterion("hotel_id >", value, "hotelId");
+        public Criteria andRoomTypeIdGreaterThan(Long value) {
+            addCriterion("room_type_id >", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("hotel_id >=", value, "hotelId");
+        public Criteria andRoomTypeIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("room_type_id >=", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdLessThan(Long value) {
-            addCriterion("hotel_id <", value, "hotelId");
+        public Criteria andRoomTypeIdLessThan(Long value) {
+            addCriterion("room_type_id <", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdLessThanOrEqualTo(Long value) {
-            addCriterion("hotel_id <=", value, "hotelId");
+        public Criteria andRoomTypeIdLessThanOrEqualTo(Long value) {
+            addCriterion("room_type_id <=", value, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIn(List<Long> values) {
-            addCriterion("hotel_id in", values, "hotelId");
+        public Criteria andRoomTypeIdIn(List<Long> values) {
+            addCriterion("room_type_id in", values, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotIn(List<Long> values) {
-            addCriterion("hotel_id not in", values, "hotelId");
+        public Criteria andRoomTypeIdNotIn(List<Long> values) {
+            addCriterion("room_type_id not in", values, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdBetween(Long value1, Long value2) {
-            addCriterion("hotel_id between", value1, value2, "hotelId");
+        public Criteria andRoomTypeIdBetween(Long value1, Long value2) {
+            addCriterion("room_type_id between", value1, value2, "roomTypeId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotBetween(Long value1, Long value2) {
-            addCriterion("hotel_id not between", value1, value2, "hotelId");
+        public Criteria andRoomTypeIdNotBetween(Long value1, Long value2) {
+            addCriterion("room_type_id not between", value1, value2, "roomTypeId");
             return (Criteria) this;
         }
 

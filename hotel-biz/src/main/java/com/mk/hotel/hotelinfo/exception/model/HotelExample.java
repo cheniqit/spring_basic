@@ -1,4 +1,4 @@
-package com.mk.hotel.model;
+package com.mk.hotel.hotelinfo.exception.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
