@@ -17,16 +17,16 @@ import java.util.LinkedHashMap;
  * Created by chenqi on 16/5/9.
  */
 @Controller
-@RequestMapping(value = "/bookclick", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/hotel", produces = MediaType.APPLICATION_JSON_VALUE)
 public class HotelController {
 
     @Autowired
     private HotelService hotelService;
 
 
-    @RequestMapping(value = "/thotelHourStatistics", method = RequestMethod.GET)
+    @RequestMapping(value = "/findHotelById", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<LinkedHashMap<String, Object>> hotelSync() {
+    public ResponseEntity<LinkedHashMap<String, Object>> findHotelById() {
         Hotel hotel = hotelService.findHotelById(1L);
         LinkedHashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

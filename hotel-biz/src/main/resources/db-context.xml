@@ -30,9 +30,9 @@
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
 		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="jdbcUrl" value="${mysql.jdbc.url}"/>
-		<property name="user" value="${mysql.jdbc.username}"/>
-		<property name="password" value="${mysql.jdbc.password}"/>
+		<property name="jdbcUrl" value="${hotel.mysql.jdbc.url}"/>
+		<property name="user" value="${hotel.mysql.jdbc.username}"/>
+		<property name="password" value="${hotel.mysql.jdbc.password}"/>
 		<property name="minPoolSize" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
@@ -49,13 +49,13 @@
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/*.xml"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/hotel/*.xml"/>
 
 	</bean>
 
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"/>
-		<qualifier value="ots"/>
+		<qualifier value="hotel"/>
 	</bean>
 
 
@@ -78,20 +78,19 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ots"/>
-
+		<property name="basePackage" value="com.mk.hotel.mapper"/>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
 
 
-<!---     cps 数据源  -->
+<!---     ots 数据源  -->
 
-	<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+	<!--<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
 		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
-		<property name="jdbcUrl" value="${cps.mysql.jdbc.url}"/>
-		<property name="user" value="${cps.mysql.jdbc.username}"/>
-		<property name="password" value="${cps.mysql.jdbc.password}"/>
+		<property name="jdbcUrl" value="${ots.mysql.jdbc.url}"/>
+		<property name="user" value="${ots.mysql.jdbc.username}"/>
+		<property name="password" value="${ots.mysql.jdbc.password}"/>
 		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
@@ -108,9 +107,9 @@
 		<property name="preferredTestQuery" value="SELECT 1"/>
 	</bean>
 
-	<bean id="sqlSessionFactoryCPS" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="sqlSessionFactoryOts" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceCPS"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/cps/*.xml"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/ots/*.xml"/>
 
 	</bean>
 
@@ -121,126 +120,8 @@
 
 	<aop:aspectj-autoproxy expose-proxy="true"/>
 	<bean name="scannerConfigurerCPS" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.cps.mapper"/>
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCPS"></property>
+		<property name="basePackage" value="com.mk.ots.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOts"></property>
 	</bean>
-
-	<!---     ods 数据源  -->
-
-	<bean id="dataSourceOds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
-
-		<property name="jdbcUrl" value="${ods.mysql.jdbc.url}"/>
-		<property name="user" value="${ods.mysql.jdbc.username}"/>
-		<property name="password" value="${ods.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="10" />
-		<property name="maxPoolSize" value="100" />
-		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="5" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="acquireRetryAttempts" value="3" />
-		<property name="acquireRetryDelay" value="300" />
-		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="1"/>
-		<property name="numHelperThreads" value="6"/>
-		<property name="maxAdministrativeTaskTime" value="5"/>
-		<property name="testConnectionOnCheckout" value="false"/>
-		<property name="testConnectionOnCheckin" value="true"/>
-		<property name="preferredTestQuery" value="SELECT 1"/>
-	</bean>
-
-	<bean id="sqlSessionFactoryOds" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSourceOds"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/ods/*.xml"/>
-
-	</bean>
-
-	<bean id="transactionManagerOds" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSourceOds"/>
-		<qualifier value="ods"/>
-	</bean>
-	<bean name="scannerConfigurerOds" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ods"/>
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOds"></property>
-	</bean>
-
-
-	<!---     ht 数据源  -->
-
-	<bean id="dataSourceHt" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
-
-		<property name="jdbcUrl" value="${ht.mysql.jdbc.url}"/>
-		<property name="user" value="${ht.mysql.jdbc.username}"/>
-		<property name="password" value="${ht.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="10" />
-		<property name="maxPoolSize" value="100" />
-		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="5" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="acquireRetryAttempts" value="3" />
-		<property name="acquireRetryDelay" value="300" />
-		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="1"/>
-		<property name="numHelperThreads" value="6"/>
-		<property name="maxAdministrativeTaskTime" value="5"/>
-		<property name="testConnectionOnCheckout" value="true"/>
-		<property name="testConnectionOnCheckin" value="true"/>
-		<property name="preferredTestQuery" value="SELECT 1"/>
-
-	</bean>
-
-	<bean id="sqlSessionFactoryHt" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSourceHt"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/ht/*.xml"/>
-
-	</bean>
-
-	<bean id="transactionManagerHt" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSourceHt"/>
-		<qualifier value="ods"/>
-	</bean>
-	<bean name="scannerConfigurerHt" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.ht"/>
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryHt"></property>
-	</bean>
-
-	<!---     crawer 数据源  -->
-
-	<bean id="dataSourceCrawer" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
-
-		<property name="jdbcUrl" value="${crawer.mysql.jdbc.url}"/>
-		<property name="user" value="${crawer.mysql.jdbc.username}"/>
-		<property name="password" value="${crawer.mysql.jdbc.password}"/>
-		<property name="minPoolSize" value="10" />
-		<property name="maxPoolSize" value="100" />
-		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="5" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="acquireRetryAttempts" value="3" />
-		<property name="acquireRetryDelay" value="300" />
-		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="1"/>
-		<property name="numHelperThreads" value="6"/>
-		<property name="maxAdministrativeTaskTime" value="5"/>
-		<property name="testConnectionOnCheckout" value="true"/>
-		<property name="testConnectionOnCheckin" value="true"/>
-		<property name="preferredTestQuery" value="SELECT 1"/>
-	</bean>
-
-	<bean id="sqlSessionFactoryCrawer" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSourceCrawer"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/crawer/*.xml"/>
-
-	</bean>
-
-	<bean id="transactionManagerCrawer" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSourceCrawer"/>
-		<qualifier value="ods"/>
-	</bean>
-	<bean name="scannerConfigurerCrawer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.mk.taskfactory.biz.mapper.crawer"/>
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryCrawer"></property>
-	</bean>
+-->
 </beans>
