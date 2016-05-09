@@ -1,13 +1,21 @@
-package com.mk.hotel.hotelinfo.model;
+package com.mk.hotel.roomtype.model;
 
 import java.util.Date;
 
-public class RoomTypeFacility {
+public class RoomType {
     private Long id;
 
-    private Long roomTypeId;
+    private Long fangId;
 
-    private Long facilityId;
+    private Long hotelId;
+
+    private String name;
+
+    private String area;
+
+    private Short bedType;
+
+    private Short roomNum;
 
     private Date createDate;
 
@@ -27,20 +35,52 @@ public class RoomTypeFacility {
         this.id = id;
     }
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
+    public Long getFangId() {
+        return fangId;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setFangId(Long fangId) {
+        this.fangId = fangId;
     }
 
-    public Long getFacilityId() {
-        return facilityId;
+    public Long getHotelId() {
+        return hotelId;
     }
 
-    public void setFacilityId(Long facilityId) {
-        this.facilityId = facilityId;
+    public void setHotelId(Long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area == null ? null : area.trim();
+    }
+
+    public Short getBedType() {
+        return bedType;
+    }
+
+    public void setBedType(Short bedType) {
+        this.bedType = bedType;
+    }
+
+    public Short getRoomNum() {
+        return roomNum;
+    }
+
+    public void setRoomNum(Short roomNum) {
+        this.roomNum = roomNum;
     }
 
     public Date getCreateDate() {

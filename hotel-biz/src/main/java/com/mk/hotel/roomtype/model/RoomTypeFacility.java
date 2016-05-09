@@ -1,16 +1,13 @@
-package com.mk.hotel.hotelinfo.model;
+package com.mk.hotel.roomtype.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-public class RoomTypePrice {
+public class RoomTypeFacility {
     private Long id;
 
     private Long roomTypeId;
 
-    private Long day;
-
-    private BigDecimal price;
+    private Long facilityId;
 
     private Date createDate;
 
@@ -38,20 +35,12 @@ public class RoomTypePrice {
         this.roomTypeId = roomTypeId;
     }
 
-    public Long getDay() {
-        return day;
+    public Long getFacilityId() {
+        return facilityId;
     }
 
-    public void setDay(Long day) {
-        this.day = day;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setFacilityId(Long facilityId) {
+        this.facilityId = facilityId;
     }
 
     public Date getCreateDate() {
