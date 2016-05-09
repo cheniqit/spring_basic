@@ -1,9 +1,9 @@
-package com.mk.hotel.hotelinfo.mapper;
+package com.mk.hotel.roomtype.mapper;
 
 import java.util.List;
 
-import com.mk.hotel.hotelinfo.model.RoomType;
-import com.mk.hotel.hotelinfo.model.RoomTypeExample;
+import com.mk.hotel.roomtype.model.RoomType;
+import com.mk.hotel.roomtype.model.RoomTypeExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface RoomTypeMapper {

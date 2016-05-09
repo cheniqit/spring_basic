@@ -1,4 +1,4 @@
-package com.mk.hotel.hotelinfo.model;
+package com.mk.hotel.log.model;
 
 import java.util.Date;
 

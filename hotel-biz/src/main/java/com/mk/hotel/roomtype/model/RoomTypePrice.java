@@ -1,21 +1,16 @@
-package com.mk.hotel.hotelinfo.model;
+package com.mk.hotel.roomtype.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class RoomType {
+public class RoomTypePrice {
     private Long id;
 
-    private Long fangId;
+    private Long roomTypeId;
 
-    private Long hotelId;
+    private Long day;
 
-    private String name;
-
-    private String area;
-
-    private Short bedType;
-
-    private Short roomNum;
+    private BigDecimal price;
 
     private Date createDate;
 
@@ -35,52 +30,28 @@ public class RoomType {
         this.id = id;
     }
 
-    public Long getFangId() {
-        return fangId;
+    public Long getRoomTypeId() {
+        return roomTypeId;
     }
 
-    public void setFangId(Long fangId) {
-        this.fangId = fangId;
+    public void setRoomTypeId(Long roomTypeId) {
+        this.roomTypeId = roomTypeId;
     }
 
-    public Long getHotelId() {
-        return hotelId;
+    public Long getDay() {
+        return day;
     }
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
+    public void setDay(Long day) {
+        this.day = day;
     }
 
-    public String getName() {
-        return name;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area == null ? null : area.trim();
-    }
-
-    public Short getBedType() {
-        return bedType;
-    }
-
-    public void setBedType(Short bedType) {
-        this.bedType = bedType;
-    }
-
-    public Short getRoomNum() {
-        return roomNum;
-    }
-
-    public void setRoomNum(Short roomNum) {
-        this.roomNum = roomNum;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public Date getCreateDate() {
