@@ -1,4 +1,4 @@
-package com.mk.hotel.hotel.controller;
+package com.mk.hotel.controller;
 
 import com.mk.hotel.model.Hotel;
 import com.mk.hotel.service.HotelService;
