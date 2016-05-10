@@ -179,7 +179,7 @@ http://ip:port/ots/order/cancel
 > POST
 
 **接口url：**
-> http://ip:port/cube/roomtype/roomtypestock
+> http://ip:port/cube/order/order
 
 
 </article>
