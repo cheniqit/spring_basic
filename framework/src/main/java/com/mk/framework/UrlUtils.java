@@ -24,7 +24,9 @@ public class UrlUtils {
 	 * @return
 	 */
 	public static String getUrl(String key) {
-		
+		if (urls == null || urls.size() == 0){
+			reloadYml();
+		}
 		String hessianURL = urls.get(key);
 		return hessianURL;
 	}
