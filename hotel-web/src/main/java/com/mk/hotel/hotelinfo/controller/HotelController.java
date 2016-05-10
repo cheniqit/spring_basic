@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -54,9 +51,9 @@ public class HotelController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/hotelAll", method = RequestMethod.POST)
+    @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> hotelAllPush(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<HashMap<String, Object>> hotelAllPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
@@ -66,7 +63,7 @@ public class HotelController {
 
     @RequestMapping(value = "/hotel", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> hotelPush(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<HashMap<String, Object>> hotelPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

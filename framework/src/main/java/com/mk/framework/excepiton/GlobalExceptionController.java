@@ -23,7 +23,7 @@ public class GlobalExceptionController {
     public ResponseEntity<Map<String, Object>> handleCustomException(MyException ex) {
         Map<String, Object> errorMap = Maps.newHashMap();
         errorMap.put("success", "F");
-        errorMap.put("errCode", ex.getErrorCode());
+        errorMap.put("errorCode", ex.getErrorCode());
         GlobalExceptionController.logger.error("异常::" + ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(errorMap, HttpStatus.OK);
     }
@@ -33,7 +33,7 @@ public class GlobalExceptionController {
         GlobalExceptionController.logger.error(e.getMessage(), e);
 
         Map<String, Object> errorMap = Maps.newHashMap();
-        errorMap.put("errMsg", e.getMessage());
+        errorMap.put("errorMessage", e.getMessage());
 
         return new ResponseEntity<>(errorMap, HttpStatus.EXPECTATION_FAILED);
     }
