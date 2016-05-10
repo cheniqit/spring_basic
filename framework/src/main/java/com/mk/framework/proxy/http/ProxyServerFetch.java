@@ -51,7 +51,7 @@ public class ProxyServerFetch {
     }
 
     private static void fetchByMike() {
-        String ipListJSONStr = HttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
+        String ipListJSONStr = ProxyHttpUtil.doGetNoProxy(Config.IMIKE_PROXY_IP_LIST_URL);
 
         GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
@@ -67,7 +67,7 @@ public class ProxyServerFetch {
     }
 
     private static void fetchByBill() {
-        String ipListJSONStr = HttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_LIST_URL);
+        String ipListJSONStr = ProxyHttpUtil.doGetNoProxy(Config.BILL_PROXY_IP_LIST_URL);
 
         GBJProxy gbjProxy = JSONUtil.fromJson(ipListJSONStr, GBJProxy.class);
 
