@@ -301,21 +301,21 @@
                 <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>smlt-writer</ots.jdbc.user>
                 <ots.jdbc.password>j9bcyZ5U5LQp7xxEomsu</ots.jdbc.password>
+
                 <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/hotel?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>root</hotel.jdbc.user>
                 <hotel.jdbc.password>LZBV5D5ak</hotel.jdbc.password>
-                <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://dev-ots.imike.cn/ots</ots.url>
-                <ots.remote.url>http://192.168.81.134:8080</ots.remote.url>
+
                 <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+
+                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
+                <fangChannelId>11</fangChannelId>
             </properties>
         </profile>
-
-
 
         <profile>
             <id>bgp-simulation</id>
@@ -325,21 +325,21 @@
                 <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>liming</ots.jdbc.user>
                 <ots.jdbc.password>nhpL4RznJl</ots.jdbc.password>
+
                 <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/hotel?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>liming</hotel.jdbc.user>
                 <hotel.jdbc.password>nhpL4RznJl</hotel.jdbc.password>
-                <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://huidu.imike.cn/ots</ots.url>
-                <ots.remote.url>http://customer2.imike.cn/</ots.remote.url>
-                <ots.huidu>http://huidu.imike.cn/ots</ots.huidu>
+
                 <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+
+                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
+                <fangChannelId>11</fangChannelId>
             </properties>
         </profile>
-
 
         <profile>
             <id>bgp-clu</id>
@@ -349,17 +349,19 @@
                 <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>imike-writer</ots.jdbc.user>
                 <ots.jdbc.password>Imike-writer</ots.jdbc.password>
+
                 <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/hotel?autoReconnect=true&zeroDateTimeBehavior=convrtToNull&characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>imike-writer</hotel.jdbc.user>
                 <hotel.jdbc.password>Imike-writer</hotel.jdbc.password>
-                <ots.token>1qaz2wsx</ots.token>
-                <ots.url>http://api.imike.com/ots</ots.url>
-                <ots.remote.url>http://customer.imike.com/customer</ots.remote.url>
+
                 <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+
+                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
+                <fangChannelId>11</fangChannelId>
             </properties>
         </profile>
 
