@@ -66,6 +66,7 @@ http://ip:port/ots/order/cancel
 > 报文中判断是否的字段，均使用（T/F），T 代表 true，F 代表 false
 
 
+
 ##PUSH接口
 
 ###酒店信息全量push
@@ -78,7 +79,7 @@ http://ip:port/ots/order/cancel
 > GET
 
 **接口url：**
-> http://ip:port/hotelpush/hotel/hotelall
+> http://ip:port/pmspush/hotel/hotelall
 
 **head请求参数：**
 
