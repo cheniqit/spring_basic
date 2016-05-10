@@ -1,5 +1,6 @@
 package com.mk.framework.proxy.http;
 
+import com.mk.framework.net.Config;
 import org.slf4j.Logger;
 
 import java.io.IOException;

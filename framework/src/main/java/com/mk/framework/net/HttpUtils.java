@@ -1,26 +1,31 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.net;
 
-import com.mk.framework.net.Config;
+import com.mk.framework.proxy.http.CharsetDetector;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-public class HttpUtil {
+public class HttpUtils {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtils.class);
 
     private static ThreadLocal<HttpClientContext> contextThreadLocal = new ThreadLocal<>();
 
@@ -36,33 +41,9 @@ public class HttpUtil {
         contextThreadLocal.remove();
     }
 
-    public static String doGet(String url) throws Exception {
-        ProxyServer proxyServer = ThreadContext.PROXY_SERVER_THREAD_LOCAL.get();
 
-        if ( proxyServer == null ) {
-            throw new NullPointerException("没有为该线程绑定代理服务器对象");
-        }
 
-        String result;
-        try {
-            result = HttpUtil.doGet(url, proxyServer);
-        } catch (Exception e) {
-            removeContext();
-            throw e;
-        }
-
-        if ( StringUtils.isEmpty(result)  ) {
-            removeContext();
-            throw new Exception("响应内容为空");
-        } else if ( result.length() < 100 ) {
-            removeContext();
-            throw new Exception(result);
-        }
-
-        return result;
-    }
-
-    public static String doGetNoProxy(String url)  {
+    public static String doGet(String url)  {
         String resp = null;
         try {
             resp = doGet(url, null);
@@ -73,25 +54,24 @@ public class HttpUtil {
     }
 
 
-    public static String doGet(String urlStr, ProxyServer proxyServer) throws IOException {
-        LOGGER.info("发送请求：{}", urlStr);
+
+    public static String doGet(String url, Map<String , Object> headers) throws IOException {
+        LOGGER.info("发送请求：{}", url);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 
         CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
 
         try {
-            HttpGet httpGet = new HttpGet(urlStr);
-            httpGet.setHeaders(Device.random().getHeaders());
+            HttpGet httpGet = new HttpGet(url);
+
+            if (headers != null){
+                httpGet.setHeaders(ParamsHeaders.paramHeader(headers));
+            }else {
+                httpGet.setHeaders(ParamsHeaders.paramHeader());
+            }
 
             RequestConfig.Builder builder  = RequestConfig.custom();
-            if (proxyServer != null) {
-                LOGGER.info("使用代理：{}", JSONUtil.toJson(proxyServer));
-                HttpHost httpHost = new HttpHost(proxyServer.getIp(), proxyServer.getPort());
-                builder.setProxy(httpHost);
-            } else {
-                LOGGER.info("未使用代理");
-            }
 
             builder.setSocketTimeout(Config.READ_TIMEOUT)
                     .setConnectionRequestTimeout(Config.READ_TIMEOUT)
@@ -129,6 +109,78 @@ public class HttpUtil {
             }
         }
     }
+    public static String doPost(String url, Map<String , Object> params) throws IOException {
+        return doPost(url, params, null);
+    }
+
+    public static String doPost(String url, Map<String , Object> params, Map<String, Object> headers) throws IOException {
+        LOGGER.info("发送请求：{}", url);
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+
+        CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+
+        try {
+            HttpPost httpPost = new HttpPost(url);
+
+            if (headers != null){
+                httpPost.setHeaders(ParamsHeaders.paramHeader(headers));
+            }else {
+                httpPost.setHeaders(ParamsHeaders.paramHeader());
+            }
+
+
+            if (params != null){
+                List<NameValuePair> nameValuePairs = new ArrayList<>();
+                for (Map.Entry<String, Object> entry : params.entrySet()){
+                    String key = entry.getKey();
+                    Object val = entry.getValue();
+
+                    nameValuePairs.add((new BasicNameValuePair(key, val.toString())));
+                }
+
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            }
+
+            RequestConfig.Builder builder  = RequestConfig.custom();
+
+            builder.setSocketTimeout(Config.READ_TIMEOUT)
+                    .setConnectionRequestTimeout(Config.READ_TIMEOUT)
+                    .setConnectTimeout(Config.READ_TIMEOUT);
+
+            httpPost.setConfig(builder.build());
+
+            CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpPost, getContext());
+
+            int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+
+            HttpEntity httpEntity = closeableHttpResponse.getEntity();
+
+            byte[] bytes = EntityUtils.toByteArray(httpEntity);
+
+            String charset = CharsetDetector.guessEncoding(bytes);
+
+            String result = new String(bytes, charset);
+
+            if ( result.length() < 500 ) {
+                LOGGER.info("响应内容：{}", result);
+            } else {
+                LOGGER.info("响应内容：{}", result.substring(0, 499));
+            }
+
+            LOGGER.info("响应码为：{}", statusCode);
+            if ( statusCode != 200 ) {
+                throw new IOException("响应码为：" + statusCode);
+            }
+
+            return result;
+        } finally {
+            if ( closeableHttpClient != null ) {
+                closeableHttpClient.close();
+            }
+        }
+    }
+
 
 
 

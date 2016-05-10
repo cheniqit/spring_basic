@@ -312,6 +312,8 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <pms.channelid>11</pms.channelid>
+                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
             </properties>
         </profile>
 
@@ -337,6 +339,8 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <pms.channelid>11</pms.channelid>
+                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
             </properties>
         </profile>
 
@@ -360,6 +364,9 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+
+                <pms.channelid>11</pms.channelid>
+                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
             </properties>
         </profile>
 

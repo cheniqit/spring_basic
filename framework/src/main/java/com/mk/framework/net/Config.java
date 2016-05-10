@@ -1,4 +1,4 @@
-package com.mk.framework.proxy.http;
+package com.mk.framework.net;
 
 import com.google.common.collect.ImmutableSet;
 
