@@ -34,7 +34,7 @@ public class UrlUtils {
 	public static void reloadYml(){
 		try {
 			PropertiesUtil pro = new PropertiesUtil();
-			pro.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("common_urls.properties"));
+			pro.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("common.properties"));
 			urls = pro.getMap();
 		} catch (Exception e) {
 			e.printStackTrace();
