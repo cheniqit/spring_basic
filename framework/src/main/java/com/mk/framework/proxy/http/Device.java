@@ -17,7 +17,7 @@ public class Device {
         public Header[] getHeaders() {
             String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
             try {
-                 cookie = HttpUtil.getCookies();
+                 cookie = ProxyHttpUtil.getCookies();
             } catch (IOException e) {
                 cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
                 e.printStackTrace();
@@ -39,7 +39,7 @@ public class Device {
         public Header[] getHeaders() {
             String cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
             try {
-                cookie = HttpUtil.getCookies();
+                cookie = ProxyHttpUtil.getCookies();
             } catch (IOException e) {
                 cookie = "QN48=pd_650ae0a633f5adbc_1531bf1c81f_159a";
                 e.printStackTrace();

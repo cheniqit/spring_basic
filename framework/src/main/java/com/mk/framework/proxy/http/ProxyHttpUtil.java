@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class HttpUtil {
+public class ProxyHttpUtil {
 
-    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(HttpUtil.class);
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(ProxyHttpUtil.class);
 
     private static ThreadLocal<HttpClientContext> contextThreadLocal = new ThreadLocal<>();
 
@@ -45,7 +45,7 @@ public class HttpUtil {
 
         String result;
         try {
-            result = HttpUtil.doGet(url, proxyServer);
+            result = ProxyHttpUtil.doGet(url, proxyServer);
         } catch (Exception e) {
             removeContext();
             throw e;
