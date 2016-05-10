@@ -22,6 +22,8 @@ public class Hotel {
 
     private String defaultLeaveTime;
 
+    private String hotelType;
+
     private String retentionTime;
 
     private Date repairTime;
@@ -114,6 +116,14 @@ public class Hotel {
 
     public void setDefaultLeaveTime(String defaultLeaveTime) {
         this.defaultLeaveTime = defaultLeaveTime == null ? null : defaultLeaveTime.trim();
+    }
+
+    public String getHotelType() {
+        return hotelType;
+    }
+
+    public void setHotelType(String hotelType) {
+        this.hotelType = hotelType == null ? null : hotelType.trim();
     }
 
     public String getRetentionTime() {

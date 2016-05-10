@@ -696,6 +696,76 @@ public class HotelExample {
             return (Criteria) this;
         }
 
+        public Criteria andHotelTypeIsNull() {
+            addCriterion("hotel_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeIsNotNull() {
+            addCriterion("hotel_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeEqualTo(String value) {
+            addCriterion("hotel_type =", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotEqualTo(String value) {
+            addCriterion("hotel_type <>", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeGreaterThan(String value) {
+            addCriterion("hotel_type >", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("hotel_type >=", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLessThan(String value) {
+            addCriterion("hotel_type <", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLessThanOrEqualTo(String value) {
+            addCriterion("hotel_type <=", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLike(String value) {
+            addCriterion("hotel_type like", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotLike(String value) {
+            addCriterion("hotel_type not like", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeIn(List<String> values) {
+            addCriterion("hotel_type in", values, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotIn(List<String> values) {
+            addCriterion("hotel_type not in", values, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeBetween(String value1, String value2) {
+            addCriterion("hotel_type between", value1, value2, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotBetween(String value1, String value2) {
+            addCriterion("hotel_type not between", value1, value2, "hotelType");
+            return (Criteria) this;
+        }
+
         public Criteria andRetentionTimeIsNull() {
             addCriterion("retention_time is null");
             return (Criteria) this;

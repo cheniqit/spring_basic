@@ -11,6 +11,7 @@
     <result column="lat" property="lat" jdbcType="DECIMAL" />
     <result column="lon" property="lon" jdbcType="DECIMAL" />
     <result column="default_leave_time" property="defaultLeaveTime" jdbcType="VARCHAR" />
+    <result column="hotel_type" property="hotelType" jdbcType="VARCHAR" />
     <result column="retention_time" property="retentionTime" jdbcType="VARCHAR" />
     <result column="repair_time" property="repairTime" jdbcType="TIMESTAMP" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
@@ -52,37 +53,8 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
-    id, fang_id, name, addr, phone, pic, lat, lon, default_leave_time, retention_time, 
+    id, fang_id, name, addr, phone, pic, lat, lon, default_leave_time, hotel_type, retention_time, 
     repair_time, introduction, prov_code, city_code, dis_code, create_date, create_by, 
     update_date, update_by, is_valid
   </sql>
@@ -111,27 +83,21 @@
     delete from hotel
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.mk.hotel.hotelinfo.model.HotelExample" >
-    delete from hotel
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
   <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" >
     insert into hotel (id, fang_id, name, 
       addr, phone, pic, lat, 
-      lon, default_leave_time, retention_time, 
-      repair_time, introduction, prov_code, 
-      city_code, dis_code, create_date, 
-      create_by, update_date, update_by, 
-      is_valid)
+      lon, default_leave_time, hotel_type, 
+      retention_time, repair_time, introduction, 
+      prov_code, city_code, dis_code, 
+      create_date, create_by, update_date, 
+      update_by, is_valid)
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{addr,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR}, #{lat,jdbcType=DECIMAL}, 
-      #{lon,jdbcType=DECIMAL}, #{defaultLeaveTime,jdbcType=VARCHAR}, #{retentionTime,jdbcType=VARCHAR}, 
-      #{repairTime,jdbcType=TIMESTAMP}, #{introduction,jdbcType=VARCHAR}, #{provCode,jdbcType=VARCHAR}, 
-      #{cityCode,jdbcType=VARCHAR}, #{disCode,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{isValid,jdbcType=CHAR})
+      #{lon,jdbcType=DECIMAL}, #{defaultLeaveTime,jdbcType=VARCHAR}, #{hotelType,jdbcType=VARCHAR}, 
+      #{retentionTime,jdbcType=VARCHAR}, #{repairTime,jdbcType=TIMESTAMP}, #{introduction,jdbcType=VARCHAR}, 
+      #{provCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{disCode,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" >
     insert into hotel
@@ -162,6 +128,9 @@
       </if>
       <if test="defaultLeaveTime != null" >
         default_leave_time,
+      </if>
+      <if test="hotelType != null" >
+        hotel_type,
       </if>
       <if test="retentionTime != null" >
         retention_time,
@@ -225,6 +194,9 @@
       <if test="defaultLeaveTime != null" >
         #{defaultLeaveTime,jdbcType=VARCHAR},
       </if>
+      <if test="hotelType != null" >
+        #{hotelType,jdbcType=VARCHAR},
+      </if>
       <if test="retentionTime != null" >
         #{retentionTime,jdbcType=VARCHAR},
       </if>
@@ -266,100 +238,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update hotel
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=BIGINT},
-      </if>
-      <if test="record.fangId != null" >
-        fang_id = #{record.fangId,jdbcType=BIGINT},
-      </if>
-      <if test="record.name != null" >
-        name = #{record.name,jdbcType=VARCHAR},
-      </if>
-      <if test="record.addr != null" >
-        addr = #{record.addr,jdbcType=VARCHAR},
-      </if>
-      <if test="record.phone != null" >
-        phone = #{record.phone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.pic != null" >
-        pic = #{record.pic,jdbcType=VARCHAR},
-      </if>
-      <if test="record.lat != null" >
-        lat = #{record.lat,jdbcType=DECIMAL},
-      </if>
-      <if test="record.lon != null" >
-        lon = #{record.lon,jdbcType=DECIMAL},
-      </if>
-      <if test="record.defaultLeaveTime != null" >
-        default_leave_time = #{record.defaultLeaveTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.retentionTime != null" >
-        retention_time = #{record.retentionTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.repairTime != null" >
-        repair_time = #{record.repairTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.introduction != null" >
-        introduction = #{record.introduction,jdbcType=VARCHAR},
-      </if>
-      <if test="record.provCode != null" >
-        prov_code = #{record.provCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.cityCode != null" >
-        city_code = #{record.cityCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.disCode != null" >
-        dis_code = #{record.disCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createDate != null" >
-        create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createBy != null" >
-        create_by = #{record.createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateDate != null" >
-        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateBy != null" >
-        update_by = #{record.updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="record.isValid != null" >
-        is_valid = #{record.isValid,jdbcType=CHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update hotel
-    set id = #{record.id,jdbcType=BIGINT},
-      fang_id = #{record.fangId,jdbcType=BIGINT},
-      name = #{record.name,jdbcType=VARCHAR},
-      addr = #{record.addr,jdbcType=VARCHAR},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      pic = #{record.pic,jdbcType=VARCHAR},
-      lat = #{record.lat,jdbcType=DECIMAL},
-      lon = #{record.lon,jdbcType=DECIMAL},
-      default_leave_time = #{record.defaultLeaveTime,jdbcType=VARCHAR},
-      retention_time = #{record.retentionTime,jdbcType=VARCHAR},
-      repair_time = #{record.repairTime,jdbcType=TIMESTAMP},
-      introduction = #{record.introduction,jdbcType=VARCHAR},
-      prov_code = #{record.provCode,jdbcType=VARCHAR},
-      city_code = #{record.cityCode,jdbcType=VARCHAR},
-      dis_code = #{record.disCode,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      create_by = #{record.createBy,jdbcType=VARCHAR},
-      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
-      update_by = #{record.updateBy,jdbcType=VARCHAR},
-      is_valid = #{record.isValid,jdbcType=CHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" >
     update hotel
     <set >
@@ -386,6 +264,9 @@
       </if>
       <if test="defaultLeaveTime != null" >
         default_leave_time = #{defaultLeaveTime,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelType != null" >
+        hotel_type = #{hotelType,jdbcType=VARCHAR},
       </if>
       <if test="retentionTime != null" >
         retention_time = #{retentionTime,jdbcType=VARCHAR},
@@ -433,6 +314,7 @@
       lat = #{lat,jdbcType=DECIMAL},
       lon = #{lon,jdbcType=DECIMAL},
       default_leave_time = #{defaultLeaveTime,jdbcType=VARCHAR},
+      hotel_type = #{hotelType,jdbcType=VARCHAR},
       retention_time = #{retentionTime,jdbcType=VARCHAR},
       repair_time = #{repairTime,jdbcType=TIMESTAMP},
       introduction = #{introduction,jdbcType=VARCHAR},

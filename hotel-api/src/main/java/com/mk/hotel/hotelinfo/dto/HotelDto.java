@@ -44,6 +44,16 @@ public class HotelDto {
 
     private String isValid;
 
+    private String hotelType;
+
+    public String getHotelType() {
+        return hotelType;
+    }
+
+    public void setHotelType(String hotelType) {
+        this.hotelType = hotelType;
+    }
+
     public Long getId() {
         return id;
     }
