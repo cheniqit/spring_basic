@@ -109,6 +109,12 @@ public class HttpUtils {
             }
         }
     }
+
+
+    public static String doPost(String url) throws IOException {
+        return doPost(url, null, null);
+    }
+
     public static String doPost(String url, Map<String , Object> params) throws IOException {
         return doPost(url, params, null);
     }
