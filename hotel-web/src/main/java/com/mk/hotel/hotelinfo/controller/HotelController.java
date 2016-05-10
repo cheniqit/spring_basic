@@ -23,7 +23,6 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
-
     @RequestMapping(value = "/findHotelById", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<LinkedHashMap<String, Object>> findHotelById() {
@@ -33,5 +32,26 @@ public class HotelController {
         result.put("hotel", hotel);
         return new ResponseEntity<LinkedHashMap<String, Object>>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/hotelAll", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<LinkedHashMap<String, Object>> hotelAllPush() {
+
+
+        LinkedHashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<LinkedHashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/hotel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<LinkedHashMap<String, Object>> hotelPush() {
+
+
+        LinkedHashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<LinkedHashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
 }
 
