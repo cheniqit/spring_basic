@@ -34,5 +34,26 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/roomtypeprice", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> roomTypePricePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        result.put("headers.token",headers.get("token"));
+        result.put("body", body);
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/roomtypestock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> roomTypeStockPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        result.put("headers.token",headers.get("token"));
+        result.put("body", body);
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
 }
 
