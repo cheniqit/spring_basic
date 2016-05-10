@@ -73,13 +73,11 @@ http://ip:port/ots/order/cancel
 ***
 **业务说明：**
 
-查询订单列表
-
 **请求方式：**
-> GET
+> POST
 
 **接口url：**
-> http://ip:port/pmspush/hotel/hotelall
+> http://ip:port/cube/hotel/hotelall
 
 **head请求参数：**
 
@@ -101,7 +99,6 @@ http://ip:port/ots/order/cancel
 * http状态200
 
 ```js
-
 {
     "success":"T"
 }
@@ -119,6 +116,70 @@ http://ip:port/ots/order/cancel
 }
 ```
 
+###酒店信息增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/hotel/hotel
+
+
+###酒店标签信息增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/hotel/hotelfacility
+
+
+###房型信息增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/roomtype
+
+
+###房型价格信息增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/roomtypeprice
+
+
+###房型库存信息增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/roomtypestock
+
+
+###订单状态增量push
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/roomtypestock
 
 
 </article>
