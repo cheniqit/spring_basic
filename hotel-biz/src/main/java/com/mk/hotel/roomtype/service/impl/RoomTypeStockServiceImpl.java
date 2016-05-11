@@ -1,6 +1,7 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
+import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.roomtype.RoomTypeStockService;
@@ -10,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     public String lock(String hotelId, String roomTypeId, Date day, long maxWaitTimeOut) {
+
         Jedis jedis = null;
         try {
             jedis = RedisUtil.getJedis();
@@ -83,6 +86,26 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             return;
         }
 
+        //
+        Date[] dates = DateUtils.getStartEndDate(from,to);
+        try {
+            for (Date date : dates) {
+                this.lock(hotelId, roomTypeId, date, 10 * 1000);
+            }
+
+            //
+            String availableHashName =  RoomTypeStockCacheEnum.getAvailableHashName(hotelId,roomTypeId);
+            String usingHashName = RoomTypeStockCacheEnum.getUsingHashName(hotelId, roomTypeId);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
+        for (Date date : dates) {
+            this.unlock(hotelId, roomTypeId, date);
+        }
     }
 
     public void unlockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
@@ -90,6 +113,21 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             return;
         }
 
+        //
+        Date[] dates = DateUtils.getStartEndDate(from,to);
+        try {
+            for (Date date : dates) {
+                this.lock(hotelId, roomTypeId, date, 10 * 1000);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
+        for (Date date : dates) {
+            this.unlock(hotelId, roomTypeId, date);
+        }
     }
 
     public void push (String hotelId, String roomTypeId, Date day, Integer num) {

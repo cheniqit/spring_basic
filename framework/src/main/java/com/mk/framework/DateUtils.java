@@ -1795,6 +1795,49 @@ public class DateUtils extends Object {
         return new Date[]{runTime,runTime};
     }
 
+    public static Date[] getStartEndDate(Date startTime, Date endTime) {
+        //
+        if (null == startTime || null == endTime) {
+            return new Date[]{new Date()};
+        }
+
+        //开始时间晚于结束时间
+        if(startTime.after(endTime)) {
+            return new Date[]{startTime};
+        }
+
+        //
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date startDate = datetimeFormat.parse(dateFormat.format(startTime) + " 00:00:00" );
+            Date endDate = datetimeFormat.parse(dateFormat.format(endTime) + " 00:00:00" );
+
+            //计算间隔天数
+            long start = startDate.getTime();
+            long end = endDate.getTime();
+
+            long diff = (end - start) / (1000 * 60 * 60 * 24) + 1;
+
+            //
+            List<Date> dateList = new ArrayList<>();
+            for (int i = 0 ; i< diff;i++) {
+
+                //
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startDate);
+                calendar.add(Calendar.DAY_OF_MONTH, i);
+                dateList.add(calendar.getTime());
+            }
+
+            return dateList.toArray(new Date[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date[]{startTime};
+    }
     /**
      * 计算两个时间的时分，是否第一个时间的时分在第二个时间之前
      * @param firstDate
