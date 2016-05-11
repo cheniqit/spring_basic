@@ -14,6 +14,8 @@ import redis.clients.jedis.Jedis;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -103,12 +105,25 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
             //
             jedis = RedisUtil.getJedis();
+
+            Map<String,Long> availableMap = new HashMap<String, Long>();
+
             for (Date date : dates) {
                 String strDate = format.format(date);
                 String strAvailableNum = jedis.hget(availableHashName,strDate);
+                if (null == strAvailableNum) {
+                    strAvailableNum = "0";
+                }
                 String strUsingNum = jedis.hget(usingHashName, strDate);
+                if (null == strUsingNum) {
+                    strUsingNum = "0";
+                }
 
+                //
+                Long availabelNum = Long.parseLong(strAvailableNum);
+                Long usingNum = Long.parseLong(strUsingNum);
 
+                availableMap.put(strDate, availabelNum);
             }
         } catch (MyException e) {
             throw e;
