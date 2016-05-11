@@ -7,16 +7,16 @@ import java.util.List;
  */
 public class RoomTypeJson {
 
-    private Long roomTypeId;
+    private Long roomtypeid;
 
     private List<PriceInfoJson> priceinfo;
 
-    public Long getRoomTypeId() {
-        return roomTypeId;
+    public Long getRoomtypeid() {
+        return roomtypeid;
     }
 
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
+    public void setRoomtypeid(Long roomtypeid) {
+        this.roomtypeid = roomtypeid;
     }
 
     public List<PriceInfoJson> getPriceinfo() {
