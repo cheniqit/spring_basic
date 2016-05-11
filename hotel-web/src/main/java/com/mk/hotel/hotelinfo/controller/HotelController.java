@@ -3,6 +3,7 @@ package com.mk.hotel.hotelinfo.controller;
 import com.mk.framework.net.HttpUtils;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.log.service.LogPushService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class HotelController {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private LogPushService logPushService;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     @ResponseBody
