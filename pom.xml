@@ -150,7 +150,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.0.1.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -281,7 +281,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java-version>1.7</java-version>
-        <spring.version>4.0.0.RELEASE</spring.version>
+        <spring.version>4.1.5.RELEASE</spring.version>
         <org.aspectj-version>1.7.3</org.aspectj-version>
         <slf4j.version>1.7.12</slf4j.version>
         <logback.version>1.1.2</logback.version>
@@ -311,14 +311,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-<<<<<<< HEAD
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-=======
-
                 <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
                 <fangChannelId>11</fangChannelId>
->>>>>>> 26baa9f49523fae7b7f5afca11a159b691978d17
             </properties>
         </profile>
 
@@ -340,14 +336,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-<<<<<<< HEAD
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-=======
-
                 <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
                 <fangChannelId>11</fangChannelId>
->>>>>>> 26baa9f49523fae7b7f5afca11a159b691978d17
             </properties>
         </profile>
 
@@ -369,14 +361,10 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
-
-<<<<<<< HEAD
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-=======
                 <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
                 <fangChannelId>11</fangChannelId>
->>>>>>> 26baa9f49523fae7b7f5afca11a159b691978d17
             </properties>
         </profile>
 
