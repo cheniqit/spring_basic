@@ -311,10 +311,9 @@
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
-                <fangChannelId>11</fangChannelId>
             </properties>
         </profile>
 
@@ -338,8 +337,7 @@
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
-                <fangChannelId>11</fangChannelId>
+                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
             </properties>
         </profile>
 
@@ -363,8 +361,6 @@
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
-                <fangToken>88db86e86f4884ab2244bff28b9252e3</fangToken>
-                <fangChannelId>11</fangChannelId>
             </properties>
         </profile>
 
