@@ -1,6 +1,9 @@
 package com.mk.hotel.roomtype.controller;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.log.LogPushService;
+import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +24,26 @@ public class RoomTypeController {
     @Autowired
     private RoomTypeService roomTypeService;
 
+    @Autowired
+    private LogPushService logPushService;
+
     @RequestMapping(value = "/roomtype", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> roomTypePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+
+            //TODO
+            logPushDto.setType(1l);
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
 
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(body, RoomTypeJson.class);
 
@@ -38,10 +58,22 @@ public class RoomTypeController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> roomTypePricePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+
+            //TODO
+            logPushDto.setType(1l);
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
-        result.put("headers.token",headers.get("token"));
-        result.put("body", body);
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
@@ -49,10 +81,22 @@ public class RoomTypeController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> roomTypeStockPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+
+            //TODO
+            logPushDto.setType(1l);
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
-        result.put("headers.token",headers.get("token"));
-        result.put("body", body);
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 }
