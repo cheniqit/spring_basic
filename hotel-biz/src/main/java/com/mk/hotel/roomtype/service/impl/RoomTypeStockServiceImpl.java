@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by huangjie on 16/5/11.
@@ -31,12 +32,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             String h = jedis.set(lockKeyName, "1", "NX", "EX", 6);
 
             while (null == h) {
+                TimeUnit.MILLISECONDS.sleep(10);
                 h = jedis.set(lockKeyName, "1", "NX", "EX", 6);
 
                 //
                 long now = System.currentTimeMillis();
                 long diff = now - start;
-                if (diff < maxWaitTimeOut) {
+                if (diff > maxWaitTimeOut) {
                     throw new MyException("-99", "-99", "锁定超时");
                 }
             }
@@ -57,4 +59,44 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     }
 
 
+    public void unlock(String hotelId, String roomTypeId, Date day) {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            //
+            String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, day);
+            jedis.del(lockKeyName);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis){
+                jedis.close();
+            }
+        }
+    }
+
+    public void lockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
+
+    }
+
+    public void unlockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
+
+    }
+
+    public void push (String hotelId, String roomTypeId, Date day, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == num) {
+            return;
+        }
+
+
+    }
 }
