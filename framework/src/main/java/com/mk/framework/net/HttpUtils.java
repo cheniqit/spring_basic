@@ -10,10 +10,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -53,6 +56,15 @@ public class HttpUtils {
         return resp;
     }
 
+    public static String doGetWithJson(String url, String json)  {
+        String resp = null;
+        try {
+            resp = doGet(url, null);
+        } catch (IOException e) {
+            LOGGER.error("请求出错：", e);
+        }
+        return resp;
+    }
 
 
     public static String doGet(String url, Map<String , Object> headers) throws IOException {
@@ -110,16 +122,24 @@ public class HttpUtils {
         }
     }
 
+    public static String doPost(String url,String json) throws IOException {
+        return doPost(url, null, null, json);
+    }
 
     public static String doPost(String url) throws IOException {
         return doPost(url, null, null);
     }
 
+
     public static String doPost(String url, Map<String , Object> params) throws IOException {
         return doPost(url, params, null);
     }
-
     public static String doPost(String url, Map<String , Object> params, Map<String, Object> headers) throws IOException {
+        return doPost(url, params, headers, null);
+    }
+
+
+    public static String doPost(String url, Map<String , Object> params, Map<String, Object> headers, String json) throws IOException {
         LOGGER.info("发送请求：{}", url);
 
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
@@ -146,6 +166,11 @@ public class HttpUtils {
                 }
 
                 httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            }
+
+            if (StringUtils.isNotBlank(json)){
+                StringEntity entity = new StringEntity(json, ContentType.create("application/json", "UTF-8"));
+                httpPost.setEntity(entity);
             }
 
             RequestConfig.Builder builder  = RequestConfig.custom();

@@ -1,5 +1,7 @@
 package com.mk.framework;
 
+import com.mk.framework.net.PmsAuthHeader;
+
 import java.util.Calendar;
 
 /**
@@ -10,9 +12,10 @@ public class FbbRequestHead {
     private String token;
     private Long timeStamp;
 
-    public FbbRequestHead(String channelId, String token) {
-        this.channelId = channelId;
-        this.token = token;
+    public FbbRequestHead() {
+        PmsAuthHeader pmsAuthHeader = new PmsAuthHeader();
+        this.channelId = pmsAuthHeader.getChannelId();
+        this.token = pmsAuthHeader.getToken();
         this.timeStamp = Calendar.getInstance().getTimeInMillis();
     }
 
