@@ -7,4 +7,5 @@ public class Constant {
     public static final String PMS_CHANNEL_ID_KEY = "channelid";
     public static final String PMS_TOKEN_KEY = "token";
     public static final String PMS_TIMESTAMP_KEY = "timestamp";
+    public static final String PMS_REMOTE_URL = UrlUtils.getUrl("pms.remote.url");
 }
