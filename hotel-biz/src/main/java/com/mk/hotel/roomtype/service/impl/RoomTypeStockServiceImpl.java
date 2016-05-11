@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +87,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             return;
         }
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
         //
         Date[] dates = DateUtils.getStartEndDate(from,to);
         try {
@@ -93,14 +97,28 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 this.lock(hotelId, roomTypeId, date, 10 * 1000);
             }
 
-            //
+            //hashName
             String availableHashName =  RoomTypeStockCacheEnum.getAvailableHashName(hotelId,roomTypeId);
             String usingHashName = RoomTypeStockCacheEnum.getUsingHashName(hotelId, roomTypeId);
 
+            //
+            jedis = RedisUtil.getJedis();
+            for (Date date : dates) {
+                String strDate = format.format(date);
+                String strAvailableNum = jedis.hget(availableHashName,strDate);
+                String strUsingNum = jedis.hget(usingHashName, strDate);
 
+
+            }
+        } catch (MyException e) {
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+        } finally {
+            if (null != jedis){
+                jedis.close();
+            }
         }
 
         for (Date date : dates) {
