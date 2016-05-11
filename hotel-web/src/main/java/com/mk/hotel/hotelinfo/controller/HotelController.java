@@ -1,9 +1,12 @@
 package com.mk.hotel.hotelinfo.controller;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.net.HttpUtils;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.log.service.LogPushService;
+import com.mk.hotel.log.LogPushService;
+import com.mk.hotel.log.dto.LogPushDto;
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -59,6 +62,17 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelAllPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.hotelAll.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -69,6 +83,18 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.hotel.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -77,6 +103,18 @@ public class HotelController {
     @RequestMapping(value = "/hotelfacility", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelFacilityPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.hotelFacility.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
