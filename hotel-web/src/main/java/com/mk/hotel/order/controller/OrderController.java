@@ -3,6 +3,7 @@ package com.mk.hotel.order.controller;
 import com.dianping.cat.Cat;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,7 @@ public class OrderController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.orderStatus.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {

@@ -6,6 +6,7 @@ import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -65,9 +66,7 @@ public class HotelController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.hotelAll.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {
@@ -88,9 +87,7 @@ public class HotelController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.hotel.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {
@@ -111,9 +108,7 @@ public class HotelController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.hotelFacility.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {

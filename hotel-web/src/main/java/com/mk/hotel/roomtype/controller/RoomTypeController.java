@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,7 @@ public class RoomTypeController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.roomType.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {
@@ -62,9 +61,7 @@ public class RoomTypeController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.roomTypePrice.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {
@@ -85,9 +82,7 @@ public class RoomTypeController {
             //log
             LogPushDto logPushDto = new LogPushDto();
             logPushDto.setMsg(body);
-
-            //TODO
-            logPushDto.setType(1l);
+            logPushDto.setType(LogPushTypeEnum.roomTypeStock.getId());
 
             this.logPushService.save(logPushDto);
         }catch (Exception e) {
