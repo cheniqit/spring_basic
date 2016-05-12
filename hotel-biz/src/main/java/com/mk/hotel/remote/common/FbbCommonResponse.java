@@ -1,17 +1,14 @@
 package com.mk.hotel.remote.common;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 /**
  * Created by chenqi on 16/5/9.
  */
-public class FbbCommonResponse<T> {
+public class FbbCommonResponse{
     private String success;
     private String errorCode;
     private String errorMessage;
     private String result;
-    @JSONField(name ="data")
-    private T date;
+
 
     public String getSuccess() {
         return success;
@@ -37,11 +34,11 @@ public class FbbCommonResponse<T> {
         this.errorMessage = errorMessage;
     }
 
-    public T getDate() {
-        return date;
+    public String getResult() {
+        return result;
     }
 
-    public void setDate(T date) {
-        this.date = date;
+    public void setResult(String result) {
+        this.result = result;
     }
 }
