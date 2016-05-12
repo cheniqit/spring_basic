@@ -9,7 +9,7 @@ import java.util.List;
  * Created by chenqi on 16/5/10.
  */
 public class QueryStockResponse extends FbbCommonResponse {
-    private Roominfo roominfo;
+    private Roominfo data;
 
     class Roominfo{
         private String roomtypeid;
