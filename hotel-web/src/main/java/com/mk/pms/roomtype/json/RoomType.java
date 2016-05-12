@@ -26,7 +26,9 @@ public class RoomType {
 
     private Integer roomnum;
 
-    private List<Picture> roomtypepics;
+    private String roomtypepics;
+
+    private List<Picture> roomTypePics;
 
     public Long getId() {
         return id;
@@ -108,11 +110,19 @@ public class RoomType {
         this.roomnum = roomnum;
     }
 
-    public List<Picture> getRoomtypepics() {
+    public String getRoomtypepics() {
         return roomtypepics;
     }
 
-    public void setRoomtypepics(List<Picture> roomtypepics) {
+    public void setRoomtypepics(String roomtypepics) {
         this.roomtypepics = roomtypepics;
+    }
+
+    public List<Picture> getRoomTypePics() {
+        return roomTypePics;
+    }
+
+    public void setRoomTypePics(List<Picture> roomTypePics) {
+        this.roomTypePics = roomTypePics;
     }
 }

@@ -1,13 +1,18 @@
 package com.mk.pms.hoteldetail.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mk.framework.Constant;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.net.HttpUtils;
 import com.mk.pms.hoteldetail.json.HotelDetail;
 import com.mk.pms.hoteldetail.service.HotelDetailService;
+import com.mk.pms.roomtype.json.Picture;
+import com.mk.pms.roomtype.json.RoomType;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by kirinli on 16/5/12.
@@ -30,6 +35,34 @@ public class HotelDetailServiceImpl implements HotelDetailService{
 
                     JSONObject hotelObj = dataObj.getJSONObject("hotel");
                     hotelDetail = JsonUtils.fromJson(hotelObj.toJSONString(), HotelDetail.class);
+
+                    if (null != hotelDetail){
+                        String hotelPicsJson = hotelDetail.getHotelpics();
+
+                        if (StringUtils.isNotBlank(hotelPicsJson)){
+
+                            List<Picture> hotelPics = JSON.parseArray(hotelPicsJson,Picture.class);
+                            if (null != hotelPics){
+                                hotelDetail.setHotelPics(hotelPics);
+                            }
+                        }
+
+
+                        List<RoomType> roomTypes = hotelDetail.getRoomtypes();
+
+                        if (null != roomTypes){
+
+                            for (RoomType roomType : roomTypes) {
+                                String roomTypePicsJson = roomType.getRoomtypepics();
+
+                                if (StringUtils.isNotBlank(roomTypePicsJson)){
+                                    List<Picture> roomTypePics = JSON.parseArray(roomTypePicsJson,Picture.class);
+                                    roomType.setRoomTypePics(roomTypePics);
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
 

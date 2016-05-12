@@ -12,8 +12,6 @@ import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,6 +60,18 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         throw new MyException("-99", "-99", "锁定超时");
     }
 
+    @Override
+    public void lock(String hotelId, String roomTypeId, Date from, Date to, int lockTime, long maxWaitTimeOut) {
+        if (StringUtils.isEmpty(hotelId) || StringUtils.isEmpty(roomTypeId) || null == from || null == to) {
+            throw new MyException("-99", "-99", "参数不可为空");
+        }
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+
+        for (Date date : dates) {
+            this.lock(hotelId, roomTypeId, date, lockTime, maxWaitTimeOut);
+        }
+    }
+
 
     public void unlock(String hotelId, String roomTypeId, Date day) {
         Jedis jedis = null;
@@ -79,6 +89,18 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             if (null != jedis) {
                 jedis.close();
             }
+        }
+    }
+
+    @Override
+    public void unlock(String hotelId, String roomTypeId, Date from, Date to) {
+        if (StringUtils.isEmpty(hotelId) || StringUtils.isEmpty(roomTypeId) || null == from || null == to) {
+            throw new MyException("-99", "-99", "参数不可为空");
+        }
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+
+        for (Date date : dates) {
+            this.unlock(hotelId, roomTypeId, date);
         }
     }
 
@@ -222,17 +244,10 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             String otsUsingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
             String pmsUsingHashName = RoomTypeStockCacheEnum.getPmsUsingHashName(hotelId, roomTypeId);
 
-            for (Date date : dates) {
-                String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, date);
+            //检查是否已锁, 及是否有房
+            this.checkHaveRoom(hotelId, roomTypeId, dates, otsUsingHashName, num);
 
-                String lockKey = jedis.get(lockKeyName);
-
-                if (null == lockKey) {
-                    throw new MyException("-99","-99","未获得操作锁");
-                }
-            }
-
-
+            //锁房
             for (Date date : dates) {
                 String strDate = format.format(date);
 
@@ -253,18 +268,87 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     @Override
     public void unlockPms(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //hashName
+            String otsUsingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
+            String pmsUsingHashName = RoomTypeStockCacheEnum.getPmsUsingHashName(hotelId, roomTypeId);
+
+
+            //检查是否已锁, 及是否有房
+            this.checkHaveRoom(hotelId, roomTypeId, dates, pmsUsingHashName, num);
+
+            //解锁
+            for (Date date : dates) {
+                String strDate = format.format(date);
+
+                jedis.hincrBy(otsUsingHashName, strDate, num);
+                jedis.hincrBy(pmsUsingHashName, strDate, num * -1);
+            }
+        } catch (MyException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
     }
 
-    /**
-     * @param hotelId
-     * @param roomTypeId
-     * @param day
-     * @param totalNum
-     * @param num
-     */
-    public void updateStock(String hotelId, String roomTypeId, Date day, Integer totalNum, Integer num) {
-        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == num || null == totalNum) {
+    @Override
+    public void cancelLockPms(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //hashName
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
+            String pmsUsingHashName = RoomTypeStockCacheEnum.getPmsUsingHashName(hotelId, roomTypeId);
+
+            //检查是否已锁, 及是否有房
+            this.checkHaveRoom(hotelId, roomTypeId, dates, pmsUsingHashName, num);
+
+            //解锁
+            for (Date date : dates) {
+                String strDate = format.format(date);
+
+                jedis.hincrBy(availableHashName, strDate, num);
+                jedis.hincrBy(pmsUsingHashName, strDate, num * -1);
+            }
+        } catch (MyException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
+    public void updateStock(String hotelId, String roomTypeId, Date day, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == num) {
             return;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -281,31 +365,19 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
             //hashName
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
-            String usingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
+            String otsUsingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
 
             //
-            String strAvailableNum = jedis.hget(availableHashName, strDate);
-            if (null == strAvailableNum) {
-                strAvailableNum = "0";
-            }
-            String strUsingNum = jedis.hget(usingHashName, strDate);
-            if (null == strUsingNum) {
-                strUsingNum = "0";
+            String strOtsUsingNum = jedis.hget(otsUsingHashName, strDate);
+            if (null == strOtsUsingNum) {
+                strOtsUsingNum = "0";
             }
 
-            //
-            Long availableNum = Long.parseLong(strAvailableNum);
-            Long usingNum = Long.parseLong(strUsingNum);
+            //ots锁数量
+            Long otsUsingNum = Long.parseLong(strOtsUsingNum);
 
             //计算 可用房量
-            Long redisTotal = availableNum + usingNum;
-
-            if (redisTotal > totalNum) {
-                Long diff = redisTotal - totalNum;
-                availableNum = num - diff;
-            } else {
-                availableNum = num.longValue();
-            }
+            Long availableNum = num - otsUsingNum;
 
             //更新
             jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
@@ -321,5 +393,51 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
         //
         this.unlock(hotelId, roomTypeId, day);
+    }
+
+    /**
+     * 检查redis中是否有房
+     * @param hotelId 酒店id
+     * @param roomTypeId 房型id
+     * @param dates 检查日期队列
+     * @param checkKey
+     * @param checkNum
+     */
+    private void checkHaveRoom(String hotelId, String roomTypeId, Date[] dates, String checkKey, Integer checkNum) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
+        //
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            for (Date date : dates) {
+                String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, date);
+
+                String lockKey = jedis.get(lockKeyName);
+
+                if (null == lockKey) {
+                    throw new MyException("-99", "-99", "未获得操作锁");
+                }
+
+                //检查是否有房
+                String strDate = format.format(date);
+                String strCacheNum = jedis.hget(checkKey, strDate);
+                if (null == strCacheNum) {
+                    strCacheNum = "0";
+                }
+                //
+                Long cacheNum = Long.parseLong(strCacheNum);
+
+                if (cacheNum < checkNum) {
+                    throw new MyException("-99", "-99", strDate + "无锁房");
+                }
+
+            }
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
     }
 }

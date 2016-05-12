@@ -27,7 +27,9 @@ public class HotelDetail {
 
     private String districtname;
 
-    private List<Picture> hotelpics;
+    private List<Picture> hotelPics;
+
+    private String   hotelpics;
 
     private Integer hoteltype;
 
@@ -115,11 +117,19 @@ public class HotelDetail {
         this.districtname = districtname;
     }
 
-    public List<Picture> getHotelpics() {
+    public List<Picture> getHotelPics() {
+        return hotelPics;
+    }
+
+    public void setHotelPics(List<Picture> hotelPics) {
+        this.hotelPics = hotelPics;
+    }
+
+    public String getHotelpics() {
         return hotelpics;
     }
 
-    public void setHotelpics(List<Picture> hotelpics) {
+    public void setHotelpics(String hotelpics) {
         this.hotelpics = hotelpics;
     }
 
