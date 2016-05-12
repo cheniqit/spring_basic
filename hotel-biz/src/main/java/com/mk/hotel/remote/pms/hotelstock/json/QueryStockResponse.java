@@ -1,7 +1,7 @@
-package com.mk.hotel.remote.hotelstock.json;
+package com.mk.hotel.remote.pms.hotelstock.json;
 
 
-import com.mk.hotel.remote.common.FbbCommonResponse;
+import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 
 import java.util.List;
 

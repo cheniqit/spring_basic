@@ -1,13 +1,15 @@
-package com.mk.hotel.remote.hotel.json;
+package com.mk.hotel.remote.pms.hotel.json;
 
-import com.mk.hotel.remote.common.FbbCommonResponse;
+
+
+import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 
 import java.util.List;
 
 /**
  * Created by chenqi on 16/5/11.
  */
-public class HotelRoomTypeQueryResponse extends FbbCommonResponse{
+public class HotelRoomTypeQueryResponse extends FbbCommonResponse {
     private List<RoomType> data;
 
 

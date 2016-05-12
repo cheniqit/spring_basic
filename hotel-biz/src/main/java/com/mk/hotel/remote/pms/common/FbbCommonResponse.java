@@ -1,4 +1,4 @@
-package com.mk.hotel.remote.common;
+package com.mk.hotel.remote.pms.common;
 
 /**
  * Created by chenqi on 16/5/9.

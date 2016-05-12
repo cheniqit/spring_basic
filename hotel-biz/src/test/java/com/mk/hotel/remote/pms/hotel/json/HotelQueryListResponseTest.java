@@ -1,11 +1,9 @@
-package com.mk.hotel.remote.hotel.json;
+package com.mk.hotel.remote.pms.hotel.json;
 
 import com.mk.framework.JsonUtils;
-import com.mk.hotel.remote.common.FbbCommonResponse;
+import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by chenqi on 16/5/12.
