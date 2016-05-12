@@ -1,5 +1,7 @@
 package com.mk.hotel.remote.common;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * Created by chenqi on 16/5/9.
  */
@@ -7,6 +9,8 @@ public class FbbCommonResponse<T> {
     private String success;
     private String errorCode;
     private String errorMessage;
+    private String result;
+    @JSONField(name ="data")
     private T date;
 
     public String getSuccess() {
