@@ -1,12 +1,10 @@
 package com.mk.pms.roomtype.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.mk.framework.JsonUtils;
-import com.mk.pms.hoteldetail.service.impl.HotelDetailServiceImpl;
+import com.mk.pms.hoteldetail.json.HotelDetail;
+import com.mk.pms.hoteldetail.service.HotelDetailService;
 import com.mk.pms.roomtype.json.RoomType;
 import com.mk.pms.roomtype.service.RoomTypeService;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,22 +16,16 @@ import java.util.List;
 @Service
 public class RoomTypeServiceImpl implements RoomTypeService {
 
+    @Autowired
+    private HotelDetailService hotelDetailService;
+
     @Override
     public List<RoomType> queryHotelRoomType(Long hotelId) {
-        String roomTypesJson = HotelDetailServiceImpl.getHotelDetailJson(hotelId);
+        HotelDetail hotelDetail = hotelDetailService.queryHotelDetail(hotelId);
         List<RoomType> roomTypes = new ArrayList<RoomType>();
 
-        if (StringUtils.isNotBlank(roomTypesJson)){
-            JSONArray roomTypeList = JSONArray.parseArray(roomTypesJson);
-
-            for (Object o : roomTypeList) {
-                JSONObject roomTypeJsonObj = (JSONObject)o;
-                RoomType roomType = JsonUtils.fromJson(roomTypeJsonObj.toJSONString(), RoomType.class);
-
-                if (roomType != null){
-                    roomTypes.add(roomType);
-                }
-            }
+        if (hotelDetail != null){
+            roomTypes = hotelDetail.getRoomtypes();
         }
 
         return roomTypes;
