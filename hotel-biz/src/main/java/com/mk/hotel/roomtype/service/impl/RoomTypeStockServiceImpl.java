@@ -230,8 +230,21 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 if (null == lockKey) {
                     throw new MyException("-99","-99","未获得操作锁");
                 }
-            }
 
+                //检查是否有房
+                String strDate = format.format(date);
+                String strOtsUsingNum = jedis.hget(otsUsingHashName, strDate);
+                if (null == strOtsUsingNum) {
+                    strOtsUsingNum = "0";
+                }
+                //
+                Long otsUsingNum = Long.parseLong(strOtsUsingNum);
+
+                if (otsUsingNum < num) {
+                    throw new MyException("-99", "-99", strDate + "无锁房");
+                }
+
+            }
 
             for (Date date : dates) {
                 String strDate = format.format(date);
@@ -253,16 +266,122 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     @Override
     public void unlockPms(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //hashName
+            String otsUsingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
+            String pmsUsingHashName = RoomTypeStockCacheEnum.getPmsUsingHashName(hotelId, roomTypeId);
+
+            for (Date date : dates) {
+                String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, date);
+
+                String lockKey = jedis.get(lockKeyName);
+
+                if (null == lockKey) {
+                    throw new MyException("-99","-99","未获得操作锁");
+                }
+
+                //检查是否有房
+                String strDate = format.format(date);
+                String strPmsUsingNum = jedis.hget(pmsUsingHashName, strDate);
+                if (null == strPmsUsingNum) {
+                    strPmsUsingNum = "0";
+                }
+                //
+                Long pmsUsingNum = Long.parseLong(strPmsUsingNum);
+
+                if (pmsUsingNum < num) {
+                    throw new MyException("-99", "-99", strDate + "无锁房");
+                }
+            }
+
+            for (Date date : dates) {
+                String strDate = format.format(date);
+
+                jedis.hincrBy(otsUsingHashName, strDate, num);
+                jedis.hincrBy(pmsUsingHashName, strDate, num * -1);
+            }
+        } catch (MyException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
     }
 
-    /**
-     * @param hotelId
-     * @param roomTypeId
-     * @param day
-     * @param totalNum
-     * @param num
-     */
+    @Override
+    public void cancelLockPms(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //hashName
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
+            String pmsUsingHashName = RoomTypeStockCacheEnum.getPmsUsingHashName(hotelId, roomTypeId);
+
+            for (Date date : dates) {
+                String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, date);
+
+                String lockKey = jedis.get(lockKeyName);
+
+                if (null == lockKey) {
+                    throw new MyException("-99","-99","未获得操作锁");
+                }
+
+                //检查是否有房
+                String strDate = format.format(date);
+                String strPmsUsingNum = jedis.hget(pmsUsingHashName, strDate);
+                if (null == strPmsUsingNum) {
+                    strPmsUsingNum = "0";
+                }
+                //
+                Long pmsUsingNum = Long.parseLong(strPmsUsingNum);
+
+                if (pmsUsingNum < num) {
+                    throw new MyException("-99", "-99", strDate + "无锁房");
+                }
+            }
+
+            for (Date date : dates) {
+                String strDate = format.format(date);
+
+                jedis.hincrBy(availableHashName, strDate, num);
+                jedis.hincrBy(pmsUsingHashName, strDate, num * -1);
+            }
+        } catch (MyException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
     public void updateStock(String hotelId, String roomTypeId, Date day, Integer totalNum, Integer num) {
         if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == num || null == totalNum) {
             return;
@@ -281,31 +400,19 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
             //hashName
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
-            String usingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
+            String otsUsingHashName = RoomTypeStockCacheEnum.getOtsUsingHashName(hotelId, roomTypeId);
 
             //
-            String strAvailableNum = jedis.hget(availableHashName, strDate);
-            if (null == strAvailableNum) {
-                strAvailableNum = "0";
-            }
-            String strUsingNum = jedis.hget(usingHashName, strDate);
-            if (null == strUsingNum) {
-                strUsingNum = "0";
+            String strOtsUsingNum = jedis.hget(otsUsingHashName, strDate);
+            if (null == strOtsUsingNum) {
+                strOtsUsingNum = "0";
             }
 
-            //
-            Long availableNum = Long.parseLong(strAvailableNum);
-            Long usingNum = Long.parseLong(strUsingNum);
+            //ots锁数量
+            Long otsUsingNum = Long.parseLong(strOtsUsingNum);
 
             //计算 可用房量
-            Long redisTotal = availableNum + usingNum;
-
-            if (redisTotal > totalNum) {
-                Long diff = redisTotal - totalNum;
-                availableNum = num - diff;
-            } else {
-                availableNum = num.longValue();
-            }
+            Long availableNum = num - otsUsingNum;
 
             //更新
             jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
