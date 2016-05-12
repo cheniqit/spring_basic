@@ -12,8 +12,6 @@ import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,6 +60,18 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         throw new MyException("-99", "-99", "锁定超时");
     }
 
+    @Override
+    public void lock(String hotelId, String roomTypeId, Date from, Date to, int lockTime, long maxWaitTimeOut) {
+        if (StringUtils.isEmpty(hotelId) || StringUtils.isEmpty(roomTypeId) || null == from || null == to) {
+            throw new MyException("-99", "-99", "参数不可为空");
+        }
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+
+        for (Date date : dates) {
+            this.lock(hotelId, roomTypeId, date, lockTime, maxWaitTimeOut);
+        }
+    }
+
 
     public void unlock(String hotelId, String roomTypeId, Date day) {
         Jedis jedis = null;
@@ -79,6 +89,18 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             if (null != jedis) {
                 jedis.close();
             }
+        }
+    }
+
+    @Override
+    public void unlock(String hotelId, String roomTypeId, Date from, Date to) {
+        if (StringUtils.isEmpty(hotelId) || StringUtils.isEmpty(roomTypeId) || null == from || null == to) {
+            throw new MyException("-99", "-99", "参数不可为空");
+        }
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+
+        for (Date date : dates) {
+            this.unlock(hotelId, roomTypeId, date);
         }
     }
 
@@ -400,14 +422,14 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
                 //检查是否有房
                 String strDate = format.format(date);
-                String strOtsUsingNum = jedis.hget(checkKey, strDate);
-                if (null == strOtsUsingNum) {
-                    strOtsUsingNum = "0";
+                String strCacheNum = jedis.hget(checkKey, strDate);
+                if (null == strCacheNum) {
+                    strCacheNum = "0";
                 }
                 //
-                Long otsUsingNum = Long.parseLong(strOtsUsingNum);
+                Long cacheNum = Long.parseLong(strCacheNum);
 
-                if (otsUsingNum < checkNum) {
+                if (cacheNum < checkNum) {
                     throw new MyException("-99", "-99", strDate + "无锁房");
                 }
 

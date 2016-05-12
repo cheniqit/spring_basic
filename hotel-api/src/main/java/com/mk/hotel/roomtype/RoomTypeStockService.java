@@ -17,6 +17,19 @@ public interface RoomTypeStockService {
     void lock(String hotelId, String roomTypeId, Date day, int lockTime, long maxWaitTimeOut);
 
     /**
+     * 操作锁
+     *
+     * @param hotelId        酒店id
+     * @param roomTypeId     房型id
+     * @param from           开始日期
+     * @param to             结束日期
+     * @param lockTime       锁时间(秒)
+     * @param maxWaitTimeOut 超时等待(豪秒)
+     * @return
+     */
+    void lock(String hotelId, String roomTypeId, Date from, Date to, int lockTime, long maxWaitTimeOut);
+
+    /**
      * 操作解锁
      *
      * @param hotelId    酒店id
@@ -24,6 +37,16 @@ public interface RoomTypeStockService {
      * @param day        日期
      */
     void unlock(String hotelId, String roomTypeId, Date day);
+
+    /**
+     * 操作解锁
+     *
+     * @param hotelId    酒店id
+     * @param roomTypeId 房型id
+     * @param from       开始日期
+     * @param to         结束日期
+     */
+    void unlock(String hotelId, String roomTypeId, Date from, Date to);
 
     /**
      * ots锁房,已执行操作锁
