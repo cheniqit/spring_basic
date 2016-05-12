@@ -8,6 +8,7 @@ import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
+import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -75,33 +76,12 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/roomtypestock", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> roomTypeStockPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
-
-        try {
-            //log
-            LogPushDto logPushDto = new LogPushDto();
-            logPushDto.setMsg(body);
-            logPushDto.setType(LogPushTypeEnum.roomTypeStock.getId());
-
-            this.logPushService.save(logPushDto);
-        }catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        RoomTypePriceJson roomTypeJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+
 }
 
