@@ -11,6 +11,61 @@ public class RoomTypeJson {
     private String bedtype;
     private Long roomnum;
 
+    private Integer prepay;
+    private Integer breakfast;
+    private Integer refund;
+    private Integer maxroomnum;
+    private Integer status;
+    private String roomtypepics;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRoomtypepics() {
+        return roomtypepics;
+    }
+
+    public void setRoomtypepics(String roomtypepics) {
+        this.roomtypepics = roomtypepics;
+    }
+
+    public Integer getPrepay() {
+        return prepay;
+    }
+
+    public void setPrepay(Integer prepay) {
+        this.prepay = prepay;
+    }
+
+    public Integer getBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(Integer breakfast) {
+        this.breakfast = breakfast;
+    }
+
+    public Integer getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Integer refund) {
+        this.refund = refund;
+    }
+
+    public Integer getMaxroomnum() {
+        return maxroomnum;
+    }
+
+    public void setMaxroomnum(Integer maxroomnum) {
+        this.maxroomnum = maxroomnum;
+    }
+
     public Long getId() {
         return id;
     }

@@ -6,7 +6,6 @@ import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
-import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -28,9 +25,6 @@ public class RoomTypeController {
 
     @Autowired
     private RoomTypeService roomTypeService;
-
-    @Autowired
-    private RoomTypeStockService roomTypeStockService;
 
     @Autowired
     private LogPushService logPushService;
@@ -52,6 +46,7 @@ public class RoomTypeController {
         }
 
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(body, RoomTypeJson.class);
+
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
