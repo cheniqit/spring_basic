@@ -8,7 +8,7 @@ public enum LogPushTypeEnum {
 	roomTypePrice(250l,"房型价格"),
 	roomTypeStock(260l,"房型库存"),
 	orderStatus(900l,"订单状态"),
-	other(999l,"其他证件"),
+	other(999l,"其他"),
 	;
 	private final Long id;
 	private final String name;

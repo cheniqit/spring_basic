@@ -24,6 +24,7 @@ public class GlobalExceptionController {
         Map<String, Object> errorMap = Maps.newHashMap();
         errorMap.put("success", "F");
         errorMap.put("errorCode", ex.getErrorCode());
+        errorMap.put("errorMessage", ex.getMessage());
         GlobalExceptionController.logger.error("异常::" + ex.getLocalizedMessage(), ex);
         return new ResponseEntity<>(errorMap, HttpStatus.OK);
     }
