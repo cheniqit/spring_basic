@@ -19,7 +19,6 @@ public class HotelDetail {
 
     private String provincename;
 
-
     private Long citycode;
 
     private String cityname;
