@@ -87,9 +87,8 @@ public interface RoomTypeStockService {
      * @param hotelId    酒店id
      * @param roomTypeId 房型id
      * @param day        日期
-     * @param totalNum   房型总房量
      * @param num        可用房量
      */
-    void updateStock(String hotelId, String roomTypeId, Date day, Integer totalNum, Integer num);
+    void updateStock(String hotelId, String roomTypeId, Date day, Integer num);
 
 }

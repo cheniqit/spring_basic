@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -94,8 +95,12 @@ public class RoomTypeController {
             e.printStackTrace();
             Cat.logError(e);
         }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
 
-        this.roomTypeStockService.lock("123","456",new Date(), 10000l);
+        this.roomTypeStockService.updateStock("","",);
+        this.roomTypeStockService.lockRoomType("123","456",new Date(), calendar.getTime(), 2);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
