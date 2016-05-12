@@ -38,7 +38,7 @@ public class HotelController {
         String url = "http://api.fangbaba.cc/open/area/queryProvince";
         String resultStr = null;
         try {
-            resultStr =  HttpUtils.doPost(url, null);
+            resultStr =  HttpUtils.doPost(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
