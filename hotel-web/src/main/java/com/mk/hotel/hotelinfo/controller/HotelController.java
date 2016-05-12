@@ -37,19 +37,12 @@ public class HotelController {
     public ResponseEntity<HashMap<String, Object>> test() {
         String url = "http://api.fangbaba.cc/open/area/queryProvince";
         String resultStr = null;
-<<<<<<< HEAD
         try {
             resultStr =  HttpUtils.doPost(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
-=======
-//        try {
-//            resultStr =  HttpUtils.doPost(url, null);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
->>>>>>> 4d4d699bcbc1249aeb6836c4bf8dd924442e8dd6
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         result.put("hotel", resultStr);
