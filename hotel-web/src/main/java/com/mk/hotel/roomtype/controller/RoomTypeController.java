@@ -99,7 +99,7 @@ public class RoomTypeController {
         calendar.setTime(new Date());
         calendar.add(Calendar.DAY_OF_MONTH, 2);
 
-        this.roomTypeStockService.updateStock("","",);
+//        this.roomTypeStockService.updateStock("","",);
         this.roomTypeStockService.lockRoomType("123","456",new Date(), calendar.getTime(), 2);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
