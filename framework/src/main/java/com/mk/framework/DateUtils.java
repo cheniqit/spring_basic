@@ -1818,7 +1818,7 @@ public class DateUtils extends Object {
             long start = startDate.getTime();
             long end = endDate.getTime();
 
-            long diff = (end - start) / (1000 * 60 * 60 * 24) + 1;
+            long diff = (end - start) / (1000 * 60 * 60 * 24);
 
             //
             List<Date> dateList = new ArrayList<>();
