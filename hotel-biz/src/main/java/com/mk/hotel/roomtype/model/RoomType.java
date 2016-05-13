@@ -25,7 +25,7 @@ public class RoomType {
 
     private Integer maxRoomNum;
 
-    private Integer roomTypePics;
+    private String roomTypePics;
 
     private Date createDate;
 
@@ -125,11 +125,11 @@ public class RoomType {
         this.maxRoomNum = maxRoomNum;
     }
 
-    public Integer getRoomTypePics() {
+    public String getRoomTypePics() {
         return roomTypePics;
     }
 
-    public void setRoomTypePics(Integer roomTypePics) {
+    public void setRoomTypePics(String roomTypePics) {
         this.roomTypePics = roomTypePics;
     }
 
