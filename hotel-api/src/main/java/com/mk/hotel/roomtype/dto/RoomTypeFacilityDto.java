@@ -5,6 +5,11 @@ import java.util.Date;
 public class RoomTypeFacilityDto {
     private Long id;
 
+    //for json
+    private Long fangHotelId;
+    //for json
+    private Long fangRoomTypeId;
+
     private Long roomTypeId;
 
     private Long facilityId;
@@ -81,5 +86,21 @@ public class RoomTypeFacilityDto {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public Long getFangRoomTypeId() {
+        return fangRoomTypeId;
+    }
+
+    public void setFangRoomTypeId(Long fangRoomTypeId) {
+        this.fangRoomTypeId = fangRoomTypeId;
+    }
+
+    public Long getFangHotelId() {
+        return fangHotelId;
+    }
+
+    public void setFangHotelId(Long fangHotelId) {
+        this.fangHotelId = fangHotelId;
     }
 }
