@@ -7,6 +7,9 @@ public class HotelFacilityDto {
 
     private Long hotelId;
 
+    //for json
+    private Long fangHotelId;
+
     private Long facilityId;
 
     private Date createDate;
@@ -81,5 +84,13 @@ public class HotelFacilityDto {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public Long getFangHotelId() {
+        return fangHotelId;
+    }
+
+    public void setFangHotelId(Long fangHotelId) {
+        this.fangHotelId = fangHotelId;
     }
 }
