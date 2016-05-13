@@ -1,4 +1,4 @@
-package com.mk.hotel.remote.hotel.json;
+package com.mk.hotel.remote.pms.hotel.json;
 
 /**
  * Created by chenqi on 16/5/11.

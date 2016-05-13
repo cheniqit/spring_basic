@@ -52,10 +52,10 @@ public class HttpUtils {
 
     public static String sendHttpClientPostByString(String path, FbbRequestHead fbbRequestHead, String body){
         Map<String, String> headParams = new HashMap<>();
-        headParams.put("token", fbbRequestHead.getToken());
-        headParams.put("channelid", fbbRequestHead.getChannelId());
+        headParams.put(Constant.PMS_TOKEN_KEY, fbbRequestHead.getToken());
+        headParams.put(Constant.PMS_CHANNEL_ID_KEY, fbbRequestHead.getChannelId());
         if(fbbRequestHead.getTimeStamp() != null){
-            headParams.put("timestamp", fbbRequestHead.getTimeStamp().toString());
+            headParams.put(Constant.PMS_TIMESTAMP_KEY, fbbRequestHead.getTimeStamp().toString());
         }
         return sendHttpClientPostByString(path, headParams, body, timeout, charset);
     }
