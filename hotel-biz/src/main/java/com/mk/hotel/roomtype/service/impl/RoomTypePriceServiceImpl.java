@@ -24,6 +24,15 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
     @Autowired
     private RoomTypePriceMapper roomTypePriceMapper;
 
+    public int saveOrUpdateByFangId(List<RoomTypePriceDto> roomTypePriceDtoList) {
+
+        for (RoomTypePriceDto dto : roomTypePriceDtoList) {
+            this.saveOrUpdateByFangId(dto);
+        }
+
+        return 1;
+    }
+
     public int saveOrUpdateByFangId(RoomTypePriceDto roomTypePriceDto) {
 
         if (null == roomTypePriceDto) {

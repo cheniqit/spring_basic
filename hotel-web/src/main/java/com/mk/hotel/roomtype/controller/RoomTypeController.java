@@ -163,7 +163,8 @@ public class RoomTypeController {
             }
         }
 
-//        this.roomTypePriceService.
+        this.roomTypePriceService.saveOrUpdateByFangId(roomTypePriceDtoList);
+
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
