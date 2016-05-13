@@ -6,11 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public enum RoomTypeStockCacheEnum {
-    LockKey(10l, "RoomTypeStockLock"),
-    AvailableKey(20l, "RoomTypeStockAvailable"),
-    OtsUsingKey(30l, "RoomTypeStockUsing"),
-    PmsUsingKey(40l, "RoomTypeStockPmsUsing"),
-    other(999l, "Other"),;
+    LOCK_KEY(10l, "HOTEL_ROOMTYPE_STOCK_LOCK_"),     //操作锁
+    AVAILABLE_KEY(20l, "HOTEL_ROOMTYPE_STOCK_"),     //可用数量
+//    OtsUsingKey(30l, "RoomTypeStockUsing"),
+//    PmsUsingKey(40l, "RoomTypeStockPmsUsing"),
+    ;
     private final Long id;
     private final String name;
 
@@ -50,7 +50,7 @@ public enum RoomTypeStockCacheEnum {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         StringBuilder result = new StringBuilder()
-                .append(RoomTypeStockCacheEnum.LockKey.getName())
+                .append(RoomTypeStockCacheEnum.LOCK_KEY.getName())
                 .append("_")
                 .append(hotelId)
                 .append("_")
@@ -68,7 +68,7 @@ public enum RoomTypeStockCacheEnum {
 
         //
         StringBuilder result = new StringBuilder()
-                .append(RoomTypeStockCacheEnum.AvailableKey.getName())
+                .append(RoomTypeStockCacheEnum.AVAILABLE_KEY.getName())
                 .append("_")
                 .append(hotelId)
                 .append("_")
@@ -77,35 +77,35 @@ public enum RoomTypeStockCacheEnum {
         return result.toString();
     }
 
-    public static String getOtsUsingHashName(String hotelId, String roomTypeId) {
-        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
-            return "";
-        }
-
-        //
-        StringBuilder result = new StringBuilder()
-                .append(RoomTypeStockCacheEnum.OtsUsingKey.getName())
-                .append("_")
-                .append(hotelId)
-                .append("_")
-                .append(roomTypeId);
-
-        return result.toString();
-    }
-
-    public static String getPmsUsingHashName(String hotelId, String roomTypeId) {
-        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
-            return "";
-        }
-
-        //
-        StringBuilder result = new StringBuilder()
-                .append(RoomTypeStockCacheEnum.PmsUsingKey.getName())
-                .append("_")
-                .append(hotelId)
-                .append("_")
-                .append(roomTypeId);
-
-        return result.toString();
-    }
+//    public static String getOtsUsingHashName(String hotelId, String roomTypeId) {
+//        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
+//            return "";
+//        }
+//
+//        //
+//        StringBuilder result = new StringBuilder()
+//                .append(RoomTypeStockCacheEnum.OtsUsingKey.getName())
+//                .append("_")
+//                .append(hotelId)
+//                .append("_")
+//                .append(roomTypeId);
+//
+//        return result.toString();
+//    }
+//
+//    public static String getPmsUsingHashName(String hotelId, String roomTypeId) {
+//        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
+//            return "";
+//        }
+//
+//        //
+//        StringBuilder result = new StringBuilder()
+//                .append(RoomTypeStockCacheEnum.PmsUsingKey.getName())
+//                .append("_")
+//                .append(hotelId)
+//                .append("_")
+//                .append(roomTypeId);
+//
+//        return result.toString();
+//    }
 }
