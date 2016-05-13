@@ -8,7 +8,27 @@ import java.util.List;
  * Created by chenqi on 16/5/11.
  */
 public class HotelQueryListResponse extends FbbCommonResponse{
-    private List<HotelInfo> data;
+    private hotels data;
+
+    public hotels getData() {
+        return data;
+    }
+
+    public void setData(hotels data) {
+        this.data = data;
+    }
+
+    class hotels{
+        private List<HotelInfo> hotels;
+
+        public List<HotelInfo> getHotels() {
+            return hotels;
+        }
+
+        public void setHotels(List<HotelInfo> hotels) {
+            this.hotels = hotels;
+        }
+    }
 
     class HotelInfo{
         private int citycode;
@@ -130,11 +150,4 @@ public class HotelQueryListResponse extends FbbCommonResponse{
         }
     }
 
-    public List<HotelInfo> getData() {
-        return data;
-    }
-
-    public void setData(List<HotelInfo> data) {
-        this.data = data;
-    }
 }

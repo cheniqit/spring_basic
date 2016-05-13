@@ -21,30 +21,30 @@ public class HotelPriceResponse extends FbbCommonResponse{
     }
 
     class HotelPrice{
-        private List<RoomTypePrices> roomTypePrices;
+        private List<Roomtypeprices> roomtypeprices;
 
-        public List<RoomTypePrices> getRoomTypePrices() {
-            return roomTypePrices;
+
+        public void setRoomtypeprices(List<Roomtypeprices> roomtypeprices) {
+            this.roomtypeprices = roomtypeprices;
         }
-
-        public void setRoomTypePrices(List<RoomTypePrices> roomTypePrices) {
-            this.roomTypePrices = roomTypePrices;
+        public List<Roomtypeprices> getRoomtypeprices() {
+            return roomtypeprices;
         }
     }
 
-    class RoomTypePrices {
+    class Roomtypeprices {
 
-        private List<PriceInfos> priceInfos;
+        private List<Priceinfos> priceinfos;
         private int roomtypeid;
 
 
-        public List<PriceInfos> getPriceInfos() {
-            return priceInfos;
+        public void setPriceinfos(List<Priceinfos> priceinfos) {
+            this.priceinfos = priceinfos;
+        }
+        public List<Priceinfos> getPriceinfos() {
+            return priceinfos;
         }
 
-        public void setPriceInfos(List<PriceInfos> priceInfos) {
-            this.priceInfos = priceInfos;
-        }
 
         public void setRoomtypeid(int roomtypeid) {
             this.roomtypeid = roomtypeid;
@@ -55,7 +55,7 @@ public class HotelPriceResponse extends FbbCommonResponse{
 
     }
 
-    class PriceInfos {
+    class Priceinfos {
 
         private String cost;
         private String date;

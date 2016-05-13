@@ -8,14 +8,26 @@ import java.util.List;
  * Created by chenqi on 16/5/11.
  */
 public class HotelQueryDetailResponse extends FbbCommonResponse{
-    private HotelInfo data;
+    private Hotel data;
 
-    public HotelInfo getData() {
+    public Hotel getData() {
         return data;
     }
 
-    public void setData(HotelInfo data) {
+    public void setData(Hotel data) {
         this.data = data;
+    }
+
+    class Hotel{
+        private HotelInfo hotel;
+
+        public HotelInfo getHotel() {
+            return hotel;
+        }
+
+        public void setHotel(HotelInfo hotel) {
+            this.hotel = hotel;
+        }
     }
 
     class HotelInfo{
@@ -27,6 +39,7 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         private String districtname;
         private String hotelname;
         private String hotelpic;
+        private String hotelpics;
         private int hoteltype;
         private int id;
         private String introduction;
@@ -99,6 +112,14 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         }
         public String getHotelpic() {
             return hotelpic;
+        }
+
+
+        public void setHotelpics(String hotelpics) {
+            this.hotelpics = hotelpics;
+        }
+        public String getHotelpics() {
+            return hotelpics;
         }
 
 

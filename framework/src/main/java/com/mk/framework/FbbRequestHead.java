@@ -19,6 +19,12 @@ public class FbbRequestHead {
         this.timeStamp = Calendar.getInstance().getTimeInMillis();
     }
 
+    public FbbRequestHead(String channelId, String token, Long timeStamp) {
+        this.channelId = channelId;
+        this.token = token;
+        this.timeStamp = timeStamp;
+    }
+
     public String getChannelId() {
         return channelId;
     }
