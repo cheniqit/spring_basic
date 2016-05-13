@@ -14,7 +14,7 @@ public class RoomTypePriceDto {
 
     private Long roomTypeId;
 
-    private Long day;
+    private Date day;
 
     private BigDecimal price;
 
@@ -44,11 +44,11 @@ public class RoomTypePriceDto {
         this.roomTypeId = roomTypeId;
     }
 
-    public Long getDay() {
+    public Date getDay() {
         return day;
     }
 
-    public void setDay(Long day) {
+    public void setDay(Date day) {
         this.day = day;
     }
 
