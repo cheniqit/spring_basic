@@ -7,8 +7,11 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
+import com.mk.hotel.roomtype.json.roomtypeprice.PriceInfoJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
+import com.mk.hotel.roomtype.model.RoomTypePrice;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,8 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/roomtype", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +103,29 @@ public class RoomTypeController {
         }
 
         RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+        //fang-hotelId
+        Long fangHotelId = roomTypePriceJson.getHotelid();
 
+        //roomTypeJsonList
+        List<com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson> roomTypeJsonList = roomTypePriceJson.getRoomtypes();
+        for (com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson roomTypeJson : roomTypeJsonList) {
+            //fang-roomTypeId
+            Long fangRoomTypeId = roomTypeJson.getRoomtypeid();
+
+            List<PriceInfoJson> priceInfoJsonList = roomTypeJson.getPriceinfo();
+            for (PriceInfoJson priceInfoJson : priceInfoJsonList) {
+
+                String strDay = priceInfoJson.getDay();
+                String strPrice = priceInfoJson.getPrice();
+
+                RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+                //TODO
+                roomTypePriceDto.setDay(null);
+                roomTypePriceDto.setPrice(null);
+                roomTypePriceDto.setRoomTypeId(null);
+
+            }
+        }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
