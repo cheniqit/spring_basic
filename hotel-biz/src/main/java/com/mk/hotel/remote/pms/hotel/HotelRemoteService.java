@@ -1,10 +1,10 @@
-package com.mk.hotel.remote.hotel;
+package com.mk.hotel.remote.pms.hotel;
 
 import com.mk.framework.Constant;
 import com.mk.framework.FbbRequestHead;
 import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
-import com.mk.hotel.remote.hotel.json.*;
+import com.mk.hotel.remote.pms.hotel.json.*;
 
 /**
  * Created by chenqi on 16/5/11.

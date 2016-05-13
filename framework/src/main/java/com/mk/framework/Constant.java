@@ -8,6 +8,7 @@ public class Constant {
     public static final String PMS_TOKEN_KEY = "token";
     public static final String PMS_TIMESTAMP_KEY = "timestamp";
     public static final String PMS_REMOTE_URL = UrlUtils.getUrl("pms.remote.url");
+    public static final String AMAP_REMOTE_URL = "http://restapi.amap.com";
 
 
     /**

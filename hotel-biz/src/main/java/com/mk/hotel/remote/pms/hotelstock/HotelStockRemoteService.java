@@ -1,12 +1,12 @@
-package com.mk.hotel.remote.hotelstock;
+package com.mk.hotel.remote.pms.hotelstock;
 
 
 import com.mk.framework.Constant;
 import com.mk.framework.FbbRequestHead;
 import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
-import com.mk.hotel.remote.hotelstock.json.QueryStockRequest;
-import com.mk.hotel.remote.hotelstock.json.QueryStockResponse;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 
 /**
  * Created by chenqi on 16/5/10.

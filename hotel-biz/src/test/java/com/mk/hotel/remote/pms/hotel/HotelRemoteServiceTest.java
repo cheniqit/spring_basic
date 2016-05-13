@@ -1,14 +1,12 @@
-package com.mk.hotel.remote.hotel;
+package com.mk.hotel.remote.pms.hotel;
 
 import com.mk.framework.DateUtils;
-import com.mk.hotel.remote.common.FbbCommonResponse;
-import com.mk.hotel.remote.hotel.json.*;
+import com.mk.hotel.remote.pms.common.FbbCommonResponse;
+import com.mk.hotel.remote.pms.hotel.json.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by chenqi on 16/5/11.
