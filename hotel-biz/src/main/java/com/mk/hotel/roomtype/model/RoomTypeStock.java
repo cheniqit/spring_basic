@@ -7,7 +7,7 @@ public class RoomTypeStock {
 
     private Long roomTypeId;
 
-    private Long day;
+    private Date day;
 
     private Long number;
 
@@ -37,11 +37,11 @@ public class RoomTypeStock {
         this.roomTypeId = roomTypeId;
     }
 
-    public Long getDay() {
+    public Date getDay() {
         return day;
     }
 
-    public void setDay(Long day) {
+    public void setDay(Date day) {
         this.day = day;
     }
 

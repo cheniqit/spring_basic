@@ -22,6 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -102,6 +105,9 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //json
         RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
         //fang-hotelId
         Long fangHotelId = roomTypePriceJson.getHotelid();
@@ -115,14 +121,42 @@ public class RoomTypeController {
             List<PriceInfoJson> priceInfoJsonList = roomTypeJson.getPriceinfo();
             for (PriceInfoJson priceInfoJson : priceInfoJsonList) {
 
+                //day
+                Date day = null;
                 String strDay = priceInfoJson.getDay();
+                if (StringUtils.isBlank(strDay)) {
+                    continue;
+                } else {
+                    try {
+                        day = format.parse(strDay);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        continue;
+                    }
+                }
+
+                //price
+                BigDecimal price = null;
                 String strPrice = priceInfoJson.getPrice();
+                if (StringUtils.isBlank(strPrice)) {
+                    continue;
+                } else {
+                    try {
+                        price = new BigDecimal(strPrice);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        continue;
+                    }
+                }
+
 
                 RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
-                //TODO
-                roomTypePriceDto.setDay(null);
-                roomTypePriceDto.setPrice(null);
-                roomTypePriceDto.setRoomTypeId(null);
+                roomTypePriceDto.setDay(day);
+                roomTypePriceDto.setPrice(price);
+                roomTypePriceDto.setFangHotelId(fangHotelId);
+                roomTypePriceDto.setFangRoomTypeId(fangRoomTypeId);
 
             }
         }

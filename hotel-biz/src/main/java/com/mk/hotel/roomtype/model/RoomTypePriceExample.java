@@ -3,6 +3,7 @@ package com.mk.hotel.roomtype.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class RoomTypePriceExample {
@@ -104,6 +105,32 @@ public class RoomTypePriceExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
+        }
+
+        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
+            if (value == null) {
+                throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value.getTime()), property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
+            if (values == null || values.size() == 0) {
+                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
+            }
+            List<java.sql.Date> dateList = new ArrayList<java.sql.Date>();
+            Iterator<Date> iter = values.iterator();
+            while (iter.hasNext()) {
+                dateList.add(new java.sql.Date(iter.next().getTime()));
+            }
+            addCriterion(condition, dateList, property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
+            if (value1 == null || value2 == null) {
+                throw new RuntimeException("Between values for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
         }
 
         public Criteria andIdIsNull() {
@@ -236,53 +263,53 @@ public class RoomTypePriceExample {
             return (Criteria) this;
         }
 
-        public Criteria andDayEqualTo(Long value) {
-            addCriterion("day =", value, "day");
+        public Criteria andDayEqualTo(Date value) {
+            addCriterionForJDBCDate("day =", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotEqualTo(Long value) {
-            addCriterion("day <>", value, "day");
+        public Criteria andDayNotEqualTo(Date value) {
+            addCriterionForJDBCDate("day <>", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThan(Long value) {
-            addCriterion("day >", value, "day");
+        public Criteria andDayGreaterThan(Date value) {
+            addCriterionForJDBCDate("day >", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayGreaterThanOrEqualTo(Long value) {
-            addCriterion("day >=", value, "day");
+        public Criteria andDayGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("day >=", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThan(Long value) {
-            addCriterion("day <", value, "day");
+        public Criteria andDayLessThan(Date value) {
+            addCriterionForJDBCDate("day <", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayLessThanOrEqualTo(Long value) {
-            addCriterion("day <=", value, "day");
+        public Criteria andDayLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("day <=", value, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayIn(List<Long> values) {
-            addCriterion("day in", values, "day");
+        public Criteria andDayIn(List<Date> values) {
+            addCriterionForJDBCDate("day in", values, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotIn(List<Long> values) {
-            addCriterion("day not in", values, "day");
+        public Criteria andDayNotIn(List<Date> values) {
+            addCriterionForJDBCDate("day not in", values, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayBetween(Long value1, Long value2) {
-            addCriterion("day between", value1, value2, "day");
+        public Criteria andDayBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("day between", value1, value2, "day");
             return (Criteria) this;
         }
 
-        public Criteria andDayNotBetween(Long value1, Long value2) {
-            addCriterion("day not between", value1, value2, "day");
+        public Criteria andDayNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("day not between", value1, value2, "day");
             return (Criteria) this;
         }
 
