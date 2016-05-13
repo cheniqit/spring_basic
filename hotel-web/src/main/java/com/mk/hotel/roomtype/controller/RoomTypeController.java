@@ -6,8 +6,10 @@ import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,35 @@ public class RoomTypeController {
 
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(body, RoomTypeJson.class);
 
+        RoomTypeDto roomTypeDto = new RoomTypeDto();
+
+        roomTypeDto.setHotelId(roomTypeJson.getHotelid());
+        roomTypeDto.setName(roomTypeJson.getName());
+        roomTypeDto.setArea(roomTypeJson.getArea());
+
+        String strBedType = roomTypeJson.getBedtype();
+        if (StringUtils.isNotBlank(strBedType)) {
+            try {
+                Integer bedType = Integer.valueOf(strBedType);
+                roomTypeDto.setBedType(bedType);
+            } catch (NumberFormatException e) {
+
+            }
+        }
+
+        roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
+        roomTypeDto.setPrepay(roomTypeJson.getPrepay());
+        roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
+        roomTypeDto.setRefund(roomTypeJson.getRefund());
+        roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
+
+        String strRoomTypePics = roomTypeJson.getRoomtypepics();
+        if (StringUtils.isNotBlank(strRoomTypePics)) {
+
+        }
+        roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
+
+        this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -71,7 +102,8 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
-        RoomTypePriceJson roomTypeJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+        RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

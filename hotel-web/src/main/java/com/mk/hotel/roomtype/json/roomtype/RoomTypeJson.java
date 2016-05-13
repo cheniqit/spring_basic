@@ -9,7 +9,7 @@ public class RoomTypeJson {
     private String name;
     private String area;
     private String bedtype;
-    private Long roomnum;
+    private Integer roomnum;
 
     private Integer prepay;
     private Integer breakfast;
@@ -106,11 +106,11 @@ public class RoomTypeJson {
         this.bedtype = bedtype;
     }
 
-    public Long getRoomnum() {
+    public Integer getRoomnum() {
         return roomnum;
     }
 
-    public void setRoomnum(Long roomnum) {
+    public void setRoomnum(Integer roomnum) {
         this.roomnum = roomnum;
     }
 }
