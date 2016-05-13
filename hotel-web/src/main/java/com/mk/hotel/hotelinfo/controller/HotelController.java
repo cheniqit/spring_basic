@@ -3,6 +3,7 @@ package com.mk.hotel.hotelinfo.controller;
 import com.dianping.cat.Cat;
 import com.mk.framework.net.HttpUtils;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
@@ -12,6 +13,9 @@ import com.mk.hotel.hotelinfo.json.hotelall.HotelJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
+import com.mk.hotel.roomtype.RoomTypeFacilityService;
+import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,6 +40,12 @@ public class HotelController {
 
     @Autowired
     private HotelService hotelService;
+
+    @Autowired
+    private HotelFacilityService hotelFacilityService;
+
+    @Autowired
+    private RoomTypeFacilityService roomTypeFacilityService;
 
     @Autowired
     private LogPushService logPushService;
@@ -131,26 +142,62 @@ public class HotelController {
 
         //
         HotelFacilityJson facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
-        Long hotelId = facilityJson.getHotelid();
+        Long fangHotelId = facilityJson.getHotelid();
         String hotelTag = facilityJson.getTagid();
 
         if (StringUtils.isNotBlank(hotelTag)) {
             String[] holelTags =  hotelTag.split(",");
+
+            List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
             for (String strTag : holelTags) {
                 Long tag = null;
-                tag = Long.parseLong(strTag);
+                try {
+                    tag = Long.parseLong(strTag);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Cat.logError(e);
+                    continue;
+                }
 
                 HotelFacilityDto dto = new HotelFacilityDto();
-                dto.setFangHotelId(hotelId);
+                dto.setFangHotelId(fangHotelId);
                 dto.setFacilityId(tag);
+                hotelFacilityDtoList.add(dto);
             }
+
+            this.hotelFacilityService.saveOrUpdateByFangId(hotelFacilityDtoList);
         }
 
         //
         List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtype();
         for (RoomTypeFacilityJson json : roomTypeFacilityJsonList) {
-            Long roomTypeId = json.getRoomtypeid();
+            Long fangRoomTypeId = json.getRoomtypeid();
+            String roomTypeTag = json.getRoomtypetagid();
 
+            if (StringUtils.isNotBlank(roomTypeTag)) {
+                String[] roomTypeTags = roomTypeTag.split(",");
+
+                List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
+                for(String strTag : roomTypeTags) {
+                    Long tag = null;
+                    try {
+                        tag = Long.parseLong(strTag);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        continue;
+                    }
+
+                    //
+                    RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
+                    dto.setFangHotelId(fangHotelId);
+                    dto.setFangRoomTypeId(fangRoomTypeId);
+                    dto.setFacilityId(tag);
+                    roomTypeFacilityDtoList.add(dto);
+                }
+
+                this.roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
+            }
 
         }
 
