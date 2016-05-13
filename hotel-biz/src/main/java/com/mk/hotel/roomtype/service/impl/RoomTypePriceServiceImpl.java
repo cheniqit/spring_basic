@@ -1,19 +1,28 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
+import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
+import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
 import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypePriceExample;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,6 +73,30 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
 
             return this.roomTypePriceMapper.updateByPrimaryKeySelective(dbRoomTypePrice);
+        }
+    }
+
+    public void updatePrice(String roomTypeId, Date day, BigDecimal price) {
+        if (StringUtils.isBlank(roomTypeId) || null == day || null == price) {
+            return;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(roomTypeId);
+            jedis.hset(priceHashName, strDate, String.valueOf(price));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 }
