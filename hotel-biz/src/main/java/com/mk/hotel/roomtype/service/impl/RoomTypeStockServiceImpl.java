@@ -354,8 +354,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = format.format(day);
 
-//        //
-//        this.lock(hotelId, roomTypeId, day, 6, 10 * 1000);
+        //
+        this.lock(hotelId, roomTypeId, day, 6, 10 * 1000);
 
         //
         Jedis jedis = null;
@@ -393,8 +393,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
         }
 
-//        //
-//        this.unlock(hotelId, roomTypeId, day);
+        //
+        this.unlock(hotelId, roomTypeId, day);
     }
 
 //    /**
