@@ -1,6 +1,8 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.mk.framework.excepiton.MyException;
+import com.mk.hotel.hotelinfo.HotelService;
+import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
@@ -20,14 +22,44 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Autowired
     private RoomTypeMapper roomTypeMapper;
 
-    public RoomTypeDto selectByFangId(Long fangId) {
-        if (null == fangId) {
+    @Autowired
+    private HotelService hotelService;
+    public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId) {
+        if (null == fangHotelId || null == fangRoomTypeId) {
+            throw new MyException("-99", "-99", "fangId 不可为空");
+        }
+
+        //hotelDto
+        HotelDto hotelDto = hotelService.findByFangId(fangHotelId);
+        if (null == hotelDto) {
+            return null;
+        }
+        //
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andHotelIdEqualTo(hotelDto.getId()).andFangIdEqualTo(fangRoomTypeId);
+
+        //
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+        if (roomTypeList.isEmpty()) {
+            return null;
+        }
+        RoomType roomType = roomTypeList.get(0);
+
+        //
+        RoomTypeDto dto = new RoomTypeDto();
+        BeanUtils.copyProperties(roomType, dto);
+
+        return dto;
+    }
+
+    public RoomTypeDto selectByFangId(Long fangRoomTypeId) {
+        if (null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
         }
 
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andFangIdEqualTo(fangId);
+        roomTypeExample.createCriteria().andFangIdEqualTo(fangRoomTypeId);
 
         //
         List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);

@@ -6,6 +6,12 @@ import java.util.Date;
 public class RoomTypePriceDto {
     private Long id;
 
+    //for json
+    private Long fangHotelId;
+
+    //for json
+    private Long fangRoomTypeId;
+
     private Long roomTypeId;
 
     private Long day;
@@ -92,5 +98,21 @@ public class RoomTypePriceDto {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public Long getFangHotelId() {
+        return fangHotelId;
+    }
+
+    public void setFangHotelId(Long fangHotelId) {
+        this.fangHotelId = fangHotelId;
+    }
+
+    public Long getFangRoomTypeId() {
+        return fangRoomTypeId;
+    }
+
+    public void setFangRoomTypeId(Long fangRoomTypeId) {
+        this.fangRoomTypeId = fangRoomTypeId;
     }
 }
