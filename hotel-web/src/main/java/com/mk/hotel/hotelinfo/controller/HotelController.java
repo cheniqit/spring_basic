@@ -5,6 +5,7 @@ import com.mk.framework.net.HttpUtils;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelJson;
@@ -134,7 +135,15 @@ public class HotelController {
         String hotelTag = facilityJson.getTagid();
 
         if (StringUtils.isNotBlank(hotelTag)) {
-//            String hotelTag.split(",");
+            String[] holelTags =  hotelTag.split(",");
+            for (String strTag : holelTags) {
+                Long tag = null;
+                tag = Long.parseLong(strTag);
+
+                HotelFacilityDto dto = new HotelFacilityDto();
+                dto.setFangHotelId(hotelId);
+                dto.setFacilityId(tag);
+            }
         }
 
         //
