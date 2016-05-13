@@ -2,8 +2,11 @@ package com.mk.hotel.hotelinfo.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.net.HttpUtils;
+import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
+import com.mk.hotel.hotelinfo.json.hotelall.HotelJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -75,6 +78,8 @@ public class HotelController {
             Cat.logError(e);
         }
 
+        HotelJson hotelJson = JSONUtil.fromJson(body, HotelJson.class);
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -96,6 +101,9 @@ public class HotelController {
             Cat.logError(e);
         }
 
+        com.mk.hotel.hotelinfo.json.hotel.HotelJson hotelJson =
+                JSONUtil.fromJson(body, com.mk.hotel.hotelinfo.json.hotel.HotelJson.class);
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -116,6 +124,8 @@ public class HotelController {
             e.printStackTrace();
             Cat.logError(e);
         }
+
+        HotelFacilityJson facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

@@ -6,8 +6,13 @@ import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeService;
-import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
+import com.mk.hotel.roomtype.json.roomtypeprice.PriceInfoJson;
+import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
+import com.mk.hotel.roomtype.model.RoomTypePrice;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,10 +21,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/roomtype", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -27,9 +32,6 @@ public class RoomTypeController {
 
     @Autowired
     private RoomTypeService roomTypeService;
-
-    @Autowired
-    private RoomTypeStockService roomTypeStockService;
 
     @Autowired
     private LogPushService logPushService;
@@ -51,6 +53,31 @@ public class RoomTypeController {
         }
 
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(body, RoomTypeJson.class);
+
+        RoomTypeDto roomTypeDto = new RoomTypeDto();
+
+        roomTypeDto.setHotelId(roomTypeJson.getHotelid());
+        roomTypeDto.setName(roomTypeJson.getName());
+        roomTypeDto.setArea(roomTypeJson.getArea());
+
+        String strBedType = roomTypeJson.getBedtype();
+        if (StringUtils.isNotBlank(strBedType)) {
+            try {
+                Integer bedType = Integer.valueOf(strBedType);
+                roomTypeDto.setBedType(bedType);
+            } catch (NumberFormatException e) {
+
+            }
+        }
+
+        roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
+        roomTypeDto.setPrepay(roomTypeJson.getPrepay());
+        roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
+        roomTypeDto.setRefund(roomTypeJson.getRefund());
+        roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
+        roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
+
+        this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -75,33 +102,35 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
+        RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+        //fang-hotelId
+        Long fangHotelId = roomTypePriceJson.getHotelid();
 
-    @RequestMapping(value = "/roomtypestock", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> roomTypeStockPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+        //roomTypeJsonList
+        List<com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson> roomTypeJsonList = roomTypePriceJson.getRoomtypes();
+        for (com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson roomTypeJson : roomTypeJsonList) {
+            //fang-roomTypeId
+            Long fangRoomTypeId = roomTypeJson.getRoomtypeid();
 
-        try {
-            //log
-            LogPushDto logPushDto = new LogPushDto();
-            logPushDto.setMsg(body);
-            logPushDto.setType(LogPushTypeEnum.roomTypeStock.getId());
+            List<PriceInfoJson> priceInfoJsonList = roomTypeJson.getPriceinfo();
+            for (PriceInfoJson priceInfoJson : priceInfoJsonList) {
 
-            this.logPushService.save(logPushDto);
-        }catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
+                String strDay = priceInfoJson.getDay();
+                String strPrice = priceInfoJson.getPrice();
+
+                RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+                //TODO
+                roomTypePriceDto.setDay(null);
+                roomTypePriceDto.setPrice(null);
+                roomTypePriceDto.setRoomTypeId(null);
+
+            }
         }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+
 }
 
