@@ -6,10 +6,12 @@ import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
+import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -125,7 +128,22 @@ public class HotelController {
             Cat.logError(e);
         }
 
+        //
         HotelFacilityJson facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
+        Long hotelId = facilityJson.getHotelid();
+        String hotelTag = facilityJson.getTagid();
+
+        if (StringUtils.isNotBlank(hotelTag)) {
+//            String hotelTag.split(",");
+        }
+
+        //
+        List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtype();
+        for (RoomTypeFacilityJson json : roomTypeFacilityJsonList) {
+            Long roomTypeId = json.getRoomtypeid();
+
+
+        }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
