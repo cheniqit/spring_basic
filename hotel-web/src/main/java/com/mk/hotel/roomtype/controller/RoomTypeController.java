@@ -70,11 +70,6 @@ public class RoomTypeController {
         roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
         roomTypeDto.setRefund(roomTypeJson.getRefund());
         roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
-
-        String strRoomTypePics = roomTypeJson.getRoomtypepics();
-        if (StringUtils.isNotBlank(strRoomTypePics)) {
-
-        }
         roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
 
         this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
