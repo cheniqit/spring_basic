@@ -9,6 +9,9 @@ public class RoomTypeDto {
 
     private Long hotelId;
 
+    //for json
+    private Long fangHotelId;
+
     private String name;
 
     private String area;
@@ -171,5 +174,13 @@ public class RoomTypeDto {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public Long getFangHotelId() {
+        return fangHotelId;
+    }
+
+    public void setFangHotelId(Long fangHotelId) {
+        this.fangHotelId = fangHotelId;
     }
 }

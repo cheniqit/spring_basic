@@ -103,14 +103,21 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             throw new MyException("-99", "-99", "roomTypeDto 不可为空");
         }
 
-        RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andFangIdEqualTo(roomTypeDto.getFangId());
-        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+        //hotelDto
+        HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId());
+        if (null == hotelDto) {
+            return -1;
+        }
+        roomTypeDto.setHotelId(hotelDto.getId());
 
-        if (roomTypeList.isEmpty()) {
+        //
+        RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId());
+
+        if (null == dbDto) {
             return this.save(roomTypeDto);
         } else {
-            RoomType dbRoomType = roomTypeList.get(0);
+            RoomType dbRoomType = new RoomType();
+            dbRoomType.setId(dbDto.getId());
             dbRoomType.setHotelId(roomTypeDto.getHotelId());
             dbRoomType.setName(roomTypeDto.getName());
             dbRoomType.setArea(roomTypeDto.getArea());
