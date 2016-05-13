@@ -1,6 +1,8 @@
 package com.mk.hotel.remote.pms.hotel.json;
 
+import com.alibaba.fastjson.JSON;
 import com.mk.hotel.remote.pms.common.FbbCommonResponse;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
@@ -40,6 +42,7 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         private String hotelname;
         private String hotelpic;
         private String hotelpics;
+        private List<Picture> hotelPics;
         private int hoteltype;
         private int id;
         private String introduction;
@@ -186,12 +189,62 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
             return retentiontime;
         }
 
+        public List<Picture> getHotelPics() {
+            if (StringUtils.isNotBlank(this.hotelpics)){
+
+                List<Picture> hotelPics = JSON.parseArray(this.hotelpics,Picture.class);
+                if (null != hotelPics){
+                    this.setHotelPics(hotelPics);
+                }
+            }
+            return hotelPics;
+        }
+
+        public void setHotelPics(List<Picture> hotelPics) {
+            this.hotelPics = hotelPics;
+        }
+
+        public List<Roomtypes> getRoomtypes() {
+            return roomtypes;
+        }
 
         public void setRoomtypes(List<Roomtypes> roomtypes) {
             this.roomtypes = roomtypes;
         }
-        public List<Roomtypes> getRoomtypes() {
-            return roomtypes;
+    }
+
+    class Picture {
+
+        private String name;
+
+        private List<Pic> pic;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public List<Pic> getPic() {
+            return pic;
+        }
+
+        public void setPic(List<Pic> pic) {
+            this.pic = pic;
+        }
+
+        class Pic {
+            private String url;
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
         }
     }
 
