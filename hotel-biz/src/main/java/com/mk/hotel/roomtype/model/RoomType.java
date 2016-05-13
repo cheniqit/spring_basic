@@ -13,9 +13,19 @@ public class RoomType {
 
     private String area;
 
-    private Short bedType;
+    private Integer bedType;
 
-    private Short roomNum;
+    private Integer roomNum;
+
+    private Integer prepay;
+
+    private Integer breakfast;
+
+    private Integer refund;
+
+    private Integer maxRoomNum;
+
+    private Integer roomTypePics;
 
     private Date createDate;
 
@@ -67,20 +77,60 @@ public class RoomType {
         this.area = area == null ? null : area.trim();
     }
 
-    public Short getBedType() {
+    public Integer getBedType() {
         return bedType;
     }
 
-    public void setBedType(Short bedType) {
+    public void setBedType(Integer bedType) {
         this.bedType = bedType;
     }
 
-    public Short getRoomNum() {
+    public Integer getRoomNum() {
         return roomNum;
     }
 
-    public void setRoomNum(Short roomNum) {
+    public void setRoomNum(Integer roomNum) {
         this.roomNum = roomNum;
+    }
+
+    public Integer getPrepay() {
+        return prepay;
+    }
+
+    public void setPrepay(Integer prepay) {
+        this.prepay = prepay;
+    }
+
+    public Integer getBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(Integer breakfast) {
+        this.breakfast = breakfast;
+    }
+
+    public Integer getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Integer refund) {
+        this.refund = refund;
+    }
+
+    public Integer getMaxRoomNum() {
+        return maxRoomNum;
+    }
+
+    public void setMaxRoomNum(Integer maxRoomNum) {
+        this.maxRoomNum = maxRoomNum;
+    }
+
+    public Integer getRoomTypePics() {
+        return roomTypePics;
+    }
+
+    public void setRoomTypePics(Integer roomTypePics) {
+        this.roomTypePics = roomTypePics;
     }
 
     public Date getCreateDate() {

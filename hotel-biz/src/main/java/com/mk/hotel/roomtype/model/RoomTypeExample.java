@@ -545,6 +545,306 @@ public class RoomTypeExample {
             return (Criteria) this;
         }
 
+        public Criteria andPrepayIsNull() {
+            addCriterion("prepay is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayIsNotNull() {
+            addCriterion("prepay is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayEqualTo(Short value) {
+            addCriterion("prepay =", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayNotEqualTo(Short value) {
+            addCriterion("prepay <>", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayGreaterThan(Short value) {
+            addCriterion("prepay >", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayGreaterThanOrEqualTo(Short value) {
+            addCriterion("prepay >=", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayLessThan(Short value) {
+            addCriterion("prepay <", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayLessThanOrEqualTo(Short value) {
+            addCriterion("prepay <=", value, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayIn(List<Short> values) {
+            addCriterion("prepay in", values, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayNotIn(List<Short> values) {
+            addCriterion("prepay not in", values, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayBetween(Short value1, Short value2) {
+            addCriterion("prepay between", value1, value2, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andPrepayNotBetween(Short value1, Short value2) {
+            addCriterion("prepay not between", value1, value2, "prepay");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastIsNull() {
+            addCriterion("breakfast is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastIsNotNull() {
+            addCriterion("breakfast is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastEqualTo(Short value) {
+            addCriterion("breakfast =", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastNotEqualTo(Short value) {
+            addCriterion("breakfast <>", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastGreaterThan(Short value) {
+            addCriterion("breakfast >", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastGreaterThanOrEqualTo(Short value) {
+            addCriterion("breakfast >=", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastLessThan(Short value) {
+            addCriterion("breakfast <", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastLessThanOrEqualTo(Short value) {
+            addCriterion("breakfast <=", value, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastIn(List<Short> values) {
+            addCriterion("breakfast in", values, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastNotIn(List<Short> values) {
+            addCriterion("breakfast not in", values, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastBetween(Short value1, Short value2) {
+            addCriterion("breakfast between", value1, value2, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andBreakfastNotBetween(Short value1, Short value2) {
+            addCriterion("breakfast not between", value1, value2, "breakfast");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundIsNull() {
+            addCriterion("refund is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundIsNotNull() {
+            addCriterion("refund is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundEqualTo(Short value) {
+            addCriterion("refund =", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundNotEqualTo(Short value) {
+            addCriterion("refund <>", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundGreaterThan(Short value) {
+            addCriterion("refund >", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundGreaterThanOrEqualTo(Short value) {
+            addCriterion("refund >=", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundLessThan(Short value) {
+            addCriterion("refund <", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundLessThanOrEqualTo(Short value) {
+            addCriterion("refund <=", value, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundIn(List<Short> values) {
+            addCriterion("refund in", values, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundNotIn(List<Short> values) {
+            addCriterion("refund not in", values, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundBetween(Short value1, Short value2) {
+            addCriterion("refund between", value1, value2, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andRefundNotBetween(Short value1, Short value2) {
+            addCriterion("refund not between", value1, value2, "refund");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumIsNull() {
+            addCriterion("max_room_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumIsNotNull() {
+            addCriterion("max_room_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumEqualTo(Short value) {
+            addCriterion("max_room_num =", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumNotEqualTo(Short value) {
+            addCriterion("max_room_num <>", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumGreaterThan(Short value) {
+            addCriterion("max_room_num >", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumGreaterThanOrEqualTo(Short value) {
+            addCriterion("max_room_num >=", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumLessThan(Short value) {
+            addCriterion("max_room_num <", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumLessThanOrEqualTo(Short value) {
+            addCriterion("max_room_num <=", value, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumIn(List<Short> values) {
+            addCriterion("max_room_num in", values, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumNotIn(List<Short> values) {
+            addCriterion("max_room_num not in", values, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumBetween(Short value1, Short value2) {
+            addCriterion("max_room_num between", value1, value2, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaxRoomNumNotBetween(Short value1, Short value2) {
+            addCriterion("max_room_num not between", value1, value2, "maxRoomNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsIsNull() {
+            addCriterion("room_type_pics is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsIsNotNull() {
+            addCriterion("room_type_pics is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsEqualTo(Short value) {
+            addCriterion("room_type_pics =", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsNotEqualTo(Short value) {
+            addCriterion("room_type_pics <>", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsGreaterThan(Short value) {
+            addCriterion("room_type_pics >", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsGreaterThanOrEqualTo(Short value) {
+            addCriterion("room_type_pics >=", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsLessThan(Short value) {
+            addCriterion("room_type_pics <", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsLessThanOrEqualTo(Short value) {
+            addCriterion("room_type_pics <=", value, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsIn(List<Short> values) {
+            addCriterion("room_type_pics in", values, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsNotIn(List<Short> values) {
+            addCriterion("room_type_pics not in", values, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsBetween(Short value1, Short value2) {
+            addCriterion("room_type_pics between", value1, value2, "roomTypePics");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomTypePicsNotBetween(Short value1, Short value2) {
+            addCriterion("room_type_pics not between", value1, value2, "roomTypePics");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateDateIsNull() {
             addCriterion("create_date is null");
             return (Criteria) this;

@@ -25,8 +25,16 @@ public class HotelJson {
     private String provincename;
     private Long repairtime;
     private String retentiontime;
-
+    private String hoteltype;
     private List<RoomtypeJson> roomtypes;
+
+    public String getHoteltype() {
+        return hoteltype;
+    }
+
+    public void setHoteltype(String hoteltype) {
+        this.hoteltype = hoteltype;
+    }
 
     public Long getId() {
         return id;
