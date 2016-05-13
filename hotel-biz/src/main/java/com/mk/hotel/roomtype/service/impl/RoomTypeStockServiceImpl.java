@@ -382,7 +382,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 //            //更新
 //            jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
 
-            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
             jedis.hset(availableHashName, strDate, String.valueOf(num));
         } catch (Exception e) {
             e.printStackTrace();
@@ -456,7 +456,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         Date[] dates = DateUtils.getStartEndDate(from, to);
         try {
             //hashName
-            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(hotelId, roomTypeId);
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
             //
             jedis = RedisUtil.getJedis();
 

@@ -61,16 +61,14 @@ public enum RoomTypeStockCacheEnum {
         return result.toString();
     }
 
-    public static String getAvailableHashName(String hotelId, String roomTypeId) {
-        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
+    public static String getAvailableHashName(String roomTypeId) {
+        if (StringUtils.isBlank(roomTypeId)) {
             return "";
         }
 
         //
         StringBuilder result = new StringBuilder()
                 .append(RoomTypeStockCacheEnum.AVAILABLE_KEY.getName())
-                .append("_")
-                .append(hotelId)
                 .append("_")
                 .append(roomTypeId);
 
