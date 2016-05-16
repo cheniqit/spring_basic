@@ -209,17 +209,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             com.mk.hotel.roomtype.redisbean.RoomType roomType = new com.mk.hotel.roomtype.redisbean.RoomType();
 
-//            private Long hotelId;
-//            private Long roomTypeId;
-//            private String roomTypeName;
-//            private Integer area;
-//            private BedType bedType;
-//            private Integer breakFast;
-//            private Integer status;
-//            private Integer roomNum;
-//            private String online;
-//            private List<PicList> roomTypePics;
-
             roomType.setHotelId(roomTypeDto.getHotelId());
             roomType.setRoomTypeId(roomTypeDto.getId());
             roomType.setRoomTypeName(roomTypeDto.getName());
@@ -227,6 +216,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomType.setBedType(bedType);
             roomType.setBreakFast(roomTypeDto.getBreakfast());
             roomType.setStatus(roomTypeDto.getStatus());
+            roomType.setRoomNum(roomTypeDto.getRoomNum());
+            roomType.setRoomTypePics(null);
 
             roomType.setCacheTime(strDate);
             roomType.setCacheFrom(cacheFrom);
