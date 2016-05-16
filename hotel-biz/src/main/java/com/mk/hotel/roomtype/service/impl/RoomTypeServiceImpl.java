@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -206,6 +207,15 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             //
             String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomTypeDto.getHotelId()));
             //TODO add
+            Set<String> roomTypeSet = jedis.smembers(roomTypeSetName);
+            //先删除
+            for (String roomTypeJson : roomTypeSet) {
+                if (1 == 1) {
+                    jedis.srem(roomTypeSetName,roomTypeJson);
+                }
+            }
+            //
+            jedis.sadd(roomTypeKeyName,null);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -82,7 +82,7 @@ public class HotelServiceImpl implements HotelService {
 
 
     public void updateRedisHotel(String hotelId, HotelDto hotelDto) {
-        if (StringUtils.isBlank(hotelId) || null == hotelDto || null == hotelDto.getId()) {
+        if (StringUtils.isBlank(hotelId) || null == hotelDto || null == hotelDto.getId() || null == hotelDto.getCityCode()) {
             return;
         }
 
@@ -91,10 +91,21 @@ public class HotelServiceImpl implements HotelService {
         try {
             //
             jedis = RedisUtil.getJedis();
+
             String hotelKeyName = HotelCacheEnum.getHotelKeyName(hotelId);
+            String originalHotelJson = jedis.get(hotelKeyName);
+
+            if (null != originalHotelJson) {
+                //TODO 分析 originalHotelJson ,从老城市中删除
+                String originalCityKeyName = HotelCacheEnum.getCityHotelSetName(null);
+                jedis.srem(originalCityKeyName,originalHotelJson);
+            }
+
             //TODO add
             jedis.set(hotelKeyName, null);
-
+            String cityKeyName = HotelCacheEnum.getCityHotelSetName(hotelDto.getCityCode());
+            jedis.sadd(cityKeyName,null);
+            jedis.set(hotelKeyName,null);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
