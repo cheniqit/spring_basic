@@ -21,4 +21,11 @@ public class AddressInfoRemoteServiceTest {
     }
 
 
+    @Test
+    public void testFindTownCodeByLocation() throws Exception {
+        String latLocation = "29.55476000";
+        String longLocation = "106.57329600";
+        String townCode = addressInfoRemoteService.findTownCodeByLocation(latLocation, longLocation);
+        Assert.assertEquals("500103003", townCode);
+    }
 }

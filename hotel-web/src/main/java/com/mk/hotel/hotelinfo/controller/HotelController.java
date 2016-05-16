@@ -205,5 +205,23 @@ public class HotelController {
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/mergePmsHotel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergePmsHotel(Integer pageNo) {
+        try {
+           if(pageNo == null){
+               pageNo = 1;
+           }
+           hotelService.mergePmsHotel(pageNo);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
 }
 

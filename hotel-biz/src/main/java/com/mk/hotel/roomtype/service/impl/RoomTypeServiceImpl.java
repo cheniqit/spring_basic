@@ -1,8 +1,16 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
+import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.mapper.HotelMapper;
+import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
+import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryRequest;
+import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
@@ -11,6 +19,7 @@ import com.mk.hotel.roomtype.model.RoomTypeExample;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -21,9 +30,15 @@ import java.util.List;
 public class RoomTypeServiceImpl implements RoomTypeService {
     @Autowired
     private RoomTypeMapper roomTypeMapper;
-
+    @Autowired
+    private HotelMapper hotelMapper;
+    @Autowired
+    private HotelRemoteService hotelRemoteService;
     @Autowired
     private HotelService hotelService;
+    @Autowired
+    private RoomTypeProxyService roomTypeProxyService;
+
     public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId) {
         if (null == fangHotelId || null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
@@ -131,5 +146,35 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             return this.roomTypeMapper.updateByPrimaryKeySelective(dbRoomType);
         }
+    }
+
+    public void mergeRoomType(){
+        int pageNo = 1;
+        mergeRoomType(pageNo);
+    }
+
+    public void mergeRoomType(int pageNo) {
+        HotelRoomTypeQueryRequest hotelRoomTypeQueryRequest = new HotelRoomTypeQueryRequest();
+        //酒店分页
+        HotelExample hotelExample = new HotelExample();
+        int count = hotelMapper.countByExample(hotelExample);
+        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        HotelExample example = new HotelExample();
+        example.setStart(pageBean.getStart());
+        example.setEnd(pageBean.getEnd());
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            hotelRoomTypeQueryRequest.setHotelid(hotel.getFangId().toString());
+            HotelRoomTypeQueryResponse response = hotelRemoteService.queryRoomType(hotelRoomTypeQueryRequest);
+            if(response.getData() == null || CollectionUtils.isEmpty(response.getData())){
+                return;
+            }
+            roomTypeProxyService.saveRoomType(hotel, response.getData());
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
     }
 }

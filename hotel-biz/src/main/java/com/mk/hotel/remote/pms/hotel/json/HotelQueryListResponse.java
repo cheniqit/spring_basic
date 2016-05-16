@@ -18,7 +18,7 @@ public class HotelQueryListResponse extends FbbCommonResponse{
         this.data = data;
     }
 
-    class hotels{
+    public class hotels{
         private List<HotelInfo> hotels;
 
         public List<HotelInfo> getHotels() {
@@ -30,7 +30,7 @@ public class HotelQueryListResponse extends FbbCommonResponse{
         }
     }
 
-    class HotelInfo{
+    public class HotelInfo{
         private int citycode;
         private String cityname;
         private String detailaddr;

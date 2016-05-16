@@ -20,7 +20,7 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         this.data = data;
     }
 
-    class Hotel{
+    public class Hotel{
         private HotelInfo hotel;
 
         public HotelInfo getHotel() {
@@ -32,7 +32,7 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         }
     }
 
-    class HotelInfo{
+    public class HotelInfo{
         private int citycode;
         private String cityname;
         private String defaultleavetime;
@@ -40,16 +40,18 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         private int discode;
         private String districtname;
         private String hotelname;
+        private String hotelphone;
         private String hotelpic;
         private String hotelpics;
-        private List<Picture> hotelPics;
         private int hoteltype;
         private int id;
         private String introduction;
         private double latitude;
         private double longitude;
+        private String opentime;
         private int provcode;
         private String provincename;
+        private String repairtime;
         private String retentiontime;
         private List<Roomtypes> roomtypes;
 
@@ -110,6 +112,14 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         }
 
 
+        public void setHotelphone(String hotelphone) {
+            this.hotelphone = hotelphone;
+        }
+        public String getHotelphone() {
+            return hotelphone;
+        }
+
+
         public void setHotelpic(String hotelpic) {
             this.hotelpic = hotelpic;
         }
@@ -165,6 +175,17 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
             return longitude;
         }
 
+        public String getOpentime() {
+            return opentime;
+        }
+
+        public void setOpentime(String opentime) {
+            this.opentime = opentime;
+        }
+
+        public void setRepairtime(String repairtime) {
+            this.repairtime = repairtime;
+        }
 
         public void setProvcode(int provcode) {
             this.provcode = provcode;
@@ -181,6 +202,9 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
             return provincename;
         }
 
+        public String getRepairtime() {
+            return repairtime;
+        }
 
         public void setRetentiontime(String retentiontime) {
             this.retentiontime = retentiontime;
@@ -189,28 +213,15 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
             return retentiontime;
         }
 
-        public List<Picture> getHotelPics() {
-            if (StringUtils.isNotBlank(this.hotelpics)){
-
-                List<Picture> hotelPics = JSON.parseArray(this.hotelpics,Picture.class);
-                if (null != hotelPics){
-                    this.setHotelPics(hotelPics);
-                }
-            }
-            return hotelPics;
-        }
-
-        public void setHotelPics(List<Picture> hotelPics) {
-            this.hotelPics = hotelPics;
-        }
-
-        public List<Roomtypes> getRoomtypes() {
-            return roomtypes;
-        }
 
         public void setRoomtypes(List<Roomtypes> roomtypes) {
             this.roomtypes = roomtypes;
         }
+        public List<Roomtypes> getRoomtypes() {
+            return roomtypes;
+        }
+
+
     }
 
     class Picture {

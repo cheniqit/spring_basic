@@ -20,8 +20,9 @@ public class HotelRoomTypeQueryResponse extends FbbCommonResponse {
         this.data = data;
     }
 
-    class HotelRoomType{
+    public class HotelRoomType{
         private String area;
+        private String bedsize;
         private String bedtype;
         private String breakfast;
         private int id;
@@ -92,6 +93,14 @@ public class HotelRoomTypeQueryResponse extends FbbCommonResponse {
         }
         public String getRoomtypepics() {
             return roomtypepics;
+        }
+
+        public String getBedsize() {
+            return bedsize;
+        }
+
+        public void setBedsize(String bedsize) {
+            this.bedsize = bedsize;
         }
     }
 

@@ -13,4 +13,6 @@ public interface RoomTypeService {
     int saveOrUpdateByFangId(RoomTypeDto roomTypeDto);
 
     RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId);
+
+    void mergeRoomType(int pageNo);
 }

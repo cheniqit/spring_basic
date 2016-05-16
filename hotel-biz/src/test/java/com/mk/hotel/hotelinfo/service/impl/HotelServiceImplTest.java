@@ -21,4 +21,19 @@ public class HotelServiceImplTest extends BaseTest{
         Assert.assertNotNull(hotel);
         Assert.assertEquals(new Long(1) , hotel.getId());
     }
+
+    @Test
+    public void testMergePmsHotel() throws Exception {
+        hotelService.mergePmsHotel(1);
+    }
+
+    @Test
+    public void testUpdateHotel() throws Exception {
+
+    }
+
+    @Test
+    public void testSaveHotel() throws Exception {
+
+    }
 }

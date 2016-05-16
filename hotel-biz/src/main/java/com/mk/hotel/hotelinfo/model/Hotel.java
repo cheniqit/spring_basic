@@ -14,8 +14,6 @@ public class Hotel {
 
     private String phone;
 
-    private String pic;
-
     private BigDecimal lat;
 
     private BigDecimal lon;
@@ -45,6 +43,20 @@ public class Hotel {
     private String updateBy;
 
     private String isValid;
+
+    private String townCode;
+
+    private String businessZoneInfo;
+
+    private String airportStationInfo;
+
+    private String scenicSpotsInfo;
+
+    private String hospitalInfo;
+
+    private String collegesInfo;
+
+    private String pic;
 
     public Long getId() {
         return id;
@@ -84,14 +96,6 @@ public class Hotel {
 
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
-    }
-
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic == null ? null : pic.trim();
     }
 
     public BigDecimal getLat() {
@@ -212,5 +216,61 @@ public class Hotel {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public String getTownCode() {
+        return townCode;
+    }
+
+    public void setTownCode(String townCode) {
+        this.townCode = townCode == null ? null : townCode.trim();
+    }
+
+    public String getBusinessZoneInfo() {
+        return businessZoneInfo;
+    }
+
+    public void setBusinessZoneInfo(String businessZoneInfo) {
+        this.businessZoneInfo = businessZoneInfo == null ? null : businessZoneInfo.trim();
+    }
+
+    public String getAirportStationInfo() {
+        return airportStationInfo;
+    }
+
+    public void setAirportStationInfo(String airportStationInfo) {
+        this.airportStationInfo = airportStationInfo == null ? null : airportStationInfo.trim();
+    }
+
+    public String getScenicSpotsInfo() {
+        return scenicSpotsInfo;
+    }
+
+    public void setScenicSpotsInfo(String scenicSpotsInfo) {
+        this.scenicSpotsInfo = scenicSpotsInfo == null ? null : scenicSpotsInfo.trim();
+    }
+
+    public String getHospitalInfo() {
+        return hospitalInfo;
+    }
+
+    public void setHospitalInfo(String hospitalInfo) {
+        this.hospitalInfo = hospitalInfo == null ? null : hospitalInfo.trim();
+    }
+
+    public String getCollegesInfo() {
+        return collegesInfo;
+    }
+
+    public void setCollegesInfo(String collegesInfo) {
+        this.collegesInfo = collegesInfo == null ? null : collegesInfo.trim();
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic == null ? null : pic.trim();
     }
 }

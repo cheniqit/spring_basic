@@ -68,7 +68,7 @@
 			<tx:method name="delete*" propagation="REQUIRED" />
 			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
 			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="*" read-only="true" />
+			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>
 	<aop:config expose-proxy="true">

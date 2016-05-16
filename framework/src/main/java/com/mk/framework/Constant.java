@@ -33,6 +33,10 @@ public class Constant {
     public static final String STOCK_QUERY_API = "/stock/roomtype/query";
 
     public static final String ORDER_FAILED_QUERY_API = "/order/queryfaillist";
+    /*远程调用默认每页的返回的数据量**/
+    public static final Integer DEFAULT_REMOTE_PAGE_SIZE = 1000;
+
+    public static final String SYSTEM_USER_NAME = "hotel_system";
 
 
 }

@@ -5,10 +5,12 @@ import com.mk.framework.FbbRequestHead;
 import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.remote.pms.hotel.json.*;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by chenqi on 16/5/11.
  */
+@Service
 public class HotelRemoteService {
     private final String HOTEL_LIST_QUERY = "/hotel/list/query";
     private final String HOTEL_DETAIL_QUERY = "/hotel/detail/query";

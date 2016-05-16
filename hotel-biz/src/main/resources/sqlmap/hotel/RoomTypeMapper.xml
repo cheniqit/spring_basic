@@ -52,6 +52,35 @@
       </foreach>
     </where>
   </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
   <sql id="Base_Column_List" >
     id, fang_id, hotel_id, name, area, bed_type, bed_size, room_num, prepay, breakfast, 
     refund, max_room_num, create_date, create_by, update_date, update_by, is_valid
@@ -102,6 +131,12 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from room_type
     where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mk.hotel.roomtype.model.RoomTypeExample" >
+    delete from room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
   </delete>
   <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomType" >
     insert into room_type (id, fang_id, hotel_id, 
@@ -240,6 +275,88 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update room_type
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.fangId != null" >
+        fang_id = #{record.fangId,jdbcType=BIGINT},
+      </if>
+      <if test="record.hotelId != null" >
+        hotel_id = #{record.hotelId,jdbcType=BIGINT},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null" >
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bedType != null" >
+        bed_type = #{record.bedType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.roomNum != null" >
+        room_num = #{record.roomNum,jdbcType=SMALLINT},
+      </if>
+      <if test="record.prepay != null" >
+        prepay = #{record.prepay,jdbcType=SMALLINT},
+      </if>
+      <if test="record.breakfast != null" >
+        breakfast = #{record.breakfast,jdbcType=SMALLINT},
+      </if>
+      <if test="record.refund != null" >
+        refund = #{record.refund,jdbcType=SMALLINT},
+      </if>
+      <if test="record.maxRoomNum != null" >
+        max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
+      </if>
+      <if test="record.roomTypePics != null" >
+        room_type_pics = #{record.roomTypePics,jdbcType=SMALLINT},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update room_type
+    set id = #{record.id,jdbcType=BIGINT},
+      fang_id = #{record.fangId,jdbcType=BIGINT},
+      hotel_id = #{record.hotelId,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      bed_type = #{record.bedType,jdbcType=SMALLINT},
+      room_num = #{record.roomNum,jdbcType=SMALLINT},
+      prepay = #{record.prepay,jdbcType=SMALLINT},
+      breakfast = #{record.breakfast,jdbcType=SMALLINT},
+      refund = #{record.refund,jdbcType=SMALLINT},
+      max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
+      room_type_pics = #{record.roomTypePics,jdbcType=SMALLINT},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.roomtype.model.RoomType" >
     update room_type
     <set >

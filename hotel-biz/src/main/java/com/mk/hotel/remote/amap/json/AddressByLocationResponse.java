@@ -106,7 +106,7 @@ public class AddressByLocationResponse {
 
     }
 
-    class AddressComponent {
+    public class AddressComponent {
 
         private String country;
         private String province;
@@ -545,7 +545,7 @@ public class AddressByLocationResponse {
 
     }
 
-    class Regeocode {
+    public class Regeocode {
 
         @JSONField(name ="formatted_address")
         private String formattedAddress;

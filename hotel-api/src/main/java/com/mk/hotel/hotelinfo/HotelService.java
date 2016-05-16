@@ -17,4 +17,6 @@ public interface HotelService {
      * @return
      */
     HotelDto findByFangId(Long fangId);
+
+    void mergePmsHotel(int pageNo);
 }
