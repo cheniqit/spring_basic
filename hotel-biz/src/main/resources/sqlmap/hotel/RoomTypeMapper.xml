@@ -8,17 +8,20 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="bed_type" property="bedType" jdbcType="SMALLINT" />
+    <result column="bed_size" property="bedSize" jdbcType="VARCHAR" />
     <result column="room_num" property="roomNum" jdbcType="SMALLINT" />
     <result column="prepay" property="prepay" jdbcType="SMALLINT" />
     <result column="breakfast" property="breakfast" jdbcType="SMALLINT" />
     <result column="refund" property="refund" jdbcType="SMALLINT" />
     <result column="max_room_num" property="maxRoomNum" jdbcType="SMALLINT" />
-    <result column="room_type_pics" property="roomTypePics" jdbcType="SMALLINT" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="is_valid" property="isValid" jdbcType="CHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.mk.hotel.roomtype.model.RoomType" extends="BaseResultMap" >
+    <result column="room_type_pics" property="roomTypePics" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -50,9 +53,29 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, fang_id, hotel_id, name, area, bed_type, room_num, prepay, breakfast, refund, 
-    max_room_num, room_type_pics, create_date, create_by, update_date, update_by, is_valid
+    id, fang_id, hotel_id, name, area, bed_type, bed_size, room_num, prepay, breakfast, 
+    refund, max_room_num, create_date, create_by, update_date, update_by, is_valid
   </sql>
+  <sql id="Blob_Column_List" >
+    room_type_pics
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.mk.hotel.roomtype.model.RoomTypeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from room_type
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.roomtype.model.RoomTypeExample" >
     select
     <if test="distinct" >
@@ -68,9 +91,11 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from room_type
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -81,16 +106,18 @@
   <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomType" >
     insert into room_type (id, fang_id, hotel_id, 
       name, area, bed_type, 
-      room_num, prepay, breakfast, 
-      refund, max_room_num, room_type_pics, 
+      bed_size, room_num, prepay, 
+      breakfast, refund, max_room_num, 
       create_date, create_by, update_date, 
-      update_by, is_valid)
+      update_by, is_valid, room_type_pics
+      )
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
       #{name,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{bedType,jdbcType=SMALLINT}, 
-      #{roomNum,jdbcType=SMALLINT}, #{prepay,jdbcType=SMALLINT}, #{breakfast,jdbcType=SMALLINT}, 
-      #{refund,jdbcType=SMALLINT}, #{maxRoomNum,jdbcType=SMALLINT}, #{roomTypePics,jdbcType=SMALLINT}, 
+      #{bedSize,jdbcType=VARCHAR}, #{roomNum,jdbcType=SMALLINT}, #{prepay,jdbcType=SMALLINT}, 
+      #{breakfast,jdbcType=SMALLINT}, #{refund,jdbcType=SMALLINT}, #{maxRoomNum,jdbcType=SMALLINT}, 
       #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR})
+      #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, #{roomTypePics,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomType" >
     insert into room_type
@@ -113,6 +140,9 @@
       <if test="bedType != null" >
         bed_type,
       </if>
+      <if test="bedSize != null" >
+        bed_size,
+      </if>
       <if test="roomNum != null" >
         room_num,
       </if>
@@ -128,9 +158,6 @@
       <if test="maxRoomNum != null" >
         max_room_num,
       </if>
-      <if test="roomTypePics != null" >
-        room_type_pics,
-      </if>
       <if test="createDate != null" >
         create_date,
       </if>
@@ -145,6 +172,9 @@
       </if>
       <if test="isValid != null" >
         is_valid,
+      </if>
+      <if test="roomTypePics != null" >
+        room_type_pics,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -166,6 +196,9 @@
       <if test="bedType != null" >
         #{bedType,jdbcType=SMALLINT},
       </if>
+      <if test="bedSize != null" >
+        #{bedSize,jdbcType=VARCHAR},
+      </if>
       <if test="roomNum != null" >
         #{roomNum,jdbcType=SMALLINT},
       </if>
@@ -181,9 +214,6 @@
       <if test="maxRoomNum != null" >
         #{maxRoomNum,jdbcType=SMALLINT},
       </if>
-      <if test="roomTypePics != null" >
-        #{roomTypePics,jdbcType=SMALLINT},
-      </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -198,6 +228,9 @@
       </if>
       <if test="isValid != null" >
         #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="roomTypePics != null" >
+        #{roomTypePics,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -225,6 +258,9 @@
       <if test="bedType != null" >
         bed_type = #{bedType,jdbcType=SMALLINT},
       </if>
+      <if test="bedSize != null" >
+        bed_size = #{bedSize,jdbcType=VARCHAR},
+      </if>
       <if test="roomNum != null" >
         room_num = #{roomNum,jdbcType=SMALLINT},
       </if>
@@ -239,9 +275,6 @@
       </if>
       <if test="maxRoomNum != null" >
         max_room_num = #{maxRoomNum,jdbcType=SMALLINT},
-      </if>
-      <if test="roomTypePics != null" >
-        room_type_pics = #{roomTypePics,jdbcType=SMALLINT},
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -258,7 +291,31 @@
       <if test="isValid != null" >
         is_valid = #{isValid,jdbcType=CHAR},
       </if>
+      <if test="roomTypePics != null" >
+        room_type_pics = #{roomTypePics,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.mk.hotel.roomtype.model.RoomType" >
+    update room_type
+    set fang_id = #{fangId,jdbcType=BIGINT},
+      hotel_id = #{hotelId,jdbcType=BIGINT},
+      name = #{name,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      bed_type = #{bedType,jdbcType=SMALLINT},
+      bed_size = #{bedSize,jdbcType=VARCHAR},
+      room_num = #{roomNum,jdbcType=SMALLINT},
+      prepay = #{prepay,jdbcType=SMALLINT},
+      breakfast = #{breakfast,jdbcType=SMALLINT},
+      refund = #{refund,jdbcType=SMALLINT},
+      max_room_num = #{maxRoomNum,jdbcType=SMALLINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=CHAR},
+      room_type_pics = #{roomTypePics,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.mk.hotel.roomtype.model.RoomType" >
@@ -268,12 +325,12 @@
       name = #{name,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       bed_type = #{bedType,jdbcType=SMALLINT},
+      bed_size = #{bedSize,jdbcType=VARCHAR},
       room_num = #{roomNum,jdbcType=SMALLINT},
       prepay = #{prepay,jdbcType=SMALLINT},
       breakfast = #{breakfast,jdbcType=SMALLINT},
       refund = #{refund,jdbcType=SMALLINT},
       max_room_num = #{maxRoomNum,jdbcType=SMALLINT},
-      room_type_pics = #{roomTypePics,jdbcType=SMALLINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},

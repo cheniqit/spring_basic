@@ -15,6 +15,8 @@ public class RoomType {
 
     private Integer bedType;
 
+    private String bedSize;
+
     private Integer roomNum;
 
     private Integer prepay;
@@ -25,8 +27,6 @@ public class RoomType {
 
     private Integer maxRoomNum;
 
-    private String roomTypePics;
-
     private Date createDate;
 
     private String createBy;
@@ -36,6 +36,8 @@ public class RoomType {
     private String updateBy;
 
     private String isValid;
+
+    private String roomTypePics;
 
     public Long getId() {
         return id;
@@ -75,6 +77,63 @@ public class RoomType {
 
     public void setArea(String area) {
         this.area = area == null ? null : area.trim();
+    }
+
+
+    public String getBedSize() {
+        return bedSize;
+    }
+
+    public void setBedSize(String bedSize) {
+        this.bedSize = bedSize == null ? null : bedSize.trim();
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy == null ? null : createBy.trim();
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy == null ? null : updateBy.trim();
+    }
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public String getRoomTypePics() {
+        return roomTypePics;
+    }
+
+    public void setRoomTypePics(String roomTypePics) {
+        this.roomTypePics = roomTypePics == null ? null : roomTypePics.trim();
     }
 
     public Integer getBedType() {
@@ -123,53 +182,5 @@ public class RoomType {
 
     public void setMaxRoomNum(Integer maxRoomNum) {
         this.maxRoomNum = maxRoomNum;
-    }
-
-    public String getRoomTypePics() {
-        return roomTypePics;
-    }
-
-    public void setRoomTypePics(String roomTypePics) {
-        this.roomTypePics = roomTypePics;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
-    }
-
-    public String getIsValid() {
-        return isValid;
-    }
-
-    public void setIsValid(String isValid) {
-        this.isValid = isValid == null ? null : isValid.trim();
     }
 }

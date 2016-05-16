@@ -485,6 +485,76 @@ public class RoomTypeExample {
             return (Criteria) this;
         }
 
+        public Criteria andBedSizeIsNull() {
+            addCriterion("bed_size is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeIsNotNull() {
+            addCriterion("bed_size is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeEqualTo(String value) {
+            addCriterion("bed_size =", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeNotEqualTo(String value) {
+            addCriterion("bed_size <>", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeGreaterThan(String value) {
+            addCriterion("bed_size >", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeGreaterThanOrEqualTo(String value) {
+            addCriterion("bed_size >=", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeLessThan(String value) {
+            addCriterion("bed_size <", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeLessThanOrEqualTo(String value) {
+            addCriterion("bed_size <=", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeLike(String value) {
+            addCriterion("bed_size like", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeNotLike(String value) {
+            addCriterion("bed_size not like", value, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeIn(List<String> values) {
+            addCriterion("bed_size in", values, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeNotIn(List<String> values) {
+            addCriterion("bed_size not in", values, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeBetween(String value1, String value2) {
+            addCriterion("bed_size between", value1, value2, "bedSize");
+            return (Criteria) this;
+        }
+
+        public Criteria andBedSizeNotBetween(String value1, String value2) {
+            addCriterion("bed_size not between", value1, value2, "bedSize");
+            return (Criteria) this;
+        }
+
         public Criteria andRoomNumIsNull() {
             addCriterion("room_num is null");
             return (Criteria) this;
@@ -782,66 +852,6 @@ public class RoomTypeExample {
 
         public Criteria andMaxRoomNumNotBetween(Short value1, Short value2) {
             addCriterion("max_room_num not between", value1, value2, "maxRoomNum");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsIsNull() {
-            addCriterion("room_type_pics is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsIsNotNull() {
-            addCriterion("room_type_pics is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsEqualTo(Short value) {
-            addCriterion("room_type_pics =", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsNotEqualTo(Short value) {
-            addCriterion("room_type_pics <>", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsGreaterThan(Short value) {
-            addCriterion("room_type_pics >", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsGreaterThanOrEqualTo(Short value) {
-            addCriterion("room_type_pics >=", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsLessThan(Short value) {
-            addCriterion("room_type_pics <", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsLessThanOrEqualTo(Short value) {
-            addCriterion("room_type_pics <=", value, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsIn(List<Short> values) {
-            addCriterion("room_type_pics in", values, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsNotIn(List<Short> values) {
-            addCriterion("room_type_pics not in", values, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsBetween(Short value1, Short value2) {
-            addCriterion("room_type_pics between", value1, value2, "roomTypePics");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoomTypePicsNotBetween(Short value1, Short value2) {
-            addCriterion("room_type_pics not between", value1, value2, "roomTypePics");
             return (Criteria) this;
         }
 

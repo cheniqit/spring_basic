@@ -13,11 +13,15 @@ public interface RoomTypeMapper {
 
     int insertSelective(RoomType record);
 
+    List<RoomType> selectByExampleWithBLOBs(RoomTypeExample example);
+
     List<RoomType> selectByExample(RoomTypeExample example);
 
     RoomType selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(RoomType record);
+
+    int updateByPrimaryKeyWithBLOBs(RoomType record);
 
     int updateByPrimaryKey(RoomType record);
 }
