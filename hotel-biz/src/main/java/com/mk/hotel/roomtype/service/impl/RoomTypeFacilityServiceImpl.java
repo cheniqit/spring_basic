@@ -110,8 +110,8 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
                 //
                 Facility facility = new Facility();
                 facility.setFacId(facId);
-                facility.setFacName(null);
-                facility.setFacType(null);
+                facility.setFacName(dto.getFacilityName());
+                facility.setFacType(dto.getFacilityType());
                 facility.setCacheTime(strDate);
                 facility.setCacheFrom(cacheFrom);
                 //
