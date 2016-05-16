@@ -4,17 +4,19 @@ import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
-import com.mk.hotel.hotelinfo.HotelService;
+import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
-import com.mk.hotel.log.service.impl.LogPushServiceImpl;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import com.mk.ots.mapper.LandMarkMapper;
+import com.mk.ots.model.LandMark;
+import com.mk.ots.model.LandMarkExample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -36,13 +38,19 @@ public class HotelProxyService {
     @Autowired
     private HotelMapper hotelMapper;
     @Autowired
+    private LandMarkMapper landMarkMapper;
+    @Autowired
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private AddressInfoRemoteService addressInfoRemoteService;
     @Autowired
-    private HotelService hotelService;
+    private HotelServiceImpl hotelService;
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
+
+    /**酒店离热点区域的距离 单位米*/
+    private static Integer HOTEL_TO_HOT_AREA_DISTANCE = 10000;
+
 
     @Transactional
     public void saveHotel(List<HotelQueryListResponse.HotelInfo> hotelInfoList){
@@ -107,6 +115,7 @@ public class HotelProxyService {
         hotel.setDefaultLeaveTime(hotelInfo.getDefaultleavetime());
         hotel.setHotelType(hotelInfo.getHoteltype()+"");
         hotel.setRepairTime(DateUtils.parseDate(hotelInfo.getRepairtime(), DateUtils.FORMAT_DATE));
+        hotel.setProvCode(hotelInfo.getProvcode()+"");
         hotel.setCityCode(hotelInfo.getCitycode()+"");
         hotel.setDisCode(hotelInfo.getDiscode()+"");
         String townCode  = addressInfoRemoteService.findTownCodeByLocation(String.valueOf(hotelInfo.getLatitude()), String.valueOf(hotelInfo.getLongitude()));
@@ -114,13 +123,17 @@ public class HotelProxyService {
 
         hotel.setRetentionTime(hotelInfo.getRetentiontime());
         hotel.setFangId(Long.valueOf(hotelInfo.getId()+""));
-        hotel.setBusinessZoneInfo("");
-        hotel.setProvCode(hotelInfo.getProvcode()+"");
-
-        hotel.setAirportStationInfo("");
-        hotel.setScenicSpotsInfo("");
-        hotel.setHospitalInfo("");
-        hotel.setCollegesInfo("");
+        if(CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
+            LandMarkExample example = new LandMarkExample();
+            List<LandMark> landMarks = landMarkMapper.selectByExample(example);
+            hotelService.setAllLandMarkList(landMarks);
+        }
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), this.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
+        hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
+        hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
+        hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
+        hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
+        hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
 
         hotel.setUpdateBy(Constant.SYSTEM_USER_NAME);
         hotel.setUpdateDate(new Date());
