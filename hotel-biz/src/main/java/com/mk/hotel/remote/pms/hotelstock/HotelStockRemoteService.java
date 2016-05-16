@@ -7,10 +7,12 @@ import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by chenqi on 16/5/10.
  */
+@Service
 public class HotelStockRemoteService {
     private final String HOTEL_QUERY_STOCK = "/stock/roomtype/query";
 

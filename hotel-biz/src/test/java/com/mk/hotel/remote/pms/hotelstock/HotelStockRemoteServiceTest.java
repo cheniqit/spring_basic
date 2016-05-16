@@ -21,7 +21,7 @@ public class HotelStockRemoteServiceTest {
         queryStockRequest.setChannelid(pmsAuthHeader.getChannelId());
         queryStockRequest.setHotelid("2807");
         queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
-        queryStockRequest.setEndtime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
         FbbCommonResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
         Assert.assertNotNull(response);
     }

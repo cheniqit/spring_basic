@@ -3,6 +3,7 @@ package com.mk.hotel.remote.pms.hotelstock.json;
 
 import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -11,45 +12,69 @@ import java.util.List;
 public class QueryStockResponse extends FbbCommonResponse {
     private Roominfo data;
 
-    class Roominfo{
-        private String roomtypeid;
-        private List<StockInfo> stockInfos;
+    public Roominfo getData() {
+        return data;
+    }
 
-        class StockInfo{
-            private String date;
-            private Integer num;
+    public void setData(Roominfo data) {
+        this.data = data;
+    }
 
-            public String getDate() {
-                return date;
-            }
+    public class Roominfo{
+        private List<Roomtypestocks> roomtypestocks;
 
-            public void setDate(String date) {
-                this.date = date;
-            }
 
-            public Integer getNum() {
-                return num;
-            }
-
-            public void setNum(Integer num) {
-                this.num = num;
-            }
+        public void setRoomtypestocks(List<Roomtypestocks> roomtypestocks) {
+            this.roomtypestocks = roomtypestocks;
         }
+        public List<Roomtypestocks> getRoomtypestocks() {
+            return roomtypestocks;
+        }
+    }
 
-        public String getRoomtypeid() {
+    public class Roomtypestocks {
+
+        private int roomtypeid;
+        private List<Stockinfos> stockinfos;
+
+
+        public void setRoomtypeid(int roomtypeid) {
+            this.roomtypeid = roomtypeid;
+        }
+        public int getRoomtypeid() {
             return roomtypeid;
         }
 
-        public void setRoomtypeid(String roomtypeid) {
-            this.roomtypeid = roomtypeid;
+
+        public void setStockinfos(List<Stockinfos> stockinfos) {
+            this.stockinfos = stockinfos;
+        }
+        public List<Stockinfos> getStockinfos() {
+            return stockinfos;
         }
 
-        public List<StockInfo> getStockInfos() {
-            return stockInfos;
+    }
+
+
+    public class Stockinfos {
+
+        private String date;
+        private String num;
+
+        public String getDate() {
+            return date;
         }
 
-        public void setStockInfos(List<StockInfo> stockInfos) {
-            this.stockInfos = stockInfos;
+        public void setDate(String date) {
+            this.date = date;
         }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
+        public String getNum() {
+            return num;
+        }
+
     }
 }

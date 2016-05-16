@@ -6,7 +6,7 @@
     <result column="fang_id" property="fangId" jdbcType="BIGINT" />
     <result column="hotel_id" property="hotelId" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="SMALLINT" />
     <result column="bed_type" property="bedType" jdbcType="SMALLINT" />
     <result column="bed_size" property="bedSize" jdbcType="VARCHAR" />
     <result column="room_num" property="roomNum" jdbcType="SMALLINT" />
@@ -147,7 +147,7 @@
       update_by, is_valid, room_type_pics
       )
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
-      #{name,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{bedType,jdbcType=SMALLINT}, 
+      #{name,jdbcType=VARCHAR}, #{area,jdbcType=SMALLINT}, #{bedType,jdbcType=SMALLINT}, 
       #{bedSize,jdbcType=VARCHAR}, #{roomNum,jdbcType=SMALLINT}, #{prepay,jdbcType=SMALLINT}, 
       #{breakfast,jdbcType=SMALLINT}, #{refund,jdbcType=SMALLINT}, #{maxRoomNum,jdbcType=SMALLINT}, 
       #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
@@ -226,7 +226,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
-        #{area,jdbcType=VARCHAR},
+        #{area,jdbcType=SMALLINT},
       </if>
       <if test="bedType != null" >
         #{bedType,jdbcType=SMALLINT},
@@ -291,10 +291,13 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.area != null" >
-        area = #{record.area,jdbcType=VARCHAR},
+        area = #{record.area,jdbcType=SMALLINT},
       </if>
       <if test="record.bedType != null" >
         bed_type = #{record.bedType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.bedSize != null" >
+        bed_size = #{record.bedSize,jdbcType=VARCHAR},
       </if>
       <if test="record.roomNum != null" >
         room_num = #{record.roomNum,jdbcType=SMALLINT},
@@ -311,9 +314,6 @@
       <if test="record.maxRoomNum != null" >
         max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
       </if>
-      <if test="record.roomTypePics != null" >
-        room_type_pics = #{record.roomTypePics,jdbcType=SMALLINT},
-      </if>
       <if test="record.createDate != null" >
         create_date = #{record.createDate,jdbcType=TIMESTAMP},
       </if>
@@ -329,7 +329,34 @@
       <if test="record.isValid != null" >
         is_valid = #{record.isValid,jdbcType=CHAR},
       </if>
+      <if test="record.roomTypePics != null" >
+        room_type_pics = #{record.roomTypePics,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update room_type
+    set id = #{record.id,jdbcType=BIGINT},
+      fang_id = #{record.fangId,jdbcType=BIGINT},
+      hotel_id = #{record.hotelId,jdbcType=BIGINT},
+      name = #{record.name,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=SMALLINT},
+      bed_type = #{record.bedType,jdbcType=SMALLINT},
+      bed_size = #{record.bedSize,jdbcType=VARCHAR},
+      room_num = #{record.roomNum,jdbcType=SMALLINT},
+      prepay = #{record.prepay,jdbcType=SMALLINT},
+      breakfast = #{record.breakfast,jdbcType=SMALLINT},
+      refund = #{record.refund,jdbcType=SMALLINT},
+      max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR},
+      room_type_pics = #{record.roomTypePics,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -340,14 +367,14 @@
       fang_id = #{record.fangId,jdbcType=BIGINT},
       hotel_id = #{record.hotelId,jdbcType=BIGINT},
       name = #{record.name,jdbcType=VARCHAR},
-      area = #{record.area,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=SMALLINT},
       bed_type = #{record.bedType,jdbcType=SMALLINT},
+      bed_size = #{record.bedSize,jdbcType=VARCHAR},
       room_num = #{record.roomNum,jdbcType=SMALLINT},
       prepay = #{record.prepay,jdbcType=SMALLINT},
       breakfast = #{record.breakfast,jdbcType=SMALLINT},
       refund = #{record.refund,jdbcType=SMALLINT},
       max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
-      room_type_pics = #{record.roomTypePics,jdbcType=SMALLINT},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
@@ -370,7 +397,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
-        area = #{area,jdbcType=VARCHAR},
+        area = #{area,jdbcType=SMALLINT},
       </if>
       <if test="bedType != null" >
         bed_type = #{bedType,jdbcType=SMALLINT},
@@ -419,7 +446,7 @@
     set fang_id = #{fangId,jdbcType=BIGINT},
       hotel_id = #{hotelId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
-      area = #{area,jdbcType=VARCHAR},
+      area = #{area,jdbcType=SMALLINT},
       bed_type = #{bedType,jdbcType=SMALLINT},
       bed_size = #{bedSize,jdbcType=VARCHAR},
       room_num = #{roomNum,jdbcType=SMALLINT},
@@ -440,7 +467,7 @@
     set fang_id = #{fangId,jdbcType=BIGINT},
       hotel_id = #{hotelId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
-      area = #{area,jdbcType=VARCHAR},
+      area = #{area,jdbcType=SMALLINT},
       bed_type = #{bedType,jdbcType=SMALLINT},
       bed_size = #{bedSize,jdbcType=VARCHAR},
       room_num = #{roomNum,jdbcType=SMALLINT},

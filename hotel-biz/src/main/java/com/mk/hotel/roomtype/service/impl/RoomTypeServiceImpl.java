@@ -2,6 +2,7 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
+import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
@@ -11,12 +12,16 @@ import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
+import com.mk.hotel.remote.pms.hotel.json.HotelPriceRequest;
+import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
+import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
-import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
@@ -27,8 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +47,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private HotelMapper hotelMapper;
     @Autowired
     private HotelRemoteService hotelRemoteService;
+    @Autowired
+    private HotelStockRemoteService hotelStockRemoteService;
     @Autowired
     private HotelService hotelService;
     @Autowired
@@ -189,7 +194,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-
     public void updateRedisRoomType(String roomTypeId, RoomTypeDto roomTypeDto) {
         if (StringUtils.isBlank(roomTypeId) || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
             return;
@@ -225,5 +229,71 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 jedis.close();
             }
         }
+    }
+
+    public void mergeRoomTypePrice(){
+        int pageNo = 1;
+        mergeRoomTypePrice(pageNo);
+    }
+
+    public void mergeRoomTypePrice(int pageNo) {
+
+        //酒店分页
+        HotelExample hotelExample = new HotelExample();
+        int count = hotelMapper.countByExample(hotelExample);
+        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        HotelExample example = new HotelExample();
+        example.setStart(pageBean.getStart());
+        example.setEnd(pageBean.getEnd());
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
+            hotelPriceRequest.setHotelid(hotel.getFangId().toString());
+            hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
+            hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
+            HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
+            if(response.getData() == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
+                return;
+            }
+            roomTypeProxyService.saveRoomTypePrice(response.getData());
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
+    }
+
+    public void mergeRoomTypeStock(){
+        int pageNo = 1;
+        mergeRoomTypeStock(pageNo);
+    }
+
+    public void mergeRoomTypeStock(int pageNo) {
+
+        //酒店分页
+        HotelExample hotelExample = new HotelExample();
+        int count = hotelMapper.countByExample(hotelExample);
+        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        HotelExample example = new HotelExample();
+        example.setStart(pageBean.getStart());
+        example.setEnd(pageBean.getEnd());
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            QueryStockRequest queryStockRequest = new QueryStockRequest();
+            queryStockRequest.setHotelid(hotel.getFangId().toString());
+            queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+            queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
+            QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
+            if(response == null || response.getData() == null){
+                return;
+            }
+            roomTypeProxyService.saveRoomTypeStock(response.getData());
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
     }
 }

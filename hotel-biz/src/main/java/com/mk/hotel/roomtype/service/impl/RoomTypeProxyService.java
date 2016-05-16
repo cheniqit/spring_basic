@@ -1,20 +1,29 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.mk.framework.Constant;
+import com.mk.framework.DateUtils;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
+import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
-import com.mk.hotel.roomtype.model.RoomType;
-import com.mk.hotel.roomtype.model.RoomTypeExample;
+import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
+import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
+import com.mk.hotel.roomtype.model.*;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +36,13 @@ public class RoomTypeProxyService {
     @Autowired
     private RoomTypeMapper roomTypeMapper;
     @Autowired
+    private RoomTypePriceMapper roomTypePriceMapper;
+    @Autowired
+    private RoomTypeStockMapper roomTypeStockMapper;
+    @Autowired
     private RoomTypeServiceImpl roomTypeService;
+
+    private static Logger logger = LoggerFactory.getLogger(RoomTypeProxyService.class);
 
     @Transactional
     public void saveRoomType(Hotel hotel, List<HotelRoomTypeQueryResponse.HotelRoomType> roomTypeList) {
@@ -59,7 +74,7 @@ public class RoomTypeProxyService {
 
     private RoomType convertRoomType(Hotel hotel, HotelRoomTypeQueryResponse.HotelRoomType hotelRoomType){
         RoomType roomType = new RoomType();
-        roomType.setArea(hotelRoomType.getArea());
+        roomType.setArea(Integer.valueOf(hotelRoomType.getArea()));
         if(StringUtils.isNotBlank(hotelRoomType.getBedtype())){
             roomType.setBedType(Integer.valueOf(hotelRoomType.getBedtype()));
         }
@@ -85,5 +100,136 @@ public class RoomTypeProxyService {
         roomType.setCreateDate(new Date());
         roomType.setIsValid(ValidEnum.VALID.getCode());
         return roomType;
+    }
+
+    @Transactional
+    public void saveRoomTypePrice(HotelPriceResponse.HotelPrice data) {
+        if(data == null || CollectionUtils.isEmpty(data.getRoomtypeprices())){
+            return;
+        }
+        for(HotelPriceResponse.Roomtypeprices roomPriceType : data.getRoomtypeprices()){
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomPriceType.getRoomtypeid()+""));
+            if(roomTypeDto == null){
+                logger.info("by roomTypeId  {} is not find roomType data", roomPriceType.getRoomtypeid()+"");
+                return;
+            }
+            for(HotelPriceResponse.Priceinfos priceinfo : roomPriceType.getPriceinfos()){
+                RoomTypePriceExample example = new RoomTypePriceExample();
+                try {
+                    example.createCriteria()
+                            .andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE))
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomPriceType.getRoomtypeid()+""));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                List<RoomTypePrice> roomTypePriceList = roomTypePriceMapper.selectByExample(example);
+                if(CollectionUtils.isEmpty(roomTypePriceList)){
+                    saveRoomTypePrice(roomTypeDto.getId(), priceinfo);
+                }else{
+                    updateRoomTypePrice(roomTypeDto.getId(), priceinfo);
+                }
+            }
+
+        }
+    }
+
+    private void updateRoomTypePrice(Long roomTypeId,HotelPriceResponse.Priceinfos priceinfo) {
+        try {
+            RoomTypePrice record = convertRoomTypePrice(roomTypeId, priceinfo);
+            RoomTypePriceExample example = new RoomTypePriceExample();
+            example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).
+                    andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
+            roomTypePriceMapper.updateByExampleSelective(record, example);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveRoomTypePrice(Long roomTypeId, HotelPriceResponse.Priceinfos priceinfo) {
+        try {
+            RoomTypePrice record = convertRoomTypePrice(roomTypeId, priceinfo);
+            roomTypePriceMapper.insertSelective(record);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private RoomTypePrice convertRoomTypePrice(Long roomTypeId, HotelPriceResponse.Priceinfos priceinfo) throws ParseException {
+        RoomTypePrice roomTypePrice = new RoomTypePrice();
+        roomTypePrice.setRoomTypeId(roomTypeId);
+        roomTypePrice.setDay(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
+        roomTypePrice.setPrice(new BigDecimal(priceinfo.getCost()));
+
+        roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setUpdateDate(new Date());
+        roomTypePrice.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setCreateDate(new Date());
+        roomTypePrice.setIsValid(ValidEnum.VALID.getCode());
+        return roomTypePrice;
+    }
+
+    public void saveRoomTypeStock(QueryStockResponse.Roominfo data) {
+        if(data == null || CollectionUtils.isEmpty(data.getRoomtypestocks())){
+            return;
+        }
+        for(QueryStockResponse.Roomtypestocks roomtypestock :  data.getRoomtypestocks()){
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomtypestock.getRoomtypeid()));
+            if(roomTypeDto == null){
+                logger.info("by roomTypeId  {} is not find roomType data", roomtypestock.getRoomtypeid());
+                return;
+            }
+            for(QueryStockResponse.Stockinfos stockInfo : roomtypestock.getStockinfos()){
+                RoomTypeStockExample example = new RoomTypeStockExample();
+                try {
+                    example.createCriteria()
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomtypestock.getRoomtypeid()))
+                            .andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                List<RoomTypeStock> roomTypePriceList = roomTypeStockMapper.selectByExample(example);
+                if(CollectionUtils.isEmpty(roomTypePriceList)){
+                    saveRoomTypeStock(roomTypeDto.getId(), stockInfo);
+                }else{
+                    updateRoomTypeStock(roomTypeDto.getId(), stockInfo);
+                }
+            }
+        }
+    }
+
+    private void updateRoomTypeStock(Long roomTypeId, QueryStockResponse.Stockinfos stockInfo) {
+        try {
+            RoomTypeStock record = convertRoomTypeStock(roomTypeId, stockInfo);
+            RoomTypeStockExample example = new RoomTypeStockExample();
+            example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
+            roomTypeStockMapper.updateByExampleSelective(record, example);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveRoomTypeStock(Long roomTypeId, QueryStockResponse.Stockinfos stockInfo) {
+        RoomTypeStock record = null;
+        try {
+            record = convertRoomTypeStock(roomTypeId, stockInfo);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        roomTypeStockMapper.insertSelective(record);
+    }
+
+    private RoomTypeStock convertRoomTypeStock(Long roomTypeId, QueryStockResponse.Stockinfos stockInfo) throws ParseException {
+        RoomTypeStock roomTypeStock = new RoomTypeStock();
+        roomTypeStock.setDay(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
+        roomTypeStock.setRoomTypeId(roomTypeId);
+        roomTypeStock.setNumber(Long.valueOf(stockInfo.getNum()));
+
+        roomTypeStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setUpdateDate(new Date());
+        roomTypeStock.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setCreateDate(new Date());
+        roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
+
+        return roomTypeStock;
     }
 }

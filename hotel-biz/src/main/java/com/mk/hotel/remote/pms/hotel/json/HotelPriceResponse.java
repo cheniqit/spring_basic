@@ -20,7 +20,7 @@ public class HotelPriceResponse extends FbbCommonResponse{
         this.data = data;
     }
 
-    class HotelPrice{
+    public class HotelPrice{
         private List<Roomtypeprices> roomtypeprices;
 
 
@@ -32,7 +32,7 @@ public class HotelPriceResponse extends FbbCommonResponse{
         }
     }
 
-    class Roomtypeprices {
+    public class Roomtypeprices {
 
         private List<Priceinfos> priceinfos;
         private int roomtypeid;
@@ -55,7 +55,7 @@ public class HotelPriceResponse extends FbbCommonResponse{
 
     }
 
-    class Priceinfos {
+    public class Priceinfos {
 
         private String cost;
         private String date;
@@ -85,81 +85,4 @@ public class HotelPriceResponse extends FbbCommonResponse{
 
     }
 
-
-    public static void main(String[] args){
-        String json = "{\n" +
-                "    \"data\": {\n" +
-                "        \"roomTypePrices\": [\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":545.00,\\\"saleprice\\\":545.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 30033\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 30034\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 30004\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 29976\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 29977\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 29967\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"priceInfos\": [\n" +
-                "                    {\n" +
-                "                        \"cost\": \"{\\\"channelprice\\\":10.00,\\\"saleprice\\\":10.00}\",\n" +
-                "                        \"date\": \"20160512\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"roomtypeid\": 29983\n" +
-                "            }\n" +
-                "        ]\n" +
-                "    },\n" +
-                "    \"errorCode\": null,\n" +
-                "    \"errorMessage\": null,\n" +
-                "    \"result\": \"true\"\n" +
-                "}";
-        HotelPriceResponse response = JsonUtils.fromJson(json, HotelPriceResponse.class);
-        System.out.print(response);
-    }
 }

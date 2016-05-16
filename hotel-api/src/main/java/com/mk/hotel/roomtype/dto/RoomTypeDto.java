@@ -14,7 +14,7 @@ public class RoomTypeDto {
 
     private String name;
 
-    private String area;
+    private Integer area;
 
     private Integer bedType;
 
@@ -72,12 +72,12 @@ public class RoomTypeDto {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(String area) {
-        this.area = area == null ? null : area.trim();
+    public void setArea(Integer area) {
+        this.area = area;
     }
 
     public Integer getBedType() {

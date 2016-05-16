@@ -62,7 +62,7 @@ public class RoomTypeController {
         roomTypeDto.setFangHotelId(roomTypeJson.getHotelid());
         roomTypeDto.setFangId(roomTypeJson.getId());
         roomTypeDto.setName(roomTypeJson.getName());
-        roomTypeDto.setArea(roomTypeJson.getArea());
+        roomTypeDto.setArea(Integer.valueOf(roomTypeJson.getArea()));
 
         String strBedType = roomTypeJson.getBedtype();
         if (StringUtils.isNotBlank(strBedType)) {

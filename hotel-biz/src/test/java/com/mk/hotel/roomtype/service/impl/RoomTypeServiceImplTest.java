@@ -17,4 +17,14 @@ public class RoomTypeServiceImplTest extends BaseTest{
     public void testMergeRoomType() throws Exception {
         roomTypeService.mergeRoomType();
     }
+
+    @Test
+    public void testMergeRoomTypePrice() throws Exception {
+        roomTypeService.mergeRoomTypePrice();
+    }
+
+    @Test
+    public void testMergeRoomTypeStock() throws Exception {
+        roomTypeService.mergeRoomTypeStock();
+    }
 }

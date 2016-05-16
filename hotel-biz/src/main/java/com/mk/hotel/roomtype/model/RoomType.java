@@ -11,7 +11,7 @@ public class RoomType {
 
     private String name;
 
-    private String area;
+    private Integer area;
 
     private Integer bedType;
 
@@ -71,14 +71,21 @@ public class RoomType {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(String area) {
-        this.area = area == null ? null : area.trim();
+    public void setArea(Integer area) {
+        this.area = area;
     }
 
+    public Integer getBedType() {
+        return bedType;
+    }
+
+    public void setBedType(Integer bedType) {
+        this.bedType = bedType;
+    }
 
     public String getBedSize() {
         return bedSize;
@@ -86,6 +93,46 @@ public class RoomType {
 
     public void setBedSize(String bedSize) {
         this.bedSize = bedSize == null ? null : bedSize.trim();
+    }
+
+    public Integer getRoomNum() {
+        return roomNum;
+    }
+
+    public void setRoomNum(Integer roomNum) {
+        this.roomNum = roomNum;
+    }
+
+    public Integer getPrepay() {
+        return prepay;
+    }
+
+    public void setPrepay(Integer prepay) {
+        this.prepay = prepay;
+    }
+
+    public Integer getBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(Integer breakfast) {
+        this.breakfast = breakfast;
+    }
+
+    public Integer getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Integer refund) {
+        this.refund = refund;
+    }
+
+    public Integer getMaxRoomNum() {
+        return maxRoomNum;
+    }
+
+    public void setMaxRoomNum(Integer maxRoomNum) {
+        this.maxRoomNum = maxRoomNum;
     }
 
     public Date getCreateDate() {
@@ -134,53 +181,5 @@ public class RoomType {
 
     public void setRoomTypePics(String roomTypePics) {
         this.roomTypePics = roomTypePics == null ? null : roomTypePics.trim();
-    }
-
-    public Integer getBedType() {
-        return bedType;
-    }
-
-    public void setBedType(Integer bedType) {
-        this.bedType = bedType;
-    }
-
-    public Integer getRoomNum() {
-        return roomNum;
-    }
-
-    public void setRoomNum(Integer roomNum) {
-        this.roomNum = roomNum;
-    }
-
-    public Integer getPrepay() {
-        return prepay;
-    }
-
-    public void setPrepay(Integer prepay) {
-        this.prepay = prepay;
-    }
-
-    public Integer getBreakfast() {
-        return breakfast;
-    }
-
-    public void setBreakfast(Integer breakfast) {
-        this.breakfast = breakfast;
-    }
-
-    public Integer getRefund() {
-        return refund;
-    }
-
-    public void setRefund(Integer refund) {
-        this.refund = refund;
-    }
-
-    public Integer getMaxRoomNum() {
-        return maxRoomNum;
-    }
-
-    public void setMaxRoomNum(Integer maxRoomNum) {
-        this.maxRoomNum = maxRoomNum;
     }
 }

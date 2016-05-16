@@ -41,8 +41,37 @@
       </foreach>
     </where>
   </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
   <sql id="Base_Column_List" >
-    id, room_type_id, day, number, create_date, create_by, update_date, update_by, is_valid
+    id, room_type_id, `day`, `number`, create_date, create_by, update_date, update_by, is_valid
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.roomtype.model.RoomTypeStockExample" >
     select
@@ -69,9 +98,15 @@
     delete from room_type_stock
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByExample" parameterType="com.mk.hotel.roomtype.model.RoomTypeStockExample" >
+    delete from room_type_stock
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
   <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" >
-    insert into room_type_stock (id, room_type_id, day, 
-      number, create_date, create_by, 
+    insert into room_type_stock (id, room_type_id, `day`,
+      `number`, create_date, create_by,
       update_date, update_by, is_valid
       )
     values (#{id,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{day,jdbcType=DATE}, 
@@ -89,10 +124,10 @@
         room_type_id,
       </if>
       <if test="day != null" >
-        day,
+        `day`,
       </if>
       <if test="number != null" >
-        number,
+        `number`,
       </if>
       <if test="createDate != null" >
         create_date,
@@ -146,6 +181,56 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update room_type_stock
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.roomTypeId != null" >
+        room_type_id = #{record.roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.day != null" >
+        `day` = #{record.day,jdbcType=DATE},
+      </if>
+      <if test="record.number != null" >
+        `number` = #{record.number,jdbcType=BIGINT},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update room_type_stock
+    set id = #{record.id,jdbcType=BIGINT},
+      room_type_id = #{record.roomTypeId,jdbcType=BIGINT},
+      `day` = #{record.day,jdbcType=DATE},
+      `number` = #{record.number,jdbcType=BIGINT},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" >
     update room_type_stock
     <set >
@@ -153,10 +238,10 @@
         room_type_id = #{roomTypeId,jdbcType=BIGINT},
       </if>
       <if test="day != null" >
-        day = #{day,jdbcType=DATE},
+        `day` = #{day,jdbcType=DATE},
       </if>
       <if test="number != null" >
-        number = #{number,jdbcType=BIGINT},
+        `number` = #{number,jdbcType=BIGINT},
       </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -179,8 +264,8 @@
   <update id="updateByPrimaryKey" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" >
     update room_type_stock
     set room_type_id = #{roomTypeId,jdbcType=BIGINT},
-      day = #{day,jdbcType=DATE},
-      number = #{number,jdbcType=BIGINT},
+      `day` = #{day,jdbcType=DATE},
+      `number` = #{number,jdbcType=BIGINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
