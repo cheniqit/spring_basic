@@ -28,11 +28,11 @@ public class HotelDto {
 
     private String introduction;
 
-    private String provCode;
+    private Integer provCode;
 
-    private String cityCode;
+    private Integer cityCode;
 
-    private String disCode;
+    private Integer disCode;
 
     private Date createDate;
 
@@ -44,13 +44,13 @@ public class HotelDto {
 
     private String isValid;
 
-    private String hotelType;
+    private Integer hotelType;
 
-    public String getHotelType() {
+    public Integer getHotelType() {
         return hotelType;
     }
 
-    public void setHotelType(String hotelType) {
+    public void setHotelType(Integer hotelType) {
         this.hotelType = hotelType;
     }
 
@@ -150,28 +150,28 @@ public class HotelDto {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public String getProvCode() {
+    public Integer getProvCode() {
         return provCode;
     }
 
-    public void setProvCode(String provCode) {
-        this.provCode = provCode == null ? null : provCode.trim();
+    public void setProvCode(Integer provCode) {
+        this.provCode = provCode;
     }
 
-    public String getCityCode() {
+    public Integer getCityCode() {
         return cityCode;
     }
 
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode == null ? null : cityCode.trim();
+    public void setCityCode(Integer cityCode) {
+        this.cityCode = cityCode;
     }
 
-    public String getDisCode() {
+    public Integer getDisCode() {
         return disCode;
     }
 
-    public void setDisCode(String disCode) {
-        this.disCode = disCode == null ? null : disCode.trim();
+    public void setDisCode(Integer disCode) {
+        this.disCode = disCode;
     }
 
     public Date getCreateDate() {
