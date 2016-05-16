@@ -9,7 +9,8 @@ import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
-import com.mk.hotel.hotelinfo.json.hotelall.HotelJson;
+import com.mk.hotel.hotelinfo.json.hotel.HotelJson;
+import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -92,7 +93,7 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        HotelJson hotelJson = JSONUtil.fromJson(body, HotelJson.class);
+        HotelAllJson hotelAllJson = JSONUtil.fromJson(body, HotelAllJson.class);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -115,8 +116,7 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        com.mk.hotel.hotelinfo.json.hotel.HotelJson hotelJson =
-                JSONUtil.fromJson(body, com.mk.hotel.hotelinfo.json.hotel.HotelJson.class);
+        HotelJson hotelJson = JSONUtil.fromJson(body, HotelJson.class);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

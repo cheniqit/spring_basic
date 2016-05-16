@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by huangjie on 16/5/10.
  */
-public class HotelJson {
+public class HotelAllJson {
 
     private Long id;
     private Long citycode;

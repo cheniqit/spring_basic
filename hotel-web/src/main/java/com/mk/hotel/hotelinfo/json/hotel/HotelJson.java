@@ -17,7 +17,7 @@ public class HotelJson {
     private Long provcode;
     private Long citycode;
     private Long discode;
-    private Long hotelpic;
+    private String hotelpic;
 
     public Long getId() {
         return id;
@@ -107,11 +107,11 @@ public class HotelJson {
         this.discode = discode;
     }
 
-    public Long getHotelpic() {
+    public String getHotelpic() {
         return hotelpic;
     }
 
-    public void setHotelpic(Long hotelpic) {
+    public void setHotelpic(String hotelpic) {
         this.hotelpic = hotelpic;
     }
 }
