@@ -119,7 +119,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomType roomType = new RoomType();
         BeanUtils.copyProperties(roomTypeDto, roomType);
 
-        return this.roomTypeMapper.insert(roomType);
+        int result = this.roomTypeMapper.insert(roomType);
+        if (result > 0) {
+            this.updateRedisRoomType(roomType.getId(), roomTypeDto, "RoomTypeService.save");
+        }
+
+        return result;
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
@@ -135,12 +140,26 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         roomTypeDto.setHotelId(hotelDto.getId());
 
-        //
+
+        //db
         RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId());
 
         if (null == dbDto) {
-            return this.save(roomTypeDto);
+            RoomType roomType = new RoomType();
+            BeanUtils.copyProperties(roomTypeDto, roomType);
+
+            int result = this.roomTypeMapper.insert(roomType);
+
+            if (result > 0) {
+                //redis
+                this.updateRedisRoomType(roomType.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+            }
+
+            return result;
         } else {
+            //redis
+            this.updateRedisRoomType(dbDto.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+
             RoomType dbRoomType = new RoomType();
             dbRoomType.setId(dbDto.getId());
             dbRoomType.setHotelId(roomTypeDto.getHotelId());
