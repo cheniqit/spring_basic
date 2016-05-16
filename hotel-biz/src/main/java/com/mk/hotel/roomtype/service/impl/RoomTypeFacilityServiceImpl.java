@@ -66,7 +66,10 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
             return;
         }
 
-        //
+        //redis
+        this.updateRedisFacility(roomTypeDto.getId(), roomTypeFacilityDtoList, "RoomTypeFacilityService.saveOrUpdateByFangid");
+
+        //db
         RoomTypeFacilityExample example = new RoomTypeFacilityExample();
         example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId());
         this.roomTypeFacilityMapper.deleteByExample(example);
