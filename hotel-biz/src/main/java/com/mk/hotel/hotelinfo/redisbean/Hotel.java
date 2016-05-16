@@ -36,8 +36,8 @@ public class Hotel {
 //    //? 没
 //    private String visible;
 //
-//    //? 没
-//    private String online;
+    //
+    private String online;
 
     //保留时间,格式 180000
     private String retentionTime;
@@ -303,5 +303,13 @@ public class Hotel {
 
     public void setCacheFrom(String cacheFrom) {
         this.cacheFrom = cacheFrom;
+    }
+
+    public String getOnline() {
+        return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
     }
 }

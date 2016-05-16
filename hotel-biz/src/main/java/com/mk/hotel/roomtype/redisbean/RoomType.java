@@ -118,4 +118,5 @@ public class RoomType {
     public void setCacheFrom(String cacheFrom) {
         this.cacheFrom = cacheFrom;
     }
+
 }

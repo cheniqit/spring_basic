@@ -3,9 +3,11 @@ package com.mk.hotel.roomtype.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
+import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -21,10 +23,12 @@ import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
+import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -115,18 +120,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return this.roomTypeMapper.insert(roomType);
     }
 
-    public int update(RoomTypeDto roomTypeDto) {
-        if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "roomTypeDto 不可为空");
-        }
-
-        RoomType roomType = new RoomType();
-        BeanUtils.copyProperties(roomTypeDto, roomType);
-
-        return this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
-
-    }
-
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
 
         if (null == roomTypeDto) {
@@ -158,6 +151,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             dbRoomType.setRefund(roomTypeDto.getRefund());
             dbRoomType.setMaxRoomNum(roomTypeDto.getMaxRoomNum());
             dbRoomType.setRoomTypePics(roomTypeDto.getRoomTypePics());
+            dbRoomType.setIsValid(roomTypeDto.getIsValid());
 
             return this.roomTypeMapper.updateByPrimaryKeySelective(dbRoomType);
         }
@@ -194,19 +188,50 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-    public void updateRedisRoomType(String roomTypeId, RoomTypeDto roomTypeDto) {
+    public void updateRedisRoomType(String roomTypeId, RoomTypeDto roomTypeDto, String cacheFrom) {
         if (StringUtils.isBlank(roomTypeId) || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
             return;
         }
 
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String strDate = formatTime.format(new Date());
         //
         Jedis jedis = null;
         try {
             //
             jedis = RedisUtil.getJedis();
             String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(roomTypeId);
-            //TODO add
-            jedis.set(roomTypeKeyName, null);
+            //
+            BedType bedType = new BedType();
+            bedType.setType(roomTypeDto.getBedType());
+            bedType.setName(BedTypeEnum.getById(roomTypeDto.getBedType()).getName());
+            bedType.setLength(roomTypeDto.getBedSize());
+
+            com.mk.hotel.roomtype.redisbean.RoomType roomType = new com.mk.hotel.roomtype.redisbean.RoomType();
+
+//            private Long hotelId;
+//            private Long roomTypeId;
+//            private String roomTypeName;
+//            private Integer area;
+//            private BedType bedType;
+//            private Integer breakFast;
+//            private Integer status;
+//            private Integer roomNum;
+//            private String online;
+//            private List<PicList> roomTypePics;
+
+            roomType.setHotelId(roomTypeDto.getHotelId());
+            roomType.setRoomTypeId(roomTypeDto.getId());
+            roomType.setRoomTypeName(roomTypeDto.getName());
+            roomType.setArea(roomTypeDto.getArea());
+            roomType.setBedType(bedType);
+            roomType.setBreakFast(roomTypeDto.getBreakfast());
+            roomType.setStatus(roomTypeDto.getStatus());
+
+            roomType.setCacheTime(strDate);
+            roomType.setCacheFrom(cacheFrom);
+
+            jedis.set(roomTypeKeyName, JsonUtils.toJson(roomType));
 
             //
             String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomTypeDto.getHotelId()));

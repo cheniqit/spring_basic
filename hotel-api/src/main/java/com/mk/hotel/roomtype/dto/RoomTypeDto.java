@@ -18,11 +18,15 @@ public class RoomTypeDto {
 
     private Integer bedType;
 
+    private String bedSize;
+
     private Integer roomNum;
 
     private Integer prepay;
 
     private Integer breakfast;
+
+    private Integer status;
 
     private Integer refund;
 
@@ -88,6 +92,14 @@ public class RoomTypeDto {
         this.bedType = bedType;
     }
 
+    public String getBedSize() {
+        return bedSize;
+    }
+
+    public void setBedSize(String bedSize) {
+        this.bedSize = bedSize;
+    }
+
     public Integer getRoomNum() {
         return roomNum;
     }
@@ -110,6 +122,14 @@ public class RoomTypeDto {
 
     public void setBreakfast(Integer breakfast) {
         this.breakfast = breakfast;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getRefund() {
