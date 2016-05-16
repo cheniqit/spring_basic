@@ -35,7 +35,7 @@ public class RoomTypeProxyService {
             return;
         }
         for(HotelRoomTypeQueryResponse.HotelRoomType hotelRoomType : roomTypeList){
-            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(hotel.getFangId());
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(hotelRoomType.getId()+""));
             if(roomTypeDto == null || roomTypeDto.getId() == null){
                 saveRoomType(hotel, hotelRoomType);
             }else{
@@ -68,7 +68,7 @@ public class RoomTypeProxyService {
         if(StringUtils.isNotBlank(hotelRoomType.getBreakfast())) {
             roomType.setBreakfast(Integer.valueOf(hotelRoomType.getBreakfast()));
         }
-        roomType.setFangId(hotel.getFangId());
+        roomType.setFangId(Long.valueOf(hotelRoomType.getId()+""));
         roomType.setHotelId(hotel.getId());
         roomType.setMaxRoomNum(Integer.valueOf(hotelRoomType.getRoomnum()));
         roomType.setName(hotelRoomType.getName());
