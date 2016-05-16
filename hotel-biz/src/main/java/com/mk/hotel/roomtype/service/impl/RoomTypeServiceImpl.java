@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
@@ -38,6 +39,7 @@ import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -120,7 +122,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomType roomType = new RoomType();
         BeanUtils.copyProperties(roomTypeDto, roomType);
 
-        return this.roomTypeMapper.insert(roomType);
+        int result = this.roomTypeMapper.insert(roomType);
+        if (result > 0) {
+            this.updateRedisRoomType(roomType.getId(), roomTypeDto, "RoomTypeService.save");
+        }
+
+        return result;
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
@@ -136,12 +143,26 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         roomTypeDto.setHotelId(hotelDto.getId());
 
-        //
+
+        //db
         RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId());
 
         if (null == dbDto) {
-            return this.save(roomTypeDto);
+            RoomType roomType = new RoomType();
+            BeanUtils.copyProperties(roomTypeDto, roomType);
+
+            int result = this.roomTypeMapper.insert(roomType);
+
+            if (result > 0) {
+                //redis
+                this.updateRedisRoomType(roomType.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+            }
+
+            return result;
         } else {
+            //redis
+            this.updateRedisRoomType(dbDto.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+
             RoomType dbRoomType = new RoomType();
             dbRoomType.setId(dbDto.getId());
             dbRoomType.setHotelId(roomTypeDto.getHotelId());
@@ -193,8 +214,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-    public void updateRedisRoomType(String roomTypeId, RoomTypeDto roomTypeDto, String cacheFrom) {
-        if (StringUtils.isBlank(roomTypeId) || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
+    public void updateRedisRoomType(Long roomTypeId, RoomTypeDto roomTypeDto, String cacheFrom) {
+        if (null == roomTypeId || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
             return;
         }
 
@@ -205,15 +226,28 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         try {
             //
             jedis = RedisUtil.getJedis();
-            String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(roomTypeId);
-            //
+
+            //roomTypeKey
+            String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
+            //bedtype
             BedType bedType = new BedType();
             bedType.setType(roomTypeDto.getBedType());
             bedType.setName(BedTypeEnum.getById(roomTypeDto.getBedType()).getName());
             bedType.setLength(roomTypeDto.getBedSize());
 
-            com.mk.hotel.roomtype.redisbean.RoomType roomType = new com.mk.hotel.roomtype.redisbean.RoomType();
+            //roomtype pic
+            String strPics = roomTypeDto.getRoomTypePics();
+            JSONArray picArray = JSONArray.parseArray(strPics);
 
+            List<PicList> picLists = new ArrayList<PicList>();
+
+            for (String strPic : picArray.toArray(new String[0])) {
+                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                picLists.add(picList);
+            }
+
+            //roomtype
+            com.mk.hotel.roomtype.redisbean.RoomType roomType = new com.mk.hotel.roomtype.redisbean.RoomType();
             roomType.setHotelId(roomTypeDto.getHotelId());
             roomType.setRoomTypeId(roomTypeDto.getId());
             roomType.setRoomTypeName(roomTypeDto.getName());
@@ -222,25 +256,28 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomType.setBreakFast(roomTypeDto.getBreakfast());
             roomType.setStatus(roomTypeDto.getStatus());
             roomType.setRoomNum(roomTypeDto.getRoomNum());
-            roomType.setRoomTypePics(null);
+            roomType.setRoomTypePics(picLists);
 
             roomType.setCacheTime(strDate);
             roomType.setCacheFrom(cacheFrom);
 
             jedis.set(roomTypeKeyName, JsonUtils.toJson(roomType));
 
-            //
+
+            //roomTypeSet
             String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomTypeDto.getHotelId()));
-            //TODO add
             Set<String> roomTypeSet = jedis.smembers(roomTypeSetName);
             //先删除
-            for (String roomTypeJson : roomTypeSet) {
-                if (1 == 1) {
-                    jedis.srem(roomTypeSetName,roomTypeJson);
+            for (String roomTypeJsonInRedis : roomTypeSet) {
+                com.mk.hotel.roomtype.redisbean.RoomType roomTypeInRedis =
+                        JsonUtils.fromJson(roomTypeJsonInRedis, com.mk.hotel.roomtype.redisbean.RoomType.class);
+
+                if (roomTypeId.equals(roomTypeInRedis.getRoomTypeId())) {
+                    jedis.srem(roomTypeSetName, roomTypeJsonInRedis);
                 }
             }
             //
-            jedis.sadd(roomTypeKeyName,null);
+            jedis.sadd(roomTypeKeyName, JsonUtils.toJson(roomType));
 
         } catch (Exception e) {
             e.printStackTrace();
