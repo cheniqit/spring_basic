@@ -16,6 +16,7 @@ public class HotelRemoteService {
     private final String HOTEL_DETAIL_QUERY = "/hotel/detail/query";
     private final String HOTEL_ROOM_TYPE_QUERY = "/hotel/roomtype/query";
     private final String HOTEL_QUERY_PRICE = "/hotel/queryprice";
+    private final String HOTEL_TAG= "/hotel/tags/querytags";
 
     public HotelQueryListResponse queryHotelList(HotelQueryListRequest hotelQueryListRequest){
         String body = JsonUtils.toJson(hotelQueryListRequest);
@@ -41,11 +42,19 @@ public class HotelRemoteService {
         return response;
     }
 
-    public HotelPriceResponse queryHotelPrice(HotelPriceRequest HotelPriceRequest){
-        String body = JsonUtils.toJson(HotelPriceRequest);
+    public HotelPriceResponse queryHotelPrice(HotelPriceRequest hotelPriceRequest){
+        String body = JsonUtils.toJson(hotelPriceRequest);
         String remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_PRICE,
                 new FbbRequestHead(), body);
         HotelPriceResponse response = JsonUtils.fromJson(remoteResult, HotelPriceResponse.class);
+        return response;
+    }
+
+    public HotelTagResponse queryHotelTags(HotelTagRequest hotelTagRequest){
+        String body = JsonUtils.toJson(hotelTagRequest);
+        String remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_TAG,
+                new FbbRequestHead(), body);
+        HotelTagResponse response = JsonUtils.fromJson(remoteResult, HotelTagResponse.class);
         return response;
     }
 }

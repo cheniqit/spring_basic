@@ -16,10 +16,10 @@ import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
-import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
-import com.mk.ots.model.LandMarkExample;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static com.mk.hotel.hotelinfo.bean.HotelLandMark.*;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -48,6 +46,8 @@ public class HotelServiceImpl implements HotelService {
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private HotelProxyService hotelProxyService;
+
+    private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     private static List<LandMark> allLandMarkList = new ArrayList<LandMark>();
 
@@ -93,6 +93,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     public void mergePmsHotel(int pageNo){
+        logger.info("begin mergePmsHotel pageNo {}", pageNo);
         HotelQueryListRequest request = new HotelQueryListRequest(pageNo);
         HotelQueryListResponse response = hotelRemoteService.queryHotelList(request);
         if(response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
@@ -100,6 +101,7 @@ public class HotelServiceImpl implements HotelService {
         }
         List<HotelQueryListResponse.HotelInfo> hotelInfoList = response.getData().getHotels();
         hotelProxyService.saveHotel(hotelInfoList);
+        logger.info("end mergePmsHotel pageNo {}", pageNo);
         pageNo++;
         mergePmsHotel(pageNo);
     }

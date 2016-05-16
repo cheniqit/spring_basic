@@ -51,4 +51,12 @@ public class HotelRemoteServiceTest {
         HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
         Assert.assertNotNull(response.getData());
     }
+
+    @Test
+    public void testQueryHotelTags() throws Exception {
+        HotelTagRequest request = new HotelTagRequest();
+        request.setHotelid("2807");
+        HotelTagResponse response = hotelRemoteService.queryHotelTags(request);
+        Assert.assertNotNull(response);
+    }
 }
