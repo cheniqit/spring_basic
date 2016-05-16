@@ -90,14 +90,6 @@ public class RoomTypeJson {
         this.name = name;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getBedtype() {
         return bedtype;
     }
@@ -112,5 +104,13 @@ public class RoomTypeJson {
 
     public void setRoomnum(Integer roomnum) {
         this.roomnum = roomnum;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 }
