@@ -27,6 +27,10 @@ public class RoomType {
 
     private List<PicList> roomTypePics;
 
+    private String cacheTime;
+
+    private String cacheFrom;
+
     public Long getHotelId() {
         return hotelId;
     }
@@ -97,5 +101,21 @@ public class RoomType {
 
     public void setRoomTypePics(List<PicList> roomTypePics) {
         this.roomTypePics = roomTypePics;
+    }
+
+    public String getCacheTime() {
+        return cacheTime;
+    }
+
+    public void setCacheTime(String cacheTime) {
+        this.cacheTime = cacheTime;
+    }
+
+    public String getCacheFrom() {
+        return cacheFrom;
+    }
+
+    public void setCacheFrom(String cacheFrom) {
+        this.cacheFrom = cacheFrom;
     }
 }

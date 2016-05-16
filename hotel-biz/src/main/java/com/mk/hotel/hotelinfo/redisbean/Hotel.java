@@ -93,6 +93,10 @@ public class Hotel {
     //学校信息以逗号隔开
     private String collegesInfo;
 
+    private String cacheTime;
+
+    private String cacheFrom;
+
     public Long getId() {
         return id;
     }
@@ -283,5 +287,21 @@ public class Hotel {
 
     public void setCollegesInfo(String collegesInfo) {
         this.collegesInfo = collegesInfo;
+    }
+
+    public String getCacheTime() {
+        return cacheTime;
+    }
+
+    public void setCacheTime(String cacheTime) {
+        this.cacheTime = cacheTime;
+    }
+
+    public String getCacheFrom() {
+        return cacheFrom;
+    }
+
+    public void setCacheFrom(String cacheFrom) {
+        this.cacheFrom = cacheFrom;
     }
 }

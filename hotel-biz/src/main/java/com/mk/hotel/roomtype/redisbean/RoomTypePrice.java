@@ -16,6 +16,10 @@ public class RoomTypePrice {
 
     private Integer promoOption;
 
+    private String cacheTime;
+
+    private String cacheFrom;
+
     public Long getRoomTypeId() {
         return roomTypeId;
     }
@@ -54,5 +58,21 @@ public class RoomTypePrice {
 
     public void setPromoOption(Integer promoOption) {
         this.promoOption = promoOption;
+    }
+
+    public String getCacheTime() {
+        return cacheTime;
+    }
+
+    public void setCacheTime(String cacheTime) {
+        this.cacheTime = cacheTime;
+    }
+
+    public String getCacheFrom() {
+        return cacheFrom;
+    }
+
+    public void setCacheFrom(String cacheFrom) {
+        this.cacheFrom = cacheFrom;
     }
 }
