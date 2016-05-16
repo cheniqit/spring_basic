@@ -171,5 +171,39 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/mergeRoomType", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeRoomType(Integer pageNo) {
+        try {
+            if(pageNo == null){
+                pageNo = 1;
+            }
+            roomTypeService.mergeRoomType(pageNo);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/mergeRoomTypePrice", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypePrice(Integer pageNo) {
+        try {
+            if(pageNo == null){
+                pageNo = 1;
+            }
+            roomTypeService.mergeRoomTypePrice(pageNo);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
 }
 

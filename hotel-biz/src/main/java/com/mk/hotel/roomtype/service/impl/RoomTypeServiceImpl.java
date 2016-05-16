@@ -7,7 +7,6 @@ import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
-import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -30,6 +29,8 @@ import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
 import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private HotelService hotelService;
     @Autowired
     private RoomTypeProxyService roomTypeProxyService;
+
+    private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
     public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId) {
         if (null == fangHotelId || null == fangRoomTypeId) {
@@ -163,6 +166,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomType(int pageNo) {
+        logger.info("begin mergeRoomType pageNo {}", pageNo);
         HotelRoomTypeQueryRequest hotelRoomTypeQueryRequest = new HotelRoomTypeQueryRequest();
         //酒店分页
         HotelExample hotelExample = new HotelExample();
@@ -183,6 +187,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             }
             roomTypeProxyService.saveRoomType(hotel, response.getData());
         }
+        logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
         mergeRoomType(pageNo);
     }
@@ -253,7 +258,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomTypePrice(int pageNo) {
-
+        logger.info("begin mergeRoomTypePrice pageNo {}", pageNo);
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -276,6 +281,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             }
             roomTypeProxyService.saveRoomTypePrice(response.getData());
         }
+        logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
         mergeRoomType(pageNo);
     }
