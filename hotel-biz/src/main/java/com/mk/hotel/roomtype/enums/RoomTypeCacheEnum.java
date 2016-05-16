@@ -27,8 +27,8 @@ public enum RoomTypeCacheEnum {
         return String.valueOf(id) + " " + name;
     }
 
-    public static String getRoomTypeSetName(String roomTypeId) {
-        if (StringUtils.isBlank(roomTypeId)) {
+    public static String getRoomTypeSetName(String hotelId) {
+        if (StringUtils.isBlank(hotelId)) {
             return "";
         }
 
@@ -36,7 +36,7 @@ public enum RoomTypeCacheEnum {
         StringBuilder result = new StringBuilder()
                 .append(RoomTypeCacheEnum.ROOMTYPE_SET.getName())
                 .append("_")
-                .append(roomTypeId);
+                .append(hotelId);
 
         return result.toString();
     }

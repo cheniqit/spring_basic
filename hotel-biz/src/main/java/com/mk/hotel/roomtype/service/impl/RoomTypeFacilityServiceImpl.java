@@ -1,17 +1,27 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import com.mk.hotel.roomtype.enums.RoomTypeFacilityCacheEnum;
+import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeFacilityMapper;
 import com.mk.hotel.roomtype.model.RoomTypeFacility;
 import com.mk.hotel.roomtype.model.RoomTypeFacilityExample;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
@@ -67,6 +77,42 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
             facility.setFacilityId(facilityId);
             facility.setIsValid("T");
             this.roomTypeFacilityMapper.insert(facility);
+        }
+    }
+
+
+    public void updateRedisFacility(String roomTypeId, List<RoomTypeFacilityDto> roomTypeFacilityDtoList) {
+        if (StringUtils.isBlank(roomTypeId) || null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
+            return;
+        }
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String facilityKeyName = RoomTypeFacilityCacheEnum.getFacilityKeyName(roomTypeId);
+
+            //redis rem
+            Set<String> facilityList =  jedis.smembers(facilityKeyName);
+            for (String facilityJson : facilityList) {
+                jedis.srem(facilityKeyName,facilityJson);
+            }
+
+            //redis add
+            for (RoomTypeFacilityDto dto : roomTypeFacilityDtoList) {
+                //TODO
+                jedis.sadd(facilityKeyName, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
         }
     }
 }

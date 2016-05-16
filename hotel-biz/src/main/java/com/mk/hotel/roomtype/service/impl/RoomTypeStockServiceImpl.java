@@ -347,7 +347,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 //        }
 //    }
 
-    public void updateStock(String hotelId, String roomTypeId, Date day, Integer num) {
+    public void updateRedisStock(String hotelId, String roomTypeId, Date day, Integer num) {
         if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == num) {
             return;
         }

@@ -1,7 +1,9 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -13,14 +15,21 @@ import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
+import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -108,7 +117,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomType roomType = new RoomType();
         BeanUtils.copyProperties(roomTypeDto, roomType);
 
-        return this.roomTypeMapper.updateByPrimaryKey(roomType);
+        return this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
 
     }
 
@@ -176,5 +185,35 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         pageNo++;
         mergeRoomType(pageNo);
+    }
+
+
+
+    public void updateRedisRoomType(String roomTypeId, RoomTypeDto roomTypeDto) {
+        if (StringUtils.isBlank(roomTypeId) || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
+            return;
+        }
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(roomTypeId);
+            //TODO add
+            jedis.set(roomTypeKeyName, null);
+
+            //
+            String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomTypeDto.getHotelId()));
+            //TODO add
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
     }
 }

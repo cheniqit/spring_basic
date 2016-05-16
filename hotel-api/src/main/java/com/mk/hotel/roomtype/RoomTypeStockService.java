@@ -112,7 +112,7 @@ public interface RoomTypeStockService {
      * @param day        日期
      * @param num        可用房量
      */
-    void updateStock(String hotelId, String roomTypeId, Date day, Integer num);
+    void updateRedisStock(String hotelId, String roomTypeId, Date day, Integer num);
 
     /**
      * ots锁房,已执行操作锁

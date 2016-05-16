@@ -76,7 +76,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
-    public void updatePrice(String roomTypeId, Date day, BigDecimal price) {
+    public void updateRedisPrice(String roomTypeId, Date day, BigDecimal price) {
         if (StringUtils.isBlank(roomTypeId) || null == day || null == price) {
             return;
         }

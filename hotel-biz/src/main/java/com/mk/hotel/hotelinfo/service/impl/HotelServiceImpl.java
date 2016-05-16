@@ -1,18 +1,25 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
+import com.dianping.cat.Cat;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelCacheEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
@@ -74,6 +81,29 @@ public class HotelServiceImpl implements HotelService {
     }
 
 
+    public void updateRedisHotel(String hotelId, HotelDto hotelDto) {
+        if (StringUtils.isBlank(hotelId) || null == hotelDto || null == hotelDto.getId()) {
+            return;
+        }
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String hotelKeyName = HotelCacheEnum.getHotelKeyName(hotelId);
+            //TODO add
+            jedis.set(hotelKeyName, null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
 
 
 
