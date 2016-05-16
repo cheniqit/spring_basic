@@ -130,7 +130,7 @@
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="start != null" >
+    <if test="start != null and start != 0" >
       limit ${start},${end}
     </if>
   </select>

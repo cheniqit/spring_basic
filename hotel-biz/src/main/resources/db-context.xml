@@ -85,7 +85,7 @@
 
 <!---     ots สýพÝิด  -->
 
-	<!--<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+	<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
 		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
 
 		<property name="jdbcUrl" value="${ots.mysql.jdbc.url}"/>
@@ -123,5 +123,5 @@
 		<property name="basePackage" value="com.mk.ots.mapper"/>
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryOts"></property>
 	</bean>
--->
+
 </beans>
