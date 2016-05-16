@@ -12,6 +12,17 @@ public class Facility {
 
     private String cacheFrom;
 
+    public Facility() {
+
+    }
+    public Facility(Long facId, String facName, Long facType, String cacheTime, String cacheFrom) {
+        this.facId = facId;
+        this.facName = facName;
+        this.facType = facType;
+        this.cacheTime = cacheTime;
+        this.cacheFrom = cacheFrom;
+    }
+
     public Long getFacId() {
         return facId;
     }

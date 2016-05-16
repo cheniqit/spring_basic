@@ -7,6 +7,7 @@ import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
+import com.mk.hotel.hotelinfo.json.facility.FacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotel.HotelJson;
@@ -142,25 +143,18 @@ public class HotelController {
         //
         HotelFacilityJson facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
         Long fangHotelId = facilityJson.getHotelid();
-        String hotelTag = facilityJson.getTagid();
+        List<FacilityJson> facilityJsonList = facilityJson.getTags();
 
-        if (StringUtils.isNotBlank(hotelTag)) {
-            String[] holelTags =  hotelTag.split(",");
+        if (null != facilityJsonList && !facilityJsonList.isEmpty()) {
 
             List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
-            for (String strTag : holelTags) {
-                Long tag = null;
-                try {
-                    tag = Long.parseLong(strTag);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    Cat.logError(e);
-                    continue;
-                }
+            for (FacilityJson json : facilityJsonList) {
 
                 HotelFacilityDto dto = new HotelFacilityDto();
                 dto.setFangHotelId(fangHotelId);
-                dto.setFacilityId(tag);
+                dto.setFacilityId(json.getId());
+                dto.setFacilityName(json.getTagname());
+                dto.setFacilityType(json.getTaggroupid());
                 hotelFacilityDtoList.add(dto);
             }
 
@@ -168,30 +162,24 @@ public class HotelController {
         }
 
         //
-        List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtype();
-        for (RoomTypeFacilityJson json : roomTypeFacilityJsonList) {
-            Long fangRoomTypeId = json.getRoomtypeid();
-            String roomTypeTag = json.getRoomtypetagid();
+        List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtypeTags();
+        for (RoomTypeFacilityJson roomTypeFacilityJson : roomTypeFacilityJsonList) {
+            Long fangRoomTypeId = roomTypeFacilityJson.getRoomtypeid();
+            List<FacilityJson> roomTypeTag = roomTypeFacilityJson.getTags();
 
-            if (StringUtils.isNotBlank(roomTypeTag)) {
-                String[] roomTypeTags = roomTypeTag.split(",");
+            if (null != roomTypeTag && !roomTypeTag.isEmpty()) {
 
                 List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
-                for(String strTag : roomTypeTags) {
-                    Long tag = null;
-                    try {
-                        tag = Long.parseLong(strTag);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        Cat.logError(e);
-                        continue;
-                    }
+                for(FacilityJson json: roomTypeTag) {
 
                     //
                     RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
                     dto.setFangHotelId(fangHotelId);
                     dto.setFangRoomTypeId(fangRoomTypeId);
-                    dto.setFacilityId(tag);
+                    dto.setFacilityId(json.getId());
+                    dto.setFacilityName(json.getTagname());
+                    dto.setFacilityType(json.getTaggroupid());
+
                     roomTypeFacilityDtoList.add(dto);
                 }
 

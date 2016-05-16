@@ -8,8 +8,8 @@ import java.util.List;
 public class HotelFacilityJson {
 
     private Long hotelid;
-    private String tagid;
-    private List<RoomTypeFacilityJson> roomtype;
+    private List<FacilityJson> tags;
+    private List<RoomTypeFacilityJson> roomtypeTags;
 
     public Long getHotelid() {
         return hotelid;
@@ -19,19 +19,20 @@ public class HotelFacilityJson {
         this.hotelid = hotelid;
     }
 
-    public String getTagid() {
-        return tagid;
+
+    public List<FacilityJson> getTags() {
+        return tags;
     }
 
-    public void setTagid(String tagid) {
-        this.tagid = tagid;
+    public void setTags(List<FacilityJson> tags) {
+        this.tags = tags;
     }
 
-    public List<RoomTypeFacilityJson> getRoomtype() {
-        return roomtype;
+    public List<RoomTypeFacilityJson> getRoomtypeTags() {
+        return roomtypeTags;
     }
 
-    public void setRoomtype(List<RoomTypeFacilityJson> roomtype) {
-        this.roomtype = roomtype;
+    public void setRoomtypeTags(List<RoomTypeFacilityJson> roomtypeTags) {
+        this.roomtypeTags = roomtypeTags;
     }
 }

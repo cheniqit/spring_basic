@@ -1,11 +1,13 @@
 package com.mk.hotel.hotelinfo.json.facility;
 
+import java.util.List;
+
 /**
  * Created by huangjie on 16/5/12.
  */
 public class RoomTypeFacilityJson {
     private Long roomtypeid;
-    private String roomtypetagid;
+    private List<FacilityJson> tags;
 
     public Long getRoomtypeid() {
         return roomtypeid;
@@ -15,11 +17,11 @@ public class RoomTypeFacilityJson {
         this.roomtypeid = roomtypeid;
     }
 
-    public String getRoomtypetagid() {
-        return roomtypetagid;
+    public List<FacilityJson> getTags() {
+        return tags;
     }
 
-    public void setRoomtypetagid(String roomtypetagid) {
-        this.roomtypetagid = roomtypetagid;
+    public void setTags(List<FacilityJson> tags) {
+        this.tags = tags;
     }
 }

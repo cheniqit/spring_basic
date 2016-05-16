@@ -1,8 +1,10 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.redisbean.Facility;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -64,7 +66,10 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
             return;
         }
 
-        //
+        //redis
+        this.updateRedisFacility(roomTypeDto.getId(), roomTypeFacilityDtoList, "RoomTypeFacilityService.saveOrUpdateByFangid");
+
+        //db
         RoomTypeFacilityExample example = new RoomTypeFacilityExample();
         example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId());
         this.roomTypeFacilityMapper.deleteByExample(example);
@@ -81,30 +86,39 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
     }
 
 
-    public void updateRedisFacility(String roomTypeId, List<RoomTypeFacilityDto> roomTypeFacilityDtoList) {
-        if (StringUtils.isBlank(roomTypeId) || null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
+    public void updateRedisFacility(Long roomTypeId, List<RoomTypeFacilityDto> roomTypeFacilityDtoList, String cacheFrom) {
+        if (null == roomTypeId || null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
             return;
         }
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        String strDate = format.format(day);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String strDate = format.format(new Date());
 
         //
         Jedis jedis = null;
         try {
             //
             jedis = RedisUtil.getJedis();
-            String facilityKeyName = RoomTypeFacilityCacheEnum.getFacilityKeyName(roomTypeId);
+            String facilityKeyName = RoomTypeFacilityCacheEnum.getFacilityKeyName(String.valueOf(roomTypeId));
 
             //redis rem
-            Set<String> facilityList =  jedis.smembers(facilityKeyName);
+            Set<String> facilityList = jedis.smembers(facilityKeyName);
             for (String facilityJson : facilityList) {
-                jedis.srem(facilityKeyName,facilityJson);
+                jedis.srem(facilityKeyName, facilityJson);
             }
 
             //redis add
             for (RoomTypeFacilityDto dto : roomTypeFacilityDtoList) {
-                //TODO
-                jedis.sadd(facilityKeyName, null);
+                Long facId = dto.getFacilityId();
+
+                //
+                Facility facility = new Facility();
+                facility.setFacId(facId);
+                facility.setFacName(dto.getFacilityName());
+                facility.setFacType(dto.getFacilityType());
+                facility.setCacheTime(strDate);
+                facility.setCacheFrom(cacheFrom);
+                //
+                jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
         } catch (Exception e) {
             e.printStackTrace();

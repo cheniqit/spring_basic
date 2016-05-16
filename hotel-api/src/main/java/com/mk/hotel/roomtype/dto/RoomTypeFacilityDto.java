@@ -14,6 +14,10 @@ public class RoomTypeFacilityDto {
 
     private Long facilityId;
 
+    private String facilityName;
+
+    private Long facilityType;
+
     private Date createDate;
 
     private String createBy;
@@ -102,5 +106,21 @@ public class RoomTypeFacilityDto {
 
     public void setFangHotelId(Long fangHotelId) {
         this.fangHotelId = fangHotelId;
+    }
+
+    public String getFacilityName() {
+        return facilityName;
+    }
+
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
+    }
+
+    public Long getFacilityType() {
+        return facilityType;
+    }
+
+    public void setFacilityType(Long facilityType) {
+        this.facilityType = facilityType;
     }
 }
