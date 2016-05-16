@@ -1,8 +1,10 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
 import com.dianping.cat.Cat;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.redisbean.Facility;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +46,10 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
             return;
         }
 
-        //
+        //redis
+        this.updateRedisFacility(hotelDto.getId(), hotelFacilityDtoList, "HotelFacilityService.saveOrUpdateByFangId");
+
+        //db
         HotelFacilityExample example = new HotelFacilityExample();
         example.createCriteria().andHotelIdEqualTo(hotelDto.getId());
         this.hotelFacilityMapper.deleteByExample(example);
@@ -57,20 +64,19 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         }
     }
 
-
-    public void updateRedisFacility(String hotelId, List<HotelFacilityDto> hotelFacilityDtoList) {
-        if (StringUtils.isBlank(hotelId) || null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
+    public void updateRedisFacility(Long hotelId, List<HotelFacilityDto> hotelFacilityDtoList, String cacheFrom) {
+        if (null == hotelId || null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
             return;
         }
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//        String strDate = format.format(day);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(new Date());
 
         //
         Jedis jedis = null;
         try {
             //
             jedis = RedisUtil.getJedis();
-            String facilityKeyName = HotelFacilityCacheEnum.getFacilityKeyName(hotelId);
+            String facilityKeyName = HotelFacilityCacheEnum.getFacilityKeyName(String.valueOf(hotelId));
 
             //redis rem
             Set<String> facilityList =  jedis.smembers(facilityKeyName);
@@ -80,8 +86,13 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
 
             //redis add
             for (HotelFacilityDto dto : hotelFacilityDtoList) {
-                //TODO
-                jedis.sadd(facilityKeyName, null);
+                Facility facility = new Facility();
+                facility.setFacId(dto.getId());
+                facility.setFacName(dto.getFacilityName());
+                facility.setFacType(dto.getFacilityType());
+                facility.setCacheTime(strDate);
+                facility.setCacheFrom(cacheFrom);
+                jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
         } catch (Exception e) {
             e.printStackTrace();

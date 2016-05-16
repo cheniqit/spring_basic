@@ -1,6 +1,7 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.roomtype.RoomTypePriceService;
@@ -60,6 +61,13 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         roomTypePriceExample.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(roomTypePriceDto.getDay());
         List<RoomTypePrice> roomTypePriceList = this.roomTypePriceMapper.selectByExample(roomTypePriceExample);
 
+        //redis
+        this.updateRedisPrice(
+                roomTypeDto.getId(), roomTypeDto.getName(),
+                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(),
+                "RoomTypePriceService.saveOrUpdateByFangId");
+
+        //db
         if (roomTypePriceList.isEmpty()) {
             RoomTypePrice roomTypePrice = new RoomTypePrice();
             roomTypePrice.setRoomTypeId(roomTypeDto.getId());
@@ -76,20 +84,36 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
-    public void updateRedisPrice(String roomTypeId, Date day, BigDecimal price) {
-        if (StringUtils.isBlank(roomTypeId) || null == day || null == price) {
+    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, String cacheFrom) {
+        if (null == roomTypeId || null == day || null == price) {
             return;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String strDate = format.format(day);
+        String strDateTime = formatTime.format(new Date());
 
         //
         Jedis jedis = null;
         try {
             //
             jedis = RedisUtil.getJedis();
-            String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(roomTypeId);
-            jedis.hset(priceHashName, strDate, String.valueOf(price));
+            String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(String.valueOf(roomTypeId));
+
+            //
+            com.mk.hotel.roomtype.redisbean.RoomTypePrice roomTypePrice = new com.mk.hotel.roomtype.redisbean.RoomTypePrice();
+            roomTypePrice.setRoomTypeId(roomTypeId);
+            roomTypePrice.setRoomTypeName(roomTypeName);
+            roomTypePrice.setPrice(price);
+            roomTypePrice.setOriginPrice(price);
+            roomTypePrice.setCacheTime(strDateTime);
+            roomTypePrice.setCacheFrom(cacheFrom);
+
+            //set
+            jedis.hset(priceHashName, strDate, JsonUtils.toJson(roomTypePrice));
+
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
