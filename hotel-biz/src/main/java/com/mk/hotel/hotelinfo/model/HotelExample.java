@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HotelExample extends PageBean{
+public class HotelExample extends PageBean {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -778,52 +778,62 @@ public class HotelExample extends PageBean{
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeEqualTo(Date value) {
+        public Criteria andRepairTimeEqualTo(String value) {
             addCriterion("repair_time =", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeNotEqualTo(Date value) {
+        public Criteria andRepairTimeNotEqualTo(String value) {
             addCriterion("repair_time <>", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeGreaterThan(Date value) {
+        public Criteria andRepairTimeGreaterThan(String value) {
             addCriterion("repair_time >", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andRepairTimeGreaterThanOrEqualTo(String value) {
             addCriterion("repair_time >=", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeLessThan(Date value) {
+        public Criteria andRepairTimeLessThan(String value) {
             addCriterion("repair_time <", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeLessThanOrEqualTo(Date value) {
+        public Criteria andRepairTimeLessThanOrEqualTo(String value) {
             addCriterion("repair_time <=", value, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeIn(List<Date> values) {
+        public Criteria andRepairTimeLike(String value) {
+            addCriterion("repair_time like", value, "repairTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepairTimeNotLike(String value) {
+            addCriterion("repair_time not like", value, "repairTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepairTimeIn(List<String> values) {
             addCriterion("repair_time in", values, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeNotIn(List<Date> values) {
+        public Criteria andRepairTimeNotIn(List<String> values) {
             addCriterion("repair_time not in", values, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeBetween(Date value1, Date value2) {
+        public Criteria andRepairTimeBetween(String value1, String value2) {
             addCriterion("repair_time between", value1, value2, "repairTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepairTimeNotBetween(Date value1, Date value2) {
+        public Criteria andRepairTimeNotBetween(String value1, String value2) {
             addCriterion("repair_time not between", value1, value2, "repairTime");
             return (Criteria) this;
         }
@@ -1855,6 +1865,76 @@ public class HotelExample extends PageBean{
 
         public Criteria andCollegesInfoNotBetween(String value1, String value2) {
             addCriterion("colleges_info not between", value1, value2, "collegesInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIsNull() {
+            addCriterion("open_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIsNotNull() {
+            addCriterion("open_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeEqualTo(String value) {
+            addCriterion("open_time =", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotEqualTo(String value) {
+            addCriterion("open_time <>", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeGreaterThan(String value) {
+            addCriterion("open_time >", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeGreaterThanOrEqualTo(String value) {
+            addCriterion("open_time >=", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLessThan(String value) {
+            addCriterion("open_time <", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLessThanOrEqualTo(String value) {
+            addCriterion("open_time <=", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLike(String value) {
+            addCriterion("open_time like", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotLike(String value) {
+            addCriterion("open_time not like", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIn(List<String> values) {
+            addCriterion("open_time in", values, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotIn(List<String> values) {
+            addCriterion("open_time not in", values, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeBetween(String value1, String value2) {
+            addCriterion("open_time between", value1, value2, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotBetween(String value1, String value2) {
+            addCriterion("open_time not between", value1, value2, "openTime");
             return (Criteria) this;
         }
     }

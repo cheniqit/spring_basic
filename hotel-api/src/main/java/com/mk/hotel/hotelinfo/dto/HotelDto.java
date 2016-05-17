@@ -14,25 +14,25 @@ public class HotelDto {
 
     private String phone;
 
-    private String pic;
-
     private BigDecimal lat;
 
     private BigDecimal lon;
 
     private String defaultLeaveTime;
 
+    private String hotelType;
+
     private String retentionTime;
 
-    private Date repairTime;
+    private String repairTime;
 
     private String introduction;
 
-    private Integer provCode;
+    private String provCode;
 
-    private Integer cityCode;
+    private String cityCode;
 
-    private Integer disCode;
+    private String disCode;
 
     private Date createDate;
 
@@ -44,15 +44,21 @@ public class HotelDto {
 
     private String isValid;
 
-    private Integer hotelType;
+    private String townCode;
 
-    public Integer getHotelType() {
-        return hotelType;
-    }
+    private String businessZoneInfo;
 
-    public void setHotelType(Integer hotelType) {
-        this.hotelType = hotelType;
-    }
+    private String airportStationInfo;
+
+    private String scenicSpotsInfo;
+
+    private String hospitalInfo;
+
+    private String collegesInfo;
+
+    private String openTime;
+
+    private String pic;
 
     public Long getId() {
         return id;
@@ -94,14 +100,6 @@ public class HotelDto {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic == null ? null : pic.trim();
-    }
-
     public BigDecimal getLat() {
         return lat;
     }
@@ -126,6 +124,14 @@ public class HotelDto {
         this.defaultLeaveTime = defaultLeaveTime == null ? null : defaultLeaveTime.trim();
     }
 
+    public String getHotelType() {
+        return hotelType;
+    }
+
+    public void setHotelType(String hotelType) {
+        this.hotelType = hotelType == null ? null : hotelType.trim();
+    }
+
     public String getRetentionTime() {
         return retentionTime;
     }
@@ -134,12 +140,12 @@ public class HotelDto {
         this.retentionTime = retentionTime == null ? null : retentionTime.trim();
     }
 
-    public Date getRepairTime() {
+    public String getRepairTime() {
         return repairTime;
     }
 
-    public void setRepairTime(Date repairTime) {
-        this.repairTime = repairTime;
+    public void setRepairTime(String repairTime) {
+        this.repairTime = repairTime == null ? null : repairTime.trim();
     }
 
     public String getIntroduction() {
@@ -150,28 +156,28 @@ public class HotelDto {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public Integer getProvCode() {
+    public String getProvCode() {
         return provCode;
     }
 
-    public void setProvCode(Integer provCode) {
-        this.provCode = provCode;
+    public void setProvCode(String provCode) {
+        this.provCode = provCode == null ? null : provCode.trim();
     }
 
-    public Integer getCityCode() {
+    public String getCityCode() {
         return cityCode;
     }
 
-    public void setCityCode(Integer cityCode) {
-        this.cityCode = cityCode;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode == null ? null : cityCode.trim();
     }
 
-    public Integer getDisCode() {
+    public String getDisCode() {
         return disCode;
     }
 
-    public void setDisCode(Integer disCode) {
-        this.disCode = disCode;
+    public void setDisCode(String disCode) {
+        this.disCode = disCode == null ? null : disCode.trim();
     }
 
     public Date getCreateDate() {
@@ -212,5 +218,69 @@ public class HotelDto {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public String getTownCode() {
+        return townCode;
+    }
+
+    public void setTownCode(String townCode) {
+        this.townCode = townCode == null ? null : townCode.trim();
+    }
+
+    public String getBusinessZoneInfo() {
+        return businessZoneInfo;
+    }
+
+    public void setBusinessZoneInfo(String businessZoneInfo) {
+        this.businessZoneInfo = businessZoneInfo == null ? null : businessZoneInfo.trim();
+    }
+
+    public String getAirportStationInfo() {
+        return airportStationInfo;
+    }
+
+    public void setAirportStationInfo(String airportStationInfo) {
+        this.airportStationInfo = airportStationInfo == null ? null : airportStationInfo.trim();
+    }
+
+    public String getScenicSpotsInfo() {
+        return scenicSpotsInfo;
+    }
+
+    public void setScenicSpotsInfo(String scenicSpotsInfo) {
+        this.scenicSpotsInfo = scenicSpotsInfo == null ? null : scenicSpotsInfo.trim();
+    }
+
+    public String getHospitalInfo() {
+        return hospitalInfo;
+    }
+
+    public void setHospitalInfo(String hospitalInfo) {
+        this.hospitalInfo = hospitalInfo == null ? null : hospitalInfo.trim();
+    }
+
+    public String getCollegesInfo() {
+        return collegesInfo;
+    }
+
+    public void setCollegesInfo(String collegesInfo) {
+        this.collegesInfo = collegesInfo == null ? null : collegesInfo.trim();
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime == null ? null : openTime.trim();
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic == null ? null : pic.trim();
     }
 }

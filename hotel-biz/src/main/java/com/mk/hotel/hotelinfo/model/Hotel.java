@@ -24,7 +24,7 @@ public class Hotel {
 
     private String retentionTime;
 
-    private Date repairTime;
+    private String repairTime;
 
     private String introduction;
 
@@ -55,6 +55,8 @@ public class Hotel {
     private String hospitalInfo;
 
     private String collegesInfo;
+
+    private String openTime;
 
     private String pic;
 
@@ -138,12 +140,12 @@ public class Hotel {
         this.retentionTime = retentionTime == null ? null : retentionTime.trim();
     }
 
-    public Date getRepairTime() {
+    public String getRepairTime() {
         return repairTime;
     }
 
-    public void setRepairTime(Date repairTime) {
-        this.repairTime = repairTime;
+    public void setRepairTime(String repairTime) {
+        this.repairTime = repairTime == null ? null : repairTime.trim();
     }
 
     public String getIntroduction() {
@@ -264,6 +266,14 @@ public class Hotel {
 
     public void setCollegesInfo(String collegesInfo) {
         this.collegesInfo = collegesInfo == null ? null : collegesInfo.trim();
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime == null ? null : openTime.trim();
     }
 
     public String getPic() {

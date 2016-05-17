@@ -114,7 +114,7 @@ public class HotelProxyService {
         hotel.setLon(new BigDecimal(hotelInfo.getLongitude()));
         hotel.setDefaultLeaveTime(hotelInfo.getDefaultleavetime());
         hotel.setHotelType(hotelInfo.getHoteltype()+"");
-        hotel.setRepairTime(DateUtils.parseDate(hotelInfo.getRepairtime(), DateUtils.FORMAT_DATE));
+        hotel.setRepairTime(hotelInfo.getRepairtime());
         hotel.setProvCode(hotelInfo.getProvcode()+"");
         hotel.setCityCode(hotelInfo.getCitycode()+"");
         hotel.setDisCode(hotelInfo.getDiscode()+"");

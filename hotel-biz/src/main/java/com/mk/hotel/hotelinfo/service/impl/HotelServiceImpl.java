@@ -16,7 +16,9 @@ import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
+import com.mk.ots.model.LandMarkExample;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,17 +170,21 @@ public class HotelServiceImpl implements HotelService {
             hotel.setLongitude(hotelDto.getLon());
             hotel.setLatitude(hotelDto.getLat());
             hotel.setOpenTime(null);
-//            hotel.setRepairTime(hotelDto.getRepairTime());
+            hotel.setRepairTime(hotelDto.getRepairTime());
             hotel.setOnline(null);
             hotel.setRetentionTime(hotelDto.getRetentionTime());
             hotel.setDefaultLeaveTime(hotelDto.getDefaultLeaveTime());
             hotel.setHotelPhone(hotelDto.getPhone());
-            hotel.setProvCode(hotelDto.getProvCode());
-            hotel.setCityCode(hotelDto.getCityCode());
-            hotel.setDisCode(hotelDto.getDisCode());
+
+//            hotel.setProvCode(hotelDto.getProvCode());
+//            hotel.setCityCode(hotelDto.getCityCode());
+//            hotel.setDisCode(hotelDto.getDisCode());
+
             hotel.setTownCode(null);
             hotel.setTownName(null);
-            hotel.setHotelType(hotelDto.getHotelType());
+
+//            hotel.setHotelType(hotelDto.getHotelType());
+
             hotel.setIntroduction(hotelDto.getIntroduction());
             hotel.setHotelPics(picLists);
             hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
