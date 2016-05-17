@@ -51,33 +51,6 @@ public class HotelController {
     @Autowired
     private LogPushService logPushService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> test() {
-        String url = "http://api.fangbaba.cc/open/area/queryProvince";
-        String resultStr = null;
-        try {
-            resultStr =  HttpUtils.doPost(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        result.put("hotel", resultStr);
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/findHotelById", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> findHotelById() {
-        HotelDto hotel = hotelService.findById(1L);
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        result.put("hotel", hotel);
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelAllPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
