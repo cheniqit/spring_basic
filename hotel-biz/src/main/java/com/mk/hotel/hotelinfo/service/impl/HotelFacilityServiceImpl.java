@@ -145,7 +145,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
-        example.setEnd(pageBean.getEnd());
+        example.setPageCount(pageBean.getPageCount());
         List<Hotel> hotelList = hotelMapper.selectByExample(example);
         if(CollectionUtils.isEmpty(hotelList)){
             return;
