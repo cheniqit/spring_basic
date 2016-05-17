@@ -74,7 +74,7 @@ public class RoomTypeProxyService {
         RoomType roomType = convertRoomType(hotel, hotelRoomType);
         roomType.setId(id);
         RoomTypeExample example = new RoomTypeExample();
-        example.createCriteria().andHotelIdEqualTo(hotel.getId());
+        example.createCriteria().andIdEqualTo(id);
         roomTypeMapper.updateByExampleSelective(roomType, example);
         return roomType;
     }
