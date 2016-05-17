@@ -9,11 +9,9 @@ import java.util.List;
 public class HotelAllJson {
     private Long id;
     private Long citycode;
-    private String cityname;
     private String defaultleavetime;
     private String detailaddr;
     private Long discode;
-    private Long districtname;
     private String hotelname;
     private String hotelpic;
     private String introduction;
@@ -21,7 +19,6 @@ public class HotelAllJson {
     private BigDecimal longitude;
     private String pmstype;
     private Long provcode;
-    private String provincename;
     private String repairtime;
     private String retentiontime;
     private String hoteltype;
@@ -53,14 +50,6 @@ public class HotelAllJson {
         this.citycode = citycode;
     }
 
-    public String getCityname() {
-        return cityname;
-    }
-
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
-    }
-
     public String getDefaultleavetime() {
         return defaultleavetime;
     }
@@ -83,14 +72,6 @@ public class HotelAllJson {
 
     public void setDiscode(Long discode) {
         this.discode = discode;
-    }
-
-    public Long getDistrictname() {
-        return districtname;
-    }
-
-    public void setDistrictname(Long districtname) {
-        this.districtname = districtname;
     }
 
     public String getHotelname() {
@@ -147,14 +128,6 @@ public class HotelAllJson {
 
     public void setProvcode(Long provcode) {
         this.provcode = provcode;
-    }
-
-    public String getProvincename() {
-        return provincename;
-    }
-
-    public void setProvincename(String provincename) {
-        this.provincename = provincename;
     }
 
     public String getRepairtime() {
