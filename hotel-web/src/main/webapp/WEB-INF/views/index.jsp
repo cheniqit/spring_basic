@@ -5,10 +5,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>JOB任务系统</title>
+    <title>Hotel系统</title>
 </head>
 <body>
-<h1>JOB任务系统</h1>
+<h1>Hotel系统</h1>
 <ul>
   <li>
    <!-- <a href="/login">/login </a>-->
