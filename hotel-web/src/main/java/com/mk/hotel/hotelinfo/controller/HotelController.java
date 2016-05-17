@@ -1,5 +1,7 @@
 package com.mk.hotel.hotelinfo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.net.HttpUtils;
 import com.mk.framework.proxy.http.JSONUtil;
@@ -92,8 +94,14 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        HotelAllJson hotelJson = JSONUtil.fromJson(body, HotelAllJson.class);
+        //
+        JSONObject bodyJson = JSON.parseObject(body);
+        String data = (String) bodyJson.get("data");
 
+        //
+        HotelAllJson hotelJson = JSONUtil.fromJson(data, HotelAllJson.class);
+
+        //
         HotelDto hotelDto = new HotelDto();
         hotelDto.setFangId(hotelJson.getId());
         hotelDto.setName(hotelJson.getHotelname());
@@ -200,7 +208,12 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        HotelJson hotelJson = JSONUtil.fromJson(body, HotelJson.class);
+        //
+        JSONObject bodyJson = JSON.parseObject(body);
+        String data = (String) bodyJson.get("data");
+
+        //
+        HotelJson hotelJson = JSONUtil.fromJson(data, HotelJson.class);
 
         HotelDto hotelDto = new HotelDto();
         hotelDto.setFangId(hotelJson.getId());
@@ -245,7 +258,11 @@ public class HotelController {
         }
 
         //
-        HotelFacilityJson facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
+        JSONObject bodyJson = JSON.parseObject(body);
+        String data = (String) bodyJson.get("data");
+
+        //
+        HotelFacilityJson facilityJson = JSONUtil.fromJson(data, HotelFacilityJson.class);
         Long fangHotelId = facilityJson.getHotelid();
         List<FacilityJson> facilityJsonList = facilityJson.getTags();
 

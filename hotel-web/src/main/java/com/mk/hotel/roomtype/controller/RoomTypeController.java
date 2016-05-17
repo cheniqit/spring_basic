@@ -1,5 +1,7 @@
 package com.mk.hotel.roomtype.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.log.LogPushService;
@@ -55,7 +57,12 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
-        RoomTypeJson roomTypeJson = JSONUtil.fromJson(body, RoomTypeJson.class);
+        //
+        JSONObject bodyJson = JSON.parseObject(body);
+        String data = (String) bodyJson.get("data");
+
+        //
+        RoomTypeJson roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
 
         RoomTypeDto roomTypeDto = new RoomTypeDto();
 
@@ -109,8 +116,12 @@ public class RoomTypeController {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
+        //
+        JSONObject bodyJson = JSON.parseObject(body);
+        String data = (String) bodyJson.get("data");
+
         //json
-        RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+        RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
         //fang-hotelId
         Long fangHotelId = roomTypePriceJson.getHotelid();
 
