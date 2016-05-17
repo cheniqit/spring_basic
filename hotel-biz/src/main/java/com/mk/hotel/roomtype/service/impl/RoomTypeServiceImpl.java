@@ -164,6 +164,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             RoomType roomType = new RoomType();
             BeanUtils.copyProperties(roomTypeDto, roomType);
 
+            roomType.setCreateDate(new Date());
+            roomType.setCreateBy("hotel_system");
+            roomType.setUpdateDate(new Date());
+            roomType.setUpdateBy("hotel_system");
+
             int result = this.roomTypeMapper.insert(roomType);
 
             if (result > 0) {
@@ -255,7 +260,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             List<PicList> picLists = new ArrayList<PicList>();
 
-            for (String strPic : picArray.toArray(new String[0])) {
+            for (int i = 0; i < picArray.size(); i++) {
+                String strPic = picArray.getString(i);
                 PicList picList = JsonUtils.fromJson(strPic, PicList.class);
                 picLists.add(picList);
             }

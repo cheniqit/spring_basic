@@ -88,6 +88,11 @@ public class HotelServiceImpl implements HotelService {
         if (hotelList.isEmpty()) {
             Hotel dbHotel = new Hotel();
             BeanUtils.copyProperties(hotelDto, dbHotel);
+
+            dbHotel.setCreateDate(new Date());
+            dbHotel.setCreateBy("hotel_system");
+            dbHotel.setUpdateDate(new Date());
+            dbHotel.setUpdateBy("hotel_system");
             //
             this.hotelMapper.insert(dbHotel);
             hotelId = dbHotel.getId();

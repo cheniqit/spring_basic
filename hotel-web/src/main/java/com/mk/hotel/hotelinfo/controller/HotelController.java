@@ -127,11 +127,18 @@ public class HotelController {
 
                 //
                 String isValid = null;
-                if (0 == roomTypeJson.getStatus()) {
+                Integer status = roomTypeJson.getStatus();
+
+                if (null == status) {
                     isValid = "T";
                 } else {
-                    isValid = "F";
+                    if (0 == roomTypeJson.getStatus()) {
+                        isValid = "T";
+                    } else {
+                        isValid = "F";
+                    }
                 }
+
                 //
                 RoomTypeDto roomTypeDto = new RoomTypeDto();
                 roomTypeDto.setFangHotelId(hotelJson.getId());
