@@ -26,6 +26,7 @@ public class HotelAllJson {
     private Long repairtime;
     private String retentiontime;
     private String hoteltype;
+    private String opentime;
     private List<RoomtypeJson> roomtypes;
 
     public String getHoteltype() {
@@ -170,6 +171,14 @@ public class HotelAllJson {
 
     public void setRetentiontime(String retentiontime) {
         this.retentiontime = retentiontime;
+    }
+
+    public String getOpentime() {
+        return opentime;
+    }
+
+    public void setOpentime(String opentime) {
+        this.opentime = opentime;
     }
 
     public List<RoomtypeJson> getRoomtypes() {

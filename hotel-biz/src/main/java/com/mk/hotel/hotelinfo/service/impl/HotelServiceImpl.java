@@ -13,6 +13,8 @@ import com.mk.hotel.hotelinfo.enums.HotelCacheEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.remote.amap.AddressInfoRemoteService;
+import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
@@ -48,6 +50,8 @@ public class HotelServiceImpl implements HotelService {
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private HotelProxyService hotelProxyService;
+    @Autowired
+    private AddressInfoRemoteService addressInfoRemoteService;
 
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -70,8 +74,7 @@ public class HotelServiceImpl implements HotelService {
         BeanUtils.copyProperties(hotel, dto);
         return dto;
     }
-
-
+git
     public HotelDto findByFangId(Long fangId) {
 
         HotelExample hotelExample = new HotelExample();
@@ -107,7 +110,6 @@ public class HotelServiceImpl implements HotelService {
         pageNo++;
         mergePmsHotel(pageNo);
     }
-
 
     public void updateRedisHotel(Long hotelId, HotelDto hotelDto, String cacheFrom) {
         if (null == hotelId || null == hotelDto || null == hotelDto.getId() || null == hotelDto.getCityCode()) {
@@ -149,6 +151,74 @@ public class HotelServiceImpl implements HotelService {
                 PicList picList = JsonUtils.fromJson(strPic, PicList.class);
                 picLists.add(picList);
             }
+
+            //hotel type
+            Integer intHotelType = null;
+            try {
+                intHotelType = Integer.parseInt(hotelDto.getHotelType());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+            //town code
+            AddressByLocationResponse townlocation = addressInfoRemoteService.findAddressByLocation(
+                    String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
+            String townCode = null;
+            String townName = null;
+
+            if (null != townlocation) {
+                AddressByLocationResponse.Regeocode regeocode = townlocation.getRegeocode();
+                if (null != regeocode) {
+                    AddressByLocationResponse.AddressComponent addressComponent = regeocode.getAddresscomponent();
+                    if (null != addressComponent) {
+                        townCode = addressComponent.getTowncode();
+                        townName = addressComponent.getTownship();
+                    }
+                }
+            }
+
+            //getProvCode
+            Integer intProvCode = null;
+            try {
+                intProvCode = Integer.parseInt(hotelDto.getProvCode());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+            //getCityCode
+            Integer intCityCode = null;
+            try {
+                hotelDto.getCityCode();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+            //getDisCode
+            Integer intDisCode = null;
+            try {
+                hotelDto.getDisCode();
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+            //townCode
+            Integer intTownCode = null;
+            try {
+                intTownCode = Integer.parseInt(townCode);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+
+            //online
+            String online = null;
+            String isValid = hotelDto.getIsValid();
+            if ("T".equals(isValid)) {
+                online = "T";
+            } else {
+                online = "F";
+            }
+
             //
             if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
                 LandMarkExample example = new LandMarkExample();
@@ -159,7 +229,6 @@ public class HotelServiceImpl implements HotelService {
             HotelLandMark hotelLandMark = this.getHotelLandMark(
                     hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 10000, this.getAllLandMarkList());
 
-
             //
             com.mk.hotel.hotelinfo.redisbean.Hotel hotel = new com.mk.hotel.hotelinfo.redisbean.Hotel();
 
@@ -169,22 +238,18 @@ public class HotelServiceImpl implements HotelService {
             hotel.setDetailAddr(hotelDto.getAddr());
             hotel.setLongitude(hotelDto.getLon());
             hotel.setLatitude(hotelDto.getLat());
-            hotel.setOpenTime(null);
+            hotel.setOpenTime(hotelDto.getOpenTime());
             hotel.setRepairTime(hotelDto.getRepairTime());
-            hotel.setOnline(null);
+            hotel.setOnline(online);
             hotel.setRetentionTime(hotelDto.getRetentionTime());
             hotel.setDefaultLeaveTime(hotelDto.getDefaultLeaveTime());
             hotel.setHotelPhone(hotelDto.getPhone());
-
-//            hotel.setProvCode(hotelDto.getProvCode());
-//            hotel.setCityCode(hotelDto.getCityCode());
-//            hotel.setDisCode(hotelDto.getDisCode());
-
-            hotel.setTownCode(null);
-            hotel.setTownName(null);
-
-//            hotel.setHotelType(hotelDto.getHotelType());
-
+            hotel.setProvCode(intProvCode);
+            hotel.setCityCode(intCityCode);
+            hotel.setDisCode(intDisCode);
+            hotel.setTownCode(intTownCode);
+            hotel.setTownName(townName);
+            hotel.setHotelType(intHotelType);
             hotel.setIntroduction(hotelDto.getIntroduction());
             hotel.setHotelPics(picLists);
             hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
@@ -192,6 +257,8 @@ public class HotelServiceImpl implements HotelService {
             hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
             hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
             hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
+
+            //
             hotel.setCacheTime(strDate);
             hotel.setCacheFrom(cacheFrom);
             //

@@ -11,6 +11,7 @@ public class HotelJson {
     private String detailaddr;
     private BigDecimal longitude;
     private BigDecimal latitude;
+    private String opentime;
     private Long roomnum;
     private String hotelphone;
     private Long hoteltype;
@@ -113,5 +114,13 @@ public class HotelJson {
 
     public void setHotelpic(String hotelpic) {
         this.hotelpic = hotelpic;
+    }
+
+    public String getOpentime() {
+        return opentime;
+    }
+
+    public void setOpentime(String opentime) {
+        this.opentime = opentime;
     }
 }
