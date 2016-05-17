@@ -59,7 +59,7 @@ public class RoomTypeController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getJSONObject("data").getString("roomtype");
+        String data = bodyJson.getString("data");
 
         //
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
@@ -69,7 +69,16 @@ public class RoomTypeController {
         roomTypeDto.setFangHotelId(roomTypeJson.getHotelid());
         roomTypeDto.setFangId(roomTypeJson.getId());
         roomTypeDto.setName(roomTypeJson.getName());
-        roomTypeDto.setArea(Integer.valueOf(roomTypeJson.getArea()));
+
+        Integer intArea = null;
+        try {
+            intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
+        roomTypeDto.setArea(intArea);
 
         String strBedType = roomTypeJson.getBedtype();
         if (StringUtils.isNotBlank(strBedType)) {

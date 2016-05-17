@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -101,8 +102,8 @@ public class HotelController {
                 //
                 Integer intArea = null;
                 try {
-                    intArea = Integer.parseInt(roomTypeJson.getArea());
-                } catch (NumberFormatException e){
+                    intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
+                } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Cat.logError(e);
                 }
