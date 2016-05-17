@@ -22,12 +22,12 @@ public class HotelAllJson {
     private String pmstype;
     private Long provcode;
     private String provincename;
-    private Long repairtime;
+    private String repairtime;
     private String retentiontime;
     private String hoteltype;
     private String opentime;
     private String hotelphone;
-    private List<RoomtypeJson> roomtypes;
+    private List<RoomTypeJson> roomtypes;
 
     public String getHoteltype() {
         return hoteltype;
@@ -157,11 +157,11 @@ public class HotelAllJson {
         this.provincename = provincename;
     }
 
-    public Long getRepairtime() {
+    public String getRepairtime() {
         return repairtime;
     }
 
-    public void setRepairtime(Long repairtime) {
+    public void setRepairtime(String repairtime) {
         this.repairtime = repairtime;
     }
 
@@ -189,11 +189,11 @@ public class HotelAllJson {
         this.hotelphone = hotelphone;
     }
 
-    public List<RoomtypeJson> getRoomtypes() {
+    public List<RoomTypeJson> getRoomtypes() {
         return roomtypes;
     }
 
-    public void setRoomtypes(List<RoomtypeJson> roomtypes) {
+    public void setRoomtypes(List<RoomTypeJson> roomtypes) {
         this.roomtypes = roomtypes;
     }
 }

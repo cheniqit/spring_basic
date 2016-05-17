@@ -120,7 +120,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         //本次上传的
         Map<Long, RoomTypeDto> dtoMap = new HashMap<Long, RoomTypeDto>();
         for (RoomTypeDto dto : roomTypeDtoList) {
-            dtoMap.put(dto.getId(), dto);
+            dtoMap.put(dto.getFangId(), dto);
 
             //
             this.saveOrUpdateByFangId(dto);
@@ -133,17 +133,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
         //将数据库有的, roomTypeDtoList没有的标记isValid = "F"
         for (RoomType roomType : roomTypeList) {
-            Long roomTypeId = roomType.getId();
-            if(!dtoMap.containsKey(roomTypeId)) {
+            Long fangId = roomType.getFangId();
+            if(!dtoMap.containsKey(fangId)) {
                 roomType.setIsValid("F");
 
                 this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
-                this.updateRedisRoomType(roomTypeId, roomType, "RoomTypeService.saveOrUpdateByFangId(hotelId,list)");
+                this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId(hotelId,list)");
             }
         }
-
-        return;
-
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
