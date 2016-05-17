@@ -263,7 +263,7 @@ public class HotelServiceImpl implements HotelService {
             //getCityCode
             Integer intCityCode = null;
             try {
-                hotel.getCityCode();
+                intCityCode = Integer.valueOf(hotel.getCityCode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
@@ -271,7 +271,7 @@ public class HotelServiceImpl implements HotelService {
             //getDisCode
             Integer intDisCode = null;
             try {
-                hotel.getDisCode();
+                intDisCode = Integer.valueOf(hotel.getDisCode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
