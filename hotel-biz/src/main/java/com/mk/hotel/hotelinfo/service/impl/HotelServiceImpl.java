@@ -72,7 +72,7 @@ public class HotelServiceImpl implements HotelService {
         BeanUtils.copyProperties(hotel, dto);
         return dto;
     }
-git
+
     public HotelDto findByFangId(Long fangId) {
 
         HotelExample hotelExample = new HotelExample();
