@@ -12,8 +12,8 @@ public class AddressInfoRemoteServiceTest {
 
     @Test
     public void testFindAddressByLocation() throws Exception {
-        String latLocation = "106.57329600";
-        String longLocation = "29.55476000";
+        String latLocation = "29.58339000";
+        String longLocation = "106.49745200";
         AddressByLocationResponse addressByLocationResponse = addressInfoRemoteService.findAddressByLocation(latLocation, longLocation);
         Assert.assertNotNull(addressByLocationResponse);
         Assert.assertNotNull(addressByLocationResponse.getInfocode());
