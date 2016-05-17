@@ -35,7 +35,6 @@ public enum HotelCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelCacheEnum.HOTEL_KEY.getName())
-                .append("_")
                 .append(roomTypeId);
 
         return result.toString();
@@ -49,7 +48,6 @@ public enum HotelCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelCacheEnum.CITY_HOTEL_SET.getName())
-                .append("_")
                 .append(roomTypeId);
 
         return result.toString();

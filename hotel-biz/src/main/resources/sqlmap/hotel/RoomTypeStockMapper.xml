@@ -104,7 +104,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" >
+  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" useGeneratedKeys="true" keyProperty="id">
     insert into room_type_stock (id, room_type_id, `day`,
       `number`, create_date, create_by,
       update_date, update_by, is_valid
@@ -114,7 +114,7 @@
       #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomTypeStock" useGeneratedKeys="true" keyProperty="id">
     insert into room_type_stock
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

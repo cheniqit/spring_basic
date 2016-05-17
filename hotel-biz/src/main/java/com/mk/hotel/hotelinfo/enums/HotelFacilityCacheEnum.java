@@ -34,7 +34,6 @@ public enum HotelFacilityCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelFacilityCacheEnum.FACILITY_KEY.getName())
-                .append("_")
                 .append(roomTypeId);
 
         return result.toString();
