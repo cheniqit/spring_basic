@@ -69,7 +69,7 @@ public class HotelController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = (String) bodyJson.get("data");
+        String data = bodyJson.getJSONObject("data").getString("hotel");
 
         //
         HotelAllJson hotelJson = JSONUtil.fromJson(data, HotelAllJson.class);
@@ -183,7 +183,7 @@ public class HotelController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = (String) bodyJson.get("data");
+        String data = bodyJson.getJSONObject("data").getString("hotel");
 
         //
         HotelJson hotelJson = JSONUtil.fromJson(data, HotelJson.class);
@@ -232,7 +232,7 @@ public class HotelController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = (String) bodyJson.get("data");
+        String data = bodyJson.getString("data");
 
         //
         HotelFacilityJson facilityJson = JSONUtil.fromJson(data, HotelFacilityJson.class);

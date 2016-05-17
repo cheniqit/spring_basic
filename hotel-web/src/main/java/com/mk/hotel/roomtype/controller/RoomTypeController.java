@@ -59,7 +59,7 @@ public class RoomTypeController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = (String) bodyJson.get("data");
+        String data = bodyJson.getJSONObject("data").getString("roomtype");
 
         //
         RoomTypeJson roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
@@ -118,7 +118,7 @@ public class RoomTypeController {
 
         //
         JSONObject bodyJson = JSON.parseObject(body);
-        String data = (String) bodyJson.get("data");
+        String data = bodyJson.getString("data");
 
         //json
         RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
