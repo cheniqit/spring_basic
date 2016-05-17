@@ -19,4 +19,6 @@ public interface HotelService {
     HotelDto findByFangId(Long fangId);
 
     void mergePmsHotel(int pageNo);
+
+    void saveOrUpdateByFangId(HotelDto hotelDto);
 }

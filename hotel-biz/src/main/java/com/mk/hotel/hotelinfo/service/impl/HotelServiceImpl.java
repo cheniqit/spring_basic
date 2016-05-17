@@ -70,7 +70,7 @@ public class HotelServiceImpl implements HotelService {
         HotelServiceImpl.allLandMarkList = allLandMarkList;
     }
 
-    public int saveOrUpdateByFangId(HotelDto hotelDto) {
+    public void saveOrUpdateByFangId(HotelDto hotelDto) {
 
         if (null == hotelDto || null == hotelDto.getFangId()) {
             throw new MyException("-99", "-99", "hotelDto fangId必填");
@@ -81,13 +81,17 @@ public class HotelServiceImpl implements HotelService {
         hotelExample.createCriteria().andFangIdEqualTo(hotelDto.getFangId());
         List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
 
+        //
+        Long hotelId = null;
 
+        //save or update hotel
         if (hotelList.isEmpty()) {
             Hotel dbHotel = new Hotel();
             BeanUtils.copyProperties(hotelDto, dbHotel);
             //
             this.hotelMapper.insert(dbHotel);
-            this.updateRedisHotel(dbHotel.getId(), dbHotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
+            hotelId = dbHotel.getId();
+            this.updateRedisHotel(hotelId, dbHotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
         } else {
             //hotelLandMark
             if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
@@ -128,17 +132,16 @@ public class HotelServiceImpl implements HotelService {
             hotel.setOpenTime(hotelDto.getOpenTime());
             hotel.setPic(hotelDto.getPic());
 
+            hotelId = hotel.getId();
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
-            this.updateRedisHotel(hotel.getId(), hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
+            this.updateRedisHotel(hotelId, hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
 
         }
 
         //roomTypeList
         if (null != hotelDto.getRoomTypeDtoList() && !hotelDto.getRoomTypeDtoList().isEmpty()) {
-//            this.roomTypeService
+            this.roomTypeService.saveOrUpdateByHotelId(hotelId, hotelDto.getRoomTypeDtoList());
         }
-
-        return -1;
     }
 
     @Override
@@ -211,10 +214,12 @@ public class HotelServiceImpl implements HotelService {
                         JsonUtils.fromJson(originalHotelJson, com.mk.hotel.hotelinfo.redisbean.Hotel.class);
                 //originalCityCode
                 Integer originalCityCode = hotelInRedis.getCityCode();
-                //originalCityKeyName
-                String originalCityKeyName = HotelCacheEnum.getCityHotelSetName(String.valueOf(originalCityCode));
+                if (null != originalCityCode) {
+                    //originalCityKeyName
+                    String originalCityKeyName = HotelCacheEnum.getCityHotelSetName(String.valueOf(originalCityCode));
 
-                jedis.srem(originalCityKeyName, originalHotelJson);
+                    jedis.srem(originalCityKeyName, originalHotelJson);
+                }
             }
 
             //roomtype pic

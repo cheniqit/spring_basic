@@ -12,12 +12,13 @@ import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotel.HotelJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
+import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -92,7 +92,92 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        HotelAllJson hotelAllJson = JSONUtil.fromJson(body, HotelAllJson.class);
+        HotelAllJson hotelJson = JSONUtil.fromJson(body, HotelAllJson.class);
+
+        HotelDto hotelDto = new HotelDto();
+        hotelDto.setFangId(hotelJson.getId());
+        hotelDto.setName(hotelJson.getHotelname());
+        hotelDto.setAddr(hotelJson.getDetailaddr());
+        hotelDto.setPhone(hotelJson.getHotelphone());
+        hotelDto.setLat(hotelJson.getLatitude());
+        hotelDto.setLon(hotelJson.getLongitude());
+        hotelDto.setDefaultLeaveTime(hotelJson.getDefaultleavetime());
+        hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
+        hotelDto.setRetentionTime(hotelJson.getRetentiontime());
+        hotelDto.setRepairTime(hotelJson.getRepairtime());
+        hotelDto.setIntroduction(hotelJson.getIntroduction());
+        hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
+        hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
+        hotelDto.setDisCode(String.valueOf(hotelJson.getDiscode()));
+        hotelDto.setIsValid("T");
+        hotelDto.setOpenTime(hotelJson.getOpentime());
+        hotelDto.setPic(hotelJson.getHotelpic());
+
+        //
+        List<RoomTypeJson> roomTypeJsonList = hotelJson.getRoomtypes();
+        if (null != roomTypeJsonList) {
+
+            List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
+            for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
+                //
+                Integer intArea = null;
+                try {
+                    intArea = Integer.parseInt(roomTypeJson.getArea());
+                } catch (NumberFormatException e){
+                    e.printStackTrace();
+                    Cat.logError(e);
+                }
+
+                //
+                Integer intPrePay = null;
+                try {
+                    intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
+                } catch (NumberFormatException e){
+                    e.printStackTrace();
+                    Cat.logError(e);
+                }
+
+                //
+                Integer intBreakfast = null;
+                try {
+                    intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
+                } catch (NumberFormatException e){
+                    e.printStackTrace();
+                    Cat.logError(e);
+                }
+
+                //
+                String isValid = null;
+                if (0 == roomTypeJson.getStatus()) {
+                    isValid = "T";
+                } else {
+                    isValid = "F";
+                }
+                //
+                RoomTypeDto roomTypeDto = new RoomTypeDto();
+                roomTypeDto.setFangHotelId(hotelJson.getId());
+                roomTypeDto.setFangId(roomTypeJson.getId());
+                roomTypeDto.setName(roomTypeJson.getName());
+                roomTypeDto.setArea(intArea);
+                roomTypeDto.setBedType(roomTypeJson.getBedtype());
+                roomTypeDto.setBedSize(roomTypeJson.getBedsize());
+                roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
+                roomTypeDto.setPrepay(intPrePay);
+                roomTypeDto.setBreakfast(intBreakfast);
+                roomTypeDto.setStatus(roomTypeJson.getStatus());
+                roomTypeDto.setRefund(roomTypeJson.getRefund());
+                roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
+                roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
+
+                roomTypeDto.setIsValid(isValid);
+
+                roomTypeDtoList.add(roomTypeDto);
+            }
+
+            hotelDto.setRoomTypeDtoList(roomTypeDtoList);
+        }
+
+        this.hotelService.saveOrUpdateByFangId(hotelDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -135,6 +220,8 @@ public class HotelController {
         hotelDto.setIsValid("T");
         hotelDto.setOpenTime(hotelJson.getOpentime());
         hotelDto.setPic(hotelJson.getHotelpic());
+
+        this.hotelService.saveOrUpdateByFangId(hotelDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
