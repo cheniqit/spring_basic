@@ -136,17 +136,17 @@ public class RoomTypeController {
 
         //roomTypeJsonList
         List<RoomTypePriceDto> roomTypePriceDtoList = new ArrayList<RoomTypePriceDto>();
-        List<com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson> roomTypeJsonList = roomTypePriceJson.getRoomtypes();
+        List<com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson> roomTypeJsonList = roomTypePriceJson.getRoomtypeprices();
         for (com.mk.hotel.roomtype.json.roomtypeprice.RoomTypeJson roomTypeJson : roomTypeJsonList) {
             //fang-roomTypeId
             Long fangRoomTypeId = roomTypeJson.getRoomtypeid();
 
-            List<PriceInfoJson> priceInfoJsonList = roomTypeJson.getPriceinfo();
+            List<PriceInfoJson> priceInfoJsonList = roomTypeJson.getPriceinfos();
             for (PriceInfoJson priceInfoJson : priceInfoJsonList) {
 
                 //day
                 Date day = null;
-                String strDay = priceInfoJson.getDay();
+                String strDay = priceInfoJson.getDate();
                 if (StringUtils.isBlank(strDay)) {
                     continue;
                 } else {
@@ -161,7 +161,7 @@ public class RoomTypeController {
 
                 //price
                 BigDecimal price = null;
-                String strPrice = priceInfoJson.getPrice();
+                String strPrice = priceInfoJson.getCost();
                 if (StringUtils.isBlank(strPrice)) {
                     continue;
                 } else {

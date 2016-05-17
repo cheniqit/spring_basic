@@ -11,7 +11,7 @@ public class RoomTypePriceJson {
 
     private Long hotelid;
 
-    private List<RoomTypeJson> roomtypes;
+    private List<RoomTypeJson> roomtypeprices;
 
     public Long getHotelid() {
         return hotelid;
@@ -21,11 +21,11 @@ public class RoomTypePriceJson {
         this.hotelid = hotelid;
     }
 
-    public List<RoomTypeJson> getRoomtypes() {
-        return roomtypes;
+    public List<RoomTypeJson> getRoomtypeprices() {
+        return roomtypeprices;
     }
 
-    public void setRoomtypes(List<RoomTypeJson> roomtypes) {
-        this.roomtypes = roomtypes;
+    public void setRoomtypeprices(List<RoomTypeJson> roomtypeprices) {
+        this.roomtypeprices = roomtypeprices;
     }
 }

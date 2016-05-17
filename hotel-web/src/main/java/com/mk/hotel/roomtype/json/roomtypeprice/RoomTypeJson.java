@@ -9,7 +9,7 @@ public class RoomTypeJson {
 
     private Long roomtypeid;
 
-    private List<PriceInfoJson> priceinfo;
+    private List<PriceInfoJson> priceinfos;
 
     public Long getRoomtypeid() {
         return roomtypeid;
@@ -19,11 +19,11 @@ public class RoomTypeJson {
         this.roomtypeid = roomtypeid;
     }
 
-    public List<PriceInfoJson> getPriceinfo() {
-        return priceinfo;
+    public List<PriceInfoJson> getPriceinfos() {
+        return priceinfos;
     }
 
-    public void setPriceinfo(List<PriceInfoJson> priceinfo) {
-        this.priceinfo = priceinfo;
+    public void setPriceinfos(List<PriceInfoJson> priceinfos) {
+        this.priceinfos = priceinfos;
     }
 }
