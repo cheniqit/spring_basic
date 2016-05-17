@@ -86,6 +86,10 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
 
             HotelFacility facility = new HotelFacility();
             BeanUtils.copyProperties(dto, facility);
+            facility.setCreateBy("hotel_system");
+            facility.setCreateDate(new Date());
+            facility.setUpdateBy("hotel_system");
+            facility.setUpdateDate(new Date());
             this.hotelFacilityMapper.insert(facility);
         }
     }
