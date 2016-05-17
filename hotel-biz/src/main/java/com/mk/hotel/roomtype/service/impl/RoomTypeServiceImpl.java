@@ -40,10 +40,7 @@ import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -116,6 +113,34 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
+    public int saveOrUpdateByFangId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
+        if (null == hotelId || null == roomTypeDtoList) {
+            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+        }
+        //本次上传的
+        Map<Long, RoomTypeDto> dtoMap = new HashMap<Long, RoomTypeDto>();
+        for (RoomTypeDto dto : roomTypeDtoList) {
+            dtoMap.put(dto.getId(), dto);
+        }
+
+        //找出hotel下所有roomType
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId);
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+
+        //将数据库有的, roomTypeDtoList没有的标记isValid = "F"
+        for (RoomType roomType : roomTypeList) {
+            Long roomTypeId = roomType.getId();
+            if(!dtoMap.containsKey(roomTypeId)) {
+                roomType.setIsValid("F");
+
+            }
+        }
+
+        return -1;
+
+    }
+
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
 
         if (null == roomTypeDto) {
@@ -125,7 +150,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         //hotelDto
         HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId());
         if (null == hotelDto) {
-            return -1;
+            throw new MyException("-99", "-99", "错误的roomTypeDto.FangHotelId");
         }
         roomTypeDto.setHotelId(hotelDto.getId());
 
@@ -141,29 +166,30 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             if (result > 0) {
                 //redis
-                this.updateRedisRoomType(roomType.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+                this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
             }
 
             return result;
         } else {
+
+            RoomType roomType = new RoomType();
+            roomType.setId(dbDto.getId());
+            roomType.setHotelId(roomTypeDto.getHotelId());
+            roomType.setName(roomTypeDto.getName());
+            roomType.setArea(roomTypeDto.getArea());
+            roomType.setBedType(roomTypeDto.getBedType());
+            roomType.setRoomNum(roomTypeDto.getRoomNum());
+            roomType.setPrepay(roomTypeDto.getPrepay());
+            roomType.setBreakfast(roomTypeDto.getBreakfast());
+            roomType.setRefund(roomTypeDto.getRefund());
+            roomType.setMaxRoomNum(roomTypeDto.getMaxRoomNum());
+            roomType.setRoomTypePics(roomTypeDto.getRoomTypePics());
+            roomType.setIsValid(roomTypeDto.getIsValid());
+
             //redis
-            this.updateRedisRoomType(dbDto.getId(), dbDto, "RoomTypeService.saveOrUpdateByFangId");
+            this.updateRedisRoomType(dbDto.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
 
-            RoomType dbRoomType = new RoomType();
-            dbRoomType.setId(dbDto.getId());
-            dbRoomType.setHotelId(roomTypeDto.getHotelId());
-            dbRoomType.setName(roomTypeDto.getName());
-            dbRoomType.setArea(roomTypeDto.getArea());
-            dbRoomType.setBedType(roomTypeDto.getBedType());
-            dbRoomType.setRoomNum(roomTypeDto.getRoomNum());
-            dbRoomType.setPrepay(roomTypeDto.getPrepay());
-            dbRoomType.setBreakfast(roomTypeDto.getBreakfast());
-            dbRoomType.setRefund(roomTypeDto.getRefund());
-            dbRoomType.setMaxRoomNum(roomTypeDto.getMaxRoomNum());
-            dbRoomType.setRoomTypePics(roomTypeDto.getRoomTypePics());
-            dbRoomType.setIsValid(roomTypeDto.getIsValid());
-
-            return this.roomTypeMapper.updateByPrimaryKeySelective(dbRoomType);
+            return this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
         }
     }
 
@@ -200,8 +226,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-    public void updateRedisRoomType(Long roomTypeId, RoomTypeDto roomTypeDto, String cacheFrom) {
-        if (null == roomTypeId || null == roomTypeDto || null == roomTypeDto.getHotelId()) {
+    public void updateRedisRoomType(Long roomTypeId, RoomType roomType, String cacheFrom) {
+        if (null == roomTypeId || null == roomType || null == roomType.getHotelId()) {
             return;
         }
 
@@ -217,12 +243,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
             //bedtype
             BedType bedType = new BedType();
-            bedType.setType(roomTypeDto.getBedType());
-            bedType.setName(BedTypeEnum.getById(roomTypeDto.getBedType()).getName());
-            bedType.setLength(roomTypeDto.getBedSize());
+            bedType.setType(roomType.getBedType());
+            bedType.setName(BedTypeEnum.getById(roomType.getBedType()).getName());
+            bedType.setLength(roomType.getBedSize());
 
             //roomtype pic
-            String strPics = roomTypeDto.getRoomTypePics();
+            String strPics = roomType.getRoomTypePics();
             JSONArray picArray = JSONArray.parseArray(strPics);
 
             List<PicList> picLists = new ArrayList<PicList>();
@@ -233,37 +259,42 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             }
 
             //roomtype
-            com.mk.hotel.roomtype.redisbean.RoomType roomType = new com.mk.hotel.roomtype.redisbean.RoomType();
-            roomType.setHotelId(roomTypeDto.getHotelId());
-            roomType.setRoomTypeId(roomTypeDto.getId());
-            roomType.setRoomTypeName(roomTypeDto.getName());
-            roomType.setArea(roomTypeDto.getArea());
-            roomType.setBedType(bedType);
-            roomType.setBreakFast(roomTypeDto.getBreakfast());
-            roomType.setStatus(roomTypeDto.getStatus());
-            roomType.setRoomNum(roomTypeDto.getRoomNum());
-            roomType.setRoomTypePics(picLists);
+            com.mk.hotel.roomtype.redisbean.RoomType roomTypeInRedis = new com.mk.hotel.roomtype.redisbean.RoomType();
+            roomTypeInRedis.setHotelId(roomType.getHotelId());
+            roomTypeInRedis.setRoomTypeId(roomType.getId());
+            roomTypeInRedis.setRoomTypeName(roomType.getName());
+            roomTypeInRedis.setArea(roomType.getArea());
+            roomTypeInRedis.setBedType(bedType);
+            roomTypeInRedis.setBreakFast(roomType.getBreakfast());
+            //0、可定；1、不可订
+            if ("T".equals(roomType.getIsValid())) {
+                roomTypeInRedis.setStatus(0);
+            } else {
+                roomTypeInRedis.setStatus(1);
+            }
+            roomTypeInRedis.setRoomNum(roomType.getRoomNum());
+            roomTypeInRedis.setRoomTypePics(picLists);
 
-            roomType.setCacheTime(strDate);
-            roomType.setCacheFrom(cacheFrom);
+            roomTypeInRedis.setCacheTime(strDate);
+            roomTypeInRedis.setCacheFrom(cacheFrom);
 
-            jedis.set(roomTypeKeyName, JsonUtils.toJson(roomType));
-
+            jedis.set(roomTypeKeyName, JsonUtils.toJson(roomTypeInRedis));
 
             //roomTypeSet
-            String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomTypeDto.getHotelId()));
+            String roomTypeSetName = RoomTypeCacheEnum.getRoomTypeSetName(String.valueOf(roomType.getHotelId()));
             Set<String> roomTypeSet = jedis.smembers(roomTypeSetName);
             //先删除
             for (String roomTypeJsonInRedis : roomTypeSet) {
-                com.mk.hotel.roomtype.redisbean.RoomType roomTypeInRedis =
+                com.mk.hotel.roomtype.redisbean.RoomType oriRoomTypeInRedis =
                         JsonUtils.fromJson(roomTypeJsonInRedis, com.mk.hotel.roomtype.redisbean.RoomType.class);
 
-                if (roomTypeId.equals(roomTypeInRedis.getRoomTypeId())) {
+                if (roomTypeId.equals(oriRoomTypeInRedis.getRoomTypeId())) {
                     jedis.srem(roomTypeSetName, roomTypeJsonInRedis);
+                    break;
                 }
             }
             //
-            jedis.sadd(roomTypeKeyName, JsonUtils.toJson(roomType));
+            jedis.sadd(roomTypeKeyName, JsonUtils.toJson(roomTypeInRedis));
 
         } catch (Exception e) {
             e.printStackTrace();
