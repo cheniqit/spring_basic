@@ -116,21 +116,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
-    public int save(RoomTypeDto roomTypeDto) {
-        if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "roomTypeDto 不可为空");
-        }
-        RoomType roomType = new RoomType();
-        BeanUtils.copyProperties(roomTypeDto, roomType);
-
-        int result = this.roomTypeMapper.insert(roomType);
-        if (result > 0) {
-            this.updateRedisRoomType(roomType.getId(), roomTypeDto, "RoomTypeService.save");
-        }
-
-        return result;
-    }
-
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
 
         if (null == roomTypeDto) {

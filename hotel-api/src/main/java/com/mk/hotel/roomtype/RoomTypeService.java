@@ -4,8 +4,6 @@ import com.mk.hotel.roomtype.dto.RoomTypeDto;
 
 public interface RoomTypeService {
 
-    int save(RoomTypeDto roomTypeDto);
-
     RoomTypeDto selectByFangId(Long fangId);
 
     int saveOrUpdateByFangId(RoomTypeDto roomTypeDto);

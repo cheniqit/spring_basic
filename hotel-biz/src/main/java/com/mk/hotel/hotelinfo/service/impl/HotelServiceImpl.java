@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -18,6 +19,7 @@ import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
@@ -46,6 +48,8 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private LandMarkMapper landMarkMapper;
     @Autowired
+    private RoomTypeService roomTypeService;
+    @Autowired
     private HotelRemoteService hotelRemoteService;
     @Autowired
     private HotelProxyService hotelProxyService;
@@ -62,6 +66,77 @@ public class HotelServiceImpl implements HotelService {
 
     public static void setAllLandMarkList(List<LandMark> allLandMarkList) {
         HotelServiceImpl.allLandMarkList = allLandMarkList;
+    }
+
+    public int saveOrUpdateByFangId(HotelDto hotelDto) {
+
+        if (null == hotelDto || null == hotelDto.getFangId()) {
+            throw new MyException("-99", "-99", "hotelDto fangId必填");
+        }
+
+        //
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andFangIdEqualTo(hotelDto.getFangId());
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+
+
+        if (hotelList.isEmpty()) {
+            Hotel dbHotel = new Hotel();
+            BeanUtils.copyProperties(hotelDto, dbHotel);
+            //
+            this.hotelMapper.insert(dbHotel);
+            this.updateRedisHotel(dbHotel.getId(), dbHotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
+        } else {
+            //hotelLandMark
+            if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
+                LandMarkExample example = new LandMarkExample();
+
+                List<LandMark> landMarks = landMarkMapper.selectByExample(example);
+                this.setAllLandMarkList(landMarks);
+            }
+            HotelLandMark hotelLandMark = this.getHotelLandMark(
+                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+            //town code
+            String townCode = addressInfoRemoteService.findTownCodeByLocation(
+                    String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
+
+            //
+            Hotel hotel = hotelList.get(0);
+            hotel.setFangId(hotelDto.getFangId());
+            hotel.setName(hotelDto.getName());
+            hotel.setAddr(hotelDto.getAddr());
+            hotel.setPhone(hotelDto.getPhone());
+            hotel.setLat(hotelDto.getLat());
+            hotel.setLon(hotelDto.getLon());
+            hotel.setDefaultLeaveTime(hotelDto.getDefaultLeaveTime());
+            hotel.setHotelType(hotelDto.getHotelType());
+            hotel.setRetentionTime(hotelDto.getRetentionTime());
+            hotel.setRepairTime(hotelDto.getRepairTime());
+            hotel.setIntroduction(hotelDto.getIntroduction());
+            hotel.setProvCode(hotelDto.getProvCode());
+            hotel.setCityCode(hotelDto.getCityCode());
+            hotel.setDisCode(hotelDto.getDisCode());
+            hotel.setIsValid(hotelDto.getIsValid());
+            hotel.setTownCode(townCode);
+            hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
+            hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
+            hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
+            hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
+            hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
+            hotel.setOpenTime(hotelDto.getOpenTime());
+            hotel.setPic(hotelDto.getPic());
+
+            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.updateRedisHotel(hotel.getId(), hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
+
+        }
+
+        //roomTypeList
+        if (null != hotelDto.getRoomTypeDtoList() && !hotelDto.getRoomTypeDtoList().isEmpty()) {
+//            this.roomTypeService
+        }
+
+        return -1;
     }
 
     @Override
@@ -221,7 +296,7 @@ public class HotelServiceImpl implements HotelService {
                 online = "F";
             }
 
-            //
+            //hotelLandMark
             if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
                 LandMarkExample example = new LandMarkExample();
 

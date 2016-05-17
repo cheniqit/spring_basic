@@ -7,7 +7,6 @@ import java.util.List;
  * Created by huangjie on 16/5/10.
  */
 public class HotelAllJson {
-
     private Long id;
     private Long citycode;
     private String cityname;
@@ -27,6 +26,7 @@ public class HotelAllJson {
     private String retentiontime;
     private String hoteltype;
     private String opentime;
+    private String hotelphone;
     private List<RoomtypeJson> roomtypes;
 
     public String getHoteltype() {
@@ -179,6 +179,14 @@ public class HotelAllJson {
 
     public void setOpentime(String opentime) {
         this.opentime = opentime;
+    }
+
+    public String getHotelphone() {
+        return hotelphone;
+    }
+
+    public void setHotelphone(String hotelphone) {
+        this.hotelphone = hotelphone;
     }
 
     public List<RoomtypeJson> getRoomtypes() {

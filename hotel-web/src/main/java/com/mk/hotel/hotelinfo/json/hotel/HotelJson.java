@@ -11,14 +11,19 @@ public class HotelJson {
     private String detailaddr;
     private BigDecimal longitude;
     private BigDecimal latitude;
+    private String defaultleavetime;
     private String opentime;
-    private Long roomnum;
     private String hotelphone;
     private Long hoteltype;
+    private String retentiontime;
+    private String repairtime;
+    private String introduction;
+
     private Long provcode;
     private Long citycode;
     private Long discode;
     private String hotelpic;
+
 
     public Long getId() {
         return id;
@@ -60,12 +65,12 @@ public class HotelJson {
         this.latitude = latitude;
     }
 
-    public Long getRoomnum() {
-        return roomnum;
+    public String getDefaultleavetime() {
+        return defaultleavetime;
     }
 
-    public void setRoomnum(Long roomnum) {
-        this.roomnum = roomnum;
+    public void setDefaultleavetime(String defaultleavetime) {
+        this.defaultleavetime = defaultleavetime;
     }
 
     public String getHotelphone() {
@@ -82,6 +87,30 @@ public class HotelJson {
 
     public void setHoteltype(Long hoteltype) {
         this.hoteltype = hoteltype;
+    }
+
+    public String getRetentiontime() {
+        return retentiontime;
+    }
+
+    public void setRetentiontime(String retentiontime) {
+        this.retentiontime = retentiontime;
+    }
+
+    public String getRepairtime() {
+        return repairtime;
+    }
+
+    public void setRepairtime(String repairtime) {
+        this.repairtime = repairtime;
+    }
+
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
     public Long getProvcode() {

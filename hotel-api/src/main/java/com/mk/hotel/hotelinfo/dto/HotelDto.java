@@ -1,7 +1,10 @@
 package com.mk.hotel.hotelinfo.dto;
 
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class HotelDto {
     private Long id;
@@ -59,6 +62,8 @@ public class HotelDto {
     private String openTime;
 
     private String pic;
+
+    private List<RoomTypeDto> roomTypeDtoList;
 
     public Long getId() {
         return id;
@@ -282,5 +287,13 @@ public class HotelDto {
 
     public void setPic(String pic) {
         this.pic = pic == null ? null : pic.trim();
+    }
+
+    public List<RoomTypeDto> getRoomTypeDtoList() {
+        return roomTypeDtoList;
+    }
+
+    public void setRoomTypeDtoList(List<RoomTypeDto> roomTypeDtoList) {
+        this.roomTypeDtoList = roomTypeDtoList;
     }
 }
