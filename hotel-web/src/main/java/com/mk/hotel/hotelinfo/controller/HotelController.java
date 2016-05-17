@@ -205,6 +205,10 @@ public class HotelController {
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -223,6 +227,10 @@ public class HotelController {
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");

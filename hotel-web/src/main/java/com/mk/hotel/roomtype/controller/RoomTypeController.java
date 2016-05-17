@@ -182,6 +182,10 @@ public class RoomTypeController {
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -199,6 +203,31 @@ public class RoomTypeController {
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/mergeRoomTypeStock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypeStock(Integer pageNo) {
+        try {
+            if(pageNo == null){
+                pageNo = 1;
+            }
+            roomTypeService.mergeRoomTypeStock(pageNo);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
