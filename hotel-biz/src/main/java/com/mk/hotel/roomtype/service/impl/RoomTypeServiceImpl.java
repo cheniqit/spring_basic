@@ -195,6 +195,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomType.setRoomTypePics(roomTypeDto.getRoomTypePics());
             roomType.setIsValid(roomTypeDto.getIsValid());
 
+            roomType.setUpdateBy("hotel_system");
+            roomType.setUpdateDate(new Date());
+
             //redis
             this.updateRedisRoomType(dbDto.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
 

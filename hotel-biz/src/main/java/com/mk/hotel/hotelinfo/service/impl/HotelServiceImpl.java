@@ -137,6 +137,9 @@ public class HotelServiceImpl implements HotelService {
             hotel.setOpenTime(hotelDto.getOpenTime());
             hotel.setPic(hotelDto.getPic());
 
+            hotel.setUpdateDate(new Date());
+            hotel.setUpdateBy("hotel_system");
+
             hotelId = hotel.getId();
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
             this.updateRedisHotel(hotelId, hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");

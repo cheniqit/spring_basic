@@ -81,6 +81,10 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
             facility.setRoomTypeId(roomTypeDto.getId());
             facility.setFacilityId(facilityId);
             facility.setIsValid("T");
+            facility.setCreateBy("hotel_system");
+            facility.setCreateDate(new Date());
+            facility.setUpdateBy("hotel_system");
+            facility.setUpdateDate(new Date());
             this.roomTypeFacilityMapper.insert(facility);
         }
     }
