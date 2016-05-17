@@ -2,6 +2,8 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
@@ -222,15 +224,11 @@ public class HotelServiceImpl implements HotelService {
 
             //roomtype pic
             String strPics = hotel.getPic();
-            JSONArray picArray = JSONArray.parseArray(strPics);
-
-            List<PicList> picLists = new ArrayList<PicList>();
-
-            for (String strPic : picArray.toArray(new String[0])) {
-                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                picLists.add(picList);
+            ArrayList<PicList> picLists = null;
+            if(StringUtils.isBlank(strPics)){
+                picLists = new Gson().fromJson(strPics, new TypeToken<ArrayList<PicList>>() {
+                }.getType());
             }
-
             //hotel type
             Integer intHotelType = null;
             try {
@@ -270,7 +268,7 @@ public class HotelServiceImpl implements HotelService {
             //getCityCode
             Integer intCityCode = null;
             try {
-                hotel.getCityCode();
+                intCityCode = Integer.valueOf(hotel.getCityCode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
@@ -278,20 +276,21 @@ public class HotelServiceImpl implements HotelService {
             //getDisCode
             Integer intDisCode = null;
             try {
-                hotel.getDisCode();
+                intDisCode = Integer.valueOf(hotel.getDisCode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
             //townCode
             Integer intTownCode = null;
-            try {
-                intTownCode = Integer.parseInt(townCode);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                Cat.logError(e);
+            if(StringUtils.isNotBlank(townCode)){
+                try {
+                    intTownCode = Integer.parseInt(townCode);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Cat.logError(e);
+                }
             }
-
             //online
             String online = null;
             String isValid = hotel.getIsValid();

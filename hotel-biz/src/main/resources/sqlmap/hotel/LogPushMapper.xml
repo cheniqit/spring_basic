@@ -123,13 +123,13 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.log.model.LogPush" >
+  <insert id="insert" parameterType="com.mk.hotel.log.model.LogPush" useGeneratedKeys="true" keyProperty="id">
     insert into log_push (id, type, create_date, 
       msg)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
       #{msg,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.log.model.LogPush" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.log.model.LogPush" useGeneratedKeys="true" keyProperty="id">
     insert into log_push
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

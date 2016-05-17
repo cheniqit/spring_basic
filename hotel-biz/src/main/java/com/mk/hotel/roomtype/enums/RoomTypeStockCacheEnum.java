@@ -51,7 +51,6 @@ public enum RoomTypeStockCacheEnum {
 
         StringBuilder result = new StringBuilder()
                 .append(RoomTypeStockCacheEnum.LOCK_KEY.getName())
-                .append("_")
                 .append(hotelId)
                 .append("_")
                 .append(roomTypeId)
@@ -69,7 +68,6 @@ public enum RoomTypeStockCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(RoomTypeStockCacheEnum.AVAILABLE_KEY.getName())
-                .append("_")
                 .append(roomTypeId);
 
         return result.toString();

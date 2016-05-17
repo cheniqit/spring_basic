@@ -33,7 +33,6 @@ public enum RoomTypePriceCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(RoomTypePriceCacheEnum.PRICE_KEY.getName())
-                .append("_")
                 .append(roomTypeId);
 
         return result.toString();

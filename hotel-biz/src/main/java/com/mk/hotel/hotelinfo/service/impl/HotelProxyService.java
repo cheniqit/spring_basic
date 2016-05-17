@@ -78,7 +78,7 @@ public class HotelProxyService {
                 }
             }else{
                 try {
-                    updateHotel(hotelQueryDetailResponse);
+                    updateHotel(hotelDto.getId(),hotelQueryDetailResponse);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -89,13 +89,16 @@ public class HotelProxyService {
     public void saveHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
         Hotel hotel = convertHotel(hotelQueryDetailResponse);
         hotelMapper.insertSelective(hotel);
+        hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.saveHotel");
     }
 
-    public void updateHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
+    public void updateHotel(Long hotelId, HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
         Hotel hotel = convertHotel(hotelQueryDetailResponse);
+        hotel.setId(hotelId);
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
         hotelMapper.updateByExampleSelective(hotel, example);
+        hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.updateHotel");
     }
 
     private Hotel convertHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
@@ -109,7 +112,7 @@ public class HotelProxyService {
         hotel.setName(hotelInfo.getHotelname());
         hotel.setAddr(hotelInfo.getDetailaddr());
         hotel.setPhone(hotelInfo.getHotelphone());
-        hotel.setPic(hotelInfo.getHotelpic());
+        hotel.setPic(hotelInfo.getHotelpics());
         hotel.setLat(new BigDecimal(hotelInfo.getLatitude()));
         hotel.setLon(new BigDecimal(hotelInfo.getLongitude()));
         hotel.setDefaultLeaveTime(hotelInfo.getDefaultleavetime());

@@ -138,7 +138,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomType" >
+  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomType" useGeneratedKeys="true" keyProperty="id">
     insert into room_type (id, fang_id, hotel_id, 
       name, area, bed_type, 
       bed_size, room_num, prepay, 
@@ -154,7 +154,7 @@
       #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, #{roomTypePics,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomType" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomType" useGeneratedKeys="true" keyProperty="id">
     insert into room_type
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

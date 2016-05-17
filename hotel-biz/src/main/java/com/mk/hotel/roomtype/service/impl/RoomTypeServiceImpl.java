@@ -369,7 +369,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             if(response == null || response.getData() == null){
                 return;
             }
-            roomTypeProxyService.saveRoomTypeStock(response.getData());
+            roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
         }
         pageNo++;
         mergeRoomType(pageNo);
