@@ -21,6 +21,7 @@ import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -170,6 +171,9 @@ public class HotelServiceImpl implements HotelService {
                     AddressByLocationResponse.AddressComponent addressComponent = regeocode.getAddresscomponent();
                     if (null != addressComponent) {
                         townCode = addressComponent.getTowncode();
+                        if(StringUtils.isNotBlank(townCode) && townCode.length() >=9){
+                            townCode = townCode.substring(0,9);
+                        }
                         townName = addressComponent.getTownship();
                     }
                 }

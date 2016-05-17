@@ -115,13 +115,16 @@ public class HotelProxyService {
         hotel.setDefaultLeaveTime(hotelInfo.getDefaultleavetime());
         hotel.setHotelType(hotelInfo.getHoteltype()+"");
         hotel.setRepairTime(hotelInfo.getRepairtime());
+        hotel.setRetentionTime(hotelInfo.getRetentiontime());
+        hotel.setOpenTime(hotelInfo.getOpentime());
+
         hotel.setProvCode(hotelInfo.getProvcode()+"");
         hotel.setCityCode(hotelInfo.getCitycode()+"");
         hotel.setDisCode(hotelInfo.getDiscode()+"");
         String townCode  = addressInfoRemoteService.findTownCodeByLocation(String.valueOf(hotelInfo.getLatitude()), String.valueOf(hotelInfo.getLongitude()));
         hotel.setTownCode(townCode);
 
-        hotel.setRetentionTime(hotelInfo.getRetentiontime());
+
         hotel.setFangId(Long.valueOf(hotelInfo.getId()+""));
         if(CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
             LandMarkExample example = new LandMarkExample();
