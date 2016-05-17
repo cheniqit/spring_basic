@@ -149,7 +149,7 @@ public class HotelController {
         hotelDto.setFangId(hotelJson.getId());
         hotelDto.setName(hotelJson.getHotelname());
         hotelDto.setAddr(hotelJson.getDetailaddr());
-        hotelDto.setPhone(hotelJson.);
+        hotelDto.setPhone(hotelJson.getHotelphone());
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
