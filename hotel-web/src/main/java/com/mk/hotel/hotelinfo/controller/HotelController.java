@@ -27,10 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by chenqi on 16/5/9.
@@ -118,6 +116,40 @@ public class HotelController {
         }
 
         HotelJson hotelJson = JSONUtil.fromJson(body, HotelJson.class);
+
+        HotelDto hotelDto = new HotelDto();
+//        private Long id;
+//        private Long fangId;
+//        private String name;
+//        private String addr;
+//        private String phone;
+//        private BigDecimal lat;
+//        private BigDecimal lon;
+//        private String defaultLeaveTime;
+//        private String hotelType;
+//        private String retentionTime;
+//        private String repairTime;
+//        private String introduction;
+//        private String provCode;
+//        private String cityCode;
+//        private String disCode;
+//        private Date createDate;
+//        private String createBy;
+//        private Date updateDate;
+//        private String updateBy;
+//        private String isValid;
+//        private String townCode;
+//        private String businessZoneInfo;
+//        private String airportStationInfo;
+//        private String scenicSpotsInfo;
+//        private String hospitalInfo;
+//        private String collegesInfo;
+//        private String openTime;
+//        private String pic;
+        hotelDto.setFangId(hotelJson.getId());
+        hotelDto.setName(hotelJson.getHotelname());
+        hotelDto.setAddr(hotelJson.getDetailaddr());
+        hotelDto.setPhone(hotelJson.);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

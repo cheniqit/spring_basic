@@ -109,8 +109,8 @@ public class HotelServiceImpl implements HotelService {
         mergePmsHotel(pageNo);
     }
 
-    public void updateRedisHotel(Long hotelId, HotelDto hotelDto, String cacheFrom) {
-        if (null == hotelId || null == hotelDto || null == hotelDto.getId() || null == hotelDto.getCityCode()) {
+    public void updateRedisHotel(Long hotelId, Hotel hotel, String cacheFrom) {
+        if (null == hotelId || null == hotel) {
             return;
         }
 
@@ -140,7 +140,7 @@ public class HotelServiceImpl implements HotelService {
             }
 
             //roomtype pic
-            String strPics = hotelDto.getPic();
+            String strPics = hotel.getPic();
             JSONArray picArray = JSONArray.parseArray(strPics);
 
             List<PicList> picLists = new ArrayList<PicList>();
@@ -153,19 +153,19 @@ public class HotelServiceImpl implements HotelService {
             //hotel type
             Integer intHotelType = null;
             try {
-                intHotelType = Integer.parseInt(hotelDto.getHotelType());
+                intHotelType = Integer.parseInt(hotel.getHotelType());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
             //town code
-            AddressByLocationResponse townlocation = addressInfoRemoteService.findAddressByLocation(
-                    String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
+            AddressByLocationResponse townLocation = addressInfoRemoteService.findAddressByLocation(
+                    String.valueOf(hotel.getLat()), String.valueOf(hotel.getLon()));
             String townCode = null;
             String townName = null;
 
-            if (null != townlocation) {
-                AddressByLocationResponse.Regeocode regeocode = townlocation.getRegeocode();
+            if (null != townLocation) {
+                AddressByLocationResponse.Regeocode regeocode = townLocation.getRegeocode();
                 if (null != regeocode) {
                     AddressByLocationResponse.AddressComponent addressComponent = regeocode.getAddresscomponent();
                     if (null != addressComponent) {
@@ -178,7 +178,7 @@ public class HotelServiceImpl implements HotelService {
             //getProvCode
             Integer intProvCode = null;
             try {
-                intProvCode = Integer.parseInt(hotelDto.getProvCode());
+                intProvCode = Integer.parseInt(hotel.getProvCode());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
@@ -186,7 +186,7 @@ public class HotelServiceImpl implements HotelService {
             //getCityCode
             Integer intCityCode = null;
             try {
-                hotelDto.getCityCode();
+                hotel.getCityCode();
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
@@ -194,7 +194,7 @@ public class HotelServiceImpl implements HotelService {
             //getDisCode
             Integer intDisCode = null;
             try {
-                hotelDto.getDisCode();
+                hotel.getDisCode();
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
@@ -210,7 +210,7 @@ public class HotelServiceImpl implements HotelService {
 
             //online
             String online = null;
-            String isValid = hotelDto.getIsValid();
+            String isValid = hotel.getIsValid();
             if ("T".equals(isValid)) {
                 online = "T";
             } else {
@@ -225,46 +225,46 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), 10000, this.getAllLandMarkList());
 
             //
-            com.mk.hotel.hotelinfo.redisbean.Hotel hotel = new com.mk.hotel.hotelinfo.redisbean.Hotel();
+            com.mk.hotel.hotelinfo.redisbean.Hotel hotelInRedis = new com.mk.hotel.hotelinfo.redisbean.Hotel();
 
-            hotel.setId(hotelId);
-            hotel.setSourceId(String.valueOf(hotelDto.getFangId()));
-            hotel.setHotelName(hotelDto.getName());
-            hotel.setDetailAddr(hotelDto.getAddr());
-            hotel.setLongitude(hotelDto.getLon());
-            hotel.setLatitude(hotelDto.getLat());
-            hotel.setOpenTime(hotelDto.getOpenTime());
-            hotel.setRepairTime(hotelDto.getRepairTime());
-            hotel.setOnline(online);
-            hotel.setRetentionTime(hotelDto.getRetentionTime());
-            hotel.setDefaultLeaveTime(hotelDto.getDefaultLeaveTime());
-            hotel.setHotelPhone(hotelDto.getPhone());
-            hotel.setProvCode(intProvCode);
-            hotel.setCityCode(intCityCode);
-            hotel.setDisCode(intDisCode);
-            hotel.setTownCode(intTownCode);
-            hotel.setTownName(townName);
-            hotel.setHotelType(intHotelType);
-            hotel.setIntroduction(hotelDto.getIntroduction());
-            hotel.setHotelPics(picLists);
-            hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
-            hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
-            hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
-            hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
-            hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
-
-            //
-            hotel.setCacheTime(strDate);
-            hotel.setCacheFrom(cacheFrom);
-            //
-            jedis.set(hotelKeyName, JsonUtils.toJson(hotel));
+            hotelInRedis.setId(hotelId);
+            hotelInRedis.setSourceId(String.valueOf(hotel.getFangId()));
+            hotelInRedis.setHotelName(hotel.getName());
+            hotelInRedis.setDetailAddr(hotel.getAddr());
+            hotelInRedis.setLongitude(hotel.getLon());
+            hotelInRedis.setLatitude(hotel.getLat());
+            hotelInRedis.setOpenTime(hotel.getOpenTime());
+            hotelInRedis.setRepairTime(hotel.getRepairTime());
+            hotelInRedis.setOnline(online);
+            hotelInRedis.setRetentionTime(hotel.getRetentionTime());
+            hotelInRedis.setDefaultLeaveTime(hotel.getDefaultLeaveTime());
+            hotelInRedis.setHotelPhone(hotel.getPhone());
+            hotelInRedis.setProvCode(intProvCode);
+            hotelInRedis.setCityCode(intCityCode);
+            hotelInRedis.setDisCode(intDisCode);
+            hotelInRedis.setTownCode(intTownCode);
+            hotelInRedis.setTownName(townName);
+            hotelInRedis.setHotelType(intHotelType);
+            hotelInRedis.setIntroduction(hotel.getIntroduction());
+            hotelInRedis.setHotelPics(picLists);
+            hotelInRedis.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
+            hotelInRedis.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
+            hotelInRedis.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
+            hotelInRedis.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
+            hotelInRedis.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
 
             //
-            String cityKeyName = HotelCacheEnum.getCityHotelSetName(String.valueOf(hotelDto.getCityCode()));
-            jedis.sadd(cityKeyName, JsonUtils.toJson(hotel));
+            hotelInRedis.setCacheTime(strDate);
+            hotelInRedis.setCacheFrom(cacheFrom);
+            //
+            jedis.set(hotelKeyName, JsonUtils.toJson(hotelInRedis));
+
+            //
+            String cityKeyName = HotelCacheEnum.getCityHotelSetName(String.valueOf(hotel.getCityCode()));
+            jedis.sadd(cityKeyName, JsonUtils.toJson(hotelInRedis));
 
         } catch (Exception e) {
             e.printStackTrace();
