@@ -296,7 +296,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 }
             }
             //
-            jedis.sadd(roomTypeKeyName, JsonUtils.toJson(roomTypeInRedis));
+            jedis.sadd(roomTypeSetName, JsonUtils.toJson(roomTypeInRedis));
 
         } catch (Exception e) {
             e.printStackTrace();
