@@ -3,7 +3,6 @@ package com.mk.hotel.hotelinfo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
-import com.mk.framework.net.HttpUtils;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -29,7 +28,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
