@@ -15,4 +15,6 @@ public interface RoomTypeService {
     void mergeRoomType(int pageNo);
 
     void mergeRoomTypePrice(int pageNo);
+
+    void mergeRoomTypeStock(int pageNo);
 }
