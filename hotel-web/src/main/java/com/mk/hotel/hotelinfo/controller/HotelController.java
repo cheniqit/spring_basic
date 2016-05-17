@@ -263,29 +263,32 @@ public class HotelController {
 
         //
         List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtypeTags();
-        for (RoomTypeFacilityJson roomTypeFacilityJson : roomTypeFacilityJsonList) {
-            Long fangRoomTypeId = roomTypeFacilityJson.getRoomtypeid();
-            List<FacilityJson> roomTypeTag = roomTypeFacilityJson.getTags();
+        if (null != roomTypeFacilityJsonList) {
 
-            if (null != roomTypeTag && !roomTypeTag.isEmpty()) {
+            for (RoomTypeFacilityJson roomTypeFacilityJson : roomTypeFacilityJsonList) {
+                Long fangRoomTypeId = roomTypeFacilityJson.getRoomtypeid();
+                List<FacilityJson> roomTypeTag = roomTypeFacilityJson.getTags();
 
-                List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
-                for(FacilityJson json: roomTypeTag) {
+                if (null != roomTypeTag && !roomTypeTag.isEmpty()) {
 
-                    //
-                    RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
-                    dto.setFangHotelId(fangHotelId);
-                    dto.setFangRoomTypeId(fangRoomTypeId);
-                    dto.setFacilityId(json.getId());
-                    dto.setFacilityName(json.getTagname());
-                    dto.setFacilityType(json.getTaggroupid());
+                    List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
+                    for(FacilityJson json: roomTypeTag) {
 
-                    roomTypeFacilityDtoList.add(dto);
+                        //
+                        RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
+                        dto.setFangHotelId(fangHotelId);
+                        dto.setFangRoomTypeId(fangRoomTypeId);
+                        dto.setFacilityId(json.getId());
+                        dto.setFacilityName(json.getTagname());
+                        dto.setFacilityType(json.getTaggroupid());
+
+                        roomTypeFacilityDtoList.add(dto);
+                    }
+
+                    this.roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
                 }
 
-                this.roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
             }
-
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
