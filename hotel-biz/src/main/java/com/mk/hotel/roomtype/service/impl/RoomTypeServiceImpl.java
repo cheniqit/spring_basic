@@ -2,6 +2,8 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -251,13 +253,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             //roomtype pic
             String strPics = roomType.getRoomTypePics();
-            JSONArray picArray = JSONArray.parseArray(strPics);
-
-            List<PicList> picLists = new ArrayList<PicList>();
-
-            for (String strPic : picArray.toArray(new String[0])) {
-                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                picLists.add(picList);
+            ArrayList<PicList> picLists = null;
+            if(StringUtils.isBlank(strPics)){
+                picLists = new Gson().fromJson(strPics, new TypeToken<ArrayList<PicList>>() {
+                }.getType());
             }
 
             //roomtype

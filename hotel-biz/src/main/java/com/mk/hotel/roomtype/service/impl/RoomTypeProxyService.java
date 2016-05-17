@@ -56,9 +56,9 @@ public class RoomTypeProxyService {
             RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(hotelRoomType.getId()+""));
             RoomType roomType = null;
             if(roomTypeDto == null || roomTypeDto.getId() == null){
-                saveRoomType(hotel, hotelRoomType);
+                roomType = saveRoomType(hotel, hotelRoomType);
             }else{
-                updateRoomType(roomTypeDto.getId() ,hotel, hotelRoomType);
+                roomType = updateRoomType(roomTypeDto.getId() ,hotel, hotelRoomType);
             }
             roomTypeService.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeProxyService.saveRoomType");
         }
@@ -82,7 +82,9 @@ public class RoomTypeProxyService {
 
     private RoomType convertRoomType(Hotel hotel, HotelRoomTypeQueryResponse.HotelRoomType hotelRoomType){
         RoomType roomType = new RoomType();
-        roomType.setArea(Integer.valueOf(hotelRoomType.getArea()));
+        if(StringUtils.isNotBlank(hotelRoomType.getArea())) {
+            roomType.setArea(Integer.valueOf(hotelRoomType.getArea()));
+        }
         if(StringUtils.isNotBlank(hotelRoomType.getBedtype())){
             roomType.setBedType(Integer.valueOf(hotelRoomType.getBedtype()));
         }
@@ -140,7 +142,7 @@ public class RoomTypeProxyService {
                 }
 
                 roomTypePriceService.updateRedisPrice(
-                        roomTypePrice.getId(), roomTypeDto.getName(),
+                        roomTypeDto.getId(), roomTypeDto.getName(),
                         roomTypePrice.getDay(), roomTypePrice.getPrice(),
                         "RoomTypeProxyService.saveRoomTypePrice");
 
@@ -239,6 +241,7 @@ public class RoomTypeProxyService {
         try {
             record = convertRoomTypeStock(roomTypeId, stockInfo);
             roomTypeStockMapper.insertSelective(record);
+            return record;
         } catch (ParseException e) {
             e.printStackTrace();
         }
