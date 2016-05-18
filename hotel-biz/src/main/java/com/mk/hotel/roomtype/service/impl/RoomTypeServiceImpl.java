@@ -138,6 +138,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             Long fangId = roomType.getFangId();
             if(!dtoMap.containsKey(fangId)) {
                 roomType.setIsValid("F");
+                roomType.setUpdateDate(new Date());
+                roomType.setUpdateBy("hotel_system");
 
                 this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId(hotelId,list)");
