@@ -72,7 +72,217 @@ http://ip:port/cube/order/cancel
 ### 报文中判断 true 和 false 的判断
 > 报文中判断是否的字段，均使用（T/F），T 代表 true，F 代表 false
 
+##fetch接口
 
+###拉取标签信息
+
+***
+**业务说明：**
+拉取标签信息
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/hotel/mergeHotelFacility
+
+**请求参数：**
+
+|    字段        |         名称        | 是否必须 | 说明|
+--------------- | ------------------- | -------| ----------
+|﻿pageNo|页码|否|不填默认从第一页开始拉取
+
+
+
+> API返回json数据示例：
+
+* success为T时
+* http状态200
+
+```js
+
+{
+    "success":"T"
+}
+```
+* success为F时
+
+
+```
+{
+    "success":"F",
+    "errcode":,//错误码
+    "errmsg":
+}
+```
+
+
+###拉取pms酒店信息
+
+***
+**业务说明：**
+
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/hotel/mergePmsHotel
+
+**请求参数：**
+
+|    字段        |         名称        | 是否必须 | 说明|
+--------------- | ------------------- | -------| ----------
+|﻿pageNo|页码|否|不填默认从第一页开始拉取
+
+
+
+> API返回json数据示例：
+
+* success为T时
+* http状态200
+
+```js
+
+{
+    "success":"T"
+}
+```
+* success为F时
+
+
+```
+{
+    "success":"F",
+    "errcode":,//错误码
+    "errmsg":
+}
+```
+
+###拉取房型息
+
+***
+**业务说明：**
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/mergeRoomType
+
+**请求参数：**
+
+|    字段        |         名称        | 是否必须 | 说明|
+--------------- | ------------------- | -------| ----------
+|﻿pageNo|页码|否|不填默认从第一页开始拉取
+
+
+
+> API返回json数据示例：
+
+* success为T时
+* http状态200
+
+```js
+
+{
+    "success":"T"
+}
+```
+* success为F时
+
+
+```
+{
+    "success":"F",
+    "errcode":,//错误码
+    "errmsg":
+}
+```
+
+###拉取房型价格信息
+
+***
+**业务说明：**
+拉取标签信息
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/mergeRoomTypePrice
+
+**请求参数：**
+
+|    字段        |         名称        | 是否必须 | 说明|
+--------------- | ------------------- | -------| ----------
+|﻿pageNo|页码|否|不填默认从第一页开始拉取
+
+
+
+> API返回json数据示例：
+
+* success为T时
+* http状态200
+
+```js
+
+{
+    "success":"T"
+}
+```
+* success为F时
+
+
+```
+{
+    "success":"F",
+    "errcode":,//错误码
+    "errmsg":
+}
+```
+
+###拉取酒店库存信息
+
+***
+**业务说明：**
+
+
+**请求方式：**
+> POST
+
+**接口url：**
+> http://ip:port/cube/roomtype/mergeRoomTypeStock
+
+**请求参数：**
+
+|    字段        |         名称        | 是否必须 | 说明|
+--------------- | ------------------- | -------| ----------
+|﻿pageNo|页码|否|不填默认从第一页开始拉取
+
+
+
+> API返回json数据示例：
+
+* success为T时
+* http状态200
+
+```js
+
+{
+    "success":"T"
+}
+```
+* success为F时
+
+
+```
+{
+    "success":"F",
+    "errcode":,//错误码
+    "errmsg":
+}
+```
 
 ##PUSH接口
 
@@ -117,55 +327,115 @@ http://ip:port/cube/order/cancel
 |    roomtypes字段        |         名称        | 是否必须 | 说明|
 --------------- | ------------------- | -------| ----------
 |id|房型id|是|
+|hotelid|酒店id|是|
 |name|房型名称|是|
 |area|房型面积|是|
-|bedtype|床型|是|
-|roomnum|房间数|是|   
-                  
+|bedtype|床型|是|1、大床 2、双床 3、三床 4、单人床 5、一单一双 6、上下铺 7、通铺 8、榻榻米 9、水床 10、圆床 11、拼床 12、其他
+|bedsize|床尺寸|是|
+|prepay|支付类型|是|0、预付
+|breakfast|是否含早餐|是|0、无早；1、含早
+|status|是否可定（关房）|是|0、可定；1、不可订
+|refund|是否可退款|是|0、不可退
+|maxroomnum|单个订单最大房量|是|默认为8 可设置值为[1,8]；
+|roomnum|房间数|是|最大预定数，不是可用的
+|roomtypepics|图片|是|json
+
+
 > API提交json数据示例：
 
 ```js
 {
-        "citycode": 310000,
-        "cityname": "s 上海市",
-        "defaultleavetime": "120000",
-        "detailaddr": "上海市闸北区灵石路697-3号",
-        "discode": 310108,
-        "districtname": "z 闸北区",
-        "hotelname": "上轩商务酒店111",
-        "hotelpic": "https://dn-imke-pro.qbox.me/fuu6jue32lz7cvzfidyhfpmu-_z8",
-        "id": 399,
-        "introduction": "性价比高，住宿环境、通风采光较好。",
-        "latitude": 31.283322,
-        "longitude": 121.446101,
-        "pmstype": null,
-        "provcode": 310000,
-        "provincename": "s 上海市",
-        "repairtime": 1456588800000,
-        "retentiontime": "180000",
-        "roomtypes": [
-            {
-                "id": 175,
-                "name": "234",
-                "roomnum": 5,
-"bedtype": "双床",
-            	"area": "20.00"
-            }
-            {
-                "id": 8765,
-                "name": "sssss",
-                "roomnum": 222,
-"bedtype": "双床",
-            	"area": "20.00"
-            },
-            {
-                "id": 8766,
-                "name": "xxx",
-                "roomnum": 222,
-"bedtype": "双床",
-            	"area": "20.00"
-            }
-        ]
+  "data": {
+    "hotel": {
+      "citycode": 310000,
+      "cityname": "S 上海市",
+      "defaultleavetime": "120000",
+      "detailaddr": "灵石路679-3号",
+      "discode": 310108,
+      "districtname": "Z 闸北区",
+      "hotelname": "上轩商务酒店",
+      "hotelphone": "13810711699",
+      "hotelpic": "https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2",
+      "hotelpics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\"}]}]",
+      "hoteltype": 3,
+      "id": 2813,
+      "introduction": "测试酒店",
+      "latitude": 29.58339,
+      "longitude": 106.497452,
+      "opentime": "2014-02-01",
+      "provcode": 310000,
+      "provincename": "S 上海市",
+      "repairtime": "2014-02-01",
+      "retentiontime": "180000",
+      "roomtypes": [
+        {
+          "area": "20.00",
+          "bedsize": "2.20",
+          "bedtype": "1",
+          "breakfast": "0",
+          "id": 29995,
+          "name": "大床房",
+          "prepay": "1",
+          "roomnum": 20,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+        },
+        {
+          "area": "25.00",
+          "bedsize": "2.20",
+          "bedtype": "1",
+          "breakfast": "0",
+          "id": 29996,
+          "name": "海景房",
+          "prepay": "1",
+          "roomnum": 4,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+        },
+        {
+          "area": "34.00",
+          "bedsize": "2.20,2.20",
+          "bedtype": "2",
+          "breakfast": "0",
+          "id": 29997,
+          "name": "大床房A",
+          "prepay": "1",
+          "roomnum": 20,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FipvpKpZ2oJL8vS624ugGQm-aDDi\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+        },
+        {
+          "area": "34.00",
+          "bedsize": "2.20",
+          "bedtype": "1",
+          "breakfast": "0",
+          "id": 30025,
+          "name": "特价房",
+          "prepay": "1",
+          "roomnum": 10,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FoLA7XtPcrBjjqp0rfwSkK-CJSX1\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+        },
+        {
+          "area": "30.00",
+          "bedsize": "2.00,1.80",
+          "bedtype": "2",
+          "breakfast": "0",
+          "id": 30046,
+          "name": "压测房型",
+          "prepay": "1",
+          "roomnum": 200,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+        }
+      ]
+    }
+  }
 }
 ```
 
@@ -233,18 +503,30 @@ http://ip:port/cube/order/cancel
 
 ```js
 {
-	id:    111 ,                                  
-	hotelname: 酒店名称,                                                               
-	detailaddr: 酒店地址,                             
-	longitude: 117.195908,                         
-	latitude:  39.118328,                                                                                       
-	roomnum:  10,      
-	hotelphone: 13333333666,                            
-	hoteltype:  精品酒店（参考枚举）                            
-	discode: 10000001    ,                           
-	citycode:   10000002,                          
-	provcode:  10000003,
-	hotelpic:“http://xxxxxx.com”
+  "data": {
+    "hotel": {
+      "citycode": 310000,
+      "cityname": "S 上海市",
+      "defaultleavetime": "120000",
+      "detailaddr": "灵石路679-3号",
+      "discode": 310108,
+      "districtname": "Z 闸北区",
+      "hotelname": "上轩商务酒店",
+      "hotelphone": "13810711699",
+      "hotelpic": "https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2",
+      "hotelpics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\"}]}]",
+      "hoteltype": 3,
+      "id": 2813,
+      "introduction": "测试酒店",
+      "latitude": 29.58339,
+      "longitude": 106.497452,
+      "opentime": "2014-02-01",
+      "provcode": 310000,
+      "provincename": "S 上海市",
+      "repairtime": "2014-02-01",
+      "retentiontime": "180000"
+    }
+  }
 }
 ```
 
@@ -293,29 +575,50 @@ http://ip:port/cube/order/cancel
 |    字段        |         名称        | 是否必须 | 说明|
 --------------- | ------------------- | -------| ----------
 |﻿hotelid|酒店id|是|
-|﻿tagid|标签id,逗号分隔|是|
-|﻿roomtype|房型标签对象数组|是|
+|﻿tags|标签id,逗号分隔|是|
+|﻿roomtypeTags|房型标签对象数组|是|
 
-|    房型标签对象字段        |         名称        | 是否必须 | 说明|
+|    tags对象字段        |         名称        | 是否必须 | 说明|
 --------------- | ------------------- | -------| ----------
-|﻿roomtypeid|房型id|是|
-|﻿tagid|标签id,逗号分隔|是|
+|﻿id|标签id|是|
+|﻿tagname|标签name|是|
+|﻿taggroupid|标签分类id|是|1、商圈位置(5公里内) 2、类型特色 3、设施服务
 
 > API提交json数据示例：
 
 ```js
 {
-	"hotelid": 33670,
-	"tagid": 1,2,3,4,5，
-	"roomtype":[
-		{
-		"roomtypeid":1111
-		"roomtypetagid":1,2,3,4，
-	}，{
-		"roomtypeid":1111
-		"roomtypetagid":1,2,3,4，
-	}
-]
+  "data": {
+    "hotelid": 2813,
+    "roomtypeTags": null,
+    "tags": [
+      {
+        "id": 2,
+        "taggroupid": 2,
+        "tagname": "温泉度假"
+      },
+      {
+      	"id": 24,
+        "taggroupid": 3,
+        "tagname": "免费无线"
+      },
+      {
+      	"id": 32,
+        "taggroupid": 3,
+        "tagname": "独立卫浴"
+      },
+      {
+      	"id": 36,
+        "taggroupid": 3,
+        "tagname": "旅游票务服务"
+      },
+      {
+      	"id": 37,
+        "taggroupid": 1,
+        "tagname": "旅游景区"
+      }
+    ]
+  }
 }
 ```
 
@@ -375,18 +678,25 @@ http://ip:port/cube/order/cancel
 |refund|是否可退款|是|0、不可退
 |maxroomnum|单个订单最大房量|是|默认为8 可设置值为[1,8]；
 |roomnum|房间数|是|最大预定数，不是可用的
+|roomtypepics|图片|是|json
 
 > API提交json数据示例：
 
 ```js
- { 
-	“hotelid”:9999,
-	“roomtypeid”:444,
-	“name”:”大床房”,
-	“area”:25,
-	“bedtype“:1
-	“roomnum”:78,
-	“prepay“：0
+{
+    data:{
+          "area": "20.00",
+          "bedsize": "2.20",
+          "bedtype": "1",
+          "breakfast": "0",
+          "id": 29995,
+          "name": "大床房",
+          "prepay": "1",
+          "roomnum": 20,
+          "status":0,
+          "refund":0,
+          "roomtypepics": "[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\"}]},{\"name\":\"bed\",\"pic\":[]},{\"name\":\"toilet\",\"pic\":[]}]"
+    }
 }
 ```
 
@@ -434,7 +744,7 @@ http://ip:port/cube/order/cancel
 
 |    字段        |         名称        | 是否必须 | 说明|
 --------------- | ------------------- | -------| ----------
-|﻿roomtypeid|房型id|是|
+|﻿hotelid|酒店id|是|
 |﻿roomtypes|房型集合|是|
 
 |    roomtypes字段        |         名称        | 是否必须 | 说明|
@@ -444,42 +754,27 @@ http://ip:port/cube/order/cancel
 
 |    priceinfo字段        |         名称        | 是否必须 | 说明|
 --------------- | ------------------- | -------| ----------
-|﻿day|日期|是|
-|﻿price|价格|是|
+|﻿date|日期|是|
+|﻿cost|价格|是|
 
 > API提交json数据示例：
 
 ```js
 {
-    "hotelid": "2013",
-    "roomtypes": [
-        {
-            "roomtypeid": "20122",
-            "priceinfo": [
-                {
-                    "day": "20160328",
-                    "price": "218"
-                },
-                {
-                    "day": "20160329",
-                    "price": "300"
-                }
-            ]
-        },
-        {
-            "roomtypeid": "20122",
-            "priceinfo": [
-                {
-                    "day": "20160328",
-                    "price": "218"
-                },
-                {
-                    "day": "20160329",
-                    "price": "300"
-                }
-            ]
-        }
+  "data": {
+    "hotelid":2813,
+    "roomtypeprices": [
+      {
+        "priceinfos": [
+          {
+            "cost": "10.00",
+            "date": "2016-05-11"
+          }
+        ],
+        "roomtypeid": 29995
+      }
     ]
+  }
 }
 ```
 
@@ -529,7 +824,7 @@ http://ip:port/cube/order/cancel
 --------------- | ------------------- | -------| ----------
 |﻿orderid|订单id|是|
 |﻿orderstatus|订单状态|是|
-                   
+
 > API提交json数据示例：
 
 ```js
