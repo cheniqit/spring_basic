@@ -50,7 +50,7 @@ public class HttpUtils {
         return sendHttpClientPost(reqURL, params, timeout, charset);
     }
 
-    public static String sendHttpClientPostByString(String path, FbbRequestHead fbbRequestHead, String body){
+    public static String sendHttpClientPostByString(String path, FbbRequestHead fbbRequestHead, String body) throws IOException {
         Map<String, String> headParams = new HashMap<>();
         headParams.put(Constant.PMS_TOKEN_KEY, fbbRequestHead.getToken());
         headParams.put(Constant.PMS_CHANNEL_ID_KEY, fbbRequestHead.getChannelId());
@@ -60,12 +60,13 @@ public class HttpUtils {
         return sendHttpClientPostByString(path, headParams, body, timeout, charset);
     }
 
-    public static String sendHttpClientPostByString(String path, Map<String, String> headParams, String body){
+    public static String sendHttpClientPostByString(String path, Map<String, String> headParams, String body) throws IOException {
         return sendHttpClientPostByString(path, headParams, body, timeout, charset);
     }
 
     //用apache接口实现http的post提交数据
-    public static String sendHttpClientPostByString(String path, Map<String, String> headParams, String body, int timeout, String encode) {
+    public static String sendHttpClientPostByString(String path, Map<String, String> headParams, String body, int timeout, String encode) throws IOException {
+        Transaction t = Cat.newTransaction("callRemoteUrl", path);
         try {
             // 使用post方式提交数据
             HttpPost httpPost = new HttpPost(path);
@@ -76,6 +77,7 @@ public class HttpUtils {
             if (headParams != null && !headParams.isEmpty()) {
                 for (Map.Entry<String, String> entry : headParams.entrySet()) {
                     httpPost.setHeader(entry.getKey(), entry.getValue());
+                    paramsStr.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
                 }
             }
 
@@ -100,18 +102,12 @@ public class HttpUtils {
             }
             log.info(String.format("=========remote path[%s] result[%s]==========", path, result));
             return result;
-        } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            t.setStatus(e);
+            throw e;
+        }finally {
+            t.complete();
         }
-        return "";
-
     }
 
     //用apache接口实现http的post提交数据

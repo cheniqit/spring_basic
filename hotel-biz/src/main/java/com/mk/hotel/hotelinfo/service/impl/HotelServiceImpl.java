@@ -188,7 +188,7 @@ public class HotelServiceImpl implements HotelService {
         logger.info("begin mergePmsHotel pageNo {}", pageNo);
         HotelQueryListRequest request = new HotelQueryListRequest(pageNo);
         HotelQueryListResponse response = hotelRemoteService.queryHotelList(request);
-        if(response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
+        if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
             return;
         }
         List<HotelQueryListResponse.HotelInfo> hotelInfoList = response.getData().getHotels();

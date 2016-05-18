@@ -229,7 +229,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         for(Hotel hotel : hotelList){
             hotelRoomTypeQueryRequest.setHotelid(hotel.getFangId().toString());
             HotelRoomTypeQueryResponse response = hotelRemoteService.queryRoomType(hotelRoomTypeQueryRequest);
-            if(response.getData() == null || CollectionUtils.isEmpty(response.getData())){
+            if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData())){
                 return;
             }
             roomTypeProxyService.saveRoomType(hotel, response.getData());
@@ -344,7 +344,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
             hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
             HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
-            if(response.getData() == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
+            if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
                 return;
             }
             roomTypeProxyService.saveRoomTypePrice(response.getData());
