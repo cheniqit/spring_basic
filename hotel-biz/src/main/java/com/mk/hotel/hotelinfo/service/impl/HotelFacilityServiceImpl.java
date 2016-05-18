@@ -69,7 +69,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         //
         HotelDto hotelDto = this.hotelService.findByFangId(hotelFacilityDto.getFangHotelId());
         if (null == hotelDto) {
-            return;
+            throw new MyException("-99", "-99", "hotelFacilityDto.getFangHotelId() 错误");
         }
 
         //redis

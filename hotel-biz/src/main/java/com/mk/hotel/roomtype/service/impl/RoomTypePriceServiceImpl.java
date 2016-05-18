@@ -54,7 +54,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
                 this.roomTypeService.selectByFangId(
                         roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId());
         if (null == roomTypeDto) {
-            return -1;
+            throw new MyException("-99", "-99", "roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId() 错误");
         }
         //
         RoomTypePriceExample roomTypePriceExample = new RoomTypePriceExample();

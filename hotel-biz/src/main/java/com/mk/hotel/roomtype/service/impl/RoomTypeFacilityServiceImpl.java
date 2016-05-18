@@ -63,7 +63,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         //
         RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(fangHotelId,fangRoomTypeId);
         if (null == roomTypeDto) {
-            return;
+            throw new MyException("-99", "-99", "roomTypeFacilityDto.getFangHotelId();roomTypeFacilityDto.getFangRoomTypeId(); 错误");
         }
 
         //redis
