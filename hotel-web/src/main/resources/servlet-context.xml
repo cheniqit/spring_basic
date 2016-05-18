@@ -35,15 +35,6 @@
                 <entry key="xml" value="application/xml"/>
             </map>
         </property>
-        <property name="viewResolvers">
-            <list>
-                <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
-                <bean
-                        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-                    <property name="prefix" value="/"/>
-                </bean>
-            </list>
-        </property>
         <property name="defaultViews">
             <list>
                 <bean id="jsonView"
