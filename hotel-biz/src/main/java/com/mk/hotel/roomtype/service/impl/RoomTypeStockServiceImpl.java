@@ -502,4 +502,48 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
     }
+
+    public void unlockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num) {
+        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == from || null == to || null == num) {
+            return;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //hashName
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
+            //
+            for (Date date : dates) {
+                this.lock(hotelId, roomTypeId, date, 6, 10 * 1000);
+            }
+
+            //释放房源
+            for (Date date : dates) {
+                String strDate = format.format(date);
+
+                jedis.hincrBy(availableHashName, strDate, num);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+
+            //解锁
+            for (Date date : dates) {
+                this.unlock(hotelId, roomTypeId, date);
+            }
+        }
+
+    }
 }
