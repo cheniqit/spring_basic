@@ -124,4 +124,6 @@ public interface RoomTypeStockService {
      * @param num        锁几间房
      */
     void lockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num);
+
+    void unlockRoomType(String hotelId, String roomTypeId, Date from, Date to, Integer num);
 }
