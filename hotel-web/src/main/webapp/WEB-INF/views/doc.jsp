@@ -2,7 +2,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>hotel</title>
+<title>doc</title>
 <style type="text/css">
 body {
   font-family: Helvetica, arial, sans-serif;
@@ -581,333 +581,9 @@ http://ip:port/cube/order/cancel</code></pre>
 <p>报文中判断是否的字段，均使用（T/F），T 代表 true，F 代表 false</p>
 </blockquote>
 
-<h2 id="toc_13">fetch接口</h2>
+<h2 id="toc_13">PUSH接口</h2>
 
-<h3 id="toc_14">拉取标签信息</h3>
-
-<hr>
-
-<p><strong>业务说明：</strong>
-拉取标签信息</p>
-
-<p><strong>请求方式：</strong></p>
-
-<blockquote>
-<p>POST</p>
-</blockquote>
-
-<p><strong>接口url：</strong></p>
-
-<blockquote>
-<p><a href="http://ip:port/ots/hotel/mergeHotelFacility">http://ip:port/ots/hotel/mergeHotelFacility</a></p>
-</blockquote>
-
-<p><strong>请求参数：</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>名称</th>
-<th>是否必须</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>﻿pageNo</td>
-<td>页码</td>
-<td>否</td>
-<td>不填默认从第一页开始拉取</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>API返回json数据示例：</p>
-</blockquote>
-
-<ul>
-<li>success为T时</li>
-<li>http状态200</li>
-</ul>
-
-<pre class="line-numbers"><code class="language-javascript">
-{
-    &quot;success&quot;:&quot;T&quot;
-}</code></pre>
-
-<ul>
-<li>success为F时</li>
-</ul>
-
-<pre><code>{
-    &quot;success&quot;:&quot;F&quot;,
-    &quot;errcode&quot;:,//错误码
-    &quot;errmsg&quot;:
-}</code></pre>
-
-<h3 id="toc_15">拉取pms酒店信息</h3>
-
-<hr>
-
-<p><strong>业务说明：</strong></p>
-
-<p><strong>请求方式：</strong></p>
-
-<blockquote>
-<p>POST</p>
-</blockquote>
-
-<p><strong>接口url：</strong></p>
-
-<blockquote>
-<p><a href="http://ip:port/ots/hotel/mergePmsHotel">http://ip:port/ots/hotel/mergePmsHotel</a></p>
-</blockquote>
-
-<p><strong>请求参数：</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>名称</th>
-<th>是否必须</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>﻿pageNo</td>
-<td>页码</td>
-<td>否</td>
-<td>不填默认从第一页开始拉取</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>API返回json数据示例：</p>
-</blockquote>
-
-<ul>
-<li>success为T时</li>
-<li>http状态200</li>
-</ul>
-
-<pre class="line-numbers"><code class="language-javascript">
-{
-    &quot;success&quot;:&quot;T&quot;
-}</code></pre>
-
-<ul>
-<li>success为F时</li>
-</ul>
-
-<pre><code>{
-    &quot;success&quot;:&quot;F&quot;,
-    &quot;errcode&quot;:,//错误码
-    &quot;errmsg&quot;:
-}</code></pre>
-
-<h3 id="toc_16">拉取房型息</h3>
-
-<hr>
-
-<p><strong>业务说明：</strong></p>
-
-<p><strong>请求方式：</strong></p>
-
-<blockquote>
-<p>POST</p>
-</blockquote>
-
-<p><strong>接口url：</strong></p>
-
-<blockquote>
-<p><a href="http://ip:port/ots/roomtype/mergeRoomType">http://ip:port/ots/roomtype/mergeRoomType</a></p>
-</blockquote>
-
-<p><strong>请求参数：</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>名称</th>
-<th>是否必须</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>﻿pageNo</td>
-<td>页码</td>
-<td>否</td>
-<td>不填默认从第一页开始拉取</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>API返回json数据示例：</p>
-</blockquote>
-
-<ul>
-<li>success为T时</li>
-<li>http状态200</li>
-</ul>
-
-<pre class="line-numbers"><code class="language-javascript">
-{
-    &quot;success&quot;:&quot;T&quot;
-}</code></pre>
-
-<ul>
-<li>success为F时</li>
-</ul>
-
-<pre><code>{
-    &quot;success&quot;:&quot;F&quot;,
-    &quot;errcode&quot;:,//错误码
-    &quot;errmsg&quot;:
-}</code></pre>
-
-<h3 id="toc_17">拉取房型价格信息</h3>
-
-<hr>
-
-<p><strong>业务说明：</strong>
-拉取标签信息</p>
-
-<p><strong>请求方式：</strong></p>
-
-<blockquote>
-<p>POST</p>
-</blockquote>
-
-<p><strong>接口url：</strong></p>
-
-<blockquote>
-<p><a href="http://ip:port/ots/roomtype/mergeRoomTypePrice">http://ip:port/ots/roomtype/mergeRoomTypePrice</a></p>
-</blockquote>
-
-<p><strong>请求参数：</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>名称</th>
-<th>是否必须</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>﻿pageNo</td>
-<td>页码</td>
-<td>否</td>
-<td>不填默认从第一页开始拉取</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>API返回json数据示例：</p>
-</blockquote>
-
-<ul>
-<li>success为T时</li>
-<li>http状态200</li>
-</ul>
-
-<pre class="line-numbers"><code class="language-javascript">
-{
-    &quot;success&quot;:&quot;T&quot;
-}</code></pre>
-
-<ul>
-<li>success为F时</li>
-</ul>
-
-<pre><code>{
-    &quot;success&quot;:&quot;F&quot;,
-    &quot;errcode&quot;:,//错误码
-    &quot;errmsg&quot;:
-}</code></pre>
-
-<h3 id="toc_18">拉取酒店库存信息</h3>
-
-<hr>
-
-<p><strong>业务说明：</strong></p>
-
-<p><strong>请求方式：</strong></p>
-
-<blockquote>
-<p>POST</p>
-</blockquote>
-
-<p><strong>接口url：</strong></p>
-
-<blockquote>
-<p><a href="http://ip:port/ots/roomtype/mergeRoomTypeStock">http://ip:port/ots/roomtype/mergeRoomTypeStock</a></p>
-</blockquote>
-
-<p><strong>请求参数：</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>字段</th>
-<th>名称</th>
-<th>是否必须</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>﻿pageNo</td>
-<td>页码</td>
-<td>否</td>
-<td>不填默认从第一页开始拉取</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>API返回json数据示例：</p>
-</blockquote>
-
-<ul>
-<li>success为T时</li>
-<li>http状态200</li>
-</ul>
-
-<pre class="line-numbers"><code class="language-javascript">
-{
-    &quot;success&quot;:&quot;T&quot;
-}</code></pre>
-
-<ul>
-<li>success为F时</li>
-</ul>
-
-<pre><code>{
-    &quot;success&quot;:&quot;F&quot;,
-    &quot;errcode&quot;:,//错误码
-    &quot;errmsg&quot;:
-}</code></pre>
-
-<h2 id="toc_19">PUSH接口</h2>
-
-<h3 id="toc_20">酒店信息全量push</h3>
+<h3 id="toc_14">酒店信息全量push</h3>
 
 <hr>
 
@@ -1077,12 +753,6 @@ http://ip:port/cube/order/cancel</code></pre>
 <td></td>
 </tr>
 <tr>
-<td>hotelid</td>
-<td>酒店id</td>
-<td>是</td>
-<td></td>
-</tr>
-<tr>
 <td>name</td>
 <td>房型名称</td>
 <td>是</td>
@@ -1098,55 +768,13 @@ http://ip:port/cube/order/cancel</code></pre>
 <td>bedtype</td>
 <td>床型</td>
 <td>是</td>
-<td>1、大床 2、双床 3、三床 4、单人床 5、一单一双 6、上下铺 7、通铺 8、榻榻米 9、水床 10、圆床 11、拼床 12、其他</td>
-</tr>
-<tr>
-<td>bedsize</td>
-<td>床尺寸</td>
-<td>是</td>
 <td></td>
-</tr>
-<tr>
-<td>prepay</td>
-<td>支付类型</td>
-<td>是</td>
-<td>0、预付</td>
-</tr>
-<tr>
-<td>breakfast</td>
-<td>是否含早餐</td>
-<td>是</td>
-<td>0、无早；1、含早</td>
-</tr>
-<tr>
-<td>status</td>
-<td>是否可定（关房）</td>
-<td>是</td>
-<td>0、可定；1、不可订</td>
-</tr>
-<tr>
-<td>refund</td>
-<td>是否可退款</td>
-<td>是</td>
-<td>0、不可退</td>
-</tr>
-<tr>
-<td>maxroomnum</td>
-<td>单个订单最大房量</td>
-<td>是</td>
-<td>默认为8 可设置值为[1,8]；</td>
 </tr>
 <tr>
 <td>roomnum</td>
 <td>房间数</td>
 <td>是</td>
-<td>最大预定数，不是可用的</td>
-</tr>
-<tr>
-<td>roomtypepics</td>
-<td>图片</td>
-<td>是</td>
-<td>json</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1156,97 +784,46 @@ http://ip:port/cube/order/cancel</code></pre>
 </blockquote>
 
 <pre class="line-numbers"><code class="language-javascript">{
-  &quot;data&quot;: {
-    &quot;hotel&quot;: {
-      &quot;citycode&quot;: 310000,
-      &quot;cityname&quot;: &quot;S 上海市&quot;,
-      &quot;defaultleavetime&quot;: &quot;120000&quot;,
-      &quot;detailaddr&quot;: &quot;灵石路679-3号&quot;,
-      &quot;discode&quot;: 310108,
-      &quot;districtname&quot;: &quot;Z 闸北区&quot;,
-      &quot;hotelname&quot;: &quot;上轩商务酒店&quot;,
-      &quot;hotelphone&quot;: &quot;13810711699&quot;,
-      &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2&quot;,
-      &quot;hotelpics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\&quot;}]},{\&quot;name\&quot;:\&quot;lobby\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;mainHousing\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\&quot;}]}]&quot;,
-      &quot;hoteltype&quot;: 3,
-      &quot;id&quot;: 2813,
-      &quot;introduction&quot;: &quot;测试酒店&quot;,
-      &quot;latitude&quot;: 29.58339,
-      &quot;longitude&quot;: 106.497452,
-      &quot;opentime&quot;: &quot;2014-02-01&quot;,
-      &quot;provcode&quot;: 310000,
-      &quot;provincename&quot;: &quot;S 上海市&quot;,
-      &quot;repairtime&quot;: &quot;2014-02-01&quot;,
-      &quot;retentiontime&quot;: &quot;180000&quot;,
-      &quot;roomtypes&quot;: [
-        {
-          &quot;area&quot;: &quot;20.00&quot;,
-          &quot;bedsize&quot;: &quot;2.20&quot;,
-          &quot;bedtype&quot;: &quot;1&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 29995,
-          &quot;name&quot;: &quot;大床房&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 20,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-        },
-        {
-          &quot;area&quot;: &quot;25.00&quot;,
-          &quot;bedsize&quot;: &quot;2.20&quot;,
-          &quot;bedtype&quot;: &quot;1&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 29996,
-          &quot;name&quot;: &quot;海景房&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 4,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-        },
-        {
-          &quot;area&quot;: &quot;34.00&quot;,
-          &quot;bedsize&quot;: &quot;2.20,2.20&quot;,
-          &quot;bedtype&quot;: &quot;2&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 29997,
-          &quot;name&quot;: &quot;大床房A&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 20,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FipvpKpZ2oJL8vS624ugGQm-aDDi\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-        },
-        {
-          &quot;area&quot;: &quot;34.00&quot;,
-          &quot;bedsize&quot;: &quot;2.20&quot;,
-          &quot;bedtype&quot;: &quot;1&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 30025,
-          &quot;name&quot;: &quot;特价房&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 10,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FoLA7XtPcrBjjqp0rfwSkK-CJSX1\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-        },
-        {
-          &quot;area&quot;: &quot;30.00&quot;,
-          &quot;bedsize&quot;: &quot;2.00,1.80&quot;,
-          &quot;bedtype&quot;: &quot;2&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 30046,
-          &quot;name&quot;: &quot;压测房型&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 200,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-        }
-      ]
-    }
-  }
+        &quot;citycode&quot;: 310000,
+        &quot;cityname&quot;: &quot;s 上海市&quot;,
+        &quot;defaultleavetime&quot;: &quot;120000&quot;,
+        &quot;detailaddr&quot;: &quot;上海市闸北区灵石路697-3号&quot;,
+        &quot;discode&quot;: 310108,
+        &quot;districtname&quot;: &quot;z 闸北区&quot;,
+        &quot;hotelname&quot;: &quot;上轩商务酒店111&quot;,
+        &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/fuu6jue32lz7cvzfidyhfpmu-_z8&quot;,
+        &quot;id&quot;: 399,
+        &quot;introduction&quot;: &quot;性价比高，住宿环境、通风采光较好。&quot;,
+        &quot;latitude&quot;: 31.283322,
+        &quot;longitude&quot;: 121.446101,
+        &quot;pmstype&quot;: null,
+        &quot;provcode&quot;: 310000,
+        &quot;provincename&quot;: &quot;s 上海市&quot;,
+        &quot;repairtime&quot;: 1456588800000,
+        &quot;retentiontime&quot;: &quot;180000&quot;,
+        &quot;roomtypes&quot;: [
+            {
+                &quot;id&quot;: 175,
+                &quot;name&quot;: &quot;234&quot;,
+                &quot;roomnum&quot;: 5,
+&quot;bedtype&quot;: &quot;双床&quot;,
+                &quot;area&quot;: &quot;20.00&quot;
+            }
+            {
+                &quot;id&quot;: 8765,
+                &quot;name&quot;: &quot;sssss&quot;,
+                &quot;roomnum&quot;: 222,
+&quot;bedtype&quot;: &quot;双床&quot;,
+                &quot;area&quot;: &quot;20.00&quot;
+            },
+            {
+                &quot;id&quot;: 8766,
+                &quot;name&quot;: &quot;xxx&quot;,
+                &quot;roomnum&quot;: 222,
+&quot;bedtype&quot;: &quot;双床&quot;,
+                &quot;area&quot;: &quot;20.00&quot;
+            }
+        ]
 }</code></pre>
 
 <blockquote>
@@ -1273,7 +850,7 @@ http://ip:port/cube/order/cancel</code></pre>
     &quot;errorMessage&quot;:
 }</code></pre>
 
-<h3 id="toc_21">酒店信息增量push</h3>
+<h3 id="toc_15">酒店信息增量push</h3>
 
 <hr>
 
@@ -1424,30 +1001,18 @@ http://ip:port/cube/order/cancel</code></pre>
 </blockquote>
 
 <pre class="line-numbers"><code class="language-javascript">{
-  &quot;data&quot;: {
-    &quot;hotel&quot;: {
-      &quot;citycode&quot;: 310000,
-      &quot;cityname&quot;: &quot;S 上海市&quot;,
-      &quot;defaultleavetime&quot;: &quot;120000&quot;,
-      &quot;detailaddr&quot;: &quot;灵石路679-3号&quot;,
-      &quot;discode&quot;: 310108,
-      &quot;districtname&quot;: &quot;Z 闸北区&quot;,
-      &quot;hotelname&quot;: &quot;上轩商务酒店&quot;,
-      &quot;hotelphone&quot;: &quot;13810711699&quot;,
-      &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2&quot;,
-      &quot;hotelpics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\&quot;}]},{\&quot;name\&quot;:\&quot;lobby\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;mainHousing\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\&quot;}]}]&quot;,
-      &quot;hoteltype&quot;: 3,
-      &quot;id&quot;: 2813,
-      &quot;introduction&quot;: &quot;测试酒店&quot;,
-      &quot;latitude&quot;: 29.58339,
-      &quot;longitude&quot;: 106.497452,
-      &quot;opentime&quot;: &quot;2014-02-01&quot;,
-      &quot;provcode&quot;: 310000,
-      &quot;provincename&quot;: &quot;S 上海市&quot;,
-      &quot;repairtime&quot;: &quot;2014-02-01&quot;,
-      &quot;retentiontime&quot;: &quot;180000&quot;
-    }
-  }
+    id:    111 ,                                  
+    hotelname: 酒店名称,                                                               
+    detailaddr: 酒店地址,                             
+    longitude: 117.195908,                         
+    latitude:  39.118328,                                                                                       
+    roomnum:  10,      
+    hotelphone: 13333333666,                            
+    hoteltype:  精品酒店（参考枚举）                            
+    discode: 10000001    ,                           
+    citycode:   10000002,                          
+    provcode:  10000003,
+    hotelpic:“http://xxxxxx.com”
 }</code></pre>
 
 <blockquote>
@@ -1474,7 +1039,7 @@ http://ip:port/cube/order/cancel</code></pre>
     &quot;errorMessage&quot;:
 }</code></pre>
 
-<h3 id="toc_22">酒店标签信息增量push</h3>
+<h3 id="toc_16">酒店标签信息增量push</h3>
 
 <hr>
 
@@ -1534,13 +1099,13 @@ http://ip:port/cube/order/cancel</code></pre>
 <td></td>
 </tr>
 <tr>
-<td>﻿tags</td>
+<td>﻿tagid</td>
 <td>标签id,逗号分隔</td>
 <td>是</td>
 <td></td>
 </tr>
 <tr>
-<td>﻿roomtypeTags</td>
+<td>﻿roomtype</td>
 <td>房型标签对象数组</td>
 <td>是</td>
 <td></td>
@@ -1551,7 +1116,7 @@ http://ip:port/cube/order/cancel</code></pre>
 <table>
 <thead>
 <tr>
-<th>tags对象字段</th>
+<th>房型标签对象字段</th>
 <th>名称</th>
 <th>是否必须</th>
 <th>说明</th>
@@ -1560,22 +1125,16 @@ http://ip:port/cube/order/cancel</code></pre>
 
 <tbody>
 <tr>
-<td>﻿id</td>
-<td>标签id</td>
+<td>﻿roomtypeid</td>
+<td>房型id</td>
 <td>是</td>
 <td></td>
 </tr>
 <tr>
-<td>﻿tagname</td>
-<td>标签name</td>
+<td>﻿tagid</td>
+<td>标签id,逗号分隔</td>
 <td>是</td>
 <td></td>
-</tr>
-<tr>
-<td>﻿taggroupid</td>
-<td>标签分类id</td>
-<td>是</td>
-<td>1、商圈位置(5公里内) 2、类型特色 3、设施服务</td>
 </tr>
 </tbody>
 </table>
@@ -1585,37 +1144,17 @@ http://ip:port/cube/order/cancel</code></pre>
 </blockquote>
 
 <pre class="line-numbers"><code class="language-javascript">{
-  &quot;data&quot;: {
-    &quot;hotelid&quot;: 2813,
-    &quot;roomtypeTags&quot;: null,
-    &quot;tags&quot;: [
-      {
-        &quot;id&quot;: 2,
-        &quot;taggroupid&quot;: 2,
-        &quot;tagname&quot;: &quot;温泉度假&quot;
-      },
-      {
-        &quot;id&quot;: 24,
-        &quot;taggroupid&quot;: 3,
-        &quot;tagname&quot;: &quot;免费无线&quot;
-      },
-      {
-        &quot;id&quot;: 32,
-        &quot;taggroupid&quot;: 3,
-        &quot;tagname&quot;: &quot;独立卫浴&quot;
-      },
-      {
-        &quot;id&quot;: 36,
-        &quot;taggroupid&quot;: 3,
-        &quot;tagname&quot;: &quot;旅游票务服务&quot;
-      },
-      {
-        &quot;id&quot;: 37,
-        &quot;taggroupid&quot;: 1,
-        &quot;tagname&quot;: &quot;旅游景区&quot;
-      }
-    ]
-  }
+    &quot;hotelid&quot;: 33670,
+    &quot;tagid&quot;: 1,2,3,4,5，
+    &quot;roomtype&quot;:[
+        {
+        &quot;roomtypeid&quot;:1111
+        &quot;roomtypetagid&quot;:1,2,3,4，
+    }，{
+        &quot;roomtypeid&quot;:1111
+        &quot;roomtypetagid&quot;:1,2,3,4，
+    }
+]
 }</code></pre>
 
 <blockquote>
@@ -1642,7 +1181,7 @@ http://ip:port/cube/order/cancel</code></pre>
     &quot;errorMessage&quot;:
 }</code></pre>
 
-<h3 id="toc_23">房型信息增量push</h3>
+<h3 id="toc_17">房型信息增量push</h3>
 
 <hr>
 
@@ -1767,12 +1306,6 @@ http://ip:port/cube/order/cancel</code></pre>
 <td>是</td>
 <td>最大预定数，不是可用的</td>
 </tr>
-<tr>
-<td>roomtypepics</td>
-<td>图片</td>
-<td>是</td>
-<td>json</td>
-</tr>
 </tbody>
 </table>
 
@@ -1780,20 +1313,14 @@ http://ip:port/cube/order/cancel</code></pre>
 <p>API提交json数据示例：</p>
 </blockquote>
 
-<pre class="line-numbers"><code class="language-javascript">{
-    data:{
-          &quot;area&quot;: &quot;20.00&quot;,
-          &quot;bedsize&quot;: &quot;2.20&quot;,
-          &quot;bedtype&quot;: &quot;1&quot;,
-          &quot;breakfast&quot;: &quot;0&quot;,
-          &quot;id&quot;: 29995,
-          &quot;name&quot;: &quot;大床房&quot;,
-          &quot;prepay&quot;: &quot;1&quot;,
-          &quot;roomnum&quot;: 20,
-          &quot;status&quot;:0,
-          &quot;refund&quot;:0,
-          &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-    }
+<pre class="line-numbers"><code class="language-javascript"> { 
+    “hotelid”:9999,
+    “roomtypeid”:444,
+    “name”:”大床房”,
+    “area”:25,
+    “bedtype“:1
+    “roomnum”:78,
+    “prepay“：0
 }</code></pre>
 
 <blockquote>
@@ -1820,7 +1347,7 @@ http://ip:port/cube/order/cancel</code></pre>
     &quot;errorMessage&quot;:
 }</code></pre>
 
-<h3 id="toc_24">房型价格信息增量push</h3>
+<h3 id="toc_18">房型价格信息增量push</h3>
 
 <hr>
 
@@ -1874,8 +1401,8 @@ http://ip:port/cube/order/cancel</code></pre>
 
 <tbody>
 <tr>
-<td>﻿hotelid</td>
-<td>酒店id</td>
+<td>﻿roomtypeid</td>
+<td>房型id</td>
 <td>是</td>
 <td></td>
 </tr>
@@ -1926,13 +1453,13 @@ http://ip:port/cube/order/cancel</code></pre>
 
 <tbody>
 <tr>
-<td>﻿date</td>
+<td>﻿day</td>
 <td>日期</td>
 <td>是</td>
 <td></td>
 </tr>
 <tr>
-<td>﻿cost</td>
+<td>﻿price</td>
 <td>价格</td>
 <td>是</td>
 <td></td>
@@ -1945,20 +1472,35 @@ http://ip:port/cube/order/cancel</code></pre>
 </blockquote>
 
 <pre class="line-numbers"><code class="language-javascript">{
-  &quot;data&quot;: {
-    &quot;hotelid&quot;:2813,
-    &quot;roomtypeprices&quot;: [
-      {
-        &quot;priceinfos&quot;: [
-          {
-            &quot;cost&quot;: &quot;10.00&quot;,
-            &quot;date&quot;: &quot;2016-05-11&quot;
-          }
-        ],
-        &quot;roomtypeid&quot;: 29995
-      }
+    &quot;hotelid&quot;: &quot;2013&quot;,
+    &quot;roomtypes&quot;: [
+        {
+            &quot;roomtypeid&quot;: &quot;20122&quot;,
+            &quot;priceinfo&quot;: [
+                {
+                    &quot;day&quot;: &quot;20160328&quot;,
+                    &quot;price&quot;: &quot;218&quot;
+                },
+                {
+                    &quot;day&quot;: &quot;20160329&quot;,
+                    &quot;price&quot;: &quot;300&quot;
+                }
+            ]
+        },
+        {
+            &quot;roomtypeid&quot;: &quot;20122&quot;,
+            &quot;priceinfo&quot;: [
+                {
+                    &quot;day&quot;: &quot;20160328&quot;,
+                    &quot;price&quot;: &quot;218&quot;
+                },
+                {
+                    &quot;day&quot;: &quot;20160329&quot;,
+                    &quot;price&quot;: &quot;300&quot;
+                }
+            ]
+        }
     ]
-  }
 }</code></pre>
 
 <blockquote>
@@ -1985,7 +1527,7 @@ http://ip:port/cube/order/cancel</code></pre>
     &quot;errorMessage&quot;:
 }</code></pre>
 
-<h3 id="toc_25">订单状态增量push</h3>
+<h3 id="toc_19">订单状态增量push</h3>
 
 <hr>
 

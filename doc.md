@@ -8,7 +8,7 @@
 
 版本 |  修改日期  | 修改人 | 备注
 --- | --------- | ----- | -----------
-1.0 |  |  | 
+1.0 |  |  |
 
 ## 通用定义
 ### 时间定义
@@ -16,7 +16,7 @@
 * 注: 客户端需要自行处理时区问题，与服务器的通信均认为是北京时间。
 
 ### 提交方式
-> 
+>
 * GET – 查询
 * DELETE – 删除
 * POST- 创建新的
@@ -36,7 +36,7 @@
 }
 ```
 errorcode 表示:
-	
+
 	1. `-701`  session 超时或者不存在该 session
 	2. `-702`  该 session 因为密码被修改而失效
 	3. `-703`  该 session 因用户被禁用而失效
@@ -45,10 +45,10 @@ errorcode 表示:
 下载文件时，所有错误信息使用 http 错误状态码提示:
 
 * `404` 表示未找到文件
-* `403` 表示无权限下载 
+* `403` 表示无权限下载
 
 ### 请求报文Url及参数格式
-> http://ip:port/ots/业务类别/业务场景（动／名词:search，detail，cancel）
+> http://ip:port/cube/业务类别/业务场景（动／名词:search，detail，cancel）
 
 
 ```
@@ -58,9 +58,16 @@ errorcode 表示:
 事例：
 
 ```
-http://ip:port/ots/order/
-http://ip:port/ots/order/cancel
+http://ip:port/cube/order/
+http://ip:port/cube/order/cancel
 ```
+
+##域名
+### 模拟环境
+> http://api.imike.cn/cube
+
+### 生产环境 (暂不开放)
+> http://api.imike.com/cube
 
 ### 报文中判断 true 和 false 的判断
 > 报文中判断是否的字段，均使用（T/F），T 代表 true，F 代表 false
