@@ -117,7 +117,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
             //redis add
             for (HotelFacilityDto dto : hotelFacilityDtoList) {
                 Facility facility = new Facility();
-                facility.setFacId(dto.getId());
+                facility.setFacId(dto.getFacilityId());
                 facility.setFacName(dto.getFacilityName());
                 facility.setFacType(dto.getFacilityType());
                 facility.setCacheTime(strDate);
