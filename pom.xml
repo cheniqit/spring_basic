@@ -306,10 +306,8 @@
                 <hotel.jdbc.user>root</hotel.jdbc.user>
                 <hotel.jdbc.password>LZBV5D5ak</hotel.jdbc.password>
 
-                <!--<spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>-->
-                <!--<spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>-->
-                <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
+                <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
+                <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
