@@ -9,6 +9,7 @@ import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.redisbean.Facility;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -124,6 +125,9 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                 facility.setCacheFrom(cacheFrom);
                 jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
+
+            //
+            OtsInterface.initHotel(hotelId);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

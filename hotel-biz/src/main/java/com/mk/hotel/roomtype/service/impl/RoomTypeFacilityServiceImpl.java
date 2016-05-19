@@ -5,6 +5,7 @@ import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.Facility;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -123,6 +124,13 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
                 facility.setCacheFrom(cacheFrom);
                 //
                 jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
+            }
+
+            //
+            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
+            if (null != hotelId) {
+                //
+                OtsInterface.initHotel(hotelId);
             }
         } catch (Exception e) {
             e.printStackTrace();

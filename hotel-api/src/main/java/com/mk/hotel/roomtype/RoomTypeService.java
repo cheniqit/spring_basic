@@ -19,4 +19,6 @@ public interface RoomTypeService {
     void mergeRoomTypePrice(int pageNo);
 
     void mergeRoomTypeStock(int pageNo);
+
+    Long getHotelIdByRedis (Long roomTypeId);
 }

@@ -384,6 +384,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
             jedis.hset(availableHashName, strDate, String.valueOf(num));
+
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -484,7 +485,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
                 jedis.hincrBy(availableHashName, strDate, num * -1);
             }
-
         } catch (MyException e) {
             throw e;
         } catch (Exception e) {

@@ -11,6 +11,7 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.redisbean.PicList;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -240,6 +241,33 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         mergeRoomType(pageNo);
     }
 
+    public Long getHotelIdByRedis (Long roomTypeId) {
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+
+            //roomTypeKey
+            String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
+            String json = jedis.get(roomTypeKeyName);
+            com.mk.hotel.roomtype.redisbean.RoomType roomType = JsonUtils.fromJson(json, com.mk.hotel.roomtype.redisbean.RoomType.class);
+
+            if (null == roomType) {
+                return null;
+            } else {
+                return roomType.getHotelId();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
 
     public void updateRedisRoomType(Long roomTypeId, RoomType roomType, String cacheFrom) {
         if (null == roomTypeId || null == roomType || null == roomType.getHotelId()) {
@@ -314,6 +342,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             //
             jedis.sadd(roomTypeSetName, JsonUtils.toJson(roomTypeInRedis));
 
+            //
+            OtsInterface.initHotel(roomType.getHotelId());
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -122,6 +123,12 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             //set
             jedis.hset(priceHashName, strDate, JsonUtils.toJson(roomTypePrice));
 
+            //
+            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
+            if (null != hotelId) {
+                //
+                OtsInterface.initHotel(hotelId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
