@@ -227,7 +227,7 @@
                 <version>9.2.1.v20140609</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/job</contextPath>
+                        <contextPath>/cube</contextPath>
                         <!-- <contextPath>/${project.artifactId}</contextPath> -->
                     </webApp>
                 </configuration>

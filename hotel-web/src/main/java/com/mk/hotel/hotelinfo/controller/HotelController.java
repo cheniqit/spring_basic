@@ -353,5 +353,25 @@ public class HotelController {
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/findHotelById", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelById(Long hotelId) {
+        try {
+            HotelDto hotelDto = hotelService.findById(hotelId);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("hotel", hotelDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
 }
 
