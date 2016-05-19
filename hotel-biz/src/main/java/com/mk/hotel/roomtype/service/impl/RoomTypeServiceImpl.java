@@ -245,7 +245,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
 
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = formatTime.format(new Date());
         //
         Jedis jedis = null;

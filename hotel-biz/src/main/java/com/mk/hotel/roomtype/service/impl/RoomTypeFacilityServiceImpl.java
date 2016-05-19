@@ -94,7 +94,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         if (null == roomTypeId || null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
             return;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(new Date());
 
         //

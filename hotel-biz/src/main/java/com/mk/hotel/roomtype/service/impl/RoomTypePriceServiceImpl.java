@@ -99,7 +99,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
 
         //
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(day);
         String strDateTime = formatTime.format(new Date());
 

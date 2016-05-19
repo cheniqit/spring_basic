@@ -205,7 +205,7 @@ public class HotelServiceImpl implements HotelService {
             return;
         }
 
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = formatTime.format(new Date());
 
         //

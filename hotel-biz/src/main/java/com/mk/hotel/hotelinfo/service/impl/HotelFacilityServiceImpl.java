@@ -98,7 +98,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         if (null == hotelId || null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
             return;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(new Date());
 
         //
