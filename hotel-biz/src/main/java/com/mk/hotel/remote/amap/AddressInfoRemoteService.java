@@ -1,10 +1,12 @@
 package com.mk.hotel.remote.amap;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,16 +43,21 @@ public class AddressInfoRemoteService {
         if(remoteResult.indexOf("\"towncode\":[]") > 1){
             return null;
         }
-        String townCode = remoteResult.substring(remoteResult.indexOf("towncode"), remoteResult.indexOf("neighborhood"));
-        Pattern p = Pattern.compile("(\\d+)");
-        Matcher m= p.matcher(townCode);
-        if(m.find()){
-            townCode = m.group(1);
-            if(StringUtils.isNotBlank(townCode) && townCode.length() >=9){
-                return townCode.substring(0,9);
+        try {
+            String townCode = remoteResult.substring(remoteResult.indexOf("towncode"), remoteResult.indexOf("neighborhood"));
+            Pattern p = Pattern.compile("(\\d+)");
+            Matcher m = p.matcher(townCode);
+            if (m.find()) {
+                townCode = m.group(1);
+                if (StringUtils.isNotBlank(townCode) && townCode.length() >= 9) {
+                    return townCode.substring(0, 9);
+                }
+            } else {
+                return null;
             }
-        }else{
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
         }
         return null;
     }
