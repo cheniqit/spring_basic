@@ -3,6 +3,7 @@ package com.mk.hotel.hotelinfo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -66,12 +67,18 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        //
-        JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getJSONObject("data").getString("hotel");
 
-        //
-        HotelAllJson hotelJson = JSONUtil.fromJson(data, HotelAllJson.class);
+        HotelAllJson hotelJson = null;
+        try {
+            //
+            JSONObject bodyJson = JSON.parseObject(body);
+            String data = bodyJson.getJSONObject("data").getString("hotel");
+
+            //
+            hotelJson = JSONUtil.fromJson(data, HotelAllJson.class);
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
 
         //
         HotelDto hotelDto = new HotelDto();
@@ -236,12 +243,19 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        //
-        JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getString("data");
 
-        //
-        HotelFacilityJson facilityJson = JSONUtil.fromJson(data, HotelFacilityJson.class);
+        HotelFacilityJson facilityJson = null;
+        try {
+            //
+            JSONObject bodyJson = JSON.parseObject(body);
+            String data = bodyJson.getString("data");
+
+            //
+            facilityJson = JSONUtil.fromJson(data, HotelFacilityJson.class);
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
+
         Long fangHotelId = facilityJson.getHotelid();
         List<FacilityJson> facilityJsonList = facilityJson.getTags();
 

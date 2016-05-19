@@ -3,7 +3,9 @@ package com.mk.hotel.roomtype.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -58,11 +60,17 @@ public class RoomTypeController {
         }
 
         //
-        JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getString("data");
+        RoomTypeJson roomTypeJson = null;
+        try {
+            //
+            JSONObject bodyJson = JSON.parseObject(body);
+            String data = bodyJson.getString("data");
 
-        //
-        RoomTypeJson roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
+            //
+            roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
 
         RoomTypeDto roomTypeDto = new RoomTypeDto();
 
@@ -125,12 +133,19 @@ public class RoomTypeController {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        //
-        JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getString("data");
-
         //json
-        RoomTypePriceJson roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
+        RoomTypePriceJson roomTypePriceJson = null;
+        try {
+            //
+            JSONObject bodyJson = JSON.parseObject(body);
+            String data = bodyJson.getString("data");
+
+            //json
+            roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
+
         //fang-hotelId
         Long fangHotelId = roomTypePriceJson.getHotelid();
 
