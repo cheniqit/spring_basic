@@ -346,7 +346,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
             hotelPriceRequest.setHotelid(hotel.getFangId().toString());
             hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
-            hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
+            hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
             HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
             if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
                 return;
@@ -380,7 +380,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             QueryStockRequest queryStockRequest = new QueryStockRequest();
             queryStockRequest.setHotelid(hotel.getFangId().toString());
             queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
-            queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
+            queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
             QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
             if(response == null || response.getData() == null){
                 return;
