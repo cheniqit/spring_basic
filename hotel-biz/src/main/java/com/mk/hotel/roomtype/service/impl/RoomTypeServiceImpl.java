@@ -185,6 +185,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             RoomType roomType = new RoomType();
             roomType.setId(dbDto.getId());
+            roomType.setFangId(dbDto.getFangId());
             roomType.setHotelId(roomTypeDto.getHotelId());
             roomType.setName(roomTypeDto.getName());
             roomType.setArea(roomTypeDto.getArea());
