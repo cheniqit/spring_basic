@@ -234,11 +234,15 @@ public class HotelServiceImpl implements HotelService {
 
             //roomtype pic
             String strPics = hotel.getPic();
-            ArrayList<PicList> picLists = null;
-            if(StringUtils.isBlank(strPics)){
-                picLists = new Gson().fromJson(strPics, new TypeToken<ArrayList<PicList>>() {
-                }.getType());
+            JSONArray picArray = JSONArray.parseArray(strPics);
+
+            List<PicList> picLists = new ArrayList<PicList>();
+            for (int i = 0; i < picArray.size(); i++) {
+                String strPic = picArray.getString(i);
+                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                picLists.add(picList);
             }
+
             //hotel type
             Integer intHotelType = null;
             try {
