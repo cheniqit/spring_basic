@@ -13,6 +13,8 @@ public class RoomType {
 
     private Long roomTypeId;
 
+    private String sourceId;
+
     private String roomTypeName;
 
     private Integer area;
@@ -45,6 +47,14 @@ public class RoomType {
 
     public void setRoomTypeId(Long roomTypeId) {
         this.roomTypeId = roomTypeId;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
     public String getRoomTypeName() {

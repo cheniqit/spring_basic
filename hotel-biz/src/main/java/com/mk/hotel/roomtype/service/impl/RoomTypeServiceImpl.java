@@ -276,6 +276,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             com.mk.hotel.roomtype.redisbean.RoomType roomTypeInRedis = new com.mk.hotel.roomtype.redisbean.RoomType();
             roomTypeInRedis.setHotelId(roomType.getHotelId());
             roomTypeInRedis.setRoomTypeId(roomType.getId());
+            roomTypeInRedis.setSourceId(String.valueOf(roomType.getFangId()));
             roomTypeInRedis.setRoomTypeName(roomType.getName());
             roomTypeInRedis.setArea(roomType.getArea());
             roomTypeInRedis.setBedType(bedType);
