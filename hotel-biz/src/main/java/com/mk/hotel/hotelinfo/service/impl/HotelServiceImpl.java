@@ -89,6 +89,8 @@ public class HotelServiceImpl implements HotelService {
             Hotel dbHotel = new Hotel();
             BeanUtils.copyProperties(hotelDto, dbHotel);
 
+            dbHotel.setPic(hotelDto.getPics());
+
             dbHotel.setCreateDate(new Date());
             dbHotel.setCreateBy("hotel_system");
             dbHotel.setUpdateDate(new Date());
@@ -135,7 +137,7 @@ public class HotelServiceImpl implements HotelService {
             hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
             hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
             hotel.setOpenTime(hotelDto.getOpenTime());
-            hotel.setPic(hotelDto.getPic());
+            hotel.setPic(hotelDto.getPics());
 
             hotel.setUpdateDate(new Date());
             hotel.setUpdateBy("hotel_system");

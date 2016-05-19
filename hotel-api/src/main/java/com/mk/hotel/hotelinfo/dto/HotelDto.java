@@ -63,6 +63,8 @@ public class HotelDto {
 
     private String pic;
 
+    private String pics;
+
     private List<RoomTypeDto> roomTypeDtoList;
 
     public Long getId() {
@@ -295,5 +297,13 @@ public class HotelDto {
 
     public void setRoomTypeDtoList(List<RoomTypeDto> roomTypeDtoList) {
         this.roomTypeDtoList = roomTypeDtoList;
+    }
+
+    public String getPics() {
+        return pics;
+    }
+
+    public void setPics(String pics) {
+        this.pics = pics;
     }
 }

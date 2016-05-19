@@ -99,6 +99,7 @@ public class HotelController {
         hotelDto.setIsValid("T");
         hotelDto.setOpenTime(hotelJson.getOpentime());
         hotelDto.setPic(hotelJson.getHotelpic());
+        hotelDto.setPics(hotelJson.getHotelpics());
 
         //
         List<RoomTypeJson> roomTypeJsonList = hotelJson.getRoomtypes();
