@@ -263,13 +263,15 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             //roomtype pic
             String strPics = roomType.getRoomTypePics();
-            JSONArray picArray = JSONArray.parseArray(strPics);
-
             List<PicList> picLists = new ArrayList<PicList>();
-            for (int i = 0; i < picArray.size(); i++) {
-                String strPic = picArray.getString(i);
-                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                picLists.add(picList);
+
+            if (StringUtils.isNotBlank(strPics)) {
+                JSONArray picArray = JSONArray.parseArray(strPics);
+                for (int i = 0; i < picArray.size(); i++) {
+                    String strPic = picArray.getString(i);
+                    PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                    picLists.add(picList);
+                }
             }
 
             //roomtype
