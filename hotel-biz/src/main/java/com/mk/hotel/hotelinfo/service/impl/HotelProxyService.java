@@ -48,8 +48,7 @@ public class HotelProxyService {
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
-    /**酒店离热点区域的距离 单位米*/
-    private static Integer HOTEL_TO_HOT_AREA_DISTANCE = 10000;
+
 
 
     @Transactional
@@ -134,7 +133,7 @@ public class HotelProxyService {
             List<LandMark> landMarks = landMarkMapper.selectByExample(example);
             hotelService.setAllLandMarkList(landMarks);
         }
-        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), this.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
         hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
         hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
         hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());

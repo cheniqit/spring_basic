@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mk.framework.Constant;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
@@ -109,7 +110,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
             //town code
             String townCode = addressInfoRemoteService.findTownCodeByLocation(
                     String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
@@ -324,7 +325,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
 
             //
             com.mk.hotel.hotelinfo.redisbean.Hotel hotelInRedis = new com.mk.hotel.hotelinfo.redisbean.Hotel();
