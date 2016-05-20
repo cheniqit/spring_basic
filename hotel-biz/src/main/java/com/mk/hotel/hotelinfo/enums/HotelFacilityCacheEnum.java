@@ -26,15 +26,15 @@ public enum HotelFacilityCacheEnum {
         return String.valueOf(id) + " " + name;
     }
 
-    public static String getFacilityKeyName(String roomTypeId) {
-        if (StringUtils.isBlank(roomTypeId)) {
+    public static String getFacilityKeyName(String hotelId) {
+        if (StringUtils.isBlank(hotelId)) {
             return "";
         }
 
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelFacilityCacheEnum.FACILITY_KEY.getName())
-                .append(roomTypeId);
+                .append(hotelId);
 
         return result.toString();
     }
