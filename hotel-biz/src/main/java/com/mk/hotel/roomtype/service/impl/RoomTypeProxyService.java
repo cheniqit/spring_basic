@@ -128,7 +128,7 @@ public class RoomTypeProxyService {
                 try {
                     example.createCriteria()
                             .andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE))
-                            .andRoomTypeIdEqualTo(Long.valueOf(roomPriceType.getRoomtypeid()+""));
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomTypeDto.getId()+""));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -205,7 +205,7 @@ public class RoomTypeProxyService {
                 RoomTypeStockExample example = new RoomTypeStockExample();
                 try {
                     example.createCriteria()
-                            .andRoomTypeIdEqualTo(Long.valueOf(roomtypestock.getRoomtypeid()))
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomTypeDto.getId()))
                             .andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
                 } catch (ParseException e) {
                     e.printStackTrace();
