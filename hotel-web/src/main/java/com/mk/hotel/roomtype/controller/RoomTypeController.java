@@ -110,8 +110,6 @@ public class RoomTypeController {
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
-        result.put("headers.token",headers.get("token"));
-        result.put("body", body);
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
