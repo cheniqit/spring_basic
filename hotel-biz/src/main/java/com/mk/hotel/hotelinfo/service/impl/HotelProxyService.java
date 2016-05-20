@@ -65,7 +65,7 @@ public class HotelProxyService {
             hotelQueryDetailRequest.setHotelid(String.valueOf(hotelInfo.getId()));
             HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryHotelDetail(hotelQueryDetailRequest);
             if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
-                logger.info(String.format("page no %s hotel info is empty"));
+                logger.info(String.format("hotelQueryDetailResponse info is empty"));
                 return;
             }
             //根据调用结果更新hotel表
