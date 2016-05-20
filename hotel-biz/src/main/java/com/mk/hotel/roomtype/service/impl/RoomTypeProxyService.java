@@ -154,11 +154,11 @@ public class RoomTypeProxyService {
     private RoomTypePrice updateRoomTypePrice(RoomTypePrice roomTypePrice,HotelPriceResponse.Priceinfos priceinfo) {
         try {
             RoomTypePrice record = convertRoomTypePrice(roomTypePrice.getRoomTypeId(), priceinfo);
-            record.setId(roomTypePrice.getId());
             RoomTypePriceExample example = new RoomTypePriceExample();
             example.createCriteria().andRoomTypeIdEqualTo(roomTypePrice.getRoomTypeId()).
                     andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
             roomTypePriceMapper.updateByExampleSelective(record, example);
+            record.setId(roomTypePrice.getId());
             return record;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -225,10 +225,10 @@ public class RoomTypeProxyService {
     private RoomTypeStock updateRoomTypeStock(Long roomTypeId, QueryStockResponse.Stockinfos stockInfo) {
         try {
             RoomTypeStock record = convertRoomTypeStock(roomTypeId, stockInfo);
-            record.setId(roomTypeId);
             RoomTypeStockExample example = new RoomTypeStockExample();
             example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
             roomTypeStockMapper.updateByExampleSelective(record, example);
+            record.setId(roomTypeId);
             return record;
         } catch (ParseException e) {
             e.printStackTrace();
