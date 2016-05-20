@@ -179,6 +179,27 @@ public class HotelController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> hotelDeletePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.hotelDelete.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
+        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/hotel", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {

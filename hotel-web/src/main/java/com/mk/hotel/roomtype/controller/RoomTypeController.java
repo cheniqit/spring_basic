@@ -115,6 +115,27 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> roomTypeDeletePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.roomTypeDelete.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+
+        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/roomtypeprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> roomTypePricePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {

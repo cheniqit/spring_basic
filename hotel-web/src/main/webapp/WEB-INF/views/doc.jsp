@@ -1004,7 +1004,7 @@
     }
 </code></pre>
 
-<h3>酒店信息增量push</h3>
+<h3>酒店信息删除push</h3>
 
 <hr>
 
@@ -1019,7 +1019,7 @@
 <p><strong>接口url：</strong></p>
 
 <blockquote>
-    <p>http://ip:port/cube/hotel/hotel</p>
+    <p>http://ip:port/cube/hotel/delete</p>
 </blockquote>
 
 <p><strong>head请求参数：</strong></p>
@@ -1056,90 +1056,6 @@
     <td>是</td>
     <td></td>
 </tr>
-<tr>
-    <td>hotelname</td>
-    <td>酒店名称</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>detailaddr</td>
-    <td>酒店详情</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>hoteltype</td>
-    <td>酒店类型</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>longitude</td>
-    <td>经度</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>latitude</td>
-    <td>维度</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>retentiontime</td>
-    <td>保留时间</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>defaultleavetime</td>
-    <td>默认预离时间</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>provcode</td>
-    <td>省</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>citycode</td>
-    <td>市</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>discode</td>
-    <td>县区</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>provincename</td>
-    <td>省</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>cityname</td>
-    <td>市</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>districtname</td>
-    <td>县区</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
-    <td>hotelpic</td>
-    <td>酒店图片</td>
-    <td>是</td>
-    <td></td>
-</tr>
 </tbody></table>
 
 <blockquote>
@@ -1148,28 +1064,7 @@
 
 <pre><code class="js">{
     &quot;data&quot;: {
-    &quot;hotel&quot;: {
-    &quot;citycode&quot;: 310000,
-    &quot;cityname&quot;: &quot;S 上海市&quot;,
-    &quot;defaultleavetime&quot;: &quot;120000&quot;,
-    &quot;detailaddr&quot;: &quot;灵石路679-3号&quot;,
-    &quot;discode&quot;: 310108,
-    &quot;districtname&quot;: &quot;Z 闸北区&quot;,
-    &quot;hotelname&quot;: &quot;上轩商务酒店&quot;,
-    &quot;hotelphone&quot;: &quot;13810711699&quot;,
-    &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2&quot;,
-    &quot;hotelpics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\&quot;}]},{\&quot;name\&quot;:\&quot;lobby\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;mainHousing\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\&quot;}]}]&quot;,
-    &quot;hoteltype&quot;: 3,
-    &quot;id&quot;: 2813,
-    &quot;introduction&quot;: &quot;测试酒店&quot;,
-    &quot;latitude&quot;: 29.58339,
-    &quot;longitude&quot;: 106.497452,
-    &quot;opentime&quot;: &quot;2014-02-01&quot;,
-    &quot;provcode&quot;: 310000,
-    &quot;provincename&quot;: &quot;S 上海市&quot;,
-    &quot;repairtime&quot;: &quot;2014-02-01&quot;,
-    &quot;retentiontime&quot;: &quot;180000&quot;
-    }
+    &quot;hotelid&quot;: 2813
     }
     }
 </code></pre>
@@ -1412,12 +1307,6 @@
     <td></td>
 </tr>
 <tr>
-    <td>hotelid</td>
-    <td>酒店id</td>
-    <td>是</td>
-    <td></td>
-</tr>
-<tr>
     <td>name</td>
     <td>房型名称</td>
     <td>是</td>
@@ -1502,6 +1391,104 @@
     &quot;status&quot;:0,
     &quot;refund&quot;:0,
     &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
+    }
+    }
+</code></pre>
+
+<blockquote>
+    <p>API返回json数据示例：</p>
+</blockquote>
+
+<ul>
+    <li>success为T时</li>
+    <li>http状态200</li>
+</ul>
+
+<pre><code class="js">{
+    &quot;success&quot;:&quot;T&quot;
+    }
+</code></pre>
+
+<ul>
+    <li>success为F时</li>
+    <li>http状态400</li>
+</ul>
+
+<pre><code>{
+    &quot;success&quot;:&quot;F&quot;,
+    &quot;errorCode&quot;:,//错误码
+    &quot;errorMessage&quot;:
+    }
+</code></pre>
+
+<h3>房型信息删除push</h3>
+
+<hr>
+
+<p><strong>业务说明：</strong></p>
+
+<p><strong>请求方式：</strong></p>
+
+<blockquote>
+    <p>POST</p>
+</blockquote>
+
+<p><strong>接口url：</strong></p>
+
+<blockquote>
+    <p>http://ip:port/cube/roomtype/delete</p>
+</blockquote>
+
+<p><strong>head请求参数：</strong></p>
+
+<table><thead>
+<tr>
+    <th>字段</th>
+    <th>名称</th>
+    <th>是否必须</th>
+    <th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+    <td>﻿token</td>
+    <td>token</td>
+    <td>是</td>
+    <td></td>
+</tr>
+</tbody></table>
+
+<p><strong>body请求参数(json格式 以raw方式请求)：</strong></p>
+
+<table><thead>
+<tr>
+    <th>字段</th>
+    <th>名称</th>
+    <th>是否必须</th>
+    <th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+    <td>id</td>
+    <td>房型id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>hotelid</td>
+    <td>酒店id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+</tbody></table>
+
+<blockquote>
+    <p>API提交json数据示例：</p>
+</blockquote>
+
+<pre><code class="js">{
+    data:{
+    &quot;id&quot;: 29995,
+    &quot;hotelid&quot;: 243
     }
     }
 </code></pre>
