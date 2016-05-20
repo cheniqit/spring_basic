@@ -287,7 +287,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             //bedtype
             BedType bedType = new BedType();
             bedType.setType(roomType.getBedType());
-            bedType.setName(BedTypeEnum.getById(roomType.getBedType()).getName());
+            if (null != roomType.getBedType()) {
+                BedTypeEnum bedTypeEnum = BedTypeEnum.getById(roomType.getBedType());
+                bedType.setName(bedTypeEnum.getName());
+            }
             bedType.setLength(roomType.getBedSize());
 
             //roomtype pic
