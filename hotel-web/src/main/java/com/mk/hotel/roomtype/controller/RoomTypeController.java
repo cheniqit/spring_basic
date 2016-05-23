@@ -140,7 +140,24 @@ public class RoomTypeController {
             e.printStackTrace();
             Cat.logError(e);
         }
+        /*
+        { 
+            "hotelid":9999,
+            "roomtypeid":"444,5555,333"
+        }
 
+         */
+        try {
+            //
+            String roomTypeId = JSONObject.parseObject(body).get("roomtypeid").toString();
+            String[] ids = roomTypeId.split(",");
+
+            for (String strId : ids) {
+                Long.parseLong(strId);
+            }
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -167,12 +184,8 @@ public class RoomTypeController {
         //json
         RoomTypePriceJson roomTypePriceJson = null;
         try {
-            //
-            JSONObject bodyJson = JSON.parseObject(body);
-            String data = bodyJson.getString("data");
-
             //json
-            roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
+            roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }
