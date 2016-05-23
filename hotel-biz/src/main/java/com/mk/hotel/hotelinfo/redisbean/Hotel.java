@@ -15,8 +15,7 @@ public class Hotel {
 
     private String hotelName;
 
-//    //? 空
-//    private String regTime;
+    private String regTime;
 
     private String detailAddr;
 
@@ -119,6 +118,14 @@ public class Hotel {
 
     public void setHotelName(String hotelName) {
         this.hotelName = hotelName;
+    }
+
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime;
     }
 
     public String getDetailAddr() {

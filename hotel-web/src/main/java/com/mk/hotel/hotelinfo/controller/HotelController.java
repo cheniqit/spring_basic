@@ -99,6 +99,7 @@ public class HotelController {
             hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
             hotelDto.setRetentionTime(hotelJson.getRetentiontime());
             hotelDto.setRepairTime(hotelJson.getRepairtime());
+            hotelDto.setRegTime(hotelJson.getRegtime());
             hotelDto.setIntroduction(hotelJson.getIntroduction());
             hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
             hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
