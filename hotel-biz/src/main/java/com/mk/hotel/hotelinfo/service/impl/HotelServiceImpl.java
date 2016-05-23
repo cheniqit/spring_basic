@@ -2,8 +2,6 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mk.framework.Constant;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
@@ -59,6 +57,7 @@ public class HotelServiceImpl implements HotelService {
     private HotelProxyService hotelProxyService;
     @Autowired
     private AddressInfoRemoteService addressInfoRemoteService;
+
 
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -378,6 +377,14 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
+    public HotelLandMark getHotelLandMark(Double lon, Double lat, Integer rang){
+        if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
+            LandMarkExample example = new LandMarkExample();
+            List<LandMark> landMarks = landMarkMapper.selectByExample(example);
+            this.setAllLandMarkList(landMarks);
+        }
+        return getHotelLandMark(lon, lat, rang, this.getAllLandMarkList());
+    }
     /**
      *
      * @param lat 目标纬度
