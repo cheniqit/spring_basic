@@ -1307,6 +1307,12 @@
     <td></td>
 </tr>
 <tr>
+    <td>hotelid</td>
+    <td>酒店id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
     <td>name</td>
     <td>房型名称</td>
     <td>是</td>
@@ -1378,21 +1384,37 @@
     <p>API提交json数据示例：</p>
 </blockquote>
 
-<pre><code class="js">{
-    data:{
+<pre><code class="js">[
+    {
     &quot;area&quot;: &quot;20.00&quot;,
     &quot;bedsize&quot;: &quot;2.20&quot;,
     &quot;bedtype&quot;: &quot;1&quot;,
     &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 29995,
+    &quot;id&quot;: 29967,
+    &quot;hotelid&quot;:2807,
     &quot;name&quot;: &quot;大床房&quot;,
     &quot;prepay&quot;: &quot;1&quot;,
     &quot;roomnum&quot;: 20,
     &quot;status&quot;:0,
     &quot;refund&quot;:0,
+    &quot;maxroomnum&quot;:8,
+    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
+    },{
+    &quot;area&quot;: &quot;20.00&quot;,
+    &quot;bedsize&quot;: &quot;2.20&quot;,
+    &quot;bedtype&quot;: &quot;1&quot;,
+    &quot;breakfast&quot;: &quot;0&quot;,
+    &quot;id&quot;: 29967,
+    &quot;hotelid&quot;:2807,
+    &quot;name&quot;: &quot;大床房&quot;,
+    &quot;prepay&quot;: &quot;1&quot;,
+    &quot;roomnum&quot;: 20,
+    &quot;status&quot;:0,
+    &quot;refund&quot;:0,
+    &quot;maxroomnum&quot;:8,
     &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
     }
-    }
+    ]
 </code></pre>
 
 <blockquote>

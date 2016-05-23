@@ -1,6 +1,7 @@
 package com.mk.hotel.roomtype.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
@@ -60,53 +61,64 @@ public class RoomTypeController {
         }
 
         //
-        RoomTypeJson roomTypeJson = null;
+        List<RoomTypeJson> roomTypeJsonList = new ArrayList<RoomTypeJson>();
         try {
             //
-            JSONObject bodyJson = JSON.parseObject(body);
-            String data = bodyJson.getString("data");
+            JSONArray bodyJson = JSON.parseArray(body);
+            int bodySize = bodyJson.size();
 
-            //
-            roomTypeJson = JSONUtil.fromJson(data, RoomTypeJson.class);
+            for (int i = 0; i < bodySize; i++) {
+                String strRoomTypeJson = bodyJson.get(i).toString();
+                //
+                RoomTypeJson roomTypeJson = JSONUtil.fromJson(strRoomTypeJson, RoomTypeJson.class);
+                roomTypeJsonList.add(roomTypeJson);
+            }
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }
 
-        RoomTypeDto roomTypeDto = new RoomTypeDto();
+        //
+        for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
 
-        roomTypeDto.setFangHotelId(roomTypeJson.getHotelid());
-        roomTypeDto.setFangId(roomTypeJson.getId());
-        roomTypeDto.setName(roomTypeJson.getName());
+            RoomTypeDto roomTypeDto = new RoomTypeDto();
 
-        Integer intArea = null;
-        try {
-            intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        }
+            roomTypeDto.setFangHotelId(roomTypeJson.getHotelid());
+            roomTypeDto.setFangId(roomTypeJson.getId());
+            roomTypeDto.setName(roomTypeJson.getName());
 
-        roomTypeDto.setArea(intArea);
-
-        String strBedType = roomTypeJson.getBedtype();
-        if (StringUtils.isNotBlank(strBedType)) {
+            Integer intArea = null;
             try {
-                Integer bedType = Integer.valueOf(strBedType);
-                roomTypeDto.setBedType(bedType);
+                intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
             } catch (NumberFormatException e) {
-
+                e.printStackTrace();
+                Cat.logError(e);
+                throw new MyException("-99", "-99", "area格式错误");
             }
+
+            roomTypeDto.setArea(intArea);
+
+            String strBedType = roomTypeJson.getBedtype();
+            if (StringUtils.isNotBlank(strBedType)) {
+                try {
+                    Integer bedType = Integer.valueOf(strBedType);
+                    roomTypeDto.setBedType(bedType);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    Cat.logError(e);
+                    throw new MyException("-99", "-99", "BedType格式错误");
+                }
+            }
+
+            roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
+            roomTypeDto.setPrepay(roomTypeJson.getPrepay());
+            roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
+            roomTypeDto.setStatus(roomTypeJson.getStatus());
+            roomTypeDto.setRefund(roomTypeJson.getRefund());
+            roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
+            roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
+
+            this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
         }
-
-        roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
-        roomTypeDto.setPrepay(roomTypeJson.getPrepay());
-        roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
-        roomTypeDto.setStatus(roomTypeJson.getStatus());
-        roomTypeDto.setRefund(roomTypeJson.getRefund());
-        roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
-        roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
-
-        this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -128,7 +140,24 @@ public class RoomTypeController {
             e.printStackTrace();
             Cat.logError(e);
         }
+        /*
+        { 
+            "hotelid":9999,
+            "roomtypeid":"444,5555,333"
+        }
 
+         */
+        try {
+            //
+            String roomTypeId = JSONObject.parseObject(body).get("roomtypeid").toString();
+            String[] ids = roomTypeId.split(",");
+
+            for (String strId : ids) {
+                Long.parseLong(strId);
+            }
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -155,12 +184,8 @@ public class RoomTypeController {
         //json
         RoomTypePriceJson roomTypePriceJson = null;
         try {
-            //
-            JSONObject bodyJson = JSON.parseObject(body);
-            String data = bodyJson.getString("data");
-
             //json
-            roomTypePriceJson = JSONUtil.fromJson(data, RoomTypePriceJson.class);
+            roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }

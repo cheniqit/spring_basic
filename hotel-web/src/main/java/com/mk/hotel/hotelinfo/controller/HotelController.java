@@ -1,6 +1,7 @@
 package com.mk.hotel.hotelinfo.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
@@ -68,111 +69,121 @@ public class HotelController {
         }
 
 
-        HotelAllJson hotelJson = null;
+        List<HotelAllJson> hotelJsonList = new ArrayList<HotelAllJson>();
         try {
             //
-            JSONObject bodyJson = JSON.parseObject(body);
-            String data = bodyJson.getJSONObject("data").getString("hotel");
+            JSONArray hotelAllArray = JSON.parseArray(body);
+            int arraySize = hotelAllArray.size();
 
-            //
-            hotelJson = JSONUtil.fromJson(data, HotelAllJson.class);
+            for (int i = 0; i < arraySize; i++) {
+                String strHotelALLJson = hotelAllArray.get(i).toString();
+
+                //
+                HotelAllJson hotelJson = JSONUtil.fromJson(strHotelALLJson, HotelAllJson.class);
+                hotelJsonList.add(hotelJson);
+            }
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }
 
-        //
-        HotelDto hotelDto = new HotelDto();
-        hotelDto.setFangId(hotelJson.getId());
-        hotelDto.setName(hotelJson.getHotelname());
-        hotelDto.setAddr(hotelJson.getDetailaddr());
-        hotelDto.setPhone(hotelJson.getHotelphone());
-        hotelDto.setLat(hotelJson.getLatitude());
-        hotelDto.setLon(hotelJson.getLongitude());
-        hotelDto.setDefaultLeaveTime(hotelJson.getDefaultleavetime());
-        hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
-        hotelDto.setRetentionTime(hotelJson.getRetentiontime());
-        hotelDto.setRepairTime(hotelJson.getRepairtime());
-        hotelDto.setIntroduction(hotelJson.getIntroduction());
-        hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
-        hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
-        hotelDto.setDisCode(String.valueOf(hotelJson.getDiscode()));
-        hotelDto.setIsValid("T");
-        hotelDto.setOpenTime(hotelJson.getOpentime());
-        hotelDto.setPic(hotelJson.getHotelpic());
-        hotelDto.setPics(hotelJson.getHotelpics());
+        for (HotelAllJson hotelJson : hotelJsonList) {
+            //
+            HotelDto hotelDto = new HotelDto();
+            hotelDto.setFangId(hotelJson.getId());
+            hotelDto.setName(hotelJson.getHotelname());
+            hotelDto.setAddr(hotelJson.getDetailaddr());
+            hotelDto.setPhone(hotelJson.getHotelphone());
+            hotelDto.setLat(hotelJson.getLatitude());
+            hotelDto.setLon(hotelJson.getLongitude());
+            hotelDto.setDefaultLeaveTime(hotelJson.getDefaultleavetime());
+            hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
+            hotelDto.setRetentionTime(hotelJson.getRetentiontime());
+            hotelDto.setRepairTime(hotelJson.getRepairtime());
+            hotelDto.setIntroduction(hotelJson.getIntroduction());
+            hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
+            hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
+            hotelDto.setDisCode(String.valueOf(hotelJson.getDiscode()));
+            hotelDto.setIsValid("T");
+            hotelDto.setOpenTime(hotelJson.getOpentime());
+            hotelDto.setPic(hotelJson.getHotelpic());
+            hotelDto.setPics(hotelJson.getHotelpics());
 
-        //
-        List<RoomTypeJson> roomTypeJsonList = hotelJson.getRoomtypes();
-        if (null != roomTypeJsonList) {
+            //
+            List<RoomTypeJson> roomTypeJsonList = hotelJson.getRoomtypes();
+            if (null != roomTypeJsonList) {
 
-            List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
-            for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
-                //
-                Integer intArea = null;
-                try {
-                    intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                    Cat.logError(e);
-                }
+                List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
+                for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
+                    //
+                    Integer intArea = null;
+                    try {
+                        intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        throw new MyException("-99", "-99", "area格式错误");
+                    }
 
-                //
-                Integer intPrePay = null;
-                try {
-                    intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
-                } catch (NumberFormatException e){
-                    e.printStackTrace();
-                    Cat.logError(e);
-                }
+                    //
+                    Integer intPrePay = null;
+                    try {
+                        intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
+                    } catch (NumberFormatException e){
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        throw new MyException("-99", "-99", "prepay格式错误");
+                    }
 
-                //
-                Integer intBreakfast = null;
-                try {
-                    intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
-                } catch (NumberFormatException e){
-                    e.printStackTrace();
-                    Cat.logError(e);
-                }
+                    //
+                    Integer intBreakfast = null;
+                    try {
+                        intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
+                    } catch (NumberFormatException e){
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        throw new MyException("-99", "-99", "breakfast格式错误");
+                    }
 
-                //
-                String isValid = null;
-                Integer status = roomTypeJson.getStatus();
+                    //
+                    String isValid = null;
+                    Integer status = roomTypeJson.getStatus();
 
-                if (null == status) {
-                    isValid = "T";
-                } else {
-                    if (0 == roomTypeJson.getStatus()) {
+                    if (null == status) {
                         isValid = "T";
                     } else {
-                        isValid = "F";
+                        if (0 == roomTypeJson.getStatus()) {
+                            isValid = "T";
+                        } else {
+                            isValid = "F";
+                        }
                     }
+
+                    //
+                    RoomTypeDto roomTypeDto = new RoomTypeDto();
+                    roomTypeDto.setFangHotelId(hotelJson.getId());
+                    roomTypeDto.setFangId(roomTypeJson.getId());
+                    roomTypeDto.setName(roomTypeJson.getName());
+                    roomTypeDto.setArea(intArea);
+                    roomTypeDto.setBedType(roomTypeJson.getBedtype());
+                    roomTypeDto.setBedSize(roomTypeJson.getBedsize());
+                    roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
+                    roomTypeDto.setPrepay(intPrePay);
+                    roomTypeDto.setBreakfast(intBreakfast);
+                    roomTypeDto.setStatus(roomTypeJson.getStatus());
+                    roomTypeDto.setRefund(roomTypeJson.getRefund());
+                    roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
+                    roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
+
+                    roomTypeDto.setIsValid(isValid);
+
+                    roomTypeDtoList.add(roomTypeDto);
                 }
 
-                //
-                RoomTypeDto roomTypeDto = new RoomTypeDto();
-                roomTypeDto.setFangHotelId(hotelJson.getId());
-                roomTypeDto.setFangId(roomTypeJson.getId());
-                roomTypeDto.setName(roomTypeJson.getName());
-                roomTypeDto.setArea(intArea);
-                roomTypeDto.setBedType(roomTypeJson.getBedtype());
-                roomTypeDto.setBedSize(roomTypeJson.getBedsize());
-                roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
-                roomTypeDto.setPrepay(intPrePay);
-                roomTypeDto.setBreakfast(intBreakfast);
-                roomTypeDto.setStatus(roomTypeJson.getStatus());
-                roomTypeDto.setRefund(roomTypeJson.getRefund());
-                roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
-                roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
-
-                roomTypeDto.setIsValid(isValid);
-
-                roomTypeDtoList.add(roomTypeDto);
+                hotelDto.setRoomTypeDtoList(roomTypeDtoList);
             }
 
-            hotelDto.setRoomTypeDtoList(roomTypeDtoList);
+            this.hotelService.saveOrUpdateByFangId(hotelDto);
         }
-
-        this.hotelService.saveOrUpdateByFangId(hotelDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -193,6 +204,24 @@ public class HotelController {
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+        }
+
+        /*
+        {
+            "hotelid": "2811, 2311,22333"
+        }
+         */
+        try {
+            //
+            String hotelIds = JSONObject.parseObject(body).get("hotelid").toString();
+            String[] ids = hotelIds.split(",");
+
+            for (String strId : ids) {
+                Long.parseLong(strId);
+            }
+
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
@@ -265,15 +294,11 @@ public class HotelController {
             Cat.logError(e);
         }
 
-
+        //
         HotelFacilityJson facilityJson = null;
         try {
             //
-            JSONObject bodyJson = JSON.parseObject(body);
-            String data = bodyJson.getString("data");
-
-            //
-            facilityJson = JSONUtil.fromJson(data, HotelFacilityJson.class);
+            facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }
