@@ -1,11 +1,13 @@
 package com.mk.hotel.hotelinfo.model;
 
+import com.mk.hotel.common.bean.PageBean;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HotelExample {
+public class HotelExample extends PageBean{
     protected String orderByClause;
 
     protected boolean distinct;
