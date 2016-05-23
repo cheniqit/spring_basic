@@ -702,6 +702,66 @@ public class RoomTypePriceExample {
             addCriterion("is_valid not between", value1, value2, "isValid");
             return (Criteria) this;
         }
+
+        public Criteria andCostIsNull() {
+            addCriterion("cost is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostIsNotNull() {
+            addCriterion("cost is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostEqualTo(BigDecimal value) {
+            addCriterion("cost =", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostNotEqualTo(BigDecimal value) {
+            addCriterion("cost <>", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostGreaterThan(BigDecimal value) {
+            addCriterion("cost >", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("cost >=", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostLessThan(BigDecimal value) {
+            addCriterion("cost <", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("cost <=", value, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostIn(List<BigDecimal> values) {
+            addCriterion("cost in", values, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostNotIn(List<BigDecimal> values) {
+            addCriterion("cost not in", values, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("cost between", value1, value2, "cost");
+            return (Criteria) this;
+        }
+
+        public Criteria andCostNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("cost not between", value1, value2, "cost");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -18,6 +18,8 @@ public class RoomTypePriceDto {
 
     private BigDecimal price;
 
+    private BigDecimal cost;
+
     private Date createDate;
 
     private String createBy;
@@ -58,6 +60,14 @@ public class RoomTypePriceDto {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
     public Date getCreateDate() {

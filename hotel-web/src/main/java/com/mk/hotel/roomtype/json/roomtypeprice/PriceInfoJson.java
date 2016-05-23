@@ -7,6 +7,7 @@ public class PriceInfoJson {
 
     private String date;
     private String cost;
+    private String price;
 
     public String getDate() {
         return date;
@@ -22,5 +23,13 @@ public class PriceInfoJson {
 
     public void setCost(String cost) {
         this.cost = cost;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }

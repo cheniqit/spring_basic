@@ -1,13 +1,11 @@
 package com.mk.hotel.hotelinfo.model;
 
-import com.mk.hotel.common.bean.PageBean;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HotelExample extends PageBean {
+public class HotelExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -1935,6 +1933,76 @@ public class HotelExample extends PageBean {
 
         public Criteria andOpenTimeNotBetween(String value1, String value2) {
             addCriterion("open_time not between", value1, value2, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeIsNull() {
+            addCriterion("reg_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeIsNotNull() {
+            addCriterion("reg_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeEqualTo(String value) {
+            addCriterion("reg_time =", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeNotEqualTo(String value) {
+            addCriterion("reg_time <>", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeGreaterThan(String value) {
+            addCriterion("reg_time >", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeGreaterThanOrEqualTo(String value) {
+            addCriterion("reg_time >=", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeLessThan(String value) {
+            addCriterion("reg_time <", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeLessThanOrEqualTo(String value) {
+            addCriterion("reg_time <=", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeLike(String value) {
+            addCriterion("reg_time like", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeNotLike(String value) {
+            addCriterion("reg_time not like", value, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeIn(List<String> values) {
+            addCriterion("reg_time in", values, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeNotIn(List<String> values) {
+            addCriterion("reg_time not in", values, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeBetween(String value1, String value2) {
+            addCriterion("reg_time between", value1, value2, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegTimeNotBetween(String value1, String value2) {
+            addCriterion("reg_time not between", value1, value2, "regTime");
             return (Criteria) this;
         }
     }

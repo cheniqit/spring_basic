@@ -65,7 +65,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         //redis
         this.updateRedisPrice(
                 roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(),
+                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(), roomTypePriceDto.getCost(),
                 "RoomTypePriceService.saveOrUpdateByFangId");
 
         //db
@@ -86,6 +86,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         } else {
             RoomTypePrice dbRoomTypePrice = roomTypePriceList.get(0);
             dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            dbRoomTypePrice.setCost(roomTypePriceDto.getCost());
 
             dbRoomTypePrice.setUpdateDate(new Date());
             dbRoomTypePrice.setUpdateBy("hotel_system");
@@ -93,7 +94,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
-    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, String cacheFrom) {
+    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, String cacheFrom) {
         if (null == roomTypeId || null == day || null == price) {
             return;
         }
@@ -116,7 +117,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             roomTypePrice.setRoomTypeId(roomTypeId);
             roomTypePrice.setRoomTypeName(roomTypeName);
             roomTypePrice.setPrice(price);
-            roomTypePrice.setOriginPrice(price);
+            roomTypePrice.setOriginPrice(cost);
             roomTypePrice.setCacheTime(strDateTime);
             roomTypePrice.setCacheFrom(cacheFrom);
 
