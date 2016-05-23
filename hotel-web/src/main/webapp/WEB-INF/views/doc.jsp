@@ -1306,20 +1306,79 @@
     <td>是</td>
     <td></td>
 </tr>
+<tr>
+    <td>hotelid</td>
+    <td>酒店id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>name</td>
+    <td>房型名称</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>area</td>
+    <td>房型面积</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>bedtype</td>
+    <td>床型</td>
+    <td>是</td>
+    <td>1、大床 2、双床 3、三床 4、单人床 5、一单一双 6、上下铺 7、通铺 8、榻榻米 9、水床 10、圆床 11、拼床 12、其他</td>
+</tr>
+<tr>
+    <td>bedsize</td>
+    <td>床尺寸</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>prepay</td>
+    <td>支付类型</td>
+    <td>是</td>
+    <td>0、预付</td>
+</tr>
+<tr>
+    <td>breakfast</td>
+    <td>是否含早餐</td>
+    <td>是</td>
+    <td>0、无早；1、含早</td>
+</tr>
+<tr>
+    <td>status</td>
+    <td>是否可定（关房）</td>
+    <td>是</td>
+    <td>0、可定；1、不可订</td>
+</tr>
+<tr>
+    <td>refund</td>
+    <td>是否可退款</td>
+    <td>是</td>
+    <td>0、不可退</td>
+</tr>
+<tr>
+    <td>maxroomnum</td>
+    <td>单个订单最大房量</td>
+    <td>是</td>
+    <td>默认为8 可设置值为[1,8]；</td>
+</tr>
+<tr>
+    <td>roomnum</td>
+    <td>房间数</td>
+    <td>是</td>
+    <td>最大预定数，不是可用的</td>
+</tr>
+<tr>
+    <td>roomtypepics</td>
+    <td>图片</td>
+    <td>是</td>
+    <td>json</td>
+</tr>
 </tbody></table>
-
-<p>hotelid
-    |name|房型名称|是|
-    |area|房型面积|是|
-    |bedtype|床型|是|1、大床 2、双床 3、三床 4、单人床 5、一单一双 6、上下铺 7、通铺 8、榻榻米 9、水床 10、圆床 11、拼床 12、其他
-    |bedsize|床尺寸|是|
-    |prepay|支付类型|是|0、预付
-    |breakfast|是否含早餐|是|0、无早；1、含早
-    |status|是否可定（关房）|是|0、可定；1、不可订
-    |refund|是否可退款|是|0、不可退
-    |maxroomnum|单个订单最大房量|是|默认为8 可设置值为[1,8]；
-    |roomnum|房间数|是|最大预定数，不是可用的
-    |roomtypepics|图片|是|json</p>
 
 <blockquote>
     <p>API提交json数据示例：</p>
