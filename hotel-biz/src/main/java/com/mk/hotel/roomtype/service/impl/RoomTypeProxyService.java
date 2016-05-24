@@ -143,7 +143,7 @@ public class RoomTypeProxyService {
 
                 roomTypePriceService.updateRedisPrice(
                         roomTypeDto.getId(), roomTypeDto.getName(),
-                        roomTypePrice.getDay(), roomTypePrice.getPrice(),
+                        roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(),
                         "RoomTypeProxyService.saveRoomTypePrice");
 
             }
@@ -181,7 +181,8 @@ public class RoomTypeProxyService {
         RoomTypePrice roomTypePrice = new RoomTypePrice();
         roomTypePrice.setRoomTypeId(roomTypeId);
         roomTypePrice.setDay(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
-        roomTypePrice.setPrice(new BigDecimal(priceinfo.getCost()));
+        roomTypePrice.setPrice(new BigDecimal(priceinfo.getPrice()));
+        roomTypePrice.setCost(new BigDecimal(priceinfo.getCost()));
 
         roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
         roomTypePrice.setUpdateDate(new Date());

@@ -58,6 +58,7 @@ public class HotelPriceResponse extends FbbCommonResponse{
     public class Priceinfos {
 
         private String cost;
+        private String price;
         private String date;
 
 
@@ -68,6 +69,13 @@ public class HotelPriceResponse extends FbbCommonResponse{
             return cost;
         }
 
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
+        }
 
         public void setDate(String date) {
             this.date = date;

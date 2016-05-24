@@ -24,6 +24,7 @@ public class HotelAllJson {
     private String retentiontime;
     private String hoteltype;
     private String opentime;
+    private String regtime;
     private String hotelphone;
     private List<RoomTypeJson> roomtypes;
 
@@ -161,6 +162,14 @@ public class HotelAllJson {
 
     public void setOpentime(String opentime) {
         this.opentime = opentime;
+    }
+
+    public String getRegtime() {
+        return regtime;
+    }
+
+    public void setRegtime(String regtime) {
+        this.regtime = regtime;
     }
 
     public String getHotelphone() {

@@ -22,6 +22,8 @@ public class RoomTypePrice {
 
     private String isValid;
 
+    private BigDecimal cost;
+
     public Long getId() {
         return id;
     }
@@ -92,5 +94,13 @@ public class RoomTypePrice {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 }

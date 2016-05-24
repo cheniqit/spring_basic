@@ -884,7 +884,6 @@
 </blockquote>
 
 <pre><code class="js">{
-    &quot;data&quot;: {
     &quot;hotel&quot;: {
     &quot;citycode&quot;: 310000,
     &quot;cityname&quot;: &quot;S 上海市&quot;,
@@ -975,7 +974,6 @@
     ]
     }
     }
-    }
 </code></pre>
 
 <blockquote>
@@ -1063,9 +1061,7 @@
 </blockquote>
 
 <pre><code class="js">{
-    &quot;data&quot;: {
-    &quot;hotelid&quot;: 2813
-    }
+    &quot;hotelid&quot;: &quot;2813,2811&quot;
     }
 </code></pre>
 
@@ -1194,7 +1190,6 @@
 </blockquote>
 
 <pre><code class="js">{
-    &quot;data&quot;: {
     &quot;hotelid&quot;: 2813,
     &quot;roomtypeTags&quot;: null,
     &quot;tags&quot;: [
@@ -1224,7 +1219,6 @@
     &quot;tagname&quot;: &quot;旅游景区&quot;
     }
     ]
-    }
     }
 </code></pre>
 
@@ -1507,11 +1501,9 @@
     <p>API提交json数据示例：</p>
 </blockquote>
 
-<pre><code class="js">{
-    data:{
-    &quot;id&quot;: 29995,
-    &quot;hotelid&quot;: 243
-    }
+<pre><code class="js">{ 
+    &quot;hotelid&quot;:9999,
+    &quot;roomtypeid&quot;:&quot;444,5555,333&quot;
     }
 </code></pre>
 
@@ -1650,20 +1642,24 @@
 </blockquote>
 
 <pre><code class="js">{
-    &quot;data&quot;: {
-    &quot;hotelid&quot;:2813,
+    &quot;hotelid&quot;: &quot;2013&quot;,
     &quot;roomtypeprices&quot;: [
     {
+    &quot;roomtypeid&quot;: 1312,
     &quot;priceinfos&quot;: [
     {
-    &quot;cost&quot;: &quot;10.00&quot;,
-    &quot;date&quot;: &quot;2016-05-11&quot;
-    }
-    ],
-    &quot;roomtypeid&quot;: 29995
+    &quot;date&quot;: &quot;2016-05-31&quot;,
+    &quot;cost&quot;: 10.00,
+    &quot;price&quot;: 10.00
+    },
+    {
+    &quot;date&quot;: &quot;2016-05-30&quot;,
+    &quot;cost&quot;: 10.00,
+    &quot;price&quot;: 10.00
     }
     ]
     }
+    ]
     }
 </code></pre>
 

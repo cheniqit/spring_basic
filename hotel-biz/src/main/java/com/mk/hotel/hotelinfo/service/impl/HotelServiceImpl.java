@@ -138,6 +138,7 @@ public class HotelServiceImpl implements HotelService {
             hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
             hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
             hotel.setOpenTime(hotelDto.getOpenTime());
+            hotel.setRegTime(hotelDto.getRegTime());
             hotel.setPic(hotelDto.getPics());
 
             hotel.setUpdateDate(new Date());
@@ -350,6 +351,7 @@ public class HotelServiceImpl implements HotelService {
             hotelInRedis.setLatitude(hotel.getLat());
             hotelInRedis.setOpenTime(hotel.getOpenTime());
             hotelInRedis.setRepairTime(hotel.getRepairTime());
+            hotelInRedis.setRegTime(hotel.getRegTime());
             hotelInRedis.setOnline(online);
             hotelInRedis.setRetentionTime(hotel.getRetentionTime());
             hotelInRedis.setDefaultLeaveTime(hotel.getDefaultLeaveTime());

@@ -218,9 +218,24 @@ public class RoomTypeController {
                     }
                 }
 
+                //cost
+                BigDecimal cost = null;
+                String strCost = priceInfoJson.getCost();
+                if (StringUtils.isBlank(strCost)) {
+                    continue;
+                } else {
+                    try {
+                        cost = new BigDecimal(strCost);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        Cat.logError(e);
+                        continue;
+                    }
+                }
+
                 //price
                 BigDecimal price = null;
-                String strPrice = priceInfoJson.getCost();
+                String strPrice = priceInfoJson.getPrice();
                 if (StringUtils.isBlank(strPrice)) {
                     continue;
                 } else {
@@ -237,6 +252,7 @@ public class RoomTypeController {
                 RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
                 roomTypePriceDto.setDay(day);
                 roomTypePriceDto.setPrice(price);
+                roomTypePriceDto.setCost(cost);
                 roomTypePriceDto.setFangHotelId(fangHotelId);
                 roomTypePriceDto.setFangRoomTypeId(fangRoomTypeId);
                 roomTypePriceDtoList.add(roomTypePriceDto);

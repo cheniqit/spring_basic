@@ -118,6 +118,7 @@ public class HotelProxyService {
         hotel.setHotelType(hotelInfo.getHoteltype()+"");
         hotel.setRepairTime(hotelInfo.getRepairtime());
         hotel.setRetentionTime(hotelInfo.getRetentiontime());
+        hotel.setRegTime(hotelInfo.getRegtime());
         hotel.setOpenTime(hotelInfo.getOpentime());
 
         hotel.setProvCode(hotelInfo.getProvcode()+"");
