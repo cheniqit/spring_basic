@@ -151,7 +151,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" >
+  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
     insert into hotel (id, fang_id, name, 
       addr, phone, lat, lon, 
       default_leave_time, hotel_type, retention_time, 
@@ -173,7 +173,7 @@
       #{collegesInfo,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, #{regTime,jdbcType=VARCHAR}, 
       #{pic,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
     insert into hotel
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
