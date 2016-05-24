@@ -8,6 +8,8 @@ public interface RoomTypeService {
 
     RoomTypeDto selectByFangId(Long fangId);
 
+    RoomTypeDto selectByName(Long hotelId, String name);
+
     int saveOrUpdateByFangId(RoomTypeDto roomTypeDto);
 
     void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList);

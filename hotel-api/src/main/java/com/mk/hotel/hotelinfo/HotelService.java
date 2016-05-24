@@ -11,6 +11,8 @@ public interface HotelService {
      */
     HotelDto findById(Long id);
 
+    HotelDto findByName(String hotelName);
+
     /**
      *
      * @param fangId

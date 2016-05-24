@@ -166,6 +166,19 @@ public class HotelServiceImpl implements HotelService {
         return dto;
     }
 
+    @Override
+    public HotelDto findByName(String name) {
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andNameEqualTo(name);
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return null;
+        }
+        HotelDto dto = new HotelDto();
+        BeanUtils.copyProperties(hotelList.get(0), dto);
+        return dto;
+    }
+
     public HotelDto findByFangId(Long fangId) {
 
         HotelExample hotelExample = new HotelExample();

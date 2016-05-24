@@ -329,5 +329,31 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/findRoomTypeByName", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findRoomTypeByName(Long hotelId, String name) {
+        try {
+            if(StringUtils.isBlank(name) || hotelId == null){
+                HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+                result.put("success", "F");
+                result.put("errmsg", "参数为空");
+                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            }
+            RoomTypeDto roomTypeDto = roomTypeService.selectByName(hotelId, name);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("roomType", roomTypeDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
 }
 
