@@ -119,7 +119,7 @@ public class HotelController {
                     Integer intArea = null;
                     try {
                         intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Cat.logError(e);
                         throw new MyException("-99", "-99", "area格式错误");
