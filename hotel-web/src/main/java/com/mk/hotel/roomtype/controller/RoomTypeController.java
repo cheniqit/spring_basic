@@ -332,15 +332,15 @@ public class RoomTypeController {
 
     @RequestMapping(value = "/findRoomTypeByName", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> findRoomTypeByName(String name) {
+    public ResponseEntity<HashMap<String, Object>> findRoomTypeByName(Long hotelId, String name) {
         try {
-            if(StringUtils.isBlank(name)){
+            if(StringUtils.isBlank(name) || hotelId == null){
                 HashMap<String,Object> result = new LinkedHashMap<String, Object>();
                 result.put("success", "F");
                 result.put("errmsg", "参数为空");
                 return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
             }
-            RoomTypeDto roomTypeDto = roomTypeService.selectByName(name);
+            RoomTypeDto roomTypeDto = roomTypeService.selectByName(hotelId, name);
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("roomType", roomTypeDto);

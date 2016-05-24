@@ -118,13 +118,16 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
 
     @Override
-    public RoomTypeDto selectByName(String name) {
+    public RoomTypeDto selectByName(Long hotelId ,String name) {
         if (StringUtils.isBlank(name)) {
-            throw new MyException("-99", "-99", "fangId 不可为空");
+            throw new MyException("-99", "-99", "name 不可为空");
+        }
+        if (hotelId == null) {
+            throw new MyException("-99", "-99", "hotelId 不可为空");
         }
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andNameEqualTo(name);
+        roomTypeExample.createCriteria().andNameEqualTo(name).andHotelIdEqualTo(hotelId);
 
         //
         List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
