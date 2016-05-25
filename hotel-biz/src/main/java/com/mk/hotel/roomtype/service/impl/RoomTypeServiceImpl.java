@@ -374,7 +374,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             jedis.sadd(roomTypeSetName, JsonUtils.toJson(roomTypeInRedis));
 
             //
-            OtsInterface.initHotel(roomType.getHotelId());
+//            OtsInterface.initHotel(roomType.getHotelId());
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

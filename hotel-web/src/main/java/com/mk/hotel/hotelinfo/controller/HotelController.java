@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -184,6 +185,9 @@ public class HotelController {
             }
 
             this.hotelService.saveOrUpdateByFangId(hotelDto);
+
+            //
+            OtsInterface.initHotel(hotelJson.getId());
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
@@ -224,55 +228,6 @@ public class HotelController {
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }
-
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/hotel", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> hotelPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
-
-        try {
-            //log
-            LogPushDto logPushDto = new LogPushDto();
-            logPushDto.setMsg(body);
-            logPushDto.setType(LogPushTypeEnum.hotel.getId());
-
-            this.logPushService.save(logPushDto);
-        }catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        }
-
-        //
-        JSONObject bodyJson = JSON.parseObject(body);
-        String data = bodyJson.getJSONObject("data").getString("hotel");
-
-        //
-        HotelJson hotelJson = JSONUtil.fromJson(data, HotelJson.class);
-
-        HotelDto hotelDto = new HotelDto();
-        hotelDto.setFangId(hotelJson.getId());
-        hotelDto.setName(hotelJson.getHotelname());
-        hotelDto.setAddr(hotelJson.getDetailaddr());
-        hotelDto.setPhone(hotelJson.getHotelphone());
-        hotelDto.setLat(hotelJson.getLatitude());
-        hotelDto.setLon(hotelJson.getLongitude());
-        hotelDto.setDefaultLeaveTime(hotelJson.getDefaultleavetime());
-        hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
-        hotelDto.setRetentionTime(hotelJson.getRetentiontime());
-        hotelDto.setRepairTime(hotelJson.getRepairtime());
-        hotelDto.setIntroduction(hotelJson.getIntroduction());
-        hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
-        hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
-        hotelDto.setDisCode(String.valueOf(hotelJson.getDiscode()));
-        hotelDto.setIsValid("T");
-        hotelDto.setOpenTime(hotelJson.getOpentime());
-        hotelDto.setPic(hotelJson.getHotelpic());
-
-        this.hotelService.saveOrUpdateByFangId(hotelDto);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -349,8 +304,14 @@ public class HotelController {
 
                     this.roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
                 }
-
             }
+        }
+
+        //
+        HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
+        if (null != dbHotel) {
+            //
+            OtsInterface.initHotel(dbHotel.getId());
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();

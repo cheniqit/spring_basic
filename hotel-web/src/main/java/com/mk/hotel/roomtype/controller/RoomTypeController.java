@@ -6,6 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.common.utils.OtsInterface;
+import com.mk.hotel.hotelinfo.HotelService;
+import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
@@ -36,6 +39,8 @@ import java.util.*;
 public class RoomTypeController {
 
     @Autowired
+    private HotelService hotelService;
+    @Autowired
     private RoomTypeService roomTypeService;
 
     @Autowired
@@ -60,6 +65,7 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
+        Long fangHotelId = null;
         //
         List<RoomTypeJson> roomTypeJsonList = new ArrayList<RoomTypeJson>();
         try {
@@ -72,6 +78,9 @@ public class RoomTypeController {
                 //
                 RoomTypeJson roomTypeJson = JSONUtil.fromJson(strRoomTypeJson, RoomTypeJson.class);
                 roomTypeJsonList.add(roomTypeJson);
+
+                //
+                fangHotelId = roomTypeJson.getHotelid();
             }
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
@@ -120,6 +129,13 @@ public class RoomTypeController {
             this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
         }
 
+
+        //
+        HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
+        if (null != dbHotel) {
+            //
+            OtsInterface.initHotel(dbHotel.getId());
+        }
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -261,6 +277,13 @@ public class RoomTypeController {
 
         this.roomTypePriceService.saveOrUpdateByFangId(roomTypePriceDtoList);
 
+        //
+        HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
+        if (null != dbHotel) {
+
+            //
+            OtsInterface.initHotel(dbHotel.getId());
+        }
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);

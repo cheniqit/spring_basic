@@ -126,12 +126,12 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
                 jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
 
-            //
-            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
-            if (null != hotelId) {
-                //
-                OtsInterface.initHotel(hotelId);
-            }
+//            //
+//            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
+//            if (null != hotelId) {
+//                //
+//                OtsInterface.initHotel(hotelId);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

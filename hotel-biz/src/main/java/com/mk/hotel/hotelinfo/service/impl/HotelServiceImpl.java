@@ -381,7 +381,7 @@ public class HotelServiceImpl implements HotelService {
             jedis.sadd(cityKeyName, JsonUtils.toJson(hotelInRedis));
 
             //
-            OtsInterface.initHotel(hotelId);
+//            OtsInterface.initHotel(hotelId);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

@@ -127,7 +127,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
             }
 
             //
-            OtsInterface.initHotel(hotelId);
+//            OtsInterface.initHotel(hotelId);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
