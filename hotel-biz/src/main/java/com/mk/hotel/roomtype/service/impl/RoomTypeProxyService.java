@@ -224,11 +224,20 @@ public class RoomTypeProxyService {
                     typeStock = updateRoomTypeStock(roomTypeDto.getId(), stockInfo);
                 }
 
-                //
+                //promoCount
+                Integer promoCount = 0;
                 PromoRoomType promoRoomType = queryPromoRoomType(String.valueOf(roomTypeDto.getId()));
+                if (null != promoRoomType) {
+                    promoCount = promoRoomType.getTotalCount();
+
+                    if (null == promoCount) {
+                        promoCount = 0;
+                    }
+                }
+
                 //
                 roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(),
-                        typeStock.getDay(), typeStock.getNumber().intValue(), promoRoomType.getTotalCount());
+                        typeStock.getDay(), typeStock.getNumber().intValue(), promoCount);
             }
         }
     }
@@ -294,7 +303,11 @@ public class RoomTypeProxyService {
             }
         }
 
-        return JsonUtils.fromJson(promoRoomTypeJson, PromoRoomType.class);
+        if (StringUtils.isBlank(promoRoomTypeJson)) {
+            return null;
+        } else {
+            return JsonUtils.fromJson(promoRoomTypeJson, PromoRoomType.class);
+        }
     }
 
     public class PromoRoomType {

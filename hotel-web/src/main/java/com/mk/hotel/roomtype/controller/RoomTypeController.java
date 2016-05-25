@@ -15,6 +15,7 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
+import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
@@ -38,6 +39,8 @@ import java.util.*;
 @RequestMapping(value = "/roomtype", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoomTypeController {
 
+    @Autowired
+    private RoomTypeStockService roomTypeStockService;
     @Autowired
     private HotelService hotelService;
     @Autowired
