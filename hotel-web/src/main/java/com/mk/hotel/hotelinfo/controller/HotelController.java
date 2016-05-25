@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -17,6 +19,9 @@ import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotel.HotelJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
 import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
+import com.mk.hotel.hotelinfo.mapper.HotelMapper;
+import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -30,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -53,6 +59,8 @@ public class HotelController {
 
     @Autowired
     private LogPushService logPushService;
+    @Autowired
+    private HotelMapper hotelMapper;
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
     @ResponseBody
@@ -387,20 +395,27 @@ public class HotelController {
 
     }
 
-    @RequestMapping(value = "/findHotelByName", method = RequestMethod.POST)
+    @RequestMapping(value = "/findHotelByPage", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> findHotelByName(String hotelName, String cityCode) {
+    public ResponseEntity<HashMap<String, Object>> findHotelByName(Integer pageNo, Integer pageSize) {
         try {
-            if(StringUtils.isBlank(hotelName) || StringUtils.isBlank(cityCode)){
-                HashMap<String,Object> result = new LinkedHashMap<String, Object>();
-                result.put("success", "F");
-                result.put("errmsg", "参数错误");
-                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            if(pageNo == null) {
+                pageNo = 1;
             }
-            List<HotelDto> hotelDtoList = hotelService.findHotelByName(hotelName, cityCode);
+            if(pageSize == null){
+                pageSize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
+            }
+            //酒店分页
+            HotelExample hotelExample = new HotelExample();
+            int count = hotelMapper.countByExample(hotelExample);
+            PageBean pageBean = new PageBean(pageNo, count, pageSize);
+            HotelExample example = new HotelExample();
+            example.setStart(pageBean.getStart());
+            example.setPageCount(pageBean.getPageCount());
+            List<Hotel> hotelList = hotelMapper.selectByExample(example);
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
-            result.put("data", hotelDtoList);
+            result.put("data", hotelList);
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();
