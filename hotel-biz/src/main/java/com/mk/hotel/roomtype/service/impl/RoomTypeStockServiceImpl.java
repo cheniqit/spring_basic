@@ -87,9 +87,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         String strDate = format.format(day);
 
         //
-        this.lock(hotelId, roomTypeId, day, 6, 10 * 1000);
-
-        //
         Jedis jedis = null;
         try {
             //
@@ -116,8 +113,5 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 jedis.close();
             }
         }
-
-        //
-        this.unlock(hotelId, roomTypeId, day);
     }
 }
