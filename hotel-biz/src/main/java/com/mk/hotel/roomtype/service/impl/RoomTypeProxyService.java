@@ -1,13 +1,17 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
@@ -20,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -218,7 +223,12 @@ public class RoomTypeProxyService {
                 }else{
                     typeStock = updateRoomTypeStock(roomTypeDto.getId(), stockInfo);
                 }
-                roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(), typeStock.getDay(), typeStock.getNumber().intValue());
+
+                //
+                PromoRoomType promoRoomType = queryPromoRoomType(String.valueOf(roomTypeDto.getId()));
+                //
+                roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(),
+                        typeStock.getDay(), typeStock.getNumber().intValue(), promoRoomType.getTotalCount());
             }
         }
     }
@@ -262,5 +272,100 @@ public class RoomTypeProxyService {
         roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
 
         return roomTypeStock;
+    }
+
+
+    public PromoRoomType queryPromoRoomType(String roomTypeId) {
+        String key = "PROMO_ROOMTYPE_INFO_" + roomTypeId;
+        String promoRoomTypeJson = null;
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            promoRoomTypeJson = jedis.get(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return JsonUtils.fromJson(promoRoomTypeJson, PromoRoomType.class);
+    }
+
+    public class PromoRoomType {
+        private Long hotelId;
+
+        private Long roomTypeId;
+
+        private BigDecimal price;
+
+        private BigDecimal originPrice;
+
+        private BigDecimal settlePrice;
+
+        private Integer totalCount;
+
+        private Integer stock;
+
+        public Long getHotelId() {
+            return hotelId;
+        }
+
+        public void setHotelId(Long hotelId) {
+            this.hotelId = hotelId;
+        }
+
+        public Long getRoomTypeId() {
+            return roomTypeId;
+        }
+
+        public void setRoomTypeId(Long roomTypeId) {
+            this.roomTypeId = roomTypeId;
+        }
+
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public void setPrice(BigDecimal price) {
+            this.price = price;
+        }
+
+        public BigDecimal getOriginPrice() {
+            return originPrice;
+        }
+
+        public void setOriginPrice(BigDecimal originPrice) {
+            this.originPrice = originPrice;
+        }
+
+        public BigDecimal getSettlePrice() {
+            return settlePrice;
+        }
+
+        public void setSettlePrice(BigDecimal settlePrice) {
+            this.settlePrice = settlePrice;
+        }
+
+        public Integer getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(Integer totalCount) {
+            this.totalCount = totalCount;
+        }
+
+        public Integer getStock() {
+            return stock;
+        }
+
+        public void setStock(Integer stock) {
+            this.stock = stock;
+        }
     }
 }

@@ -7,9 +7,10 @@ import java.util.Date;
 
 public enum RoomTypeStockCacheEnum {
     LOCK_KEY(10l, "HOTEL_ROOMTYPE_STOCK_LOCK_"),     //操作锁
-    AVAILABLE_KEY(20l, "HOTEL_ROOMTYPE_STOCK_"),     //可用数量
+    AVAILABLE_KEY(20l, "HOTEL_ROOMTYPE_STOCK_"),     //普通房可用数量
 //    OtsUsingKey(30l, "RoomTypeStockUsing"),
 //    PmsUsingKey(40l, "RoomTypeStockPmsUsing"),
+    PROMO_KEY(50l, "HOTEL_ROOMTYPE_PROMO_STOCK_"),   //特价房数量
     ;
     private final Long id;
     private final String name;
@@ -31,14 +32,6 @@ public enum RoomTypeStockCacheEnum {
     public String toString() {
         return String.valueOf(id) + " " + name;
     }
-//	public static RoomTypeStockCacheEnum getByName(String name){
-//		for (RoomTypeStockCacheEnum temp : RoomTypeStockCacheEnum.values()) {
-//			if(temp.getName().equals(name)){
-//				return temp;
-//			}
-//		}
-//		return other;
-//	}
 
     public static String getLockKeyName(String hotelId, String roomTypeId, Date day) {
 
@@ -73,35 +66,18 @@ public enum RoomTypeStockCacheEnum {
         return result.toString();
     }
 
-//    public static String getOtsUsingHashName(String hotelId, String roomTypeId) {
-//        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
-//            return "";
-//        }
-//
-//        //
-//        StringBuilder result = new StringBuilder()
-//                .append(RoomTypeStockCacheEnum.OtsUsingKey.getName())
-//                .append("_")
-//                .append(hotelId)
-//                .append("_")
-//                .append(roomTypeId);
-//
-//        return result.toString();
-//    }
-//
-//    public static String getPmsUsingHashName(String hotelId, String roomTypeId) {
-//        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId)) {
-//            return "";
-//        }
-//
-//        //
-//        StringBuilder result = new StringBuilder()
-//                .append(RoomTypeStockCacheEnum.PmsUsingKey.getName())
-//                .append("_")
-//                .append(hotelId)
-//                .append("_")
-//                .append(roomTypeId);
-//
-//        return result.toString();
-//    }
+
+    public static String getPromoHashName(String roomTypeId) {
+        if (StringUtils.isBlank(roomTypeId)) {
+            return "";
+        }
+
+        //
+        StringBuilder result = new StringBuilder()
+                .append(RoomTypeStockCacheEnum.PROMO_KEY.getName())
+                .append(roomTypeId);
+
+        return result.toString();
+    }
+
 }
