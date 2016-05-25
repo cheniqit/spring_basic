@@ -23,6 +23,7 @@ import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -371,6 +372,32 @@ public class HotelController {
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("hotel", hotelDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/findHotelByName", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelByName(String hotelName, String cityCode) {
+        try {
+            if(StringUtils.isBlank(hotelName) || StringUtils.isBlank(cityCode)){
+                HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+                result.put("success", "F");
+                result.put("errmsg", "参数错误");
+                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            }
+            List<HotelDto> hotelDtoList = hotelService.findHotelByName(hotelName, cityCode);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("data", hotelDtoList);
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }catch (Exception e) {
             e.printStackTrace();

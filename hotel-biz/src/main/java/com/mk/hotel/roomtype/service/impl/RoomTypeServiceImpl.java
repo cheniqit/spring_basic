@@ -263,6 +263,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 return;
             }
             roomTypeProxyService.saveRoomType(hotel, response.getData());
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
@@ -413,6 +414,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 return;
             }
             roomTypeProxyService.saveRoomTypePrice(response.getData());
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
@@ -447,6 +449,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 return;
             }
             roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         pageNo++;
         mergeRoomType(pageNo);

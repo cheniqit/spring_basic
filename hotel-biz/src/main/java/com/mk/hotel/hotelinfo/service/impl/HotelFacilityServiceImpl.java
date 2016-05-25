@@ -209,6 +209,8 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                 }
 
             }
+
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeHotelFacility pageNo {}", pageNo);
         pageNo++;
