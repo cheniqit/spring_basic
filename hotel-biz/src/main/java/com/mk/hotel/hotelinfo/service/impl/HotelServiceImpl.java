@@ -157,6 +157,24 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public List<HotelDto> findHotelByName(String hotelName, String cityCode) {
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andNameEqualTo(hotelName.trim()).andCityCodeEqualTo(cityCode.trim());
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return null;
+        }
+        List<HotelDto> hotelDtoList = new ArrayList<HotelDto>();
+        for(Hotel hotel : hotelList){
+            HotelDto dto = new HotelDto();
+            BeanUtils.copyProperties(hotel, dto);
+            hotelDtoList.add(dto);
+        }
+
+        return hotelDtoList;
+    }
+
+    @Override
     public HotelDto findById(Long id) {
 
         Hotel hotel = hotelMapper.selectByPrimaryKey(id);

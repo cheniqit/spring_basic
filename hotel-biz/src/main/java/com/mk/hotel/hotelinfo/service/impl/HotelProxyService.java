@@ -4,6 +4,7 @@ import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -82,6 +83,7 @@ public class HotelProxyService {
                     e.printStackTrace();
                 }
             }
+            OtsInterface.initHotel(new Long(hotelInfo.getId()));
         }
     }
 
