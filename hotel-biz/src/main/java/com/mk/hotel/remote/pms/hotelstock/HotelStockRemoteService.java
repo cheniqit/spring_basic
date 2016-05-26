@@ -33,4 +33,18 @@ public class HotelStockRemoteService {
     }
 
 
+    public QueryStockResponse queryDatStock(QueryStockRequest queryStockRequest){
+        queryStockRequest.setFlag(Boolean.FALSE.toString());
+        String body = JsonUtils.toJson(queryStockRequest);
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_STOCK,
+                    new FbbRequestHead(), body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        QueryStockResponse response = JsonUtils.fromJson(remoteResult, QueryStockResponse.class);
+        return response;
+    }
+
 }

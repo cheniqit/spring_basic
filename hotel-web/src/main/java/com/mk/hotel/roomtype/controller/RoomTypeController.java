@@ -336,12 +336,16 @@ public class RoomTypeController {
 
     @RequestMapping(value = "/mergeRoomTypeStock", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergeRoomTypeStock(Integer pageNo) {
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypeStock(Integer pageNo, Long hotelId) {
         try {
             if(pageNo == null){
                 pageNo = 1;
             }
-            roomTypeService.mergeRoomTypeStock(pageNo);
+            if(hotelId == null){
+                roomTypeService.mergeRoomTypeStock(pageNo);
+            }else{
+                roomTypeService.mergeRoomTypeStockByHotel(hotelId);
+            }
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -354,6 +358,32 @@ public class RoomTypeController {
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/mergeRoomTypeDayStock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypeDayStock(Integer pageNo, Long hotelId) {
+        try {
+            if(pageNo == null){
+                pageNo = 1;
+            }
+            if(hotelId == null){
+                roomTypeService.mergeRoomTypeDayStock(pageNo);
+            }else{
+                roomTypeService.mergeRoomTypeDayStockByHotel(hotelId);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
 
 
     @RequestMapping(value = "/findRoomTypeByName", method = RequestMethod.POST)

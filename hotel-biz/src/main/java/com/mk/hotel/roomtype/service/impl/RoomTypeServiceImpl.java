@@ -427,7 +427,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomTypeStock(int pageNo) {
-
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -440,18 +439,75 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         for(Hotel hotel : hotelList){
-            QueryStockRequest queryStockRequest = new QueryStockRequest();
-            queryStockRequest.setHotelid(hotel.getFangId().toString());
-            queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
-            queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
-            QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
-            if(response == null || response.getData() == null){
-                return;
-            }
-            roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
-            OtsInterface.initHotel(new Long(hotel.getId()));
+            mergeRoomTypeStockByHotel(hotel);
         }
         pageNo++;
         mergeRoomType(pageNo);
+    }
+
+
+
+
+    @Override
+    public void mergeRoomTypeStockByHotel(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        mergeRoomTypeStockByHotel(hotel);
+    }
+
+    public void mergeRoomTypeStockByHotel(Hotel hotel){
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
+        QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
+        if(response == null || response.getData() == null){
+            return;
+        }
+        roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+        OtsInterface.initHotel(new Long(hotel.getId()));
+    }
+
+
+    @Override
+    public void mergeRoomTypeDayStockByHotel(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        mergeRoomTypeDayStockByHotel(hotel);
+    }
+
+    public void mergeRoomTypeDayStock(){
+        mergeRoomTypeDayStock(1);
+    }
+
+    @Override
+    public void mergeRoomTypeDayStock(Integer pageNo) {
+        //酒店分页
+        HotelExample hotelExample = new HotelExample();
+        int count = hotelMapper.countByExample(hotelExample);
+        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        HotelExample example = new HotelExample();
+        example.setStart(pageBean.getStart());
+        example.setPageCount(pageBean.getPageCount());
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            mergeRoomTypeDayStockByHotel(hotel);
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
+    }
+
+    public void mergeRoomTypeDayStockByHotel(Hotel hotel){
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 1)));
+        QueryStockResponse response = hotelStockRemoteService.queryDatStock(queryStockRequest);
+        if(response == null || response.getData() == null){
+            return;
+        }
+        roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+        OtsInterface.initHotel(new Long(hotel.getId()));
     }
 }
