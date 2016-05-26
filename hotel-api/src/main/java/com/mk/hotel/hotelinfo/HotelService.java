@@ -27,4 +27,6 @@ public interface HotelService {
     void saveOrUpdateByFangId(HotelDto hotelDto);
 
     List<HotelDto> findHotelByName(String hotelName, String cityCode);
+
+    void deleteByFangId(Long id);
 }

@@ -143,6 +143,27 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
+    public void deleteByHotelId(Long hotelId, List<Long> idList) {
+        if (null == hotelId || null == idList) {
+            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+        }
+
+        //
+        for (Long id : idList) {
+            RoomTypeExample roomTypeExample = new RoomTypeExample();
+            roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(id);
+            List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+
+            if (!roomTypeList.isEmpty()) {
+                RoomType roomType = roomTypeList.get(0);
+                roomType.setIsValid("F");
+                roomType.setUpdateDate(new Date());
+                roomType.setUpdateBy("hotel_system");
+                this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
+                this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.deleteByHotelId");
+            }
+        }
+    }
 
     public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
         if (null == hotelId || null == roomTypeDtoList) {

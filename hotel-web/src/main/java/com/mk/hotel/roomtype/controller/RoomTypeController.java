@@ -168,12 +168,37 @@ public class RoomTypeController {
          */
         try {
             //
-            String roomTypeId = JSONObject.parseObject(body).get("roomtypeid").toString();
+            JSONObject bodyJson = JSONObject.parseObject(body);
+            String strHotelId = bodyJson.get("hotelid").toString();
+            String roomTypeId = bodyJson.get("roomtypeid").toString();
+
+            Long hotelId = null;
+            try {
+                hotelId = Long.parseLong(strHotelId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new MyException("-99", "-99", "hotelid 格式错误");
+            }
+            HotelDto hotelDto = this.hotelService.findByFangId(hotelId);
+            if (null == hotelDto) {
+                throw new MyException("-99", "-99", "hotel未找到");
+            }
+
+            //
             String[] ids = roomTypeId.split(",");
 
+            List<Long> idList = new ArrayList<Long>();
             for (String strId : ids) {
-                Long.parseLong(strId);
+                Long id = Long.parseLong(strId);
+                idList.add(id);
             }
+
+            //
+            this.roomTypeService.deleteByHotelId(hotelDto.getId(), idList);
+
+            //
+            OtsInterface.initHotel(hotelDto.getId());
+
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }

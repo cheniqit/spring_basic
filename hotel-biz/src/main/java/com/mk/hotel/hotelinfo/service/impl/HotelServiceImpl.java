@@ -71,6 +71,29 @@ public class HotelServiceImpl implements HotelService {
         HotelServiceImpl.allLandMarkList = allLandMarkList;
     }
 
+    public void deleteByFangId(Long id) {
+
+        if (null == id) {
+            throw new MyException("-99", "-99", "id必填");
+        }
+
+        //
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andFangIdEqualTo(id);
+
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if (!hotelList.isEmpty()) {
+            Hotel hotel = hotelList.get(0);
+            hotel.setIsValid("F");
+            hotel.setUpdateBy("hotel_system");
+            hotel.setUpdateDate(new Date());
+
+            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.updateRedisHotel(hotel.getId(), hotel, "HotelService.deleteByFangId");
+        }
+
+    }
+
     public void saveOrUpdateByFangId(HotelDto hotelDto) {
 
         if (null == hotelDto || null == hotelDto.getFangId()) {

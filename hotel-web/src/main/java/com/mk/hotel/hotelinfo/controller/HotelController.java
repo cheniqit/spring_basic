@@ -237,10 +237,19 @@ public class HotelController {
             String hotelIds = JSONObject.parseObject(body).get("hotelid").toString();
             String[] ids = hotelIds.split(",");
 
+            List<Long> idList = new ArrayList<Long>();
             for (String strId : ids) {
-                Long.parseLong(strId);
+                Long id = Long.parseLong(strId);
+                idList.add(id);
             }
 
+            //
+            for (Long id : idList) {
+                this.hotelService.deleteByFangId(id);
+
+                //
+                OtsInterface.initHotel(id);
+            }
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         }

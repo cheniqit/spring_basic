@@ -23,4 +23,6 @@ public interface RoomTypeService {
     void mergeRoomTypeStock(int pageNo);
 
     Long getHotelIdByRedis (Long roomTypeId);
+
+    void deleteByHotelId(Long hotelId, List<Long> idList);
 }
