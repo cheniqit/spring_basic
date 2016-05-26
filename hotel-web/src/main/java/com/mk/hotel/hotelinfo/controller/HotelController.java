@@ -127,8 +127,11 @@ public class HotelController {
                 for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
                     //
                     Integer intArea = null;
+
                     try {
-                        intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
+                        if (null != roomTypeJson.getArea()) {
+                            intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Cat.logError(e);
@@ -138,7 +141,9 @@ public class HotelController {
                     //
                     Integer intPrePay = null;
                     try {
-                        intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
+                        if (null != roomTypeJson.getPrepay()) {
+                            intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
+                        }
                     } catch (NumberFormatException e){
                         e.printStackTrace();
                         Cat.logError(e);
@@ -148,7 +153,9 @@ public class HotelController {
                     //
                     Integer intBreakfast = null;
                     try {
-                        intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
+                        if (null != roomTypeJson.getBreakfast()) {
+                            intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
+                        }
                     } catch (NumberFormatException e){
                         e.printStackTrace();
                         Cat.logError(e);
