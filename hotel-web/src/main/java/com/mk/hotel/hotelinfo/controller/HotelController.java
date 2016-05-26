@@ -28,7 +28,9 @@ import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -61,6 +64,9 @@ public class HotelController {
     private LogPushService logPushService;
     @Autowired
     private HotelMapper hotelMapper;
+    @Autowired
+    private RoomTypeStockServiceImpl roomTypeStockService;
+
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
     @ResponseBody
@@ -441,6 +447,24 @@ public class HotelController {
 
     }
 
+    @RequestMapping(value = "/updatePromoRedisStock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updatePromoRedisStock(String hotelId, String roomTypeId, Integer promoNum) {
+        try {
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            roomTypeStockService.updatePromoRedisStock(hotelId, roomTypeId, promoNum);
+            result.put("success", "T");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
 
 }
 

@@ -4,12 +4,21 @@ import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.hotelinfo.mapper.HotelMapper;
+import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
+import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
+import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +28,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RoomTypeStockServiceImpl implements RoomTypeStockService {
+
+    @Autowired
+    private HotelStockRemoteService hotelStockRemoteService;
+    @Autowired
+    private HotelMapper hotelMapper;
+    @Autowired
+    private RoomTypeService roomTypeService;
 
     public void lock(String hotelId, String roomTypeId, Date day, int lockTime, long maxWaitTimeOut) {
 
@@ -77,6 +93,39 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 jedis.close();
             }
         }
+    }
+
+    public void updatePromoRedisStock(String hotelId, String roomTypeId, Integer promoNum){
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        Hotel hotel = hotelMapper.selectByPrimaryKey(Long.valueOf(hotelId));
+        if(hotel == null){
+            return;
+        }
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setRoomtypeid(roomTypeId);
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
+        QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
+        if(response == null || response.getData() == null){
+            return;
+        }
+        for(QueryStockResponse.Roomtypestocks roomtypestock :  response.getData().getRoomtypestocks()) {
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomtypestock.getRoomtypeid()));
+            if (roomTypeDto == null) {
+                return;
+            }
+            for (QueryStockResponse.Stockinfos stockInfo : roomtypestock.getStockinfos()) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = format.parse(stockInfo.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                updateRedisStock(hotelId, roomTypeId, date, Integer.valueOf(stockInfo.getNum()), promoNum);
+            }
+        }
+
     }
 
     public void updateRedisStock(String hotelId, String roomTypeId, Date day, Integer totalNum, Integer promoNum) {
