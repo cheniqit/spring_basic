@@ -163,6 +163,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.deleteByHotelId");
             }
         }
+
     }
 
     public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
@@ -195,6 +196,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId(hotelId,list)");
             }
         }
+
+        //stock
+        this.mergeRoomTypeStockByHotel(hotelId);
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
@@ -253,8 +257,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             //redis
             this.updateRedisRoomType(dbDto.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
+            int result = this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
 
-            return this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
+            //stock
+            this.mergeRoomTypeStockByHotel(hotelDto.getId());
+            return result;
         }
     }
 
@@ -395,8 +402,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             //
             jedis.sadd(roomTypeSetName, JsonUtils.toJson(roomTypeInRedis));
 
-            //
-//            OtsInterface.initHotel(roomType.getHotelId());
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
