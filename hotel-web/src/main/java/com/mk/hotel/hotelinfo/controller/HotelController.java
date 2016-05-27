@@ -16,7 +16,6 @@ import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
 import com.mk.hotel.hotelinfo.json.facility.FacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
-import com.mk.hotel.hotelinfo.json.hotel.HotelJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
 import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -29,20 +28,19 @@ import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
 import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by chenqi on 16/5/9.
