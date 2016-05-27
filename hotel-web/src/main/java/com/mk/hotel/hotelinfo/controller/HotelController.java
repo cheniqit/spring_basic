@@ -452,6 +452,7 @@ public class HotelController {
     @RequestMapping(value = "/updatePromoRedisStock", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum) {
+
         try {
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             roomTypeStockService.updatePromoRedisStock(hotelId, roomTypeId, promoNum);

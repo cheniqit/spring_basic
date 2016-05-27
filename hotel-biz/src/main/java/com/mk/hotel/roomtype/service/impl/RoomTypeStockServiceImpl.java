@@ -96,7 +96,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     }
 
     public void updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum){
-        Hotel hotel = hotelMapper.selectByPrimaryKey(Long.valueOf(hotelId));
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
         if(null == hotel){
             throw new MyException("-99", "-99", "酒店不存在");
         }
