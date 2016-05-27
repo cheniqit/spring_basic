@@ -883,97 +883,60 @@
     <p>API提交json数据示例：</p>
 </blockquote>
 
-<pre><code class="js">{
-    &quot;hotel&quot;: {
-    &quot;citycode&quot;: 310000,
-    &quot;cityname&quot;: &quot;S 上海市&quot;,
-    &quot;defaultleavetime&quot;: &quot;120000&quot;,
-    &quot;detailaddr&quot;: &quot;灵石路679-3号&quot;,
-    &quot;discode&quot;: 310108,
-    &quot;districtname&quot;: &quot;Z 闸北区&quot;,
-    &quot;hotelname&quot;: &quot;上轩商务酒店&quot;,
-    &quot;hotelphone&quot;: &quot;13810711699&quot;,
-    &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2&quot;,
-    &quot;hotelpics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FsldGWiFERrp0uuCSaeG4CB-4EH2\&quot;}]},{\&quot;name\&quot;:\&quot;lobby\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;mainHousing\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FseQy0avIf9k4Gq5uCcWi_9rpG0U\&quot;}]}]&quot;,
-    &quot;hoteltype&quot;: 3,
-    &quot;id&quot;: 2813,
-    &quot;introduction&quot;: &quot;测试酒店&quot;,
-    &quot;latitude&quot;: 29.58339,
-    &quot;longitude&quot;: 106.497452,
-    &quot;opentime&quot;: &quot;2014-02-01&quot;,
-    &quot;provcode&quot;: 310000,
-    &quot;provincename&quot;: &quot;S 上海市&quot;,
-    &quot;repairtime&quot;: &quot;2014-02-01&quot;,
-    &quot;retentiontime&quot;: &quot;180000&quot;,
+<pre><code class="js">[
+    {
     &quot;roomtypes&quot;: [
     {
-    &quot;area&quot;: &quot;20.00&quot;,
-    &quot;bedsize&quot;: &quot;2.20&quot;,
+    &quot;id&quot;: 159368,
+    &quot;hotelid&quot;: 50564,
+    &quot;roomtypeid&quot;: 159368,
+    &quot;name&quot;: &quot;单人房&quot;,
+    &quot;roomnum&quot;: 3,
     &quot;bedtype&quot;: &quot;1&quot;,
-    &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 29995,
-    &quot;name&quot;: &quot;大床房&quot;,
-    &quot;prepay&quot;: &quot;1&quot;,
-    &quot;roomnum&quot;: 20,
-    &quot;status&quot;:0,
-    &quot;refund&quot;:0,
-    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-    },
-    {
     &quot;area&quot;: &quot;25.00&quot;,
-    &quot;bedsize&quot;: &quot;2.20&quot;,
-    &quot;bedtype&quot;: &quot;1&quot;,
-    &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 29996,
-    &quot;name&quot;: &quot;海景房&quot;,
     &quot;prepay&quot;: &quot;1&quot;,
-    &quot;roomnum&quot;: 4,
-    &quot;status&quot;:0,
-    &quot;refund&quot;:0,
-    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/Fpy2bsNNUSdyyx4jKkG89FpgzPj2\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
+    &quot;breakfast&quot;: &quot;0&quot;,
+    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FlFhdHYXbswfrM89W0crpaFEPWKB\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;,
+    &quot;bedsize&quot;: &quot;1.20&quot;,
+    &quot;status&quot;: &quot;1&quot;
     },
     {
-    &quot;area&quot;: &quot;34.00&quot;,
-    &quot;bedsize&quot;: &quot;2.20,2.20&quot;,
+    &quot;id&quot;: 159369,
+    &quot;hotelid&quot;: 50564,
+    &quot;roomtypeid&quot;: 159369,
+    &quot;name&quot;: &quot;标准间&quot;,
+    &quot;roomnum&quot;: 3,
     &quot;bedtype&quot;: &quot;2&quot;,
-    &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 29997,
-    &quot;name&quot;: &quot;大床房A&quot;,
+    &quot;area&quot;: &quot;26.00&quot;,
     &quot;prepay&quot;: &quot;1&quot;,
-    &quot;roomnum&quot;: 20,
-    &quot;status&quot;:0,
-    &quot;refund&quot;:0,
-    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FipvpKpZ2oJL8vS624ugGQm-aDDi\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-    },
-    {
-    &quot;area&quot;: &quot;34.00&quot;,
-    &quot;bedsize&quot;: &quot;2.20&quot;,
-    &quot;bedtype&quot;: &quot;1&quot;,
     &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 30025,
-    &quot;name&quot;: &quot;特价房&quot;,
-    &quot;prepay&quot;: &quot;1&quot;,
-    &quot;roomnum&quot;: 10,
-    &quot;status&quot;:0,
-    &quot;refund&quot;:0,
-    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FoLA7XtPcrBjjqp0rfwSkK-CJSX1\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
-    },
-    {
-    &quot;area&quot;: &quot;30.00&quot;,
-    &quot;bedsize&quot;: &quot;2.00,1.80&quot;,
-    &quot;bedtype&quot;: &quot;2&quot;,
-    &quot;breakfast&quot;: &quot;0&quot;,
-    &quot;id&quot;: 30046,
-    &quot;name&quot;: &quot;压测房型&quot;,
-    &quot;prepay&quot;: &quot;1&quot;,
-    &quot;roomnum&quot;: 200,
-    &quot;status&quot;:0,
-    &quot;refund&quot;:0,
-    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FqScMeNfEkN68Zw3Yi4711FdascG\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;
+    &quot;roomtypepics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FlFhdHYXbswfrM89W0crpaFEPWKB\&quot;}]},{\&quot;name\&quot;:\&quot;bed\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;toilet\&quot;,\&quot;pic\&quot;:[]}]&quot;,
+    &quot;bedsize&quot;: &quot;1.20,1.20&quot;,
+    &quot;status&quot;: &quot;1&quot;
+    }
+    ],
+    &quot;id&quot;: 50564,
+    &quot;hotelname&quot;: &quot;c端测试酒店&quot;,
+    &quot;detailaddr&quot;: &quot;解放路11号&quot;,
+    &quot;longitude&quot;: 106.463897,
+    &quot;latitude&quot;: 29.554209,
+    &quot;retentiontime&quot;: &quot;180000&quot;,
+    &quot;defaultleavetime&quot;: &quot;120000&quot;,
+    &quot;discode&quot;: 500106,
+    &quot;citycode&quot;: 500000,
+    &quot;provcode&quot;: 500000,
+    &quot;introduction&quot;: &quot;测试酒店&quot;,
+    &quot;provincename&quot;: &quot;Z 重庆市&quot;,
+    &quot;cityname&quot;: &quot;C 重庆市&quot;,
+    &quot;districtname&quot;: &quot;S 沙坪坝区&quot;,
+    &quot;hotelpic&quot;: &quot;https://dn-imke-pro.qbox.me/FlFhdHYXbswfrM89W0crpaFEPWKB&quot;,
+    &quot;hotelpics&quot;: &quot;[{\&quot;name\&quot;:\&quot;def\&quot;,\&quot;pic\&quot;:[{\&quot;url\&quot;:\&quot;https://dn-imke-pro.qbox.me/FlFhdHYXbswfrM89W0crpaFEPWKB\&quot;}]},{\&quot;name\&quot;:\&quot;lobby\&quot;,\&quot;pic\&quot;:[]},{\&quot;name\&quot;:\&quot;mainHousing\&quot;,\&quot;pic\&quot;:[]}]&quot;,
+    &quot;hotelphone&quot;: &quot;15000249053&quot;,
+    &quot;opentime&quot;: &quot;2016-05-01&quot;,
+    &quot;repairtime&quot;: &quot;2015-12-01&quot;,
+    &quot;roomnum&quot;: 6
     }
     ]
-    }
-    }
 </code></pre>
 
 <blockquote>
@@ -1755,7 +1718,7 @@
 
 <pre><code class="js">{
     &quot;orderid&quot;: 1234567,
-    &quot;orderstatus&quot;: 1
+    &quot;orderstatus&quot;: 200
     }
 </code></pre>
 
@@ -1776,6 +1739,81 @@
 <ul>
     <li>success为F时</li>
     <li>http状态400</li>
+</ul>
+
+<pre><code>{
+    &quot;success&quot;:&quot;F&quot;,
+    &quot;errorCode&quot;:,//错误码
+    &quot;errorMessage&quot;:
+    }
+</code></pre>
+
+<h3>更新特价房数量</h3>
+
+<hr>
+
+<p><strong>业务说明：</strong>
+    只更新ots房型库存</p>
+
+<p><strong>请求方式：</strong></p>
+
+<blockquote>
+    <p>POST</p>
+</blockquote>
+
+<p><strong>接口url：</strong></p>
+
+<blockquote>
+    <p>http://ip:port/cube/hotel/updatePromoRedisStock</p>
+</blockquote>
+
+<p><strong>请求参数</strong></p>
+
+<table><thead>
+<tr>
+    <th>字段</th>
+    <th>名称</th>
+    <th>是否必须</th>
+    <th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+    <td>﻿hotelId</td>
+    <td>酒店id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>﻿roomTypeId</td>
+    <td>房型id</td>
+    <td>是</td>
+    <td></td>
+</tr>
+<tr>
+    <td>﻿promoNum</td>
+    <td>特价房数量</td>
+    <td>是</td>
+    <td></td>
+</tr>
+</tbody></table>
+
+<blockquote>
+    <p>API返回json数据示例：</p>
+</blockquote>
+
+<ul>
+    <li>success为T时</li>
+    <li>http状态200</li>
+</ul>
+
+<pre><code class="js">{
+    &quot;success&quot;:&quot;T&quot;
+    }
+</code></pre>
+
+<ul>
+    <li>success为F时</li>
+    <li>http状态200</li>
 </ul>
 
 <pre><code>{
