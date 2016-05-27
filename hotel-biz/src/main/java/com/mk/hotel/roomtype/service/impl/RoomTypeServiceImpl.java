@@ -2,8 +2,6 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -554,7 +552,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
-        OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
 
@@ -598,6 +595,5 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
-        OtsInterface.initHotel(new Long(hotel.getId()));
     }
 }

@@ -21,6 +21,7 @@ public class HotelStockRemoteServiceTest {
         PmsAuthHeader pmsAuthHeader = new PmsAuthHeader();
         queryStockRequest.setChannelid(pmsAuthHeader.getChannelId());
         queryStockRequest.setHotelid("2807");
+        queryStockRequest.setRoomtypeid(29976+"");
         queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
         queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
         FbbCommonResponse response = hotelStockRemoteService.queryStock(queryStockRequest);

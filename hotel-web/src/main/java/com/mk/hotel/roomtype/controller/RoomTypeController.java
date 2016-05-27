@@ -9,7 +9,6 @@ import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;

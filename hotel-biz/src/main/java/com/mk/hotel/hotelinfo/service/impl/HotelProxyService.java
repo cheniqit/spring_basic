@@ -1,7 +1,6 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
 import com.mk.framework.Constant;
-import com.mk.framework.DateUtils;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
