@@ -467,7 +467,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
-        mergeRoomType(pageNo);
+        mergeRoomTypePrice(pageNo);
     }
 
     public void mergeRoomTypeStock(){
@@ -491,7 +491,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomType(pageNo);
+        mergeRoomTypeStock(pageNo);
     }
 
 
@@ -544,7 +544,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeDayStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomType(pageNo);
+        mergeRoomTypeDayStock(pageNo);
     }
 
     public void mergeRoomTypeDayStockByHotel(Hotel hotel){
