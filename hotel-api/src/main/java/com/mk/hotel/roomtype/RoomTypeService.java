@@ -25,6 +25,8 @@ public interface RoomTypeService {
     Long getHotelIdByRedis (Long roomTypeId);
 
     void deleteByHotelId(Long hotelId, List<Long> idList);
+    void updateOnlineByHotelId(Long hotelId, List<Long> idList);
+
     void mergeRoomTypeStockByHotel(Long hotelId);
 
     void mergeRoomTypeDayStockByHotel(Long hotelId);

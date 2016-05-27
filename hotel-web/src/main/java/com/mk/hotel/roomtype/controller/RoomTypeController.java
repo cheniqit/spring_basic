@@ -207,6 +207,70 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/online", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> roomTypeOnlinePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
+
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(body);
+            logPushDto.setType(LogPushTypeEnum.roomTypeDelete.getId());
+
+            this.logPushService.save(logPushDto);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        /*
+        { 
+            "hotelid":9999,
+            "roomtypeid":"444,5555,333"
+        }
+
+         */
+        try {
+            //
+            JSONObject bodyJson = JSONObject.parseObject(body);
+            String strHotelId = bodyJson.get("hotelid").toString();
+            String roomTypeId = bodyJson.get("roomtypeid").toString();
+
+            Long hotelId = null;
+            try {
+                hotelId = Long.parseLong(strHotelId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new MyException("-99", "-99", "hotelid 格式错误");
+            }
+            HotelDto hotelDto = this.hotelService.findByFangId(hotelId);
+            if (null == hotelDto) {
+                throw new MyException("-99", "-99", "hotel未找到");
+            }
+
+            //
+            String[] ids = roomTypeId.split(",");
+
+            List<Long> idList = new ArrayList<Long>();
+            for (String strId : ids) {
+                Long id = Long.parseLong(strId);
+                idList.add(id);
+            }
+
+            //
+            this.roomTypeService.updateOnlineByHotelId(hotelDto.getId(), idList);
+
+            //
+            OtsInterface.initHotel(hotelDto.getId());
+
+        } catch (Exception e) {
+            throw new MyException("-99", "-99", "格式错误");
+        }
+        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/roomtypeprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> roomTypePricePush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
