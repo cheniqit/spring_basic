@@ -39,4 +39,7 @@ public class Constant {
     public static final String SYSTEM_USER_NAME = "hotel_system";
 
 
+    /**酒店离热点区域的距离 单位米*/
+    public static final Integer HOTEL_TO_HOT_AREA_DISTANCE = 3000;
+
 }

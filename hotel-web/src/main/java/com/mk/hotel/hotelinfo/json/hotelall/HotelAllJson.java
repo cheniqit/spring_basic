@@ -14,6 +14,7 @@ public class HotelAllJson {
     private Long discode;
     private String hotelname;
     private String hotelpic;
+    private String hotelpics;
     private String introduction;
     private BigDecimal latitude;
     private BigDecimal longitude;
@@ -23,6 +24,7 @@ public class HotelAllJson {
     private String retentiontime;
     private String hoteltype;
     private String opentime;
+    private String regtime;
     private String hotelphone;
     private List<RoomTypeJson> roomtypes;
 
@@ -90,6 +92,14 @@ public class HotelAllJson {
         this.hotelpic = hotelpic;
     }
 
+    public String getHotelpics() {
+        return hotelpics;
+    }
+
+    public void setHotelpics(String hotelpics) {
+        this.hotelpics = hotelpics;
+    }
+
     public String getIntroduction() {
         return introduction;
     }
@@ -152,6 +162,14 @@ public class HotelAllJson {
 
     public void setOpentime(String opentime) {
         this.opentime = opentime;
+    }
+
+    public String getRegtime() {
+        return regtime;
+    }
+
+    public void setRegtime(String regtime) {
+        this.regtime = regtime;
     }
 
     public String getHotelphone() {

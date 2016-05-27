@@ -5,6 +5,7 @@ import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.Facility;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -94,7 +95,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         if (null == roomTypeId || null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
             return;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(new Date());
 
         //
@@ -124,6 +125,13 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
                 //
                 jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
+
+//            //
+//            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
+//            if (null != hotelId) {
+//                //
+//                OtsInterface.initHotel(hotelId);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

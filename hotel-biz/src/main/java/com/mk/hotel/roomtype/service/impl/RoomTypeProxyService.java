@@ -1,13 +1,17 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
@@ -20,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -128,7 +133,7 @@ public class RoomTypeProxyService {
                 try {
                     example.createCriteria()
                             .andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE))
-                            .andRoomTypeIdEqualTo(Long.valueOf(roomPriceType.getRoomtypeid()+""));
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomTypeDto.getId()+""));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -143,7 +148,7 @@ public class RoomTypeProxyService {
 
                 roomTypePriceService.updateRedisPrice(
                         roomTypeDto.getId(), roomTypeDto.getName(),
-                        roomTypePrice.getDay(), roomTypePrice.getPrice(),
+                        roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(),
                         "RoomTypeProxyService.saveRoomTypePrice");
 
             }
@@ -154,11 +159,11 @@ public class RoomTypeProxyService {
     private RoomTypePrice updateRoomTypePrice(RoomTypePrice roomTypePrice,HotelPriceResponse.Priceinfos priceinfo) {
         try {
             RoomTypePrice record = convertRoomTypePrice(roomTypePrice.getRoomTypeId(), priceinfo);
-            record.setId(roomTypePrice.getId());
             RoomTypePriceExample example = new RoomTypePriceExample();
             example.createCriteria().andRoomTypeIdEqualTo(roomTypePrice.getRoomTypeId()).
                     andDayEqualTo(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
             roomTypePriceMapper.updateByExampleSelective(record, example);
+            record.setId(roomTypePrice.getId());
             return record;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -181,7 +186,8 @@ public class RoomTypeProxyService {
         RoomTypePrice roomTypePrice = new RoomTypePrice();
         roomTypePrice.setRoomTypeId(roomTypeId);
         roomTypePrice.setDay(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
-        roomTypePrice.setPrice(new BigDecimal(priceinfo.getCost()));
+        roomTypePrice.setPrice(new BigDecimal(priceinfo.getPrice()));
+        roomTypePrice.setCost(new BigDecimal(priceinfo.getCost()));
 
         roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
         roomTypePrice.setUpdateDate(new Date());
@@ -205,7 +211,7 @@ public class RoomTypeProxyService {
                 RoomTypeStockExample example = new RoomTypeStockExample();
                 try {
                     example.createCriteria()
-                            .andRoomTypeIdEqualTo(Long.valueOf(roomtypestock.getRoomtypeid()))
+                            .andRoomTypeIdEqualTo(Long.valueOf(roomTypeDto.getId()))
                             .andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -217,7 +223,21 @@ public class RoomTypeProxyService {
                 }else{
                     typeStock = updateRoomTypeStock(roomTypeDto.getId(), stockInfo);
                 }
-                roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(), typeStock.getDay(), typeStock.getNumber().intValue());
+
+                //promoCount
+                Integer promoCount = 0;
+                PromoRoomType promoRoomType = queryPromoRoomType(String.valueOf(roomTypeDto.getId()));
+                if (null != promoRoomType) {
+                    promoCount = promoRoomType.getTotalCount();
+
+                    if (null == promoCount) {
+                        promoCount = 0;
+                    }
+                }
+
+                //
+                roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(),
+                        typeStock.getDay(), typeStock.getNumber().intValue(), promoCount);
             }
         }
     }
@@ -225,10 +245,10 @@ public class RoomTypeProxyService {
     private RoomTypeStock updateRoomTypeStock(Long roomTypeId, QueryStockResponse.Stockinfos stockInfo) {
         try {
             RoomTypeStock record = convertRoomTypeStock(roomTypeId, stockInfo);
-            record.setId(roomTypeId);
             RoomTypeStockExample example = new RoomTypeStockExample();
             example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(DateUtils.parseDate(stockInfo.getDate(), DateUtils.FORMAT_DATE));
             roomTypeStockMapper.updateByExampleSelective(record, example);
+            record.setId(roomTypeId);
             return record;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -261,5 +281,104 @@ public class RoomTypeProxyService {
         roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
 
         return roomTypeStock;
+    }
+
+
+    public PromoRoomType queryPromoRoomType(String roomTypeId) {
+        String key = "PROMO_ROOMTYPE_INFO_" + roomTypeId;
+        String promoRoomTypeJson = null;
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            promoRoomTypeJson = jedis.get(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        if (StringUtils.isBlank(promoRoomTypeJson)) {
+            return null;
+        } else {
+            return JsonUtils.fromJson(promoRoomTypeJson, PromoRoomType.class);
+        }
+    }
+
+    public class PromoRoomType {
+        private Long hotelId;
+
+        private Long roomTypeId;
+
+        private BigDecimal price;
+
+        private BigDecimal originPrice;
+
+        private BigDecimal settlePrice;
+
+        private Integer totalCount;
+
+        private Integer stock;
+
+        public Long getHotelId() {
+            return hotelId;
+        }
+
+        public void setHotelId(Long hotelId) {
+            this.hotelId = hotelId;
+        }
+
+        public Long getRoomTypeId() {
+            return roomTypeId;
+        }
+
+        public void setRoomTypeId(Long roomTypeId) {
+            this.roomTypeId = roomTypeId;
+        }
+
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public void setPrice(BigDecimal price) {
+            this.price = price;
+        }
+
+        public BigDecimal getOriginPrice() {
+            return originPrice;
+        }
+
+        public void setOriginPrice(BigDecimal originPrice) {
+            this.originPrice = originPrice;
+        }
+
+        public BigDecimal getSettlePrice() {
+            return settlePrice;
+        }
+
+        public void setSettlePrice(BigDecimal settlePrice) {
+            this.settlePrice = settlePrice;
+        }
+
+        public Integer getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(Integer totalCount) {
+            this.totalCount = totalCount;
+        }
+
+        public Integer getStock() {
+            return stock;
+        }
+
+        public void setStock(Integer stock) {
+            this.stock = stock;
+        }
     }
 }

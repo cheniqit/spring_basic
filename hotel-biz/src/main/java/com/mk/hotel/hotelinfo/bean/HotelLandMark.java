@@ -1,5 +1,7 @@
 package com.mk.hotel.hotelinfo.bean;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -75,6 +77,9 @@ public class HotelLandMark {
     }
 
     public StringBuffer getBusinessZoneInfo() {
+        if(businessZoneInfo.length() > 0){
+            return businessZoneInfo;
+        }
         Collections.sort(this.businessZoneInfoList, new AreaInfo());
         for(AreaInfo areaInfo : businessZoneInfoList){
             this.businessZoneInfo.append(",").append(areaInfo.getAreaInfoName());
@@ -87,6 +92,9 @@ public class HotelLandMark {
     }
 
     public StringBuffer getAirportStationInfo() {
+        if(airportStationInfo.length() > 0){
+            return airportStationInfo;
+        }
         Collections.sort(this.airportStationInfoList, new AreaInfo());
         for(AreaInfo areaInfo : airportStationInfoList){
             this.airportStationInfo.append(",").append(areaInfo.getAreaInfoName());
@@ -99,6 +107,9 @@ public class HotelLandMark {
     }
 
     public StringBuffer getScenicSpotsInfo() {
+        if(scenicSpotsInfo.length() > 0){
+            return scenicSpotsInfo;
+        }
         Collections.sort(this.scenicSpotsInfoList, new AreaInfo());
         for(AreaInfo areaInfo : scenicSpotsInfoList){
             this.scenicSpotsInfo.append(",").append(areaInfo.getAreaInfoName());
@@ -111,6 +122,9 @@ public class HotelLandMark {
     }
 
     public StringBuffer getHospitalInfo() {
+        if(hospitalInfo.length() > 0){
+            return hospitalInfo;
+        }
         Collections.sort(this.hospitalInfoList, new AreaInfo());
         for(AreaInfo areaInfo : hospitalInfoList){
             this.hospitalInfo.append(",").append(areaInfo.getAreaInfoName());
@@ -123,6 +137,9 @@ public class HotelLandMark {
     }
 
     public StringBuffer getCollegesInfo() {
+        if(collegesInfo.length() > 0){
+            return collegesInfo;
+        }
         Collections.sort(this.collegesInfoList, new AreaInfo());
         for(AreaInfo areaInfo : collegesInfoList){
             this.collegesInfo.append(",").append(areaInfo.getAreaInfoName());

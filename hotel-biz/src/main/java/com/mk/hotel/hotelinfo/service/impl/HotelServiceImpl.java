@@ -2,13 +2,13 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.mk.framework.Constant;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.PicList;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -58,6 +58,7 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private AddressInfoRemoteService addressInfoRemoteService;
 
+
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     private static List<LandMark> allLandMarkList = new ArrayList<LandMark>();
@@ -68,6 +69,29 @@ public class HotelServiceImpl implements HotelService {
 
     public static void setAllLandMarkList(List<LandMark> allLandMarkList) {
         HotelServiceImpl.allLandMarkList = allLandMarkList;
+    }
+
+    public void deleteByFangId(Long id) {
+
+        if (null == id) {
+            throw new MyException("-99", "-99", "id必填");
+        }
+
+        //
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andFangIdEqualTo(id);
+
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if (!hotelList.isEmpty()) {
+            Hotel hotel = hotelList.get(0);
+            hotel.setIsValid("F");
+            hotel.setUpdateBy("hotel_system");
+            hotel.setUpdateDate(new Date());
+
+            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.updateRedisHotel(hotel.getId(), hotel, "HotelService.deleteByFangId");
+        }
+
     }
 
     public void saveOrUpdateByFangId(HotelDto hotelDto) {
@@ -89,6 +113,8 @@ public class HotelServiceImpl implements HotelService {
             Hotel dbHotel = new Hotel();
             BeanUtils.copyProperties(hotelDto, dbHotel);
 
+            dbHotel.setPic(hotelDto.getPics());
+
             dbHotel.setCreateDate(new Date());
             dbHotel.setCreateBy("hotel_system");
             dbHotel.setUpdateDate(new Date());
@@ -106,7 +132,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
             //town code
             String townCode = addressInfoRemoteService.findTownCodeByLocation(
                     String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
@@ -135,7 +161,8 @@ public class HotelServiceImpl implements HotelService {
             hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
             hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
             hotel.setOpenTime(hotelDto.getOpenTime());
-            hotel.setPic(hotelDto.getPic());
+            hotel.setRegTime(hotelDto.getRegTime());
+            hotel.setPic(hotelDto.getPics());
 
             hotel.setUpdateDate(new Date());
             hotel.setUpdateBy("hotel_system");
@@ -153,12 +180,43 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public List<HotelDto> findHotelByName(String hotelName, String cityCode) {
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andNameEqualTo(hotelName.trim()).andCityCodeEqualTo(cityCode.trim());
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return null;
+        }
+        List<HotelDto> hotelDtoList = new ArrayList<HotelDto>();
+        for(Hotel hotel : hotelList){
+            HotelDto dto = new HotelDto();
+            BeanUtils.copyProperties(hotel, dto);
+            hotelDtoList.add(dto);
+        }
+
+        return hotelDtoList;
+    }
+
+    @Override
     public HotelDto findById(Long id) {
 
         Hotel hotel = hotelMapper.selectByPrimaryKey(id);
 
         HotelDto dto = new HotelDto();
         BeanUtils.copyProperties(hotel, dto);
+        return dto;
+    }
+
+    @Override
+    public HotelDto findByName(String name) {
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andNameEqualTo(name);
+        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return null;
+        }
+        HotelDto dto = new HotelDto();
+        BeanUtils.copyProperties(hotelList.get(0), dto);
         return dto;
     }
 
@@ -188,7 +246,7 @@ public class HotelServiceImpl implements HotelService {
         logger.info("begin mergePmsHotel pageNo {}", pageNo);
         HotelQueryListRequest request = new HotelQueryListRequest(pageNo);
         HotelQueryListResponse response = hotelRemoteService.queryHotelList(request);
-        if(response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
+        if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
             return;
         }
         List<HotelQueryListResponse.HotelInfo> hotelInfoList = response.getData().getHotels();
@@ -203,7 +261,7 @@ public class HotelServiceImpl implements HotelService {
             return;
         }
 
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = formatTime.format(new Date());
 
         //
@@ -232,11 +290,16 @@ public class HotelServiceImpl implements HotelService {
 
             //roomtype pic
             String strPics = hotel.getPic();
-            ArrayList<PicList> picLists = null;
-            if(StringUtils.isBlank(strPics)){
-                picLists = new Gson().fromJson(strPics, new TypeToken<ArrayList<PicList>>() {
-                }.getType());
+            List<PicList> picLists = new ArrayList<PicList>();
+            if (StringUtils.isNotBlank(strPics) ) {
+                JSONArray picArray = JSONArray.parseArray(strPics);
+                for (int i = 0; i < picArray.size(); i++) {
+                    String strPic = picArray.getString(i);
+                    PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                    picLists.add(picList);
+                }
             }
+
             //hotel type
             Integer intHotelType = null;
             try {
@@ -316,7 +379,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), 10000, this.getAllLandMarkList());
+                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
 
             //
             com.mk.hotel.hotelinfo.redisbean.Hotel hotelInRedis = new com.mk.hotel.hotelinfo.redisbean.Hotel();
@@ -329,6 +392,7 @@ public class HotelServiceImpl implements HotelService {
             hotelInRedis.setLatitude(hotel.getLat());
             hotelInRedis.setOpenTime(hotel.getOpenTime());
             hotelInRedis.setRepairTime(hotel.getRepairTime());
+            hotelInRedis.setRegTime(hotel.getRegTime());
             hotelInRedis.setOnline(online);
             hotelInRedis.setRetentionTime(hotel.getRetentionTime());
             hotelInRedis.setDefaultLeaveTime(hotel.getDefaultLeaveTime());
@@ -357,6 +421,8 @@ public class HotelServiceImpl implements HotelService {
             String cityKeyName = HotelCacheEnum.getCityHotelSetName(String.valueOf(hotel.getCityCode()));
             jedis.sadd(cityKeyName, JsonUtils.toJson(hotelInRedis));
 
+            //
+//            OtsInterface.initHotel(hotelId);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -367,6 +433,14 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
+    public HotelLandMark getHotelLandMark(Double lon, Double lat, Integer rang){
+        if(CollectionUtils.isEmpty(this.getAllLandMarkList())){
+            LandMarkExample example = new LandMarkExample();
+            List<LandMark> landMarks = landMarkMapper.selectByExample(example);
+            this.setAllLandMarkList(landMarks);
+        }
+        return getHotelLandMark(lon, lat, rang, this.getAllLandMarkList());
+    }
     /**
      *
      * @param lat 目标纬度

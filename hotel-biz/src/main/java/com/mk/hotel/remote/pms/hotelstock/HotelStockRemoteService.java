@@ -9,6 +9,8 @@ import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+
 /**
  * Created by chenqi on 16/5/10.
  */
@@ -19,11 +21,30 @@ public class HotelStockRemoteService {
 
     public QueryStockResponse queryStock(QueryStockRequest queryStockRequest){
         String body = JsonUtils.toJson(queryStockRequest);
-        String remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_STOCK,
-                new FbbRequestHead(), body);
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_STOCK,
+                    new FbbRequestHead(), body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         QueryStockResponse response = JsonUtils.fromJson(remoteResult, QueryStockResponse.class);
         return response;
     }
 
+
+    public QueryStockResponse queryDatStock(QueryStockRequest queryStockRequest){
+        queryStockRequest.setFlag(Boolean.FALSE.toString());
+        String body = JsonUtils.toJson(queryStockRequest);
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_STOCK,
+                    new FbbRequestHead(), body);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        QueryStockResponse response = JsonUtils.fromJson(remoteResult, QueryStockResponse.class);
+        return response;
+    }
 
 }

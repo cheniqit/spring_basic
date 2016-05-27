@@ -8,6 +8,8 @@ public interface RoomTypeService {
 
     RoomTypeDto selectByFangId(Long fangId);
 
+    RoomTypeDto selectByName(Long hotelId, String name);
+
     int saveOrUpdateByFangId(RoomTypeDto roomTypeDto);
 
     void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList);
@@ -19,4 +21,13 @@ public interface RoomTypeService {
     void mergeRoomTypePrice(int pageNo);
 
     void mergeRoomTypeStock(int pageNo);
+
+    Long getHotelIdByRedis (Long roomTypeId);
+
+    void deleteByHotelId(Long hotelId, List<Long> idList);
+    void mergeRoomTypeStockByHotel(Long hotelId);
+
+    void mergeRoomTypeDayStockByHotel(Long hotelId);
+
+    void mergeRoomTypeDayStock(Integer pageNo);
 }

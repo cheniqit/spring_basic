@@ -306,16 +306,17 @@
                 <hotel.jdbc.user>root</hotel.jdbc.user>
                 <hotel.jdbc.password>LZBV5D5ak</hotel.jdbc.password>
 
-                <!--<spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>-->
-                <!--<spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>-->
-                <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
-                <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
+                <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
+                <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
                 <jedis.pool.maxidl>20</jedis.pool.maxidl>
                 <jedis.pool.minidl>8</jedis.pool.minidl>
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
+
+                <ots.interface.initHotel.url>http://api.imike.cn/ots/indexerjob/addhotelids</ots.interface.initHotel.url>
+                <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
             </properties>
         </profile>
 
@@ -340,6 +341,9 @@
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
+
+                <ots.interface.initHotel.url>http://huidu.imike.cn/ots/indexerjob/addhotelids</ots.interface.initHotel.url>
+                <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
             </properties>
         </profile>
 
@@ -364,9 +368,11 @@
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
+
+                <ots.interface.initHotel.url>http://api.imike.com/ots/indexerjob/addhotelids</ots.interface.initHotel.url>
+                <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
             </properties>
         </profile>
-
 
     </profiles>
 </project>

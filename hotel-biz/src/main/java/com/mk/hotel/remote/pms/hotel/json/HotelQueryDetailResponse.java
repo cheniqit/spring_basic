@@ -52,6 +52,7 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
         private int provcode;
         private String provincename;
         private String repairtime;
+        private String regtime;
         private String retentiontime;
         private List<Roomtypes> roomtypes;
 
@@ -204,6 +205,14 @@ public class HotelQueryDetailResponse extends FbbCommonResponse{
 
         public String getRepairtime() {
             return repairtime;
+        }
+
+        public String getRegtime() {
+            return regtime;
+        }
+
+        public void setRegtime(String regtime) {
+            this.regtime = regtime;
         }
 
         public void setRetentiontime(String retentiontime) {

@@ -11,6 +11,7 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.redisbean.PicList;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -115,6 +116,56 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
+
+    @Override
+    public RoomTypeDto selectByName(Long hotelId ,String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new MyException("-99", "-99", "name 不可为空");
+        }
+        if (hotelId == null) {
+            throw new MyException("-99", "-99", "hotelId 不可为空");
+        }
+        //
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andNameEqualTo(name).andHotelIdEqualTo(hotelId);
+
+        //
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+        if (roomTypeList.isEmpty()) {
+            return null;
+        }
+        RoomType roomType = roomTypeList.get(0);
+
+        //
+        RoomTypeDto dto = new RoomTypeDto();
+        BeanUtils.copyProperties(roomType, dto);
+        return dto;
+    }
+
+
+    public void deleteByHotelId(Long hotelId, List<Long> idList) {
+        if (null == hotelId || null == idList) {
+            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+        }
+
+        //
+        for (Long id : idList) {
+            RoomTypeExample roomTypeExample = new RoomTypeExample();
+            roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(id);
+            List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+
+            if (!roomTypeList.isEmpty()) {
+                RoomType roomType = roomTypeList.get(0);
+                roomType.setIsValid("F");
+                roomType.setUpdateDate(new Date());
+                roomType.setUpdateBy("hotel_system");
+                this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
+                this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.deleteByHotelId");
+            }
+        }
+
+    }
+
     public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
         if (null == hotelId || null == roomTypeDtoList) {
             throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
@@ -145,6 +196,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId(hotelId,list)");
             }
         }
+
+        //stock
+        this.mergeRoomTypeStockByHotel(hotelId);
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
@@ -185,6 +239,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             RoomType roomType = new RoomType();
             roomType.setId(dbDto.getId());
+            roomType.setFangId(dbDto.getFangId());
             roomType.setHotelId(roomTypeDto.getHotelId());
             roomType.setName(roomTypeDto.getName());
             roomType.setArea(roomTypeDto.getArea());
@@ -202,8 +257,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             //redis
             this.updateRedisRoomType(dbDto.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
+            int result = this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
 
-            return this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
+            //stock
+            this.mergeRoomTypeStockByHotel(hotelDto.getId());
+            return result;
         }
     }
 
@@ -229,23 +287,51 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         for(Hotel hotel : hotelList){
             hotelRoomTypeQueryRequest.setHotelid(hotel.getFangId().toString());
             HotelRoomTypeQueryResponse response = hotelRemoteService.queryRoomType(hotelRoomTypeQueryRequest);
-            if(response.getData() == null || CollectionUtils.isEmpty(response.getData())){
+            if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData())){
                 return;
             }
             roomTypeProxyService.saveRoomType(hotel, response.getData());
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
         mergeRoomType(pageNo);
     }
 
+    public Long getHotelIdByRedis (Long roomTypeId) {
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+
+            //roomTypeKey
+            String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
+            String json = jedis.get(roomTypeKeyName);
+            com.mk.hotel.roomtype.redisbean.RoomType roomType = JsonUtils.fromJson(json, com.mk.hotel.roomtype.redisbean.RoomType.class);
+
+            if (null == roomType) {
+                return null;
+            } else {
+                return roomType.getHotelId();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
 
     public void updateRedisRoomType(Long roomTypeId, RoomType roomType, String cacheFrom) {
         if (null == roomTypeId || null == roomType || null == roomType.getHotelId()) {
             return;
         }
 
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = formatTime.format(new Date());
         //
         Jedis jedis = null;
@@ -258,24 +344,30 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             //bedtype
             BedType bedType = new BedType();
             bedType.setType(roomType.getBedType());
-            bedType.setName(BedTypeEnum.getById(roomType.getBedType()).getName());
+            if (null != roomType.getBedType()) {
+                BedTypeEnum bedTypeEnum = BedTypeEnum.getById(roomType.getBedType());
+                bedType.setName(bedTypeEnum.getName());
+            }
             bedType.setLength(roomType.getBedSize());
 
             //roomtype pic
             String strPics = roomType.getRoomTypePics();
-            JSONArray picArray = JSONArray.parseArray(strPics);
-
             List<PicList> picLists = new ArrayList<PicList>();
-            for (int i = 0; i < picArray.size(); i++) {
-                String strPic = picArray.getString(i);
-                PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                picLists.add(picList);
+
+            if (StringUtils.isNotBlank(strPics)) {
+                JSONArray picArray = JSONArray.parseArray(strPics);
+                for (int i = 0; i < picArray.size(); i++) {
+                    String strPic = picArray.getString(i);
+                    PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                    picLists.add(picList);
+                }
             }
 
             //roomtype
             com.mk.hotel.roomtype.redisbean.RoomType roomTypeInRedis = new com.mk.hotel.roomtype.redisbean.RoomType();
             roomTypeInRedis.setHotelId(roomType.getHotelId());
             roomTypeInRedis.setRoomTypeId(roomType.getId());
+            roomTypeInRedis.setSourceId(String.valueOf(roomType.getFangId()));
             roomTypeInRedis.setRoomTypeName(roomType.getName());
             roomTypeInRedis.setArea(roomType.getArea());
             roomTypeInRedis.setBedType(bedType);
@@ -342,12 +434,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
             hotelPriceRequest.setHotelid(hotel.getFangId().toString());
             hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
-            hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
+            hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
             HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
-            if(response.getData() == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
+            if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
                 return;
             }
             roomTypeProxyService.saveRoomTypePrice(response.getData());
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
         pageNo++;
@@ -360,7 +453,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomTypeStock(int pageNo) {
-
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -373,17 +465,75 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         for(Hotel hotel : hotelList){
-            QueryStockRequest queryStockRequest = new QueryStockRequest();
-            queryStockRequest.setHotelid(hotel.getFangId().toString());
-            queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
-            queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 5)));
-            QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
-            if(response == null || response.getData() == null){
-                return;
-            }
-            roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+            mergeRoomTypeStockByHotel(hotel);
         }
         pageNo++;
         mergeRoomType(pageNo);
+    }
+
+
+
+
+    @Override
+    public void mergeRoomTypeStockByHotel(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        mergeRoomTypeStockByHotel(hotel);
+    }
+
+    public void mergeRoomTypeStockByHotel(Hotel hotel){
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
+        QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
+        if(response == null || response.getData() == null){
+            return;
+        }
+        roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+        OtsInterface.initHotel(new Long(hotel.getId()));
+    }
+
+
+    @Override
+    public void mergeRoomTypeDayStockByHotel(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        mergeRoomTypeDayStockByHotel(hotel);
+    }
+
+    public void mergeRoomTypeDayStock(){
+        mergeRoomTypeDayStock(1);
+    }
+
+    @Override
+    public void mergeRoomTypeDayStock(Integer pageNo) {
+        //酒店分页
+        HotelExample hotelExample = new HotelExample();
+        int count = hotelMapper.countByExample(hotelExample);
+        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        HotelExample example = new HotelExample();
+        example.setStart(pageBean.getStart());
+        example.setPageCount(pageBean.getPageCount());
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            mergeRoomTypeDayStockByHotel(hotel);
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
+    }
+
+    public void mergeRoomTypeDayStockByHotel(Hotel hotel){
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 1)));
+        QueryStockResponse response = hotelStockRemoteService.queryDatStock(queryStockRequest);
+        if(response == null || response.getData() == null){
+            return;
+        }
+        roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+        OtsInterface.initHotel(new Long(hotel.getId()));
     }
 }

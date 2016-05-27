@@ -27,28 +27,28 @@ public enum HotelCacheEnum {
         return String.valueOf(id) + " " + name;
     }
 
-    public static String getHotelKeyName(String roomTypeId) {
-        if (StringUtils.isBlank(roomTypeId)) {
+    public static String getHotelKeyName(String hotelId) {
+        if (StringUtils.isBlank(hotelId)) {
             return "";
         }
 
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelCacheEnum.HOTEL_KEY.getName())
-                .append(roomTypeId);
+                .append(hotelId);
 
         return result.toString();
     }
 
-    public static String getCityHotelSetName(String roomTypeId) {
-        if (StringUtils.isBlank(roomTypeId)) {
+    public static String getCityHotelSetName(String cityCode) {
+        if (StringUtils.isBlank(cityCode)) {
             return "";
         }
 
         //
         StringBuilder result = new StringBuilder()
                 .append(HotelCacheEnum.CITY_HOTEL_SET.getName())
-                .append(roomTypeId);
+                .append(cityCode);
 
         return result.toString();
     }

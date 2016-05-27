@@ -9,6 +9,7 @@ public class QueryStockRequest {
     private String roomtypeid;
     private String begintime;
     private String endtime;
+    private String flag = Boolean.TRUE.toString();
 
 
     public String getChannelid() {
@@ -49,5 +50,13 @@ public class QueryStockRequest {
 
     public void setEndtime(String endtime) {
         this.endtime = endtime;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

@@ -9,6 +9,7 @@ import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.redisbean.Facility;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -98,7 +99,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         if (null == hotelId || null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
             return;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(new Date());
 
         //
@@ -117,13 +118,16 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
             //redis add
             for (HotelFacilityDto dto : hotelFacilityDtoList) {
                 Facility facility = new Facility();
-                facility.setFacId(dto.getId());
+                facility.setFacId(dto.getFacilityId());
                 facility.setFacName(dto.getFacilityName());
                 facility.setFacType(dto.getFacilityType());
                 facility.setCacheTime(strDate);
                 facility.setCacheFrom(cacheFrom);
                 jedis.sadd(facilityKeyName, JsonUtils.toJson(facility));
             }
+
+            //
+//            OtsInterface.initHotel(hotelId);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -205,6 +209,8 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                 }
 
             }
+
+            OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeHotelFacility pageNo {}", pageNo);
         pageNo++;

@@ -4,6 +4,7 @@ import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -48,8 +49,7 @@ public class HotelProxyService {
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
-    /**酒店离热点区域的距离 单位米*/
-    private static Integer HOTEL_TO_HOT_AREA_DISTANCE = 10000;
+
 
 
     @Transactional
@@ -65,7 +65,7 @@ public class HotelProxyService {
             hotelQueryDetailRequest.setHotelid(String.valueOf(hotelInfo.getId()));
             HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryHotelDetail(hotelQueryDetailRequest);
             if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
-                logger.info(String.format("page no %s hotel info is empty"));
+                logger.info(String.format("hotelQueryDetailResponse info is empty"));
                 return;
             }
             //根据调用结果更新hotel表
@@ -83,6 +83,7 @@ public class HotelProxyService {
                     e.printStackTrace();
                 }
             }
+            OtsInterface.initHotel(new Long(hotelInfo.getId()));
         }
     }
 
@@ -119,6 +120,7 @@ public class HotelProxyService {
         hotel.setHotelType(hotelInfo.getHoteltype()+"");
         hotel.setRepairTime(hotelInfo.getRepairtime());
         hotel.setRetentionTime(hotelInfo.getRetentiontime());
+        hotel.setRegTime(hotelInfo.getRegtime());
         hotel.setOpenTime(hotelInfo.getOpentime());
 
         hotel.setProvCode(hotelInfo.getProvcode()+"");
@@ -134,7 +136,7 @@ public class HotelProxyService {
             List<LandMark> landMarks = landMarkMapper.selectByExample(example);
             hotelService.setAllLandMarkList(landMarks);
         }
-        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), this.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
         hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
         hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
         hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());

@@ -61,7 +61,11 @@ public class HotelDto {
 
     private String openTime;
 
+    private String regTime;
+
     private String pic;
+
+    private String pics;
 
     private List<RoomTypeDto> roomTypeDtoList;
 
@@ -281,6 +285,14 @@ public class HotelDto {
         this.openTime = openTime == null ? null : openTime.trim();
     }
 
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime;
+    }
+
     public String getPic() {
         return pic;
     }
@@ -295,5 +307,13 @@ public class HotelDto {
 
     public void setRoomTypeDtoList(List<RoomTypeDto> roomTypeDtoList) {
         this.roomTypeDtoList = roomTypeDtoList;
+    }
+
+    public String getPics() {
+        return pics;
+    }
+
+    public void setPics(String pics) {
+        this.pics = pics;
     }
 }

@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -64,7 +65,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         //redis
         this.updateRedisPrice(
                 roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(),
+                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(), roomTypePriceDto.getCost(),
                 "RoomTypePriceService.saveOrUpdateByFangId");
 
         //db
@@ -85,6 +86,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         } else {
             RoomTypePrice dbRoomTypePrice = roomTypePriceList.get(0);
             dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            dbRoomTypePrice.setCost(roomTypePriceDto.getCost());
 
             dbRoomTypePrice.setUpdateDate(new Date());
             dbRoomTypePrice.setUpdateBy("hotel_system");
@@ -92,14 +94,14 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
-    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, String cacheFrom) {
+    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, String cacheFrom) {
         if (null == roomTypeId || null == day || null == price) {
             return;
         }
 
         //
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate = format.format(day);
         String strDateTime = formatTime.format(new Date());
 
@@ -115,13 +117,19 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             roomTypePrice.setRoomTypeId(roomTypeId);
             roomTypePrice.setRoomTypeName(roomTypeName);
             roomTypePrice.setPrice(price);
-            roomTypePrice.setOriginPrice(price);
+            roomTypePrice.setOriginPrice(cost);
             roomTypePrice.setCacheTime(strDateTime);
             roomTypePrice.setCacheFrom(cacheFrom);
 
             //set
             jedis.hset(priceHashName, strDate, JsonUtils.toJson(roomTypePrice));
 
+//            //
+//            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
+//            if (null != hotelId) {
+//                //
+//                OtsInterface.initHotel(hotelId);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

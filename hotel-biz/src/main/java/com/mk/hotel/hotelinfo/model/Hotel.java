@@ -58,6 +58,8 @@ public class Hotel {
 
     private String openTime;
 
+    private String regTime;
+
     private String pic;
 
     public Long getId() {
@@ -274,6 +276,14 @@ public class Hotel {
 
     public void setOpenTime(String openTime) {
         this.openTime = openTime == null ? null : openTime.trim();
+    }
+
+    public String getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(String regTime) {
+        this.regTime = regTime == null ? null : regTime.trim();
     }
 
     public String getPic() {
