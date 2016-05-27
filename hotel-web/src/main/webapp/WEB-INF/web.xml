@@ -21,6 +21,25 @@
         <param-value>classpath:root-context.xml</param-value>
     </context-param>
 
+    <filter>
+        <filter-name>usersecurityfilter</filter-name>
+        <filter-class>com.mk.hotel.common.interceptor.UserSecurityFilter</filter-class>
+        <init-param>
+            <param-name>excludePatterns</param-name>
+            <param-value>
+                /hotel/hotelall,/hotel/delete,/hotel/hotelfacility,
+                /roomtype/roomtype,/roomtype/delete,/roomtype/roomtypeprice,
+                /order/orderstatus
+
+            </param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>usersecurityfilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
