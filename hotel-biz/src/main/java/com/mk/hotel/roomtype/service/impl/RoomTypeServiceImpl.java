@@ -293,6 +293,26 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         mergeRoomType(pageNo);
     }
 
+    public void mergeRoomTypeByHotelId(Long hotelId) {
+        //
+        HotelExample example = new HotelExample();
+        example.createCriteria().andFangIdEqualTo(hotelId);
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        if (hotelList.isEmpty()) {
+            throw new MyException("-99", "-99", "酒店不存在");
+        }
+        Hotel hotel = hotelList.get(0);
+        //
+        HotelRoomTypeQueryRequest hotelRoomTypeQueryRequest = new HotelRoomTypeQueryRequest();
+        hotelRoomTypeQueryRequest.setHotelid(String.valueOf(hotelId));
+        HotelRoomTypeQueryResponse response = hotelRemoteService.queryRoomType(hotelRoomTypeQueryRequest);
+        if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData())){
+            return;
+        }
+        roomTypeProxyService.saveRoomType(hotel, response.getData());
+        OtsInterface.initHotel(hotelId);
+    }
+
     public void mergeRoomType(int pageNo) {
         logger.info("begin mergeRoomType pageNo {}", pageNo);
         HotelRoomTypeQueryRequest hotelRoomTypeQueryRequest = new HotelRoomTypeQueryRequest();

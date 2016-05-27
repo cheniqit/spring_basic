@@ -423,6 +423,28 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/mergeRoomTypePriceOnlyOne", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypePriceOnlyOne(Long hotelId) {
+        try {
+            if(hotelId == null){
+                throw new MyException("-99", "-99", "hotelId必填");
+            }
+            roomTypeService.mergeRoomTypeByHotelId(hotelId);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/mergeRoomTypeStock", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> mergeRoomTypeStock(Integer pageNo, Long hotelId) {
