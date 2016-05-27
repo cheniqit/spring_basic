@@ -95,25 +95,30 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
     }
 
-    public void updatePromoRedisStock(String hotelId, String roomTypeId, Integer promoNum){
-        QueryStockRequest queryStockRequest = new QueryStockRequest();
+    public void updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum){
         Hotel hotel = hotelMapper.selectByPrimaryKey(Long.valueOf(hotelId));
-        if(hotel == null){
-            return;
+        if(null == hotel){
+            throw new MyException("-99", "-99", "酒店不存在");
         }
+
+        RoomTypeDto roomTypeDto = this.roomTypeService.selectById(roomTypeId);
+        if(null == roomTypeDto){
+            throw new MyException("-99", "-99", "房型不存在");
+        }
+
+        //
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
         queryStockRequest.setHotelid(hotel.getFangId().toString());
-        queryStockRequest.setRoomtypeid(roomTypeId);
+        queryStockRequest.setRoomtypeid(roomTypeDto.getFangId().toString());
         queryStockRequest.setBegintime(DateUtils.formatDateTime(new Date(), DateUtils.FORMAT_DATE));
         queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
         QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
         if(response == null || response.getData() == null){
-            return;
+            throw new MyException("-99", "-99", "房爸爸接口调用错误");
         }
+
+        //
         for(QueryStockResponse.Roomtypestocks roomtypestock :  response.getData().getRoomtypestocks()) {
-            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomtypestock.getRoomtypeid()));
-            if (roomTypeDto == null) {
-                return;
-            }
             for (QueryStockResponse.Stockinfos stockInfo : roomtypestock.getStockinfos()) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = null;
@@ -128,8 +133,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void updateRedisStock(String hotelId, String roomTypeId, Date day, Integer totalNum, Integer promoNum) {
-        if (StringUtils.isBlank(hotelId) || StringUtils.isBlank(roomTypeId) || null == day || null == totalNum || null == promoNum) {
+    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer promoNum) {
+        if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == promoNum) {
             throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -141,8 +146,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             //
             jedis = RedisUtil.getJedis();
 
-            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
-            String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(roomTypeId);
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
+            String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
 
             if (totalNum.compareTo(promoNum) <= 0) {
                 //

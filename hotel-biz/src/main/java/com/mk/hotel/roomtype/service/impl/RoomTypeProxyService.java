@@ -236,7 +236,7 @@ public class RoomTypeProxyService {
                 }
 
                 //
-                roomTypeStockService.updateRedisStock(hotel.getId().toString(), roomTypeDto.getId().toString(),
+                roomTypeStockService.updateRedisStock(hotel.getId(), roomTypeDto.getId(),
                         typeStock.getDay(), typeStock.getNumber().intValue(), promoCount);
             }
         }
