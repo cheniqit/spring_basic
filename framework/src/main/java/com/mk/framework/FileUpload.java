@@ -8,7 +8,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class FileUpload {
 	private static final Logger logger = Logger
@@ -19,8 +21,9 @@ public class FileUpload {
 	 * @date：2015-9-6 下午4:10:16
 	 */
 	@SuppressWarnings("unused")
-	public static void uploadFile(HttpServletRequest request, String saveFilePath, String fileName) throws Exception {
+	public static List<String> uploadFile(HttpServletRequest request, String saveFilePath) throws Exception {
 		// 创建一个通用的多部分解析器
+		List<String> resultList = new ArrayList();
 		try {
 		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
 				request.getSession().getServletContext());
@@ -37,14 +40,15 @@ public class FileUpload {
 				if (file != null) {
 					// 取得当前上传文件的文件名称
 					String myFileName = file.getOriginalFilename();
+					resultList.add(myFileName);
 					// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
 					if (StringUtils.isNotBlank(myFileName)) {
 						// 检查上传路径是否存在
-						File sendDir= new File(rootPath+saveFilePath);
+						File sendDir= new File(rootPath+saveFilePath+myFileName);
 						if (!sendDir.exists()) {
 							sendDir.mkdirs();
 						}
-						File sendFile = new File(rootPath+saveFilePath+fileName);
+						File sendFile = new File(rootPath+saveFilePath+myFileName);
 							// 上传附件目录
 							String sendFilePath = sendFile.getAbsolutePath();
 							if (sendFile.exists() && sendFile.isFile())
@@ -62,6 +66,7 @@ public class FileUpload {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return resultList;
 	}
 	
 	

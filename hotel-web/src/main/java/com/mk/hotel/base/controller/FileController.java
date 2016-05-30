@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -26,33 +28,37 @@ public class FileController {
     Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @RequestMapping("/upload")
-    public JSONObject upload(String fileName, HttpServletRequest request) throws IOException{
+    public JSONObject upload(HttpServletRequest request) throws IOException{
         JSONObject jsonObj = new JSONObject();
+        List<String> resultList = new ArrayList<String>();
         try {
-            FileUpload.uploadFile(request, Constant.UPLOAD_PATH, fileName);
+            List<String> localNameList = FileUpload.uploadFile(request, Constant.UPLOAD_PATH);
+            String rootPath = request.getSession().getServletContext().getRealPath("/");
+            for(String fileName : localNameList){
+                File rmFile = new File(rootPath + Constant.UPLOAD_PATH + fileName);
+                if (!rmFile.exists()) {
+                    throw new IOException("文件上传失败");
+                }
+                String qiNiuFileName = UUID.randomUUID().toString()+ ".jpg";
+                InputStream inputStream = null;
+                try {
+                    inputStream = new FileInputStream(rmFile);
+                    QiniuUtils.uploadAndTry(IOUtils.toByteArray(inputStream), qiNiuFileName, Constant.QINIU_BUCKET);
+                    String qiNiuUrl = Constant.QINIU_DOWNLOAD_ADDRESS+"/"+qiNiuFileName;
+                    resultList.add(qiNiuUrl);
+                }catch (Exception e){
+                    jsonObj.put("success", "F");
+                    jsonObj.put("errmsg", "文件上传失败,图片服务器异常");
+                    return jsonObj;
+                }finally {
+                    IOUtils.closeQuietly(inputStream);
+                }
+            }
         }catch (Exception e){
             throw new IOException("文件上传失败");
         }
-        String rootPath = request.getSession().getServletContext().getRealPath("/");
-        File rmFile = new File(rootPath + Constant.UPLOAD_PATH + fileName);
-        if (!rmFile.exists()) {
-            throw new IOException("文件上传失败");
-        }
-        String qiNiuFileName = UUID.randomUUID().toString()+ ".jpg";
-        InputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream(rmFile);
-            QiniuUtils.uploadAndTry(IOUtils.toByteArray(inputStream), qiNiuFileName, Constant.QINIU_BUCKET);
-        }catch (Exception e){
-            jsonObj.put("success", "F");
-            jsonObj.put("errmsg", "文件上传失败,图片服务器异常");
-            return jsonObj;
-        }finally {
-            IOUtils.closeQuietly(inputStream);
-        }
-        String qiNiuUrl = Constant.QINIU_DOWNLOAD_ADDRESS+"/"+qiNiuFileName;
         jsonObj.put("success", "T");
-        jsonObj.put("url", qiNiuUrl);
+        jsonObj.put("urlList", resultList);
         return jsonObj;
     }
 

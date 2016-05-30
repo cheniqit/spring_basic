@@ -1,6 +1,6 @@
 package com.mk.hotel.common;
 
-import com.mk.framework.PropertiesUtil;
+import com.mk.framework.UrlUtils;
 
 /**
  * Created by chenqi on 16/5/30.
@@ -9,16 +9,16 @@ public class Constant {
     public static final String UPLOAD_PATH = "upload/";
 
     /**七牛文件下载路径key*/
-    public static final String QINIU_DOWNLOAD_ADDRESS = new PropertiesUtil().getValue("common.properties", "qiniuDownloadAddress");
+    public static final String QINIU_DOWNLOAD_ADDRESS = UrlUtils.getUrl("qiniuDownloadAddress");
 
     /**七牛文件下载路径*/
-    public static final String QINIU_RESOURCE_DOWNLOAD_ADDRESS=new PropertiesUtil().getValue("common.properties", "qiniuResourceDownloadAddress");
+    public static final String QINIU_RESOURCE_DOWNLOAD_ADDRESS= UrlUtils.getUrl("qiniuResourceDownloadAddress");
     /**七牛安全公钥key*/
-    public static final String QINIU_ACCESS_KEY = new PropertiesUtil().getValue("common.properties", "qiniuAccessKey");
-    public static final String QINIU_SECRET_KEY = new PropertiesUtil().getValue("common.properties", "qiniuSecretKey");
+    public static final String QINIU_ACCESS_KEY = UrlUtils.getUrl("qiniuAccessKey");
+    public static final String QINIU_SECRET_KEY = UrlUtils.getUrl("qiniuSecretKey");
     /**七牛下载凭证时间key*/
-    public static final String QINIU_INVALIDATION_TIME = new PropertiesUtil().getValue("common.properties", "qiniuInvalidationTime");
+    public static final String QINIU_INVALIDATION_TIME = UrlUtils.getUrl("qiniuInvalidationTime");
     /**七牛空间名称key*/
-    public static final String QINIU_BUCKET = new PropertiesUtil().getValue("common.properties", "qiniuBucket");
-    public static final String QINIU_RESOURCE_BUCKET=new PropertiesUtil().getValue("common.properties", "resourceBucket");
+    public static final String QINIU_BUCKET = UrlUtils.getUrl("qiniuBucket");
+    public static final String QINIU_RESOURCE_BUCKET=UrlUtils.getUrl("resourceBucket");
 }
