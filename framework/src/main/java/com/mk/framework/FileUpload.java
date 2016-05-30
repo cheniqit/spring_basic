@@ -40,6 +40,9 @@ public class FileUpload {
 				if (file != null) {
 					// 取得当前上传文件的文件名称
 					String myFileName = file.getOriginalFilename();
+					if(StringUtils.isBlank(myFileName)){
+						continue;
+					}
 					resultList.add(myFileName);
 					// 如果名称不为“”,说明该文件存在，否则说明该文件不存在
 					if (StringUtils.isNotBlank(myFileName)) {
