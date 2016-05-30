@@ -114,8 +114,12 @@ public class PropertiesUtil {
 	 * @return key的值
 	 * @throws IOException 
 	 */
-	public String getValue(String filePath, String key) throws IOException {
-		load(filePath);
+	public String getValue(String filePath, String key) {
+		try {
+			load(filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if(properties.containsKey(key)){
 			return properties.getProperty(key);
 		}else{

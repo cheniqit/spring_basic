@@ -48,8 +48,8 @@ public class OrderController {
             }
             OrderStatusPush orderStatusPush = JsonUtils.fromJson(body, OrderStatusPush.class);
             if(orderStatusPush == null
-                    || StringUtils.isNotBlank(orderStatusPush.getOrderid())
-                    || StringUtils.isNotBlank(orderStatusPush.getOrderstatus())){
+                    || StringUtils.isBlank(orderStatusPush.getOrderid())
+                    || StringUtils.isBlank(orderStatusPush.getOrderstatus())){
                 result.put("success", "F");
                 result.put("errorCode", "参数为空");
                 return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
