@@ -317,6 +317,19 @@
 
                 <ots.interface.initHotel.url>http://api.imike.cn/ots</ots.interface.initHotel.url>
                 <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
+
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke-pro.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <!-- <qiniu.bucket>hotelpic</qiniu.bucket> -->
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <qiniu.bucket>test</qiniu.bucket>
+                <!-- 七牛资源空间地址 -->
+                <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
+                <!-- 七牛资源空间名称 -->
+                <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
             </properties>
         </profile>
 
@@ -344,6 +357,19 @@
 
                 <ots.interface.initHotel.url>http://huidu.imike.cn/ots</ots.interface.initHotel.url>
                 <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
+
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke-pro.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <!-- <qiniu.bucket>hotelpic</qiniu.bucket> -->
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <qiniu.bucket>test</qiniu.bucket>
+                <!-- 七牛资源空间地址 -->
+                <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
+                <!-- 七牛资源空间名称 -->
+                <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
             </properties>
         </profile>
 
@@ -371,6 +397,15 @@
 
                 <ots.interface.initHotel.url>http://api.imike.com/ots</ots.interface.initHotel.url>
                 <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
+
+                <!-- 七牛获取文件路径 -->
+                <qiniu.download.address>https://dn-imke-pro.qbox.me</qiniu.download.address>
+                <!-- 七牛空间名称 -->
+                <qiniu.bucket>hotelpic</qiniu.bucket>
+                <!-- 七牛资源空间地址 -->
+                <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
+                <!-- 七牛资源空间名称 -->
+                <qiniu.resourceBucket>resource</qiniu.resourceBucket>
             </properties>
         </profile>
 
