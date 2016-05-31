@@ -44,10 +44,10 @@ public class HotelRemoteServiceTest {
     @Test
     public void testQueryHotelPrice() throws Exception {
         HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
-        hotelPriceRequest.setHotelid("2807");
+        hotelPriceRequest.setHotelid("774");
         hotelPriceRequest.setChannelid("11");
         hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
-        hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 1)));
+        hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 2)));
         HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
         Assert.assertNotNull(response.getData());
     }

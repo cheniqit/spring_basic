@@ -28,7 +28,12 @@ public class PageBean<T> {
             pageIndex=1;
         }
         //根据当前页计算起始和结束条目
-        this.start=(pageIndex-1)*pageCount+1;
+        if(pageIndex == 1){
+            this.start = 0;
+        }else{
+            this.start=(pageIndex-1)*pageCount+1;
+        }
+
         this.end=pageIndex*pageCount;
     }
 

@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.mk.framework.FileUpload;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.utils.QiniuUtils;
+import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +30,29 @@ public class FileController {
     Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @RequestMapping("/upload")
-    public JSONObject upload(HttpServletRequest request) throws IOException{
+    public JSONObject upload(Long hotelId, Long roomTypeId, Long picResourceId, String picType, HttpServletRequest request) throws IOException{
         JSONObject jsonObj = new JSONObject();
+        if(hotelId == null){
+            jsonObj.put("success", "F");
+            jsonObj.put("errMsg", "hotelId参数为空");
+            return jsonObj;
+        }
+        if(StringUtils.isBlank(picType)){
+            jsonObj.put("success", "F");
+            jsonObj.put("errMsg", "picType参数为空");
+            return jsonObj;
+        }
+        HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByCode(Integer.valueOf(picType));
+        if(hotelPicTypeEnum == null){
+            jsonObj.put("success", "F");
+            jsonObj.put("errMsg", "picType参数错误");
+            return jsonObj;
+        }
+        if(hotelPicTypeEnum.getCode() == HotelPicTypeEnum.roomType.getCode() && roomTypeId == null){
+            jsonObj.put("success", "F");
+            jsonObj.put("errMsg", "上传房型图片时必传roomTypeId");
+            return jsonObj;
+        }
         List<String> resultList = new ArrayList<String>();
         try {
             List<String> localNameList = FileUpload.uploadFile(request, Constant.UPLOAD_PATH);
@@ -46,6 +69,8 @@ public class FileController {
                     QiniuUtils.uploadAndTry(IOUtils.toByteArray(inputStream), qiNiuFileName, Constant.QINIU_BUCKET);
                     String qiNiuUrl = Constant.QINIU_DOWNLOAD_ADDRESS+"/"+qiNiuFileName;
                     resultList.add(qiNiuUrl);
+                    //保存图片信息
+
                 }catch (Exception e){
                     jsonObj.put("success", "F");
                     jsonObj.put("errmsg", "文件上传失败,图片服务器异常");

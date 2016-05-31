@@ -19,6 +19,10 @@ public class MyException extends RuntimeException implements Serializable {
         this.errorKey = errorKey;
     }
 
+    public MyException(String msg){
+        super(msg);
+    }
+
     public String getErrorCode() {
         return errorCode;
     }
