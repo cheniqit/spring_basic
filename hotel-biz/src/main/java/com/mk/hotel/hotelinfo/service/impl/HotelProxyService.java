@@ -57,33 +57,37 @@ public class HotelProxyService {
             return;
         }
         for(HotelQueryListResponse.HotelInfo hotelInfo : hotelInfoList){
-            //根据房间列表id查找房间详细信息
-            HotelQueryDetailRequest hotelQueryDetailRequest = new HotelQueryDetailRequest();
-            PmsAuthHeader pmsAuthHeader = new PmsAuthHeader();
-            hotelQueryDetailRequest.setChannelid(pmsAuthHeader.getChannelId());
-            hotelQueryDetailRequest.setHotelid(String.valueOf(hotelInfo.getId()));
-            HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryHotelDetail(hotelQueryDetailRequest);
-            if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
-                logger.info(String.format("hotelQueryDetailResponse info is empty"));
-                return;
-            }
-            //根据调用结果更新hotel表
-            HotelDto hotelDto = hotelService.findByFangId(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
-            if(hotelDto == null || hotelDto.getId() == null){
-                try {
-                    saveHotel(hotelQueryDetailResponse);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }else{
-                try {
-                    updateHotel(hotelDto.getId(),hotelQueryDetailResponse);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            OtsInterface.initHotel(new Long(hotelInfo.getId()));
+            mergeHotel(Long.valueOf(hotelInfo.getId()));
         }
+    }
+
+    public void mergeHotel(Long pmsHotelId){
+        //根据房间列表id查找房间详细信息
+        HotelQueryDetailRequest hotelQueryDetailRequest = new HotelQueryDetailRequest();
+        PmsAuthHeader pmsAuthHeader = new PmsAuthHeader();
+        hotelQueryDetailRequest.setChannelid(pmsAuthHeader.getChannelId());
+        hotelQueryDetailRequest.setHotelid(pmsHotelId.toString());
+        HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryHotelDetail(hotelQueryDetailRequest);
+        if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
+            logger.info(String.format("hotelQueryDetailResponse info is empty"));
+            return;
+        }
+        //根据调用结果更新hotel表
+        HotelDto hotelDto = hotelService.findByFangId(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
+        if(hotelDto == null || hotelDto.getId() == null){
+            try {
+                saveHotel(hotelQueryDetailResponse);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                updateHotel(hotelDto.getId(),hotelQueryDetailResponse);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        OtsInterface.initHotel(hotelDto.getId());
     }
 
     public void saveHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {

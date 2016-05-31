@@ -255,6 +255,11 @@ public class HotelServiceImpl implements HotelService {
         mergePmsHotel(pageNo);
     }
 
+    public void mergePmsHotelByHotelId(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        hotelProxyService.mergeHotel(hotel.getFangId());
+    }
+
     public void updateRedisHotel(Long hotelId, Hotel hotel, String cacheFrom) {
         if (null == hotelId || null == hotel) {
             return;

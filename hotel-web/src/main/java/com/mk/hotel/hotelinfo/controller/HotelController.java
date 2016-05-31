@@ -355,12 +355,17 @@ public class HotelController {
 
     @RequestMapping(value = "/mergePmsHotel", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergePmsHotel(Integer pageNo) {
+    public ResponseEntity<HashMap<String, Object>> mergePmsHotel(Long hotelId, Integer pageNo) {
         try {
            if(pageNo == null){
                pageNo = 1;
            }
-           hotelService.mergePmsHotel(pageNo);
+            if(hotelId == null){
+                hotelService.mergePmsHotel(pageNo);
+            }else{
+                hotelService.mergePmsHotelByHotelId(hotelId);
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

@@ -24,6 +24,8 @@ public interface HotelService {
 
     void mergePmsHotel(int pageNo);
 
+    void mergePmsHotelByHotelId(Long hotelId);
+
     void saveOrUpdateByFangId(HotelDto hotelDto);
 
     List<HotelDto> findHotelByName(String hotelName, String cityCode);
