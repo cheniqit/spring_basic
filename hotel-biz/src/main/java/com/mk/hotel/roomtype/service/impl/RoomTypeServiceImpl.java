@@ -479,6 +479,20 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         mergeRoomTypePrice(pageNo);
     }
 
+    public void mergeRoomTypePriceByHotelId(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
+        hotelPriceRequest.setHotelid(hotel.getFangId().toString());
+        hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
+        hotelPriceRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
+        HotelPriceResponse response = hotelRemoteService.queryHotelPrice(hotelPriceRequest);
+        if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
+            return;
+        }
+        roomTypeProxyService.saveRoomTypePrice(response.getData());
+        OtsInterface.initHotel(new Long(hotel.getId()));
+    }
+
     public void mergeRoomTypePrice(int pageNo) {
         logger.info("begin mergeRoomTypePrice pageNo {}", pageNo);
         //酒店分页

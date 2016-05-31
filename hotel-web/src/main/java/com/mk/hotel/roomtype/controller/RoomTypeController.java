@@ -382,12 +382,17 @@ public class RoomTypeController {
 
     @RequestMapping(value = "/mergeRoomType", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergeRoomType(Integer pageNo) {
+    public ResponseEntity<HashMap<String, Object>> mergeRoomType(Long hotelId, Integer pageNo) {
         try {
             if(pageNo == null){
                 pageNo = 1;
             }
-            roomTypeService.mergeRoomType(pageNo);
+            if(hotelId != null){
+                roomTypeService.mergeRoomTypeByHotelId(hotelId);
+            }else{
+                roomTypeService.mergeRoomType(pageNo);
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -403,12 +408,17 @@ public class RoomTypeController {
 
     @RequestMapping(value = "/mergeRoomTypePrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergeRoomTypePrice(Integer pageNo) {
+    public ResponseEntity<HashMap<String, Object>> mergeRoomTypePrice(Long hotelId, Integer pageNo) {
         try {
             if(pageNo == null){
                 pageNo = 1;
             }
-            roomTypeService.mergeRoomTypePrice(pageNo);
+            if(hotelId != null){
+                roomTypeService.mergeRoomTypePriceByHotelId(hotelId);
+            }else{
+                roomTypeService.mergeRoomTypePrice(pageNo);
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
