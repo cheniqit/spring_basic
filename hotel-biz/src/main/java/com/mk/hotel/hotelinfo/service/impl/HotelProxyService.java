@@ -74,35 +74,38 @@ public class HotelProxyService {
         }
         //根据调用结果更新hotel表
         HotelDto hotelDto = hotelService.findByFangId(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
+        Hotel hotel = null;
         if(hotelDto == null || hotelDto.getId() == null){
             try {
-                saveHotel(hotelQueryDetailResponse);
+                hotel = saveHotel(hotelQueryDetailResponse);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }else{
             try {
-                updateHotel(hotelDto.getId(),hotelQueryDetailResponse);
+                hotel = updateHotel(hotelDto.getId(),hotelQueryDetailResponse);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        OtsInterface.initHotel(hotelDto.getId());
+        OtsInterface.initHotel(hotel.getId());
     }
 
-    public void saveHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
+    public Hotel saveHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
         Hotel hotel = convertHotel(hotelQueryDetailResponse);
         hotelMapper.insertSelective(hotel);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.saveHotel");
+        return hotel;
     }
 
-    public void updateHotel(Long hotelId, HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
+    public Hotel updateHotel(Long hotelId, HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
         Hotel hotel = convertHotel(hotelQueryDetailResponse);
         hotel.setId(hotelId);
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
         hotelMapper.updateByExampleSelective(hotel, example);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.updateHotel");
+        return hotel;
     }
 
     private Hotel convertHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
