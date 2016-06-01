@@ -21,11 +21,11 @@ import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
-import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
@@ -65,9 +65,8 @@ public class HotelController {
     private HotelMapper hotelMapper;
     @Autowired
     private RoomTypeStockService roomTypeStockService;
-
     @Autowired
-    private RoomTypeService roomTypeService;
+    private HotelPicServiceImpl hotelPicService;
 
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
@@ -211,7 +210,7 @@ public class HotelController {
             this.hotelService.saveOrUpdateByFangId(hotelDto);
 
             //
-            OtsInterface.initHotel(hotelJson.getId());
+            OtsInterface.initHotel(hotelDto.getId());
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
@@ -461,6 +460,26 @@ public class HotelController {
         try {
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             roomTypeStockService.updatePromoRedisStock(hotelId, roomTypeId, promoNum);
+            result.put("success", "T");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/saveHotelPic", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> saveHotelPic(String oldUrl, Long hotelId,Long roomTypeId, String picType, String url, String fileName, String updateBy) {
+
+        try {
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            hotelPicService.saveHotelPic(oldUrl, hotelId, roomTypeId, picType, url, fileName, updateBy);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }catch (Exception e) {

@@ -21,6 +21,7 @@ import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
+import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
@@ -56,7 +57,8 @@ public class HotelServiceImpl implements HotelService {
     private HotelProxyService hotelProxyService;
     @Autowired
     private AddressInfoRemoteService addressInfoRemoteService;
-
+    @Autowired
+    private HotelPicServiceImpl hotelPicService;
 
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -121,6 +123,7 @@ public class HotelServiceImpl implements HotelService {
             //
             this.hotelMapper.insert(dbHotel);
             hotelId = dbHotel.getId();
+            hotelDto.setId(hotelId);
             this.updateRedisHotel(hotelId, dbHotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
         } else {
             //hotelLandMark
@@ -168,6 +171,7 @@ public class HotelServiceImpl implements HotelService {
 
             hotelId = hotel.getId();
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            hotelDto.setId(hotelId);
             this.updateRedisHotel(hotelId, hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
 
         }
@@ -300,6 +304,7 @@ public class HotelServiceImpl implements HotelService {
                 for (int i = 0; i < picArray.size(); i++) {
                     String strPic = picArray.getString(i);
                     PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                    picList = hotelPicService.replacePicList(hotelId, null, picList);
                     picLists.add(picList);
                 }
             }
