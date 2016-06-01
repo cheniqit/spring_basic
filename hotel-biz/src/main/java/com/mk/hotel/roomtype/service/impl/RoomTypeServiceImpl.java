@@ -15,6 +15,7 @@ import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
@@ -60,6 +61,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private HotelService hotelService;
     @Autowired
     private RoomTypeProxyService roomTypeProxyService;
+    @Autowired
+    private HotelPicServiceImpl hotelPicService;
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
@@ -421,6 +424,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 for (int i = 0; i < picArray.size(); i++) {
                     String strPic = picArray.getString(i);
                     PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                    picList = hotelPicService.replacePicList(null, roomTypeId, picList);
                     picLists.add(picList);
                 }
             }
