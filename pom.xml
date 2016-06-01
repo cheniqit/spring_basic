@@ -393,7 +393,7 @@
                 <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
-                <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
+                <pms.token>a3b803635c9477677f17bfc6cf490624</pms.token>
 
                 <ots.interface.initHotel.url>http://api.imike.com/ots</ots.interface.initHotel.url>
                 <ots.interface.initHotel.token>!@#$%Admin)(*&amp;^</ots.interface.initHotel.token>
