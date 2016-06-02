@@ -186,8 +186,12 @@ public class RoomTypeProxyService {
         RoomTypePrice roomTypePrice = new RoomTypePrice();
         roomTypePrice.setRoomTypeId(roomTypeId);
         roomTypePrice.setDay(DateUtils.parseDate(priceinfo.getDate(), DateUtils.FORMAT_DATE));
-        roomTypePrice.setPrice(new BigDecimal(priceinfo.getPrice()));
-        roomTypePrice.setCost(new BigDecimal(priceinfo.getCost()));
+        BigDecimal price = new BigDecimal(priceinfo.getPrice());
+        price = price.setScale(2, BigDecimal.ROUND_HALF_UP);
+        roomTypePrice.setPrice(price);
+        BigDecimal cost = new BigDecimal(priceinfo.getCost());
+        cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
+        roomTypePrice.setCost(cost);
 
         roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
         roomTypePrice.setUpdateDate(new Date());
