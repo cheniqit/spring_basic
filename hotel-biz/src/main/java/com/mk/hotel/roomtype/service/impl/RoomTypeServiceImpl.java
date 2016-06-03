@@ -318,7 +318,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void mergeRoomTypeByHotelId(Long hotelId) {
         //
         HotelExample example = new HotelExample();
-        example.createCriteria().andFangIdEqualTo(hotelId);
+        example.createCriteria().andIdEqualTo(hotelId);
         List<Hotel> hotelList = hotelMapper.selectByExample(example);
         if (hotelList.isEmpty()) {
             throw new MyException("-99", "-99", "酒店不存在");
