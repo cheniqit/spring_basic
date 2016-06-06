@@ -21,4 +21,6 @@ public class Constant {
     /**七牛空间名称key*/
     public static final String QINIU_BUCKET = UrlUtils.getUrl("qiniuBucket");
     public static final String QINIU_RESOURCE_BUCKET=UrlUtils.getUrl("resourceBucket");
+
+    public static final String PUSH_INFO_SET = "PUSH_INFO_SET";
 }

@@ -1,0 +1,41 @@
+package com.mk.execution.index.hotel;
+
+import org.slf4j.Logger;
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Created by 振涛 on 2016/2/18.
+ */
+class PushInfoRefresh implements Runnable {
+
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(PushInfoRefresh.class);
+
+    private JobQueueMessage msg;
+
+    PushInfoRefresh(JobQueueMessage msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public void run() {
+        //IBaseIndexerService baseIndexerService = AppUtils.getBean(IBaseIndexerService.class);
+        try {
+            if (msg!= null && msg.pushInfo != null){
+                String body  = msg.pushInfo.body;
+                String type = msg.pushInfo.type;
+                try {
+                    TimeUnit.MILLISECONDS.sleep(600);
+                } catch (InterruptedException e1) {
+
+                }
+                //baseIndexerService.initHotel(hotelId);
+                JobQueue.getInstance().rem(msg);
+                LOGGER.info("hotelId:[{}] index refresh finished.", msg.pushInfo.body);
+            }
+
+        } catch (Exception e) {
+            LOGGER.error("error: ", e);
+        }
+    }
+}
