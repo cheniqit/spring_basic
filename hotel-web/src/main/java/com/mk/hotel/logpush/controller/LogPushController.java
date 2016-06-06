@@ -1,5 +1,6 @@
 package com.mk.hotel.logpush.controller;
 
+import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.hotelinfo.service.HotelCopyService;
 import com.mk.hotel.log.LogPushService;
@@ -50,9 +51,6 @@ public class LogPushController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //
-        HotelCopyService hotelCopyService = new HotelCopyService();
-        RoomTypeCopyService roomTypeCopyService = new RoomTypeCopyService();
 
         //
         List<LogPushDto> logPushList = this.logPushService.getByTime(dateStart, dateEnd, logId);
@@ -61,28 +59,7 @@ public class LogPushController {
             String body = logPushDto.getMsg();
 
             LogPushTypeEnum type = LogPushTypeEnum.getById(typeId);
-            switch (type) {
-                case hotelAll:
-                    hotelCopyService.handleHotelAll(body);
-                    break;
-                case hotelDelete:
-
-                    hotelCopyService.handleHotelDel(body);
-                    break;
-                case hotelFacility:
-                    hotelCopyService.handleHotelFacility(body);
-                    break;
-                case roomType:
-                    roomTypeCopyService.handleRoomType(body);
-                    break;
-                case roomTypeDelete:
-                    roomTypeCopyService.handleRoomTypeDel(body);
-                    break;
-                case roomTypePrice:
-                    roomTypeCopyService.handleRoomTypePrice(body);
-                    break;
-
-            }
+            JobManager.addPushInfoToRefreshJob(body, type);
         }
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();

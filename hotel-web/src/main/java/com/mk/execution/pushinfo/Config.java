@@ -7,7 +7,7 @@ class Config {
     /**
      * 线程池大小
      */
-    static final Integer POOL_SIZE = 8;
+    static final Integer POOL_SIZE = 16;
     /**
      * 任务执行超时时间,单位是毫秒
      */
