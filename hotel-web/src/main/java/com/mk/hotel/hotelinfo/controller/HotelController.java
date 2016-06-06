@@ -1,25 +1,13 @@
 package com.mk.hotel.hotelinfo.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
-import com.mk.framework.AppUtils;
 import com.mk.framework.Constant;
-import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.JsonUtils;
 import com.mk.hotel.common.bean.PageBean;
-import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
-import com.mk.hotel.hotelinfo.json.facility.FacilityJson;
-import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
-import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
-import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
-import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -29,8 +17,6 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
-import com.mk.hotel.roomtype.dto.RoomTypeDto;
-import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,7 +26,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,6 +71,7 @@ public class HotelController {
             e.printStackTrace();
             Cat.logError(e);
         }
+
 
         //
         JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelAll);

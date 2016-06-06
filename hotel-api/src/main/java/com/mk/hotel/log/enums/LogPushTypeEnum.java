@@ -35,7 +35,16 @@ public enum LogPushTypeEnum {
 	public String toString() {
 		return String.valueOf(id) + " " + name;
 	}
-	
+
+	public static LogPushTypeEnum getById(Long id){
+		for (LogPushTypeEnum temp : LogPushTypeEnum.values()) {
+			if(temp.getId().equals(id)){
+				return temp;
+			}
+		}
+		return other;
+	}
+
 	public static LogPushTypeEnum getByName(String name){
 		for (LogPushTypeEnum temp : LogPushTypeEnum.values()) {
 			if(temp.getName().equals(name)){
