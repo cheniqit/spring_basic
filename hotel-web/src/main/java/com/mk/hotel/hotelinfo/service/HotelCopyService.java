@@ -95,7 +95,7 @@ public class HotelCopyService {
                     } catch (Exception e) {
                         e.printStackTrace();
                         Cat.logError(e);
-                        throw new MyException("-99", "-99", "area格式错误");
+//                        throw new MyException("-99", "-99", "area格式错误");
                     }
 
                     //
@@ -107,7 +107,7 @@ public class HotelCopyService {
                     } catch (NumberFormatException e){
                         e.printStackTrace();
                         Cat.logError(e);
-                        throw new MyException("-99", "-99", "prepay格式错误");
+//                        throw new MyException("-99", "-99", "prepay格式错误");
                     }
 
                     //
@@ -119,7 +119,7 @@ public class HotelCopyService {
                     } catch (NumberFormatException e){
                         e.printStackTrace();
                         Cat.logError(e);
-                        throw new MyException("-99", "-99", "breakfast格式错误");
+//                        throw new MyException("-99", "-99", "breakfast格式错误");
                     }
 
                     //
