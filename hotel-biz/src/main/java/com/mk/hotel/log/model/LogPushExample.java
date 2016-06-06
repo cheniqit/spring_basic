@@ -1,10 +1,12 @@
 package com.mk.hotel.log.model;
 
+import com.mk.hotel.common.bean.PageBean;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LogPushExample {
+public class LogPushExample extends PageBean{
     protected String orderByClause;
 
     protected boolean distinct;

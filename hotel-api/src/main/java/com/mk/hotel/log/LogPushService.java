@@ -11,4 +11,6 @@ public interface LogPushService {
     LogPushDto getById(Long id);
 
     List<LogPushDto> getByTime(Date start, Date end, Long id);
+
+    Integer countByTime(Date start, Date end, Long id);
 }

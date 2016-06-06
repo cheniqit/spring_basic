@@ -52,8 +52,9 @@ public class LogPushController {
             e.printStackTrace();
         }
 
+
         //
-        List<LogPushDto> logPushList = this.logPushService.getByTime(dateStart, dateEnd, logId);
+        List<LogPushDto> logPushList = this.logPushService.getByTime(dateStart, dateEnd, logId );
         for(LogPushDto logPushDto : logPushList) {
             Long typeId = logPushDto.getType();
             String body = logPushDto.getMsg();

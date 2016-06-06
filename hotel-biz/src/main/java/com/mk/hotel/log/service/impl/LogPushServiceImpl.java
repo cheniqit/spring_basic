@@ -59,6 +59,11 @@ public class LogPushServiceImpl implements LogPushService {
         LogPushExample example = new LogPushExample();
         LogPushExample.Criteria criteria = example.createCriteria();
 
+        List<Long> types = new ArrayList<Long>();
+        types.add(100l);
+        types.add(200l);
+
+        criteria.andTypeIn(types);
         if (null != id) {
             criteria.andIdEqualTo(id);
         }
@@ -66,6 +71,7 @@ public class LogPushServiceImpl implements LogPushService {
         if (null != start && null != end) {
             criteria.andCreateDateBetween(start, end);
         }
+
         //from db
         List<LogPush> pushList = this.logPushMapper.selectByExampleWithBLOBs(example);
 
@@ -78,5 +84,21 @@ public class LogPushServiceImpl implements LogPushService {
         }
 
         return resultList;
+    }
+
+    @Override
+    public Integer countByTime(Date start, Date end, Long id) {
+        LogPushExample example = new LogPushExample();
+        LogPushExample.Criteria criteria = example.createCriteria();
+
+        if (null != id) {
+            criteria.andIdEqualTo(id);
+        }
+
+        if (null != start && null != end) {
+            criteria.andCreateDateBetween(start, end);
+        }
+
+        return this.logPushMapper.countByExample(example);
     }
 }

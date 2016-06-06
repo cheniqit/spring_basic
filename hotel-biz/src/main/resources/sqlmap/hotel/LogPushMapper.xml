@@ -89,6 +89,9 @@
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
+    <if test="start != null and start != 0" >
+      limit ${start},${pageCount}
+    </if>
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.log.model.LogPushExample" >
     select
@@ -103,6 +106,9 @@
     </if>
     <if test="orderByClause != null" >
       order by ${orderByClause}
+    </if>
+    <if test="start != null and start != 0" >
+      limit ${start},${pageCount}
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
