@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.AppUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.common.utils.OtsInterface;
@@ -17,9 +19,12 @@ import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
 import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,6 +34,8 @@ import java.util.List;
  * Created by huangjie on 16/6/6.
  */
 public class HotelCopyService {
+
+    private static final Logger logger = LoggerFactory.getLogger(HotelCopyService.class);
 
     public void handleHotelAll (String body) {
 
@@ -153,13 +160,31 @@ public class HotelCopyService {
                 hotelDto.setRoomTypeDtoList(roomTypeDtoList);
             }
 
-            //
-            HotelService hotelService = AppUtils.getBean(HotelService.class);
-            hotelService.saveOrUpdateByFangId(hotelDto);
 
-            //
-            OtsInterface.initHotel(hotelDto.getId());
+            JobManager.addPushInfoToRefreshJob(JsonUtils.toJson(hotelDto), LogPushTypeEnum.hotel);
+
+//            //
+//            HotelService hotelService = AppUtils.getBean(HotelService.class);
+//
+//            hotelService.saveOrUpdateByFangId(hotelDto);
+//
+//            //
+//            OtsInterface.initHotel(hotelDto.getId());
         }
+    }
+
+    public void handleHotelDetail (String body) {
+
+
+        HotelDto hotelDto = JsonUtils.fromJson(body, HotelDto.class);
+        logger.info("handleHotelDetail: hotelId:{} start", hotelDto.getId());
+
+        HotelService hotelService = AppUtils.getBean(HotelService.class);
+        hotelService.saveOrUpdateByFangId(hotelDto);
+
+        //
+        OtsInterface.initHotel(hotelDto.getId());
+        logger.info("handleHotelDetail: hotelId:{} init", hotelDto.getId());
     }
 
 

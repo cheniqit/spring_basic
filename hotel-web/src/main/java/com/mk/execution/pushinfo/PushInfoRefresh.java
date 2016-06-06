@@ -42,8 +42,10 @@ class PushInfoRefresh implements Runnable {
                         hotelCopyService.handleHotelAll(body);
                         break;
                     case hotelDelete:
-
                         hotelCopyService.handleHotelDel(body);
+                        break;
+                    case hotel:
+                        hotelCopyService.handleHotelDetail(body);
                         break;
                     case hotelFacility:
                         hotelCopyService.handleHotelFacility(body);

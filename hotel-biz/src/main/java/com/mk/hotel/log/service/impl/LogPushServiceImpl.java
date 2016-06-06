@@ -8,6 +8,8 @@ import com.mk.hotel.log.model.LogPush;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.model.LogPushExample;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Service
 public class LogPushServiceImpl implements LogPushService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LogPushServiceImpl.class);
     @Autowired
     private LogPushMapper logPushMapper;
 
