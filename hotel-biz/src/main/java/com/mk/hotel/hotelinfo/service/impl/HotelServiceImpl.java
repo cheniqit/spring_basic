@@ -313,10 +313,11 @@ public class HotelServiceImpl implements HotelService {
             Integer intHotelType = null;
             try {
                 intHotelType = Integer.parseInt(hotel.getHotelType());
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
+
             //town code
             AddressByLocationResponse townLocation = addressInfoRemoteService.findAddressByLocation(
                     String.valueOf(hotel.getLat()), String.valueOf(hotel.getLon()));

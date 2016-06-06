@@ -137,6 +137,7 @@ public class HotelCopyService {
                         }
                     }
 
+
                     //
                     RoomTypeDto roomTypeDto = new RoomTypeDto();
                     roomTypeDto.setFangHotelId(hotelJson.getId());
