@@ -473,13 +473,13 @@ public class HotelController {
 
     }
 
-    @RequestMapping(value = "/saveHotelPic", method = RequestMethod.POST)
+    @RequestMapping(value = "/savepicture", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> saveHotelPic(String oldUrl, Long hotelId,Long roomTypeId, String picType, String url, String fileName, String updateBy) {
+    public ResponseEntity<HashMap<String, Object>> savePicture(Long hotelId, Long roomTypeId, String picType, String url, String updateBy) {
 
         try {
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
-            hotelPicService.saveHotelPic(oldUrl, hotelId, roomTypeId, picType, url, fileName, updateBy);
+            hotelPicService.saveHotelPic(hotelId, roomTypeId, picType, url, updateBy);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }catch (Exception e) {
@@ -492,6 +492,27 @@ public class HotelController {
         }
 
     }
+
+    @RequestMapping(value = "/delpicture", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> delPicture(Long hotelId,Long roomTypeId, String picType, String url, String updateBy) {
+
+        try {
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            hotelPicService.delPicture(hotelId, roomTypeId, picType, url, updateBy);
+            result.put("success", "T");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
 
 }
 
