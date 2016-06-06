@@ -1,6 +1,8 @@
 package com.mk.hotel.remote.pms.hotelstock;
 
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.framework.Constant;
 import com.mk.framework.FbbRequestHead;
 import com.mk.framework.HttpUtils;
@@ -22,11 +24,17 @@ public class HotelStockRemoteService {
     public QueryStockResponse queryStock(QueryStockRequest queryStockRequest){
         String body = JsonUtils.toJson(queryStockRequest);
         String remoteResult = null;
+
+        Transaction t = Cat.newTransaction("queryRemoteStock", "HotelStockRemoteService.queryStock");
+
         try {
             remoteResult = HttpUtils.sendHttpClientPostByString(Constant.PMS_REMOTE_URL + this.HOTEL_QUERY_STOCK,
                     new FbbRequestHead(), body);
         } catch (IOException e) {
             e.printStackTrace();
+            t.setStatus(e);
+        } finally {
+            t.complete();
         }
         QueryStockResponse response = JsonUtils.fromJson(remoteResult, QueryStockResponse.class);
         return response;
