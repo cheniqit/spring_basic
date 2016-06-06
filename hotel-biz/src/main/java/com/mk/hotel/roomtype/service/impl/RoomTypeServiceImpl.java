@@ -243,8 +243,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             }
         }
 
-        //stock
-        this.mergeRoomTypeStockByHotel(hotelId);
+//        //stock
+//        this.mergeRoomTypeStockByHotel(hotelId);
     }
 
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
@@ -305,8 +305,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             this.updateRedisRoomType(dbDto.getId(), roomType, "RoomTypeService.saveOrUpdateByFangId");
             int result = this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
 
-            //stock
-            this.mergeRoomTypeStockByHotel(hotelDto.getId());
+//            //stock
+//            this.mergeRoomTypeStockByHotel(hotelDto.getId());
             return result;
         }
     }
