@@ -21,11 +21,11 @@ public class Init implements ApplicationListener<ContextRefreshedEvent>, Disposa
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-//        //防止调用两次
-//        if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
+        //防止调用两次
+        if (contextRefreshedEvent.getApplicationContext().getParent() == null || contextRefreshedEvent.getApplicationContext().getParent().getParent() == null) {
             jobManagerThread.setDaemon(true);
             jobManagerThread.start();
-//        }
+        }
     }
 
     @Override
