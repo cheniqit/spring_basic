@@ -1,5 +1,6 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -7,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class JobManager {
 
-    public static void addPushInfoToRefreshJob(String body , String type) {
+    public static void addPushInfoToRefreshJob(String body , LogPushTypeEnum type) {
         if (StringUtils.isBlank(body)) {
             throw new IllegalArgumentException("hotelId can not be blank.");
         }

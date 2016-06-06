@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;

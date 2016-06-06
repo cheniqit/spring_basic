@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 import org.slf4j.Logger;
 

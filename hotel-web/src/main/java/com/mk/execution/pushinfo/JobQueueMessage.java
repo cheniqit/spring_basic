@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 /**
  * Created by 振涛 on 2016/2/20.

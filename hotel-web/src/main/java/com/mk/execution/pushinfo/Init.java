@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationListener;
@@ -21,11 +21,11 @@ public class Init implements ApplicationListener<ContextRefreshedEvent>, Disposa
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        //防止调用两次
-        if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
+//        //防止调用两次
+//        if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
             jobManagerThread.setDaemon(true);
             jobManagerThread.start();
-        }
+//        }
     }
 
     @Override

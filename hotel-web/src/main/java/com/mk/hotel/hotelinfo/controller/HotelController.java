@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.mk.execution.pushinfo.JobManager;
+import com.mk.framework.AppUtils;
 import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
@@ -85,133 +87,8 @@ public class HotelController {
             Cat.logError(e);
         }
 
-
-        List<HotelAllJson> hotelJsonList = new ArrayList<HotelAllJson>();
-        try {
-            //
-            JSONArray hotelAllArray = JSON.parseArray(body);
-            int arraySize = hotelAllArray.size();
-
-            for (int i = 0; i < arraySize; i++) {
-                String strHotelALLJson = hotelAllArray.get(i).toString();
-
-                //
-                HotelAllJson hotelJson = JSONUtil.fromJson(strHotelALLJson, HotelAllJson.class);
-                hotelJsonList.add(hotelJson);
-            }
-        } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
-        }
-
-        for (HotelAllJson hotelJson : hotelJsonList) {
-            //
-            HotelDto hotelDto = new HotelDto();
-            hotelDto.setFangId(hotelJson.getId());
-            hotelDto.setName(hotelJson.getHotelname());
-            hotelDto.setAddr(hotelJson.getDetailaddr());
-            hotelDto.setPhone(hotelJson.getHotelphone());
-            hotelDto.setLat(hotelJson.getLatitude());
-            hotelDto.setLon(hotelJson.getLongitude());
-            hotelDto.setDefaultLeaveTime(hotelJson.getDefaultleavetime());
-            hotelDto.setHotelType(String.valueOf(hotelJson.getHoteltype()));
-            hotelDto.setRetentionTime(hotelJson.getRetentiontime());
-            hotelDto.setRepairTime(hotelJson.getRepairtime());
-            hotelDto.setRegTime(hotelJson.getRegtime());
-            hotelDto.setIntroduction(hotelJson.getIntroduction());
-            hotelDto.setProvCode(String.valueOf(hotelJson.getProvcode()));
-            hotelDto.setCityCode(String.valueOf(hotelJson.getCitycode()));
-            hotelDto.setDisCode(String.valueOf(hotelJson.getDiscode()));
-            hotelDto.setIsValid("T");
-            hotelDto.setOpenTime(hotelJson.getOpentime());
-            hotelDto.setPic(hotelJson.getHotelpic());
-            hotelDto.setPics(hotelJson.getHotelpics());
-
-            //
-            List<RoomTypeJson> roomTypeJsonList = hotelJson.getRoomtypes();
-            if (null != roomTypeJsonList) {
-
-                List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
-                for (RoomTypeJson roomTypeJson : roomTypeJsonList) {
-                    //
-                    Integer intArea = null;
-
-                    try {
-                        if (null != roomTypeJson.getArea()) {
-                            intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Cat.logError(e);
-                        throw new MyException("-99", "-99", "area格式错误");
-                    }
-
-                    //
-                    Integer intPrePay = null;
-                    try {
-                        if (null != roomTypeJson.getPrepay()) {
-                            intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
-                        }
-                    } catch (NumberFormatException e){
-                        e.printStackTrace();
-                        Cat.logError(e);
-                        throw new MyException("-99", "-99", "prepay格式错误");
-                    }
-
-                    //
-                    Integer intBreakfast = null;
-                    try {
-                        if (null != roomTypeJson.getBreakfast()) {
-                            intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
-                        }
-                    } catch (NumberFormatException e){
-                        e.printStackTrace();
-                        Cat.logError(e);
-                        throw new MyException("-99", "-99", "breakfast格式错误");
-                    }
-
-                    //
-                    String isValid = null;
-                    Integer status = roomTypeJson.getStatus();
-
-                    if (null == status) {
-                        isValid = "T";
-                    } else {
-                        if (0 == roomTypeJson.getStatus()) {
-                            isValid = "T";
-                        } else {
-                            isValid = "F";
-                        }
-                    }
-
-                    //
-                    RoomTypeDto roomTypeDto = new RoomTypeDto();
-                    roomTypeDto.setFangHotelId(hotelJson.getId());
-                    roomTypeDto.setFangId(roomTypeJson.getId());
-                    roomTypeDto.setName(roomTypeJson.getName());
-                    roomTypeDto.setArea(intArea);
-                    roomTypeDto.setBedType(roomTypeJson.getBedtype());
-                    roomTypeDto.setBedSize(roomTypeJson.getBedsize());
-                    roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
-                    roomTypeDto.setPrepay(intPrePay);
-                    roomTypeDto.setBreakfast(intBreakfast);
-                    roomTypeDto.setStatus(roomTypeJson.getStatus());
-                    roomTypeDto.setRefund(roomTypeJson.getRefund());
-                    roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
-                    roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
-
-                    roomTypeDto.setIsValid(isValid);
-
-                    roomTypeDtoList.add(roomTypeDto);
-                }
-
-                hotelDto.setRoomTypeDtoList(roomTypeDtoList);
-            }
-
-            this.hotelService.saveOrUpdateByFangId(hotelDto);
-
-            //
-            OtsInterface.initHotel(hotelDto.getId());
-        }
+        //
+        JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelAll);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -234,32 +111,8 @@ public class HotelController {
             Cat.logError(e);
         }
 
-        /*
-        {
-            "hotelid": "2811, 2311,22333"
-        }
-         */
-        try {
-            //
-            String hotelIds = JSONObject.parseObject(body).get("hotelid").toString();
-            String[] ids = hotelIds.split(",");
-
-            List<Long> idList = new ArrayList<Long>();
-            for (String strId : ids) {
-                Long id = Long.parseLong(strId);
-                idList.add(id);
-            }
-
-            //
-            for (Long id : idList) {
-                this.hotelService.deleteByFangId(id);
-
-                //
-                OtsInterface.initHotel(id);
-            }
-        } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
-        }
+        //
+        JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelDelete);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -283,68 +136,7 @@ public class HotelController {
         }
 
         //
-        HotelFacilityJson facilityJson = null;
-        try {
-            //
-            facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
-        } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
-        }
-
-        Long fangHotelId = facilityJson.getHotelid();
-        List<FacilityJson> facilityJsonList = facilityJson.getTags();
-
-        if (null != facilityJsonList && !facilityJsonList.isEmpty()) {
-
-            List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
-            for (FacilityJson json : facilityJsonList) {
-
-                HotelFacilityDto dto = new HotelFacilityDto();
-                dto.setFangHotelId(fangHotelId);
-                dto.setFacilityId(json.getId());
-                dto.setFacilityName(json.getTagname());
-                dto.setFacilityType(json.getTaggroupid());
-                hotelFacilityDtoList.add(dto);
-            }
-
-            this.hotelFacilityService.saveOrUpdateByFangId(hotelFacilityDtoList);
-        }
-
-        //
-        List<RoomTypeFacilityJson> roomTypeFacilityJsonList = facilityJson.getRoomtypeTags();
-        if (null != roomTypeFacilityJsonList) {
-
-            for (RoomTypeFacilityJson roomTypeFacilityJson : roomTypeFacilityJsonList) {
-                Long fangRoomTypeId = roomTypeFacilityJson.getRoomtypeid();
-                List<FacilityJson> roomTypeTag = roomTypeFacilityJson.getTags();
-
-                if (null != roomTypeTag && !roomTypeTag.isEmpty()) {
-
-                    List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
-                    for(FacilityJson json: roomTypeTag) {
-
-                        //
-                        RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
-                        dto.setFangHotelId(fangHotelId);
-                        dto.setFangRoomTypeId(fangRoomTypeId);
-                        dto.setFacilityId(json.getId());
-                        dto.setFacilityName(json.getTagname());
-                        dto.setFacilityType(json.getTaggroupid());
-
-                        roomTypeFacilityDtoList.add(dto);
-                    }
-
-                    this.roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
-                }
-            }
-        }
-
-        //
-        HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
-        if (null != dbHotel) {
-            //
-            OtsInterface.initHotel(dbHotel.getId());
-        }
+        JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelFacility);
 
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");

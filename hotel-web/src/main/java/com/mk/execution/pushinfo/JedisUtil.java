@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 import com.mk.framework.AppUtils;
 import com.mk.framework.MkJedisConnectionFactory;

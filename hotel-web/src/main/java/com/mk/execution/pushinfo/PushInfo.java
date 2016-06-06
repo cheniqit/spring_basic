@@ -1,4 +1,6 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
+
+import com.mk.hotel.log.enums.LogPushTypeEnum;
 
 /**
  * Created by 振涛 on 2016/2/18.
@@ -10,9 +12,9 @@ public class PushInfo {
      */
     public String body;
 
-    public String type;
+    public LogPushTypeEnum type;
 
-    public PushInfo(String body, String type) {
+    public PushInfo(String body, LogPushTypeEnum type) {
         this.body = body;
         this.type = type;
     }
@@ -25,11 +27,11 @@ public class PushInfo {
         this.body = body;
     }
 
-    public String getType() {
+    public LogPushTypeEnum getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(LogPushTypeEnum type) {
         this.type = type;
     }
 }

@@ -1,4 +1,4 @@
-package com.mk.execution.index.hotel;
+package com.mk.execution.pushinfo;
 
 import com.mk.hotel.common.Constant;
 import org.apache.commons.lang.StringUtils;
