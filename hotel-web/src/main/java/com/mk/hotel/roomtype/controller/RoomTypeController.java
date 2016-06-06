@@ -67,6 +67,8 @@ public class RoomTypeController {
             Cat.logError(e);
         }
 
+        Long s1 = System.currentTimeMillis();
+
         Long fangHotelId = null;
         //
         List<RoomTypeJson> roomTypeJsonList = new ArrayList<RoomTypeJson>();
@@ -131,6 +133,9 @@ public class RoomTypeController {
             this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
         }
 
+        Long s2 = System.currentTimeMillis();
+
+        System.out.println("s2:" + (s2 - s1));
 
         //
         HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
@@ -138,6 +143,11 @@ public class RoomTypeController {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
+        Long s3 = System.currentTimeMillis();
+
+        System.out.println("s3:" + (s2 - s3));
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);

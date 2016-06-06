@@ -1,5 +1,7 @@
 package com.mk.hotel.log.service.impl;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.mapper.LogPushMapper;
 import com.mk.hotel.log.model.LogPush;
@@ -17,15 +19,19 @@ public class LogPushServiceImpl implements LogPushService {
 
     public int save(LogPushDto logPushDto) {
 
-        if (null != logPushDto) {
+        Transaction t = Cat.newTransaction("saveLogPush", "LogPushServiceImpl.save");
+        try {
+            if (null != logPushDto) {
 
-            LogPush logPush = new LogPush();
-            BeanUtils.copyProperties(logPushDto, logPush);
+                LogPush logPush = new LogPush();
+                BeanUtils.copyProperties(logPushDto, logPush);
 
-            logPush.setCreateDate(new Date());
-            return this.logPushMapper.insert(logPush);
+                logPush.setCreateDate(new Date());
+                return this.logPushMapper.insert(logPush);
+            }
+        } finally {
+            t.complete();
         }
-
         return -1;
     }
 }
