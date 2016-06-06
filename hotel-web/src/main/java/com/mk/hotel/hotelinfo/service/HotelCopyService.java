@@ -23,6 +23,7 @@ import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +90,7 @@ public class HotelCopyService {
                     Integer intArea = null;
 
                     try {
-                        if (null != roomTypeJson.getArea()) {
+                        if (StringUtils.isNotBlank(roomTypeJson.getArea())) {
                             intArea = new BigDecimal(roomTypeJson.getArea()).intValue();
                         }
                     } catch (Exception e) {
@@ -101,10 +102,10 @@ public class HotelCopyService {
                     //
                     Integer intPrePay = null;
                     try {
-                        if (null != roomTypeJson.getPrepay()) {
+                        if (StringUtils.isNotBlank(roomTypeJson.getPrepay())) {
                             intPrePay = Integer.parseInt(roomTypeJson.getPrepay());
                         }
-                    } catch (NumberFormatException e){
+                    } catch (Exception e){
                         e.printStackTrace();
                         Cat.logError(e);
 //                        throw new MyException("-99", "-99", "prepay格式错误");
@@ -113,10 +114,10 @@ public class HotelCopyService {
                     //
                     Integer intBreakfast = null;
                     try {
-                        if (null != roomTypeJson.getBreakfast()) {
+                        if (StringUtils.isNotBlank(roomTypeJson.getBreakfast())) {
                             intBreakfast = Integer.parseInt(roomTypeJson.getBreakfast());
                         }
-                    } catch (NumberFormatException e){
+                    } catch (Exception e){
                         e.printStackTrace();
                         Cat.logError(e);
 //                        throw new MyException("-99", "-99", "breakfast格式错误");
