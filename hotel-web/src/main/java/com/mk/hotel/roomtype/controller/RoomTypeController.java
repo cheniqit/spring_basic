@@ -3,7 +3,9 @@ package com.mk.hotel.roomtype.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.SymbolTable;
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.common.utils.OtsInterface;
@@ -20,6 +22,7 @@ import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.json.roomtype.RoomTypeJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.PriceInfoJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
+import com.sun.tools.internal.xjc.model.SymbolSpace;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -66,6 +69,8 @@ public class RoomTypeController {
             e.printStackTrace();
             Cat.logError(e);
         }
+
+        Long s1 = System.currentTimeMillis();
 
         Long fangHotelId = null;
         //
@@ -131,6 +136,9 @@ public class RoomTypeController {
             this.roomTypeService.saveOrUpdateByFangId(roomTypeDto);
         }
 
+        Long s2 = System.currentTimeMillis();
+
+        System.out.println("s2:" + (s2 - s1));
 
         //
         HotelDto dbHotel = this.hotelService.findByFangId(fangHotelId);
@@ -138,6 +146,11 @@ public class RoomTypeController {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
+        Long s3 = System.currentTimeMillis();
+
+        System.out.println("s3:" + (s2 - s3));
+
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
