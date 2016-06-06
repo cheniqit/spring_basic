@@ -39,6 +39,7 @@ public class UserSecurityFilter implements Filter {
 			if (StringUtils.isNotBlank(accessToken)) {
 				if ("88db86e86f4884ab2244bff28b9252e3".equals(accessToken)) {
 					chain.doFilter(request, response);
+					return;
 				}
 			}
 

@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class HttpUtils {
     private static Logger log = LoggerFactory.getLogger(HttpUtils.class);
-    public static final int timeout = 30 * 1000;
+    public static final int timeout = 60 * 1000;
     private static final String charset = "UTF-8";
     private static final String GET = "GET";
 
