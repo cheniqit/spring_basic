@@ -1,11 +1,10 @@
 package com.mk.hotel.hotelinfo.enums;
 
 
-import org.codehaus.plexus.util.StringUtils;
-
 public enum HotelSourceEnum {
-    TYPE_FANGBABA(10l, "房爸爸"),
-    TYPE_FANQIELAILE(20l, "番茄来了"),
+    LEZHU(1l, "LEZHU"),
+    OTA(2l, "OTA"),
+    FANQIE(3l, "FANQIE"),
     ;
     private final Long id;
     private final String name;
