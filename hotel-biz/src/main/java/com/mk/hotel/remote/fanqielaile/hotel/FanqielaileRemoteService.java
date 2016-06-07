@@ -22,6 +22,7 @@ public class FanqielaileRemoteService {
     public HotelQueryListResponse queryHotelList(){
 
         String domain = UrlUtils.getUrl("fanqielaile.otaid");
+
         String remoteResult = HttpUtils.getData("");
         HotelQueryListResponse response = JsonUtils.fromJson(remoteResult, HotelQueryListResponse.class);
 
@@ -52,4 +53,9 @@ public class FanqielaileRemoteService {
         return MD5.MD5Encode(str.toString());
     }
 
+
+    public static void main(String []arg) {
+       String s = new FanqielaileRemoteService().getSignAndSoOn();
+        System.out.println(s);
+    }
 }
