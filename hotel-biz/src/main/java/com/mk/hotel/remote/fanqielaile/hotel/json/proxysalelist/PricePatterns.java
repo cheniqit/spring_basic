@@ -1,7 +1,5 @@
 package com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by huangjie on 16/6/7.
  */

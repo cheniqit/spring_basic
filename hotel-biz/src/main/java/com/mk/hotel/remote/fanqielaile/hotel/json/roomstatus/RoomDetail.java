@@ -6,16 +6,16 @@ import java.util.Date;
  * Created by huangjie on 16/6/7.
  */
 public class RoomDetail {
-    private Date roomDate;
+    private String roomDate;
     private Integer roomPrice;
     private Integer priRoomPrice;
     private Integer roomNum;
 
-    public Date getRoomDate() {
+    public String getRoomDate() {
         return roomDate;
     }
 
-    public void setRoomDate(Date roomDate) {
+    public void setRoomDate(String roomDate) {
         this.roomDate = roomDate;
     }
 

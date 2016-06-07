@@ -8,7 +8,7 @@ import java.util.List;
 public class RoomList {
 
     private Integer status;
-    private List<List> list;
+    private List<RoomDetailList> list;
     private String type;
 
     public Integer getStatus() {
@@ -19,11 +19,11 @@ public class RoomList {
         this.status = status;
     }
 
-    public List<List> getList() {
+    public List<RoomDetailList> getList() {
         return list;
     }
 
-    public void setList(List<List> list) {
+    public void setList(List<RoomDetailList> list) {
         this.list = list;
     }
 
