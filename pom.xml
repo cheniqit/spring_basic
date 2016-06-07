@@ -328,6 +328,13 @@
                 <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
+
+                <!--番茄来了 配置 开始-->
+                <fanqielaile.domain>http://openapi.test.fanqielaile.com</fanqielaile.domain>
+                <fanqielaile.otaid>923</fanqielaile.otaid>
+                <fanqielaile.name>JH</fanqielaile.name>
+                <fanqielaile.pwd>JH6767</fanqielaile.pwd>
+                <!--番茄来了 配置 结束-->
             </properties>
         </profile>
 
@@ -368,6 +375,14 @@
                 <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resource</qiniu.resourceBucket>
+
+
+                <!--番茄来了 配置 开始-->
+                <fanqielaile.domain>http://openapi.test.fanqielaile.com</fanqielaile.domain>
+                <fanqielaile.otaid>923</fanqielaile.otaid>
+                <fanqielaile.name>JH</fanqielaile.name>
+                <fanqielaile.pwd>JH6767</fanqielaile.pwd>
+                <!--番茄来了 配置 结束-->
             </properties>
         </profile>
 
@@ -404,6 +419,14 @@
                 <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resource</qiniu.resourceBucket>
+
+
+                <!--番茄来了 配置 开始-->
+                <fanqielaile.domain>http://openapi.test.fanqielaile.com</fanqielaile.domain>
+                <fanqielaile.otaid>923</fanqielaile.otaid>
+                <fanqielaile.name>JH</fanqielaile.name>
+                <fanqielaile.pwd>JH6767</fanqielaile.pwd>
+                <!--番茄来了 配置 结束-->
             </properties>
         </profile>
 

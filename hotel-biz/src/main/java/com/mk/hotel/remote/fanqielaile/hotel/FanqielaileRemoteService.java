@@ -2,6 +2,7 @@ package com.mk.hotel.remote.fanqielaile.hotel;
 
 import com.mk.framework.HttpUtils;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.UrlUtils;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FanqielaileRemoteService {
+
     private final String HOTEL_LIST_QUERY = "/api/queryProxySaleList";
     private final String HOTEL_DETAIL_QUERY = "/api/queryInn";
     private final String HOTEL_ROOM_TYPE_QUERY = "/api/queryRoomType";
@@ -19,6 +21,7 @@ public class FanqielaileRemoteService {
 
     public HotelQueryListResponse queryHotelList(){
 
+        String domain = UrlUtils.getUrl("fanqielaile.otaid");
         String remoteResult = HttpUtils.getData("");
         HotelQueryListResponse response = JsonUtils.fromJson(remoteResult, HotelQueryListResponse.class);
 
@@ -27,10 +30,10 @@ public class FanqielaileRemoteService {
 
     public String getSignAndSoOn() {
 
-        String otaId = "";
+        String otaId = UrlUtils.getUrl("fanqielaile.otaid");
         String timestamp = String.valueOf(System.currentTimeMillis());
-        String name = "";
-        String pwd = "";
+        String name = UrlUtils.getUrl("fanqielaile.name");
+        String pwd = UrlUtils.getUrl("fanqielaile.pwd");
         String sign = this.getSign(otaId,timestamp,name,pwd);
 
         //
