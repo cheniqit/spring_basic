@@ -1,18 +1,18 @@
 package com.mk.hotel.log.enums;
 
 public enum LogPushTypeEnum {
-	hotelAll(100l,"所有酒店"),
-	hotel(101l,"单个酒店"),
-	hotelDelete(110l,"删除酒店"),
+	hotelAll(100l,"所有酒店(房爸爸)"),
+	hotel(101l,"单个酒店(房爸爸)"),
+	hotelDelete(110l,"删除酒店(房爸爸)"),
 
-	hotelFacility(150l,"酒店设施"),
+	hotelFacility(150l,"酒店设施(房爸爸)"),
 
-	roomType(200l,"房型"),
-	roomTypeDelete(210l,"删除房型"),
-	roomTypePrice(250l,"房型价格"),
-	roomTypeStock(260l,"房型库存"),
+	roomType(200l,"房型(房爸爸)"),
+	roomTypeDelete(210l,"删除房型(房爸爸)"),
+	roomTypePrice(250l,"房型价格(房爸爸)"),
+	roomTypeStock(260l,"房型库存(房爸爸)"),
 
-	orderStatus(900l,"订单状态"),
+	orderStatus(900l,"订单状态(房爸爸)"),
 	other(999l,"其他"),
 	;
 	private final Long id;
