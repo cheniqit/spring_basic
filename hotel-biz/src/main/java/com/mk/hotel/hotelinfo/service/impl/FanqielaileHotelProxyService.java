@@ -45,20 +45,33 @@ public class FanqielaileHotelProxyService {
     @Autowired
     private LandMarkMapper landMarkMapper;
     @Autowired
-    private HotelRemoteService hotelRemoteService;
-    @Autowired
     private AddressInfoRemoteService addressInfoRemoteService;
     @Autowired
     private HotelServiceImpl hotelService;
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
-    public Hotel updateHotel(Long hotelId, Inn inn) throws Exception {
+    public Hotel saveOrUpdateHotel(Inn inn) throws Exception {
+        //
         Hotel hotel = convertHotel(inn);
-        hotel.setId(hotelId);
 
+        //
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(inn.getAccountId());
+        List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
+
+        if (hotelList.isEmpty()) {
+            this.hotelMapper.insert(hotel);
+        } else {
+            //db
+            Hotel dbHotel = hotelList.get(0);
+
+            //
+            hotel.setId(dbHotel.getId());
+            hotel.setCreateBy(dbHotel.getCreateBy());
+            hotel.setCreateDate(dbHotel.getCreateDate());
+            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+        }
 
         hotelMapper.updateByExampleSelective(hotel, example);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "FanqielaileHotelProxyService.updateHotel");
