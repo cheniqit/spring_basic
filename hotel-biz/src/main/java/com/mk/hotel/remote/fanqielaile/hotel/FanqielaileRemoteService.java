@@ -9,6 +9,7 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +39,11 @@ public class FanqielaileRemoteService {
 
         //
         String remoteResult = HttpUtils.getData(url.toString());
-        SaleList response = JsonUtils.fromJson(remoteResult, SaleList.class);
+
+        SaleList response = null;
+        if (StringUtils.isNotBlank(remoteResult)) {
+            response = JsonUtils.fromJson(remoteResult, SaleList.class);
+        }
 
         return response;
     }
@@ -59,7 +64,11 @@ public class FanqielaileRemoteService {
 
         //
         String remoteResult = HttpUtils.getData(url.toString());
-        InnList response = JsonUtils.fromJson(remoteResult, InnList.class);
+
+        InnList response = null;
+        if (StringUtils.isNotBlank(remoteResult)) {
+            response = JsonUtils.fromJson(remoteResult, InnList.class);
+        }
 
         return response;
     }
@@ -80,7 +89,11 @@ public class FanqielaileRemoteService {
 
         //
         String remoteResult = HttpUtils.getData(url.toString());
-        RoomTypeList response = JsonUtils.fromJson(remoteResult, RoomTypeList.class);
+        RoomTypeList response = null;
+
+        if (StringUtils.isNotBlank(remoteResult)) {
+            response = JsonUtils.fromJson(remoteResult, RoomTypeList.class);
+        }
 
         return response;
     }
@@ -109,7 +122,12 @@ public class FanqielaileRemoteService {
 
         //
         String remoteResult = HttpUtils.getData(url.toString());
-        RoomList response = JsonUtils.fromJson(remoteResult, RoomList.class);
+
+        RoomList response = null;
+
+        if (StringUtils.isNotBlank(remoteResult)) {
+            response = JsonUtils.fromJson(remoteResult, RoomList.class);
+        }
 
         return response;
     }

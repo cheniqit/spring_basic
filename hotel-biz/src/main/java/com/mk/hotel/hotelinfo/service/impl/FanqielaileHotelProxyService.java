@@ -8,12 +8,14 @@ import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.enums.HotelTypeEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
+import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.inn.Inn;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +54,7 @@ public class FanqielaileHotelProxyService {
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
-    public Hotel saveOrUpdateHotel(Inn inn) throws Exception {
+    public Hotel saveOrUpdateHotel(Inn inn) {
         //
         Hotel hotel = convertHotel(inn);
 
@@ -62,6 +65,7 @@ public class FanqielaileHotelProxyService {
 
         if (hotelList.isEmpty()) {
             this.hotelMapper.insert(hotel);
+            //TODO facilitiesMap
         } else {
             //db
             Hotel dbHotel = hotelList.get(0);
@@ -71,14 +75,14 @@ public class FanqielaileHotelProxyService {
             hotel.setCreateBy(dbHotel.getCreateBy());
             hotel.setCreateDate(dbHotel.getCreateDate());
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            //TODO facilitiesMap
         }
 
-        hotelMapper.updateByExampleSelective(hotel, example);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "FanqielaileHotelProxyService.updateHotel");
         return hotel;
     }
 
-    private Hotel convertHotel(Inn inn) throws Exception {
+    private Hotel convertHotel(Inn inn) {
         if(null == inn){
             return null;
         }
@@ -110,6 +114,8 @@ public class FanqielaileHotelProxyService {
             }
         }
 
+        //pic
+        String pic = this.processPic(inn.getImgList());
 
         //
         if(CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
@@ -154,6 +160,52 @@ public class FanqielaileHotelProxyService {
         hotel.setCreateBy(Constant.SYSTEM_USER_NAME);
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
+
+        hotel.setPic(pic);
+        hotel.setSourceType(HotelSourceEnum.FANQIE.getId());
         return hotel;
+    }
+
+    public String processPic(List<ImgList> imgList){
+        String fanqieImgDomain = "http://img.fanqiele.com/";
+
+        if (null == imgList) {
+            return "[{\"name\":\"def\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"\"}]}]";
+        } else {
+            //
+            String coverImgUrl = "";
+            List<String> notCoverUrlList = new ArrayList<String>();
+
+            //
+            for (ImgList img : imgList) {
+                //(imgList) isCover 是否封面 number (1封面,0 null不是封面)
+                Integer isCover = img.getIsCover();
+                if (Integer.valueOf(1).equals(isCover)) {
+                    coverImgUrl = fanqieImgDomain + img.getImgUrl();
+                } else {
+                    notCoverUrlList.add(img.getImgUrl());
+                }
+            }
+
+            //
+            StringBuilder notCoverImgUrl = new StringBuilder();
+            for (String imgUrl : notCoverUrlList) {
+                //非空,追加前加","
+                if (!"".equals(notCoverImgUrl.toString())) {
+                    notCoverImgUrl.append(",");
+                }
+
+                notCoverImgUrl.append("{\"url\":\"").append(fanqieImgDomain).append(imgUrl).append("\"}");
+            }
+
+            //
+            StringBuilder returnUrl = new StringBuilder()
+                    .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
+                    .append(coverImgUrl)
+                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}，{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append(notCoverImgUrl.toString())
+                    .append("]}]");
+            return returnUrl.toString();
+        }
     }
 }

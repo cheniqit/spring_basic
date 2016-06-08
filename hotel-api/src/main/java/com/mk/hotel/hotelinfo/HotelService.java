@@ -31,4 +31,6 @@ public interface HotelService {
     List<HotelDto> findHotelByName(String hotelName, String cityCode);
 
     void deleteByFangId(Long id);
+
+    void mergeFanqieHotel ();
 }

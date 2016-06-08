@@ -2,19 +2,19 @@ package com.mk.hotel.hotelinfo.enums;
 
 
 public enum HotelSourceEnum {
-    LEZHU(1l, "LEZHU"),
-    OTA(2l, "OTA"),
-    FANQIE(3l, "FANQIE"),
+    LEZHU(1, "LEZHU"),
+    OTA(2, "OTA"),
+    FANQIE(3, "FANQIE"),
     ;
-    private final Long id;
+    private final Integer id;
     private final String name;
 
-    private HotelSourceEnum(Long id, String name) {
+    private HotelSourceEnum(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -28,7 +28,7 @@ public enum HotelSourceEnum {
     }
 
 
-    public static HotelSourceEnum getById(Long id){
+    public static HotelSourceEnum getById(Integer id){
         for(HotelSourceEnum hotelPicTypeEnum : HotelSourceEnum.values()){
             if(hotelPicTypeEnum.getId().equals(id)){
                 return hotelPicTypeEnum;

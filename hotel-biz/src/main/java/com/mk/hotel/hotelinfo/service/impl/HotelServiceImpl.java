@@ -12,15 +12,26 @@ import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelCacheEnum;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
+import com.mk.hotel.remote.fanqielaile.hotel.FanqielaileRemoteService;
+import com.mk.hotel.remote.fanqielaile.hotel.json.inn.Inn;
+import com.mk.hotel.remote.fanqielaile.hotel.json.inn.InnList;
+import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.PricePatterns;
+import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.ProxyInns;
+import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
+import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
+import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType;
+import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
+import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
@@ -59,6 +70,13 @@ public class HotelServiceImpl implements HotelService {
     private AddressInfoRemoteService addressInfoRemoteService;
     @Autowired
     private HotelPicServiceImpl hotelPicService;
+
+    @Autowired
+    private FanqielaileHotelProxyService fanqielaileHotelProxyService;
+    @Autowired
+    private FanqielaileRemoteService fanqielaileRemoteService;
+    @Autowired
+    private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
 
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -168,6 +186,7 @@ public class HotelServiceImpl implements HotelService {
 
             hotel.setUpdateDate(new Date());
             hotel.setUpdateBy("hotel_system");
+            hotel.setSourceType(HotelSourceEnum.LEZHU.getId());
 
             hotelId = hotel.getId();
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
@@ -506,5 +525,73 @@ public class HotelServiceImpl implements HotelService {
         return hotelLandMark;
     }
 
+    public void mergeFanqieHotel (){
+
+        //
+        SaleList saleList = this.fanqielaileRemoteService.queryHotelList();
+
+        if (null == saleList) {
+            return;
+        }
+
+        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
+        if (null != proxyInnsList) {
+
+            for (ProxyInns proxyInns: proxyInnsList) {
+                List<PricePatterns> pricePatternsList = proxyInns.getPricePatterns();
+
+                if (null != pricePatternsList) {
+
+                    for (PricePatterns pricePatterns : pricePatternsList) {
+                        //策略模式1:底价模式 2:卖价模式
+                        String pattern = pricePatterns.getPattern();
+                        if (!"2".equals(pattern)) {
+                            continue;
+                        }
+
+                        //
+                        Integer accountId =  pricePatterns.getAccountId();
+                        /*
+                            1 酒店
+                         */
+                        //TODO
+                        Hotel hotel = null;
+                        InnList innList = this.fanqielaileRemoteService.queryInn(accountId.longValue());
+                        if (null != innList) {
+                            List<Inn> inns = innList.getList();
+                            for (Inn inn : inns) {
+                                try {
+                                    hotel = this.fanqielaileHotelProxyService.saveOrUpdateHotel(inn);
+                                } catch (Exception e) {
+                                    Cat.logError(e);
+                                }
+                            }
+                        }
+
+                        /*
+                            2 房型
+                         */
+                        RoomTypeList roomTypeList = this.fanqielaileRemoteService.queryRoomType(
+                                accountId.longValue());
+                        if (null != roomTypeList) {
+                            List<RoomType> roomTypes = roomTypeList.getList();
+                            for (RoomType roomType : roomTypes) {
+                                this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomType(hotel.getId(), roomType);
+                            }
+                        }
+
+                        /*
+                            3 房态
+                         */
+                        RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
+                                accountId.longValue(), new Date() , new Date());
+                        if (null != roomList) {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }

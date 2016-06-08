@@ -6,6 +6,7 @@ import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -154,6 +155,8 @@ public class HotelProxyService {
         hotel.setCreateBy(Constant.SYSTEM_USER_NAME);
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
+
+        hotel.setSourceType(HotelSourceEnum.LEZHU.getId());
         return hotel;
     }
 }
