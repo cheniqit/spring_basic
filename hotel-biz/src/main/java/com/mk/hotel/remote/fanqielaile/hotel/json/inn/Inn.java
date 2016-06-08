@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class Inn {
 
-    private Integer accountId;
+    private Long accountId;
     private String brandName;
     private String innType;
     private String frontPhone;
@@ -27,11 +27,11 @@ public class Inn {
     private List<ImgList> imgList;
     private List<FacilitiesMap> facilitiesMap;
 
-    public Integer getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Integer accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
