@@ -90,15 +90,15 @@ public class HotelServiceImpl implements HotelService {
         HotelServiceImpl.allLandMarkList = allLandMarkList;
     }
 
-    public void deleteByFangId(Long id) {
+    public void deleteByFangId(Long id, HotelSourceEnum hotelSourceEnum) {
 
-        if (null == id) {
-            throw new MyException("-99", "-99", "id必填");
+        if (null == id || null == hotelSourceEnum) {
+            throw new MyException("-99", "-99", "id,hotelSourceEnum必填");
         }
 
         //
         HotelExample hotelExample = new HotelExample();
-        hotelExample.createCriteria().andFangIdEqualTo(id);
+        hotelExample.createCriteria().andFangIdEqualTo(id).andSourceTypeEqualTo(hotelSourceEnum.getId());
 
         List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
         if (!hotelList.isEmpty()) {
@@ -113,15 +113,15 @@ public class HotelServiceImpl implements HotelService {
 
     }
 
-    public void saveOrUpdateByFangId(HotelDto hotelDto) {
+    public void saveOrUpdateByFangId(HotelDto hotelDto, HotelSourceEnum hotelSourceEnum) {
 
-        if (null == hotelDto || null == hotelDto.getFangId()) {
-            throw new MyException("-99", "-99", "hotelDto fangId必填");
+        if (null == hotelDto || null == hotelDto.getFangId() || null == hotelSourceEnum) {
+            throw new MyException("-99", "-99", "hotelDto fangId hotelSourceEnum必填");
         }
 
         //
         HotelExample hotelExample = new HotelExample();
-        hotelExample.createCriteria().andFangIdEqualTo(hotelDto.getFangId());
+        hotelExample.createCriteria().andFangIdEqualTo(hotelDto.getFangId()).andSourceTypeEqualTo(hotelSourceEnum.getId());
         List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
 
         //
@@ -138,6 +138,7 @@ public class HotelServiceImpl implements HotelService {
             dbHotel.setCreateBy("hotel_system");
             dbHotel.setUpdateDate(new Date());
             dbHotel.setUpdateBy("hotel_system");
+            dbHotel.setSourceType(hotelSourceEnum.getId());
             //
             this.hotelMapper.insert(dbHotel);
             hotelId = dbHotel.getId();
@@ -186,7 +187,7 @@ public class HotelServiceImpl implements HotelService {
 
             hotel.setUpdateDate(new Date());
             hotel.setUpdateBy("hotel_system");
-            hotel.setSourceType(HotelSourceEnum.LEZHU.getId());
+            hotel.setSourceType(hotelSourceEnum.getId());
 
             hotelId = hotel.getId();
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
@@ -242,10 +243,10 @@ public class HotelServiceImpl implements HotelService {
         return dto;
     }
 
-    public HotelDto findByFangId(Long fangId) {
+    public HotelDto findByFangId(Long fangId, HotelSourceEnum hotelSourceEnum) {
 
         HotelExample hotelExample = new HotelExample();
-        hotelExample.createCriteria().andFangIdEqualTo(fangId);
+        hotelExample.createCriteria().andFangIdEqualTo(fangId).andSourceTypeEqualTo(hotelSourceEnum.getId());
         List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
 
         if (hotelList.isEmpty()) {
@@ -443,6 +444,8 @@ public class HotelServiceImpl implements HotelService {
             //
             hotelInRedis.setCacheTime(strDate);
             hotelInRedis.setCacheFrom(cacheFrom);
+
+            hotelInRedis.setSoucreType(hotel.getSourceType());
             //
             jedis.set(hotelKeyName, JsonUtils.toJson(hotelInRedis));
 

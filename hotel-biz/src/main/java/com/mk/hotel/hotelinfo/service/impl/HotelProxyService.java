@@ -74,7 +74,7 @@ public class HotelProxyService {
             return;
         }
         //根据调用结果更新hotel表
-        HotelDto hotelDto = hotelService.findByFangId(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
+        HotelDto hotelDto = hotelService.findByFangId(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""), HotelSourceEnum.LEZHU);
         Hotel hotel = null;
         if(hotelDto == null || hotelDto.getId() == null){
             try {
