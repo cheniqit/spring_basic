@@ -1,11 +1,13 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.redisbean.Pic;
 import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
+import com.mk.hotel.hotelinfo.bean.HotelPicInfo;
 import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelPicMapper;
@@ -253,4 +255,51 @@ public class HotelPicServiceImpl {
     }
 
 
+    public void saveHotelPic(String hotelId, String hotelPicInfo, String updateBy) {
+        if(StringUtils.isBlank(hotelId)){
+            throw new MyException("hotelId参数为空");
+        }
+        if(StringUtils.isBlank(hotelPicInfo)){
+            throw new MyException("hotelPicInfo参数为空");
+        }
+        HotelPicInfo hpi = JsonUtils.fromJson(hotelPicInfo, HotelPicInfo.class);
+        if(hpi == null || CollectionUtils.isEmpty(hpi.getData())){
+            throw new MyException("hotelPicInfo信息错误");
+        }
+        for(HotelPicInfo.Data data : hpi.getData()){
+            if(StringUtils.isBlank(data.getRoomTypeId())){
+                //酒店信息
+                if(CollectionUtils.isEmpty(data.getPic())){
+                    continue;
+                }
+                StringBuffer url = new StringBuffer();
+                for(HotelPicInfo.Pic pic : data.getPic()){
+                    url.append(pic.getUrl()).append(",");
+                }
+                HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(data.getName());
+                if(hotelPicTypeEnum == null){
+                    continue;
+                }
+                saveHotelPic(Long.valueOf(hotelId), null, hotelPicTypeEnum.getCode()+"", url.toString(), updateBy);
+            }else{
+                if(CollectionUtils.isEmpty(data.getRoomTypePic())){
+                    continue;
+                }
+                if(StringUtils.isBlank(data.getRoomTypeId())){
+                    continue;
+                }
+                StringBuffer url = new StringBuffer();
+                for(HotelPicInfo.RoomTypePic roomTypePic : data.getRoomTypePic()){
+                    if(CollectionUtils.isEmpty(roomTypePic.getPic())){
+                        continue;
+                    }
+                    for(HotelPicInfo.Pic pic : roomTypePic.getPic()){
+                        url.append(pic.getUrl()).append(",");
+                    }
+                }
+                saveHotelPic(Long.valueOf(hotelId), Long.valueOf(data.getRoomTypeId()), HotelPicTypeEnum.roomType.getCode()+"", url.toString(), updateBy);
+            }
+
+        }
+    }
 }
