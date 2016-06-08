@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class FanqielaileRoomTypeProxyService {
         String strArea = fanqieRoomType.getRoomArea();
         if(StringUtils.isNotBlank(strArea)) {
             try {
-                roomType.setArea(Integer.valueOf(strArea));
+                roomType.setArea(new BigDecimal(strArea).intValue());
             } catch (Exception e) {
                 Cat.logError(e);
             }

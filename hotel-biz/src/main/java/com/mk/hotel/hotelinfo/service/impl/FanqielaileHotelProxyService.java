@@ -26,6 +26,7 @@ import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -65,7 +66,7 @@ public class FanqielaileHotelProxyService {
 
         //
         HotelExample example = new HotelExample();
-        example.createCriteria().andFangIdEqualTo(inn.getAccountId());
+        example.createCriteria().andFangIdEqualTo(inn.getAccountId()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
         List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
 
         if (hotelList.isEmpty()) {
@@ -113,11 +114,15 @@ public class FanqielaileHotelProxyService {
                 if (null != addressComponent) {
                     disCode = addressComponent.getAdcode();
                     townCode = addressComponent.getTowncode();
-
+                    if (StringUtils.isNotBlank(townCode) && townCode.length() >= 9) {
+                        townCode = townCode.substring(0, 9);
+                    }
                     //
                     City city = this.cityRemoteService.findByDisCode(disCode);
-                    cityCode = city.getCityCode();
-                    provCode = city.getProvCode();
+                    if (null != city) {
+                        cityCode = city.getCityCode();
+                        provCode = city.getProvCode();
+                    }
                 }
             }
         }
@@ -175,7 +180,7 @@ public class FanqielaileHotelProxyService {
     }
 
     public String processPic(List<ImgList> imgList){
-        String fanqieImgDomain = "http://img.fanqiele.com/";
+        String fanqieImgDomain = "http://img.fanqiele.com";
 
         if (null == imgList) {
             return "[{\"name\":\"def\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"\"}]}]";

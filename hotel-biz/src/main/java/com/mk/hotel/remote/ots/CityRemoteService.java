@@ -19,7 +19,7 @@ public class CityRemoteService {
     private static Logger logger = LoggerFactory.getLogger(CityRemoteService.class);
 
     private String DOMAIN = UrlUtils.getUrl("ots.domain");
-    private final String CITY_QUERY = "city/querybydist";
+    private final String CITY_QUERY = "/ots/city/querybydist";
 
     public City findByDisCode(String disCode){
 

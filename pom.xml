@@ -337,7 +337,7 @@
                 <!--番茄来了 配置 结束-->
 
                 <!--ots -->
-                <ots.domain>http://huidi.imike.cn</ots.domain>
+                <ots.domain>http://huidu.imike.cn</ots.domain>
                 <!--ots -->
             </properties>
         </profile>
@@ -388,7 +388,7 @@
                 <fanqielaile.pwd>JH6767</fanqielaile.pwd>
                 <!--番茄来了 配置 结束-->
                 <!--ots -->
-                <ots.domain>http://huidi.imike.cn</ots.domain>
+                <ots.domain>http://huidu.imike.cn</ots.domain>
                 <!--ots -->
             </properties>
         </profile>
