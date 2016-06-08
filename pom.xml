@@ -335,6 +335,10 @@
                 <fanqielaile.name>JH</fanqielaile.name>
                 <fanqielaile.pwd>JH6767</fanqielaile.pwd>
                 <!--番茄来了 配置 结束-->
+
+                <!--ots -->
+                <ots.domain>http://huidi.imike.cn</ots.domain>
+                <!--ots -->
             </properties>
         </profile>
 
@@ -383,6 +387,9 @@
                 <fanqielaile.name>JH</fanqielaile.name>
                 <fanqielaile.pwd>JH6767</fanqielaile.pwd>
                 <!--番茄来了 配置 结束-->
+                <!--ots -->
+                <ots.domain>http://huidi.imike.cn</ots.domain>
+                <!--ots -->
             </properties>
         </profile>
 
@@ -427,6 +434,10 @@
                 <fanqielaile.name>JH</fanqielaile.name>
                 <fanqielaile.pwd>JH6767</fanqielaile.pwd>
                 <!--番茄来了 配置 结束-->
+
+                <!--ots -->
+                <ots.domain>http://api.imike.com</ots.domain>
+                <!--ots -->
             </properties>
         </profile>
 

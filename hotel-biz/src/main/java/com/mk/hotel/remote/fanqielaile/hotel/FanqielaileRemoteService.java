@@ -8,7 +8,6 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.inn.InnList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
-import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ import java.util.Date;
 @Service
 public class FanqielaileRemoteService {
 
-    private String domain = UrlUtils.getUrl("fanqielaile.domain");
+    private String DOMAIN = UrlUtils.getUrl("fanqielaile.domain");
     private final String HOTEL_LIST_QUERY = "/api/queryProxySaleList";
     private final String HOTEL_DETAIL_QUERY = "/api/queryInn";
     private final String HOTEL_ROOM_TYPE_QUERY = "/api/queryRoomType";
@@ -33,7 +32,7 @@ public class FanqielaileRemoteService {
 
         String signAndSoOn = this.getSignAndSoOn();
         StringBuilder url = new StringBuilder()
-                .append(domain)
+                .append(DOMAIN)
                 .append(HOTEL_LIST_QUERY)
                 .append("?").append(signAndSoOn);
 
@@ -55,7 +54,7 @@ public class FanqielaileRemoteService {
         }
         String signAndSoOn = this.getSignAndSoOn();
         StringBuilder url = new StringBuilder()
-                .append(domain)
+                .append(DOMAIN)
                 .append(HOTEL_DETAIL_QUERY)
                 .append("?")
                 .append(signAndSoOn)
@@ -80,7 +79,7 @@ public class FanqielaileRemoteService {
         }
         String signAndSoOn = this.getSignAndSoOn();
         StringBuilder url = new StringBuilder()
-                .append(domain)
+                .append(DOMAIN)
                 .append(HOTEL_ROOM_TYPE_QUERY)
                 .append("?")
                 .append(signAndSoOn)
@@ -111,7 +110,7 @@ public class FanqielaileRemoteService {
         //
         String signAndSoOn = this.getSignAndSoOn();
         StringBuilder url = new StringBuilder()
-                .append(domain)
+                .append(DOMAIN)
                 .append(HOTEL_QUERY_STATUS)
                 .append("?")
                 .append(signAndSoOn)

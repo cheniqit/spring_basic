@@ -17,6 +17,8 @@ import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.inn.Inn;
+import com.mk.hotel.remote.ots.CityRemoteService;
+import com.mk.hotel.remote.ots.json.City;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;
@@ -51,6 +53,9 @@ public class FanqielaileHotelProxyService {
     private AddressInfoRemoteService addressInfoRemoteService;
     @Autowired
     private HotelServiceImpl hotelService;
+
+    @Autowired
+    private CityRemoteService cityRemoteService;
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -106,10 +111,13 @@ public class FanqielaileHotelProxyService {
             if (null != regeocode) {
                 AddressByLocationResponse.AddressComponent addressComponent = regeocode.getAddresscomponent();
                 if (null != addressComponent) {
-                    provCode = addressComponent.getProvince();
-                    cityCode = addressComponent.getCitycode();
                     disCode = addressComponent.getAdcode();
                     townCode = addressComponent.getTowncode();
+
+                    //
+                    City city = this.cityRemoteService.findByDisCode(disCode);
+                    cityCode = city.getCityCode();
+                    provCode = city.getProvCode();
                 }
             }
         }
