@@ -10,6 +10,7 @@ import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
 import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.roomtype.RoomTypePriceService;
@@ -102,12 +103,12 @@ public class RoomTypeCopyService {
             roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
             roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
 
-            roomTypeService.saveOrUpdateByFangId(roomTypeDto);
+            roomTypeService.saveOrUpdateByFangId(roomTypeDto, HotelSourceEnum.LEZHU);
         }
 
 
         //
-        HotelDto dbHotel = hotelService.findByFangId(fangHotelId);
+        HotelDto dbHotel = hotelService.findByFangId(fangHotelId, HotelSourceEnum.LEZHU);
         if (null != dbHotel) {
             //
             OtsInterface.initHotel(dbHotel.getId());
@@ -141,7 +142,7 @@ public class RoomTypeCopyService {
                 e.printStackTrace();
                 throw new MyException("-99", "-99", "hotelid 格式错误");
             }
-            HotelDto hotelDto = hotelService.findByFangId(hotelId);
+            HotelDto hotelDto = hotelService.findByFangId(hotelId, HotelSourceEnum.LEZHU);
             if (null == hotelDto) {
                 throw new MyException("-99", "-99", "hotel未找到");
             }
@@ -253,10 +254,10 @@ public class RoomTypeCopyService {
             }
         }
 
-        roomTypePriceService.saveOrUpdateByFangId(roomTypePriceDtoList);
+        roomTypePriceService.saveOrUpdateByFangId(roomTypePriceDtoList, HotelSourceEnum.LEZHU);
 
         //
-        HotelDto dbHotel = hotelService.findByFangId(fangHotelId);
+        HotelDto dbHotel = hotelService.findByFangId(fangHotelId, HotelSourceEnum.LEZHU);
         if (null != dbHotel) {
 
             //

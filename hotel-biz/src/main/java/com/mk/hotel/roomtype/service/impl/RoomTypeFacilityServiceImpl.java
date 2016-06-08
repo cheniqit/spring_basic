@@ -5,6 +5,7 @@ import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.Facility;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -31,7 +32,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
     @Autowired
     private RoomTypeFacilityMapper roomTypeFacilityMapper;
 
-    public void saveOrUpdateByFangid(List<RoomTypeFacilityDto> roomTypeFacilityDtoList) {
+    public void saveOrUpdateByFangid(List<RoomTypeFacilityDto> roomTypeFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
             throw new MyException("-99", "-99", "roomTypeFacilityDtoList 不可为空");
         }
@@ -58,7 +59,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         Long fangRoomTypeId = roomTypeFacilityDto.getFangRoomTypeId();
 
         //
-        RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(fangHotelId,fangRoomTypeId);
+        RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(fangHotelId,fangRoomTypeId, hotelSourceEnum);
         if (null == roomTypeDto) {
             throw new MyException("-99", "-99", "roomTypeFacilityDto.getFangHotelId();roomTypeFacilityDto.getFangRoomTypeId(); 错误");
         }

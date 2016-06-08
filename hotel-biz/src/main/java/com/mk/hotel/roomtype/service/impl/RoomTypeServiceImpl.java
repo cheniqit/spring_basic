@@ -13,6 +13,7 @@ import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -67,13 +68,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
-    public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId) {
+    public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId, HotelSourceEnum hotelSourceEnum) {
         if (null == fangHotelId || null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
         }
 
         //hotelDto
-        HotelDto hotelDto = hotelService.findByFangId(fangHotelId);
+        HotelDto hotelDto = hotelService.findByFangId(fangHotelId, hotelSourceEnum);
         if (null == hotelDto) {
             return null;
         }
@@ -212,7 +213,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
 
     }
-    public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
+    public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == hotelId || null == roomTypeDtoList) {
             throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
         }
@@ -222,7 +223,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             dtoMap.put(dto.getFangId(), dto);
 
             //
-            this.saveOrUpdateByFangId(dto);
+            this.saveOrUpdateByFangId(dto, hotelSourceEnum);
         }
 
         //找出hotel下所有roomType
@@ -247,14 +248,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 //        this.mergeRoomTypeStockByHotel(hotelId);
     }
 
-    public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
+    public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypeDto) {
             throw new MyException("-99", "-99", "roomTypeDto 不可为空");
         }
 
         //hotelDto
-        HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId());
+        HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId(), hotelSourceEnum);
         if (null == hotelDto) {
             throw new MyException("-99", "-99", "错误的roomTypeDto.FangHotelId");
         }
@@ -262,7 +263,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
 
         //db
-        RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId());
+        RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId(), hotelSourceEnum);
 
         if (null == dbDto) {
             RoomType roomType = new RoomType();

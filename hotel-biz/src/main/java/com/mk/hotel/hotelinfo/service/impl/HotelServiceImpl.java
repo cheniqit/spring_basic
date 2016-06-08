@@ -198,7 +198,7 @@ public class HotelServiceImpl implements HotelService {
 
         //roomTypeList
         if (null != hotelDto.getRoomTypeDtoList() && !hotelDto.getRoomTypeDtoList().isEmpty()) {
-            this.roomTypeService.saveOrUpdateByHotelId(hotelId, hotelDto.getRoomTypeDtoList());
+            this.roomTypeService.saveOrUpdateByHotelId(hotelId, hotelDto.getRoomTypeDtoList(), hotelSourceEnum);
         }
     }
 

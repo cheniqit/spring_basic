@@ -14,6 +14,7 @@ import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
 import com.mk.hotel.hotelinfo.enums.HotelFacilityCacheEnum;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelFacilityMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
@@ -54,14 +55,14 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
 
     private Logger logger = LoggerFactory.getLogger(HotelFacilityServiceImpl.class);
 
-    public void saveOrUpdateByFangId (List<HotelFacilityDto> hotelFacilityDtoList) {
+    public void saveOrUpdateByFangId (List<HotelFacilityDto> hotelFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
             throw new MyException("-99", "-99", "hotelFacilityDtoList 不可为空");
         }
 
         HotelFacilityDto hotelFacilityDto = hotelFacilityDtoList.get(0);
         //
-        HotelDto hotelDto = this.hotelService.findByFangId(hotelFacilityDto.getFangHotelId());
+        HotelDto hotelDto = this.hotelService.findByFangId(hotelFacilityDto.getFangHotelId(), hotelSourceEnum);
         if (null == hotelDto) {
             throw new MyException("-99", "-99", "hotelFacilityDto.getFangHotelId() 错误");
         }
@@ -175,7 +176,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                             dto.setIsValid(ValidEnum.VALID.getCode());
                             roomTypeFacilityDtoList.add(dto);
                         }
-                        roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
+                        roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList, HotelSourceEnum.LEZHU);
                     }
                 }
             }
@@ -198,7 +199,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                         dto.setIsValid(ValidEnum.VALID.getCode());
                         hotelFacilityDtoList.add(dto);
                     }
-                    this.saveOrUpdateByFangId(hotelFacilityDtoList);
+                    this.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
                 }
 
             }
