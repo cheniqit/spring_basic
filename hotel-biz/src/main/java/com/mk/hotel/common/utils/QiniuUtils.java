@@ -234,7 +234,7 @@ public class QiniuUtils {
 			//
 			upload(bao.toByteArray(), fileName, bucket);
 
-			return address + fileName;
+			return address + "/" + fileName;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Cat.logError(e);

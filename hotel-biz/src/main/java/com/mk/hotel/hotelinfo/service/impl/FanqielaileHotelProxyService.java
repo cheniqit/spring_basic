@@ -218,13 +218,20 @@ public class FanqielaileHotelProxyService {
         //TODO
         hotel.setHotelType(String.valueOf(HotelTypeEnum.INNER.getId()));
         hotel.setRetentionTime("180000");
-        hotel.setRepairTime(inn.getLastDecorateTime() + "-01-01");
+        if (null != inn.getLastDecorateTime()) {
+            hotel.setRepairTime(inn.getLastDecorateTime() + "-01-01");
+        }
+
         hotel.setIntroduction(inn.getInnInfo());
         hotel.setProvCode(provCode);
         hotel.setCityCode(cityCode);
         hotel.setDisCode(disCode);
         hotel.setTownCode(townCode);
-        hotel.setOpenTime(inn.getOpenTime() + "-01-01");
+
+        if (null != inn.getOpenTime()) {
+            hotel.setOpenTime(inn.getOpenTime() + "-01-01");
+        }
+
         hotel.setRegTime(null);
 
         hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
