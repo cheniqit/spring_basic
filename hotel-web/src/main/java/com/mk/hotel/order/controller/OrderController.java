@@ -7,7 +7,12 @@ import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
+import com.mk.hotel.order.controller.json.PushRoomType;
+import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.order.controller.json.OrderStatusPush;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -24,13 +32,13 @@ import java.util.LinkedHashMap;
  * Created by chenqi on 16/5/9.
  */
 @Controller
-@RequestMapping(value = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/order")
 public class OrderController {
 
     @Autowired
     private LogPushService logPushService;
 
-    @RequestMapping(value = "/orderstatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderstatus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> orderStatusPush(@RequestHeader HttpHeaders headers, @RequestBody String body) {
 
@@ -75,6 +83,35 @@ public class OrderController {
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getorderstatus", method = RequestMethod.POST)
+    public @ResponseBody
+    String getOrderStatus(HttpServletRequest request){
+        Result result = new Result();
+        BufferedReader br = null;
+        XStream xstream = null;
+        try{
+            br = new BufferedReader(new InputStreamReader(request.getInputStream(),"UTF-8"));
+            String lineStr = null;
+            StringBuffer sb = new StringBuffer();
+            while((lineStr = br.readLine()) != null){
+                sb.append(lineStr);
+            }
+            xstream = new XStream(new DomDriver());
+            xstream.alias("PushRoomType", PushRoomType.class);
+            xstream.autodetectAnnotations(true);
+            PushRoomType pushRoomType = (PushRoomType) xstream.fromXML(sb.toString(), new PushRoomType());
+            result.setMessage("成功");
+            result.setStatus("200");
+        }catch (Exception e){
+            e.printStackTrace();
+            IOUtils.closeQuietly(br);
+            result.setMessage("失败");
+            result.setStatus("400");
+        }
+
+        return xstream.toXML(result);
     }
 }
 
