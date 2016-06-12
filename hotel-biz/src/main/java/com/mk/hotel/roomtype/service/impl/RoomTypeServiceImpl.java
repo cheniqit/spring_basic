@@ -117,14 +117,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
-    public RoomTypeDto selectByFangId(Long fangRoomTypeId) {
+    public RoomTypeDto selectByFangId(Long fangRoomTypeId, Long hotelId) {
         if (null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
         }
 
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andFangIdEqualTo(fangRoomTypeId);
+        roomTypeExample.createCriteria().andFangIdEqualTo(fangRoomTypeId).andHotelIdEqualTo(hotelId);
 
         //
         List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
@@ -495,7 +495,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
             return;
         }
-        roomTypeProxyService.saveRoomTypePrice(response.getData());
+        roomTypeProxyService.saveRoomTypePrice(response.getData(), hotelId);
         OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
@@ -521,7 +521,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
                 return;
             }
-            roomTypeProxyService.saveRoomTypePrice(response.getData());
+            roomTypeProxyService.saveRoomTypePrice(response.getData(), hotel.getId());
             OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);

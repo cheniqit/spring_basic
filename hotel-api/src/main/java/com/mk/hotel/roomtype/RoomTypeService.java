@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RoomTypeService {
 
-    RoomTypeDto selectByFangId(Long fangId);
+    RoomTypeDto selectByFangId(Long fangId, Long hotelId);
 
     RoomTypeDto selectById(Long roomTypeId);
 

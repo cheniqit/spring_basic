@@ -58,7 +58,7 @@ public class RoomTypeProxyService {
             return;
         }
         for(HotelRoomTypeQueryResponse.HotelRoomType hotelRoomType : roomTypeList){
-            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(hotelRoomType.getId()+""));
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(hotelRoomType.getId()+""), hotel.getId());
             RoomType roomType = null;
             if(roomTypeDto == null || roomTypeDto.getId() == null){
                 roomType = saveRoomType(hotel, hotelRoomType);
@@ -118,12 +118,12 @@ public class RoomTypeProxyService {
     }
 
     @Transactional
-    public void saveRoomTypePrice(HotelPriceResponse.HotelPrice data) {
+    public void saveRoomTypePrice(HotelPriceResponse.HotelPrice data, Long hotelId) {
         if(data == null || CollectionUtils.isEmpty(data.getRoomtypeprices())){
             return;
         }
         for(HotelPriceResponse.Roomtypeprices roomPriceType : data.getRoomtypeprices()){
-            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomPriceType.getRoomtypeid()+""));
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomPriceType.getRoomtypeid()+""), hotelId);
             if(roomTypeDto == null){
                 logger.info("by roomTypeId  {} is not find roomType data", roomPriceType.getRoomtypeid()+"");
                 return;
@@ -206,7 +206,7 @@ public class RoomTypeProxyService {
             return;
         }
         for(QueryStockResponse.Roomtypestocks roomtypestock :  data.getRoomtypestocks()){
-            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomtypestock.getRoomtypeid()));
+            RoomTypeDto roomTypeDto = roomTypeService.selectByFangId(Long.valueOf(roomtypestock.getRoomtypeid()), hotel.getId());
             if(roomTypeDto == null){
                 logger.info("by roomTypeId  {} is not find roomType data", roomtypestock.getRoomtypeid());
                 return;
