@@ -87,9 +87,10 @@ public class OrderController {
 
     @RequestMapping(value = "/getorderstatus", method = RequestMethod.POST)
     public @ResponseBody
-    Result getOrderStatus(HttpServletRequest request){
+    String getOrderStatus(HttpServletRequest request){
         Result result = new Result();
         BufferedReader br = null;
+        XStream xstream = null;
         try{
             br = new BufferedReader(new InputStreamReader(request.getInputStream(),"UTF-8"));
             String lineStr = null;
@@ -97,7 +98,7 @@ public class OrderController {
             while((lineStr = br.readLine()) != null){
                 sb.append(lineStr);
             }
-            XStream xstream = new XStream(new DomDriver());
+            xstream = new XStream(new DomDriver());
             xstream.alias("PushRoomType", PushRoomType.class);
             xstream.autodetectAnnotations(true);
             PushRoomType pushRoomType = (PushRoomType) xstream.fromXML(sb.toString(), new PushRoomType());
@@ -110,7 +111,7 @@ public class OrderController {
             result.setStatus("400");
         }
 
-        return result;
+        return xstream.toXML(result);
     }
 }
 
