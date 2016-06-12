@@ -127,13 +127,14 @@ public class HotelCopyService {
                     String isValid = null;
                     Integer status = roomTypeJson.getStatus();
 
+                    //默认为T,
                     if (null == status) {
                         isValid = "T";
                     } else {
-                        if (0 == roomTypeJson.getStatus()) {
-                            isValid = "T";
-                        } else {
+                        if (1 == roomTypeJson.getStatus()) {
                             isValid = "F";
+                        } else {
+                            isValid = "T";
                         }
                     }
 

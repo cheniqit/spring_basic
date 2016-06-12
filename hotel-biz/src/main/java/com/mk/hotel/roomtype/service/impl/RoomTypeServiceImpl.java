@@ -448,10 +448,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             roomTypeInRedis.setBedType(bedType);
             roomTypeInRedis.setBreakFast(roomType.getBreakfast());
             //0、可定；1、不可订
-            if ("T".equals(roomType.getIsValid())) {
-                roomTypeInRedis.setStatus(0);
-            } else {
+            if ("F".equals(roomType.getIsValid())) {
                 roomTypeInRedis.setStatus(1);
+            } else {
+                roomTypeInRedis.setStatus(0);
             }
             roomTypeInRedis.setRoomNum(roomType.getRoomNum());
             roomTypeInRedis.setRoomTypePics(picLists);
