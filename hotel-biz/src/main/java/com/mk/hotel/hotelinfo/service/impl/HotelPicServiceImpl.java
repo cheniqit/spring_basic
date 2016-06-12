@@ -23,9 +23,7 @@ import org.apache.poi.ss.usermodel.Picture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by chenqi on 16/5/31.
@@ -285,6 +283,7 @@ public class HotelPicServiceImpl {
             taskFactoryRemoteService.saveHotelPic(hotelId, hotelPicInfo);
             return;
         }
+        hpi = convertHotelPicInfo(hpi);
         for(HotelPicInfo.Data data : hpi.getData()){
             if(StringUtils.isBlank(data.getRoomTypeId())){
                 //酒店信息
@@ -323,5 +322,44 @@ public class HotelPicServiceImpl {
             }
 
         }
+    }
+
+    public HotelPicInfo convertHotelPicInfo(HotelPicInfo hpi){
+        HotelPicInfo hotelPicInfo = new HotelPicInfo();
+        List<HotelPicInfo.Pic>  hotelPicList = new ArrayList<HotelPicInfo.Pic>();
+        Map<String, List<HotelPicInfo.RoomTypePic>> roomTypeMap = new HashMap<String, List<HotelPicInfo.RoomTypePic>>();
+        for (HotelPicInfo.Data data : hpi.getData()) {
+            if (StringUtils.isBlank(data.getRoomTypeId())) {
+                if (org.apache.commons.collections.CollectionUtils.isEmpty(data.getPic())) {
+                    continue;
+                }
+                hotelPicList.addAll(data.getPic());
+            }else{
+                if(StringUtils.isBlank(data.getRoomTypeId())){
+                    continue;
+                }
+                if(roomTypeMap.containsKey(data.getRoomTypeId())){
+                    List<HotelPicInfo.RoomTypePic> roomTypePic = roomTypeMap.get(data.getRoomTypeId());
+                    roomTypePic.addAll(data.getRoomTypePic());
+                    roomTypeMap.put(data.getRoomTypeId(), roomTypePic);
+                }else{
+                    List<HotelPicInfo.RoomTypePic> roomTypePic = new ArrayList<HotelPicInfo.RoomTypePic>();
+                    roomTypePic.addAll(data.getRoomTypePic());
+                }
+            }
+        }
+        List<HotelPicInfo.Data>  dateList = new ArrayList<HotelPicInfo.Data>();
+        HotelPicInfo.Data hotelDate = new HotelPicInfo.Data();
+        hotelDate.setName(HotelPicTypeEnum.def.getPmsPicCode());
+        hotelDate.setPic(hotelPicList);
+        dateList.add(hotelDate);
+        for(Map.Entry<String, List<HotelPicInfo.RoomTypePic>> entry : roomTypeMap.entrySet()){
+            HotelPicInfo.Data roomDate = new HotelPicInfo.Data();
+            roomDate.setRoomTypeId(entry.getKey());
+            roomDate.setRoomTypePic(entry.getValue());
+            dateList.add(roomDate);
+        }
+        hotelPicInfo.setData(dateList);
+        return hotelPicInfo;
     }
 }

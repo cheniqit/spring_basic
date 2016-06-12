@@ -44,7 +44,7 @@ public class HotelPicInfo {
     }
 
 
-    public class Data {
+    public static class Data {
 
         private String name;
         private List<Pic> pic;

@@ -32,7 +32,7 @@ public class TaskFactoryRemoteService {
             throw new MyException("保存图片信息错误");
         }
         HotelCommonResponse response = new Gson().fromJson(resultJson, HotelCommonResponse.class);
-        if(StringUtils.isBlank(response.getSuccess()) || response.getSuccess().equals("T")){
+        if(StringUtils.isBlank(response.getSuccess()) || !response.getSuccess().equals("T")){
             throw new MyException("保存图片信息错误");
         }
     }
