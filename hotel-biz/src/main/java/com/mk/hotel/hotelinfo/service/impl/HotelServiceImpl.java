@@ -547,11 +547,11 @@ public class HotelServiceImpl implements HotelService {
                 if (null != pricePatternsList) {
 
                     for (PricePatterns pricePatterns : pricePatternsList) {
-                        //策略模式1:底价模式 2:卖价模式
-                        String pattern = pricePatterns.getPattern();
-                        if (!"2".equals(pattern)) {
-                            continue;
-                        }
+//                        //策略模式1:底价模式 2:卖价模式
+//                        String pattern = pricePatterns.getPattern();
+//                        if (!"2".equals(pattern)) {
+//                            continue;
+//                        }
 
                         //
                         Integer accountId =  pricePatterns.getAccountId();
