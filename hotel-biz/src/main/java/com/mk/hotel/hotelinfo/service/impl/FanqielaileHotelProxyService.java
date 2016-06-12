@@ -6,6 +6,7 @@ import com.mk.framework.coordinate.CoordinateUtils;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
+import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
@@ -29,6 +30,7 @@ import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +40,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenqi on 16/5/13.
@@ -253,12 +257,32 @@ public class FanqielaileHotelProxyService {
 
             //
             for (ImgList img : imgList) {
+
+                //
+                String imgUrl = fanqieImgDomain + img.getImgUrl();
+
                 //(imgList) isCover 是否封面 number (1封面,0 null不是封面)
                 Integer isCover = img.getIsCover();
                 if (Integer.valueOf(1).equals(isCover)) {
-                    coverImgUrl = fanqieImgDomain + img.getImgUrl();
+                    //
+                    try {
+                        coverImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
-                    notCoverUrlList.add(img.getImgUrl());
+                    String uploadImgUrl = null;
+                    //
+                    try {
+                        uploadImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //
+                    if (null != uploadImgUrl) {
+                        notCoverUrlList.add(uploadImgUrl);
+                    }
                 }
             }
 
@@ -270,7 +294,7 @@ public class FanqielaileHotelProxyService {
                     notCoverImgUrl.append(",");
                 }
 
-                notCoverImgUrl.append("{\"url\":\"").append(fanqieImgDomain).append(imgUrl).append("\"}");
+                notCoverImgUrl.append("{\"url\":\"").append(imgUrl).append("\"}");
             }
 
             //
