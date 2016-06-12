@@ -10,9 +10,12 @@ import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.enums.HotelTypeEnum;
+import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMappingExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
@@ -48,6 +51,10 @@ public class FanqielaileHotelProxyService {
 
     @Autowired
     private HotelMapper hotelMapper;
+
+    @Autowired
+    private HotelFanqieMappingMapper hotelFanqieMappingMapper;
+
     @Autowired
     private LandMarkMapper landMarkMapper;
     @Autowired
@@ -60,13 +67,13 @@ public class FanqielaileHotelProxyService {
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
-    public Hotel saveOrUpdateHotel(Inn inn) {
+    public Hotel saveOrUpdateHotel(Integer innId, Inn inn) {
         //
-        Hotel hotel = convertHotel(inn);
+        Hotel hotel = convertHotel(innId, inn);
 
         //
         HotelExample example = new HotelExample();
-        example.createCriteria().andFangIdEqualTo(inn.getAccountId()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
+        example.createCriteria().andFangIdEqualTo(innId.longValue()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
         List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
 
         if (hotelList.isEmpty()) {
@@ -88,8 +95,40 @@ public class FanqielaileHotelProxyService {
         return hotel;
     }
 
-    private Hotel convertHotel(Inn inn) {
-        if(null == inn){
+    private HotelFanqieMapping saveOrUpdateMapping (Integer innId, Integer accountId) {
+
+        HotelFanqieMappingExample example = new HotelFanqieMappingExample();
+        example.createCriteria().andHotelIdEqualTo(innId.longValue()).andAccountIdEqualTo(accountId.longValue());
+        List<HotelFanqieMapping> mappingList =  this.hotelFanqieMappingMapper.selectByExample(example);
+
+        //
+        HotelFanqieMapping mapping = new HotelFanqieMapping();
+        mapping.setHotelId(innId.longValue());
+        mapping.setAccountId(accountId.longValue());
+        mapping.setCreateBy(Constant.SYSTEM_USER_NAME);
+        mapping.setCreateDate(new Date());
+        mapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        mapping.setUpdateDate(new Date());
+        mapping.setIsValid("T");
+
+        //
+        if (mappingList.isEmpty()) {
+            this.hotelFanqieMappingMapper.insert(mapping);
+        } else {
+            HotelFanqieMapping dbMapping = mappingList.get(0);
+            mapping.setId(dbMapping.getId());
+            mapping.setCreateBy(dbMapping.getCreateBy());
+            mapping.setCreateDate(dbMapping.getCreateDate());
+
+            this.hotelFanqieMappingMapper.updateByPrimaryKey(mapping);
+
+        }
+
+        return mapping;
+    }
+
+    private Hotel convertHotel(Integer innId, Inn inn) {
+        if(null == innId || null == inn){
             return null;
         }
         // 转换 坐标
@@ -143,7 +182,7 @@ public class FanqielaileHotelProxyService {
                 hotelService.getAllLandMarkList());
 
         Hotel hotel = new Hotel();
-        hotel.setFangId(inn.getAccountId());
+        hotel.setFangId(innId.longValue());
         hotel.setName(inn.getBrandName());
         hotel.setAddr(inn.getAddr());
         hotel.setPhone(inn.getFrontPhone());

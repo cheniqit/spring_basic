@@ -542,6 +542,7 @@ public class HotelServiceImpl implements HotelService {
 
             for (ProxyInns proxyInns: proxyInnsList) {
                 List<PricePatterns> pricePatternsList = proxyInns.getPricePatterns();
+                Integer innId = proxyInns.getInnId();
 
                 if (null != pricePatternsList) {
 
