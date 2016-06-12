@@ -4,7 +4,7 @@ public enum HotelPicTypeEnum {
     def(1, "def", "门头及招牌"),
     lobby(2, "lobby", "大堂"),
     mainHousing(3, "mainHousing", "主力房源"),
-    roomType(3, "mainHousing", "房型图片"),
+    roomType(4, "roomType", "房型图片"),
     ;
     private final int code;
     private final String pmsPicCode;
@@ -45,7 +45,7 @@ public enum HotelPicTypeEnum {
             return null;
         }
         for(HotelPicTypeEnum hotelPicTypeEnum : HotelPicTypeEnum.values()){
-            if(code.equals(hotelPicTypeEnum.getPmsPicCode())){
+            if(code.equalsIgnoreCase(hotelPicTypeEnum.getPmsPicCode())){
                 return hotelPicTypeEnum;
             }
         }

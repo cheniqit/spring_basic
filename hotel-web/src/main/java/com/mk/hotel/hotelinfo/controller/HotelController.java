@@ -253,11 +253,11 @@ public class HotelController {
 
     @RequestMapping(value = "/savepicture", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> savePicture(Long hotelId, Long roomTypeId, String picType, String url, String updateBy) {
+    public ResponseEntity<HashMap<String, Object>> savePicture(String hotelId, String hotelPicInfo, String updateBy) {
 
         try {
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
-            hotelPicService.saveHotelPic(hotelId, roomTypeId, picType, url, updateBy);
+            hotelPicService.saveHotelPic(hotelId, hotelPicInfo, updateBy);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }catch (Exception e) {

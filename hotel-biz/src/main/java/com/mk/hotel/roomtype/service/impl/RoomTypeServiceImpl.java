@@ -13,6 +13,7 @@ import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -426,6 +427,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                     String strPic = picArray.getString(i);
                     PicList picList = JsonUtils.fromJson(strPic, PicList.class);
                     picList = hotelPicService.replacePicList(null, roomTypeId, picList);
+                    picLists.add(picList);
+                }
+            }else{
+                PicList picList = new PicList();
+                picList.setName(HotelPicTypeEnum.def.getPmsPicCode());
+                picList = hotelPicService.replacePicList(null, roomTypeId, picList);
+                if(org.apache.commons.collections.CollectionUtils.isNotEmpty(picList.getPic())){
                     picLists.add(picList);
                 }
             }

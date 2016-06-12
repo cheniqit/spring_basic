@@ -328,6 +328,7 @@
                 <qiniu.resource.download.address>http://7xosvc.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resourcetest</qiniu.resourceBucket>
+                <task.factory.remote.url>http://10.10.182.67:8080/job</task.factory.remote.url>
             </properties>
         </profile>
 
@@ -368,6 +369,7 @@
                 <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resource</qiniu.resourceBucket>
+                <task.factory.remote.url>http://localhost:9050/</task.factory.remote.url>
             </properties>
         </profile>
 
@@ -404,6 +406,7 @@
                 <qiniu.resource.download.address>http://7xotjr.com2.z0.glb.qiniucdn.com</qiniu.resource.download.address>
                 <!-- 七牛资源空间名称 -->
                 <qiniu.resourceBucket>resource</qiniu.resourceBucket>
+                <task.factory.remote.url>http://10.10.148.134:8080/job</task.factory.remote.url>
             </properties>
         </profile>
 
