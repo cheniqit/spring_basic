@@ -4,6 +4,7 @@ public enum LogPushTypeEnum {
 	hotelAll(100l,"所有酒店(房爸爸)"),
 	hotel(101l,"单个酒店(房爸爸)"),
 	hotelDelete(110l,"删除酒店(房爸爸)"),
+	hotelFanqie(120l,"单个酒店(番茄)"),
 
 	hotelFacility(150l,"酒店设施(房爸爸)"),
 

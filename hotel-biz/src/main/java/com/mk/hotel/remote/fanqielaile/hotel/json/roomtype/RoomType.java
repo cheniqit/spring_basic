@@ -1,6 +1,7 @@
 package com.mk.hotel.remote.fanqielaile.hotel.json.roomtype;
 
 import com.mk.hotel.remote.fanqielaile.hotel.json.FacilitiesMap;
+import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class RoomType {
     private String recommend;
     private String roomInfo;
     private List<FacilitiesMap> facilitiesMap;
-    private List<String> imgList;
+    private List<ImgList> imgList;
     private String ratePlanCode;
     private String ratePlanConfig;
     private Integer roomTypeId;
@@ -112,11 +113,11 @@ public class RoomType {
         this.facilitiesMap = facilitiesMap;
     }
 
-    public List<String> getImgList() {
+    public List<ImgList> getImgList() {
         return imgList;
     }
 
-    public void setImgList(List<String> imgList) {
+    public void setImgList(List<ImgList> imgList) {
         this.imgList = imgList;
     }
 

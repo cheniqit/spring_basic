@@ -73,8 +73,6 @@ public class FanqielaileHotelProxyService {
 
     public Hotel saveOrUpdateHotel(Integer innId, Inn inn) {
 
-        //update
-        this.saveOrUpdateMapping(innId.longValue(), inn.getAccountId());
         //
         Hotel hotel = convertHotel(innId, inn);
 
@@ -102,7 +100,7 @@ public class FanqielaileHotelProxyService {
         return hotel;
     }
 
-    private HotelFanqieMapping saveOrUpdateMapping (Long innId, Long accountId) {
+    public HotelFanqieMapping saveOrUpdateMapping (Long innId, Integer pattern, Long accountId) {
 
         HotelFanqieMappingExample example = new HotelFanqieMappingExample();
         example.createCriteria().andHotelIdEqualTo(innId);
@@ -112,6 +110,7 @@ public class FanqielaileHotelProxyService {
         HotelFanqieMapping mapping = new HotelFanqieMapping();
         mapping.setHotelId(innId);
         mapping.setAccountId(accountId);
+        mapping.setPattern(pattern);
         mapping.setCreateBy(Constant.SYSTEM_USER_NAME);
         mapping.setCreateDate(new Date());
         mapping.setUpdateBy(Constant.SYSTEM_USER_NAME);

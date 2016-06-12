@@ -33,5 +33,7 @@ public interface HotelService {
 
     void deleteByFangId(Long id, HotelSourceEnum hotelSourceEnum);
 
-    void mergeFanqieHotel ();
+    List<String> mergeFanqieHotel ();
+
+    void mergeFangqieHotelByProxyInnJson (String proxyInnJson);
 }

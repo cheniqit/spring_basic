@@ -4,7 +4,9 @@ package com.mk.hotel.roomtype.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
@@ -18,7 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -69,6 +73,11 @@ public class FanqielaileRoomTypeProxyService {
     }
 
     private RoomType convertRoomType(Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType){
+
+
+        String pic = processPic(fanqieRoomType.getImgList());
+
+
         RoomType roomType = new RoomType();
 
         //
@@ -100,7 +109,7 @@ public class FanqielaileRoomTypeProxyService {
         //1、预付
         roomType.setPrepay(1);
         roomType.setRoomNum(0);
-        roomType.setRoomTypePics("");
+        roomType.setRoomTypePics(pic);
 
 
         roomType.setUpdateBy(Constant.SYSTEM_USER_NAME);
@@ -130,4 +139,66 @@ public class FanqielaileRoomTypeProxyService {
 //        return roomTypePrice;
 //    }
 
+    public String processPic(List<ImgList> imgList){
+        String fanqieImgDomain = "http://img.fanqiele.com";
+
+        if (null == imgList) {
+            return "[{\"name\":\"def\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"\"}]}]";
+        } else {
+            //
+            String coverImgUrl = "";
+            List<String> notCoverUrlList = new ArrayList<String>();
+
+            //
+            for (ImgList img : imgList) {
+
+                //
+                String imgUrl = fanqieImgDomain + img.getImgUrl();
+
+                //(imgList) isCover 是否封面 number (1封面,0 null不是封面)
+                Integer isCover = img.getIsCover();
+                if (Integer.valueOf(1).equals(isCover)) {
+                    //
+                    try {
+                        coverImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String uploadImgUrl = null;
+                    //
+                    try {
+                        uploadImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //
+                    if (null != uploadImgUrl) {
+                        notCoverUrlList.add(uploadImgUrl);
+                    }
+                }
+            }
+
+            //
+            StringBuilder notCoverImgUrl = new StringBuilder();
+            for (String imgUrl : notCoverUrlList) {
+                //非空,追加前加","
+                if (!"".equals(notCoverImgUrl.toString())) {
+                    notCoverImgUrl.append(",");
+                }
+
+                notCoverImgUrl.append("{\"url\":\"").append(imgUrl).append("\"}");
+            }
+
+            //
+            StringBuilder returnUrl = new StringBuilder()
+                    .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
+                    .append(coverImgUrl)
+                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}，{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append(notCoverImgUrl.toString())
+                    .append("]}]");
+            return returnUrl.toString();
+        }
+    }
 }

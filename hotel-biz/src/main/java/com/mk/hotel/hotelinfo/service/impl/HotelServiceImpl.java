@@ -13,6 +13,7 @@ import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelCacheEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
+import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -36,6 +37,7 @@ import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
+import com.qiniu.util.Json;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,8 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private HotelMapper hotelMapper;
 
+    @Autowired
+    private HotelFanqieMappingMapper hotelFanqieMappingMapper;
     @Autowired
     private LandMarkMapper landMarkMapper;
     @Autowired
@@ -528,71 +532,89 @@ public class HotelServiceImpl implements HotelService {
         return hotelLandMark;
     }
 
-    public void mergeFanqieHotel (){
+    public List<String> mergeFanqieHotel (){
 
+        List<String> result = new ArrayList<String>();
         //
         SaleList saleList = this.fanqielaileRemoteService.queryHotelList();
 
         if (null == saleList) {
-            return;
+            return result;
         }
 
         List<ProxyInns> proxyInnsList = saleList.getProxyInns();
         if (null != proxyInnsList) {
 
             for (ProxyInns proxyInns: proxyInnsList) {
-                List<PricePatterns> pricePatternsList = proxyInns.getPricePatterns();
-                Integer innId = proxyInns.getInnId();
+                String proxyInnJson = JsonUtils.toJson(proxyInns);
+                result.add(proxyInnJson);
+            }
+        }
 
-                if (null != pricePatternsList) {
+        return result;
+    }
 
-                    for (PricePatterns pricePatterns : pricePatternsList) {
-//                        //策略模式1:底价模式 2:卖价模式
-//                        String pattern = pricePatterns.getPattern();
-//                        if (!"2".equals(pattern)) {
-//                            continue;
-//                        }
+    public void mergeFangqieHotelByProxyInnJson (String proxyInnJson) {
 
-                        //
-                        Integer accountId =  pricePatterns.getAccountId();
-                        /*
-                            1 酒店
-                         */
-                        //TODO
-                        Hotel hotel = null;
-                        InnList innList = this.fanqielaileRemoteService.queryInn(accountId.longValue());
-                        if (null != innList) {
-                            List<Inn> inns = innList.getList();
-                            for (Inn inn : inns) {
-                                try {
-                                    hotel = this.fanqielaileHotelProxyService.saveOrUpdateHotel(innId, inn);
-                                } catch (Exception e) {
-                                    Cat.logError(e);
-                                }
-                            }
+        ProxyInns proxyInns = JsonUtils.fromJson(proxyInnJson, ProxyInns.class);
+
+        List<PricePatterns> pricePatternsList = proxyInns.getPricePatterns();
+        Integer innId = proxyInns.getInnId();
+
+        if (null != pricePatternsList) {
+
+            for (PricePatterns pricePatterns : pricePatternsList) {
+
+                //策略模式1:底价模式 2:卖价模式
+                String pattern = pricePatterns.getPattern();
+                Integer intPattern = null;
+                try {
+                    intPattern = Integer.parseInt(pattern);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //
+                Integer accountId =  pricePatterns.getAccountId();
+
+                //update
+                this.fanqielaileHotelProxyService.saveOrUpdateMapping(innId.longValue(), intPattern, accountId.longValue());
+
+                /*
+                    1 酒店
+                 */
+                Hotel hotel = null;
+                InnList innList = this.fanqielaileRemoteService.queryInn(accountId.longValue());
+                if (null != innList) {
+                    List<Inn> inns = innList.getList();
+                    for (Inn inn : inns) {
+                        try {
+                            hotel = this.fanqielaileHotelProxyService.saveOrUpdateHotel(innId, inn);
+                        } catch (Exception e) {
+                            Cat.logError(e);
                         }
+                    }
+                }
 
-                        /*
-                            2 房型
-                         */
-                        RoomTypeList roomTypeList = this.fanqielaileRemoteService.queryRoomType(
-                                accountId.longValue());
-                        if (null != roomTypeList) {
-                            List<RoomType> roomTypes = roomTypeList.getList();
-                            for (RoomType roomType : roomTypes) {
-                                this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomType(hotel.getId(), roomType);
-                            }
-                        }
+                /*
+                    2 房型
+                 */
+                RoomTypeList roomTypeList = this.fanqielaileRemoteService.queryRoomType(
+                        accountId.longValue());
+                if (null != roomTypeList) {
+                    List<RoomType> roomTypes = roomTypeList.getList();
+                    for (RoomType roomType : roomTypes) {
+                        this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomType(hotel.getId(), roomType);
+                    }
+                }
 
                         /*
                             3 房态
                          */
-                        RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
-                                accountId.longValue(), new Date() , new Date());
-                        if (null != roomList) {
+                RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
+                        accountId.longValue(), new Date() , new Date());
+                if (null != roomList) {
 
-                        }
-                    }
                 }
             }
         }

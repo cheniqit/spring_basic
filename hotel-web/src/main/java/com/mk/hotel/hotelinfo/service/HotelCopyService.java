@@ -296,4 +296,11 @@ public class HotelCopyService {
             OtsInterface.initHotel(dbHotel.getId());
         }
     }
+
+
+    public void handleHotelFanqie (String proxyInnJson) {
+        //
+        HotelService hotelService = AppUtils.getBean(HotelService.class);
+        hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
+    }
 }

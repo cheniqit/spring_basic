@@ -2,6 +2,7 @@ package com.mk.hotel.hotelinfo.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
+import com.mk.framework.AppUtils;
 import com.mk.framework.Constant;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.common.bean.PageBean;
@@ -295,7 +296,13 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> mergeFanqieHotel() {
 
-        this.hotelService.mergeFanqieHotel();
+        //
+        List<String> proxyInnJsonList = this.hotelService.mergeFanqieHotel();
+
+        for (String proxyInnJson : proxyInnJsonList) {
+            JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.hotelFanqie);
+        }
+
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
