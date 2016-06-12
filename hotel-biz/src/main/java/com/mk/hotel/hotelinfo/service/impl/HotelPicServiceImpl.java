@@ -129,6 +129,12 @@ public class HotelPicServiceImpl {
         }
         String[] urlList = url.split(",");
         updateOldResourceInValid(hotelId, urlList, updateBy);
+        //刷新索引
+        if(roomType != null){
+            roomTypeService.updateRedisRoomType(roomTypeId, roomType, "HotelPicServiceImpl.delPicture");
+        }else{
+            hotelService.updateRedisHotel(hotelId, hotel, "HotelPicServiceImpl.delPicture");
+        }
     }
 
     private void updateOldResourceInValid(Long hotelId, String[] urlList, String updateBy) {
