@@ -96,7 +96,12 @@ public class FanqielaileHotelProxyService {
             //TODO facilitiesMap
         }
 
-        hotelService.updateRedisHotel(hotel.getId(), hotel, "FanqielaileHotelProxyService.updateHotel");
+        //更新到redis
+        //redis中使用accountId
+        Hotel redisHotel = new Hotel();
+        BeanUtils.copyProperties(hotel, redisHotel);
+        redisHotel.setFangId(inn.getAccountId());
+        hotelService.updateRedisHotel(redisHotel.getId(), redisHotel, "FanqielaileHotelProxyService.updateHotel");
         return hotel;
     }
 
