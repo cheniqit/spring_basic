@@ -565,7 +565,7 @@ public class HotelServiceImpl implements HotelService {
                             List<Inn> inns = innList.getList();
                             for (Inn inn : inns) {
                                 try {
-                                    hotel = this.fanqielaileHotelProxyService.saveOrUpdateHotel(inn);
+                                    hotel = this.fanqielaileHotelProxyService.saveOrUpdateHotel(innId, inn);
                                 } catch (Exception e) {
                                     Cat.logError(e);
                                 }

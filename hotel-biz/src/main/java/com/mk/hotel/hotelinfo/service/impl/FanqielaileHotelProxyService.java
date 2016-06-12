@@ -68,6 +68,9 @@ public class FanqielaileHotelProxyService {
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     public Hotel saveOrUpdateHotel(Integer innId, Inn inn) {
+
+        //update
+        this.saveOrUpdateMapping(innId.longValue(), inn.getAccountId());
         //
         Hotel hotel = convertHotel(innId, inn);
 
@@ -95,16 +98,16 @@ public class FanqielaileHotelProxyService {
         return hotel;
     }
 
-    private HotelFanqieMapping saveOrUpdateMapping (Integer innId, Integer accountId) {
+    private HotelFanqieMapping saveOrUpdateMapping (Long innId, Long accountId) {
 
         HotelFanqieMappingExample example = new HotelFanqieMappingExample();
-        example.createCriteria().andHotelIdEqualTo(innId.longValue()).andAccountIdEqualTo(accountId.longValue());
+        example.createCriteria().andHotelIdEqualTo(innId);
         List<HotelFanqieMapping> mappingList =  this.hotelFanqieMappingMapper.selectByExample(example);
 
         //
         HotelFanqieMapping mapping = new HotelFanqieMapping();
-        mapping.setHotelId(innId.longValue());
-        mapping.setAccountId(accountId.longValue());
+        mapping.setHotelId(innId);
+        mapping.setAccountId(accountId);
         mapping.setCreateBy(Constant.SYSTEM_USER_NAME);
         mapping.setCreateDate(new Date());
         mapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
@@ -115,13 +118,33 @@ public class FanqielaileHotelProxyService {
         if (mappingList.isEmpty()) {
             this.hotelFanqieMappingMapper.insert(mapping);
         } else {
-            HotelFanqieMapping dbMapping = mappingList.get(0);
-            mapping.setId(dbMapping.getId());
-            mapping.setCreateBy(dbMapping.getCreateBy());
-            mapping.setCreateDate(dbMapping.getCreateDate());
 
-            this.hotelFanqieMappingMapper.updateByPrimaryKey(mapping);
+            boolean isExist = false;
+            for (HotelFanqieMapping dbMapping : mappingList) {
+                Long dbAccountId = dbMapping.getAccountId();
 
+                //已存在,不处理.不存在,更新原记录setIsValid置为"F"
+                if (dbAccountId.equals(accountId)) {
+                    //已存在,不处理
+                    isExist = true;
+
+                    dbMapping.setIsValid("T");
+                    dbMapping.setUpdateDate(new Date());
+                    dbMapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+
+                } else {
+                    //不存在,更新原记录setIsValid置为"F"
+                    dbMapping.setIsValid("F");
+                    dbMapping.setUpdateDate(new Date());
+                    dbMapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+                }
+
+            }
+
+            //不存在
+            if (!isExist) {
+                this.hotelFanqieMappingMapper.updateByPrimaryKey(mapping);
+            }
         }
 
         return mapping;
