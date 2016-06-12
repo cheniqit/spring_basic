@@ -422,6 +422,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             List<PicList> picLists = new ArrayList<PicList>();
 
             if (StringUtils.isNotBlank(strPics)) {
+                logger.info("updateRedisRoomType strPics :{}", strPics);
                 JSONArray picArray = JSONArray.parseArray(strPics);
                 for (int i = 0; i < picArray.size(); i++) {
                     String strPic = picArray.getString(i);

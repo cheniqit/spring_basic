@@ -324,7 +324,7 @@ public class FanqielaileRoomTypeProxyService {
             StringBuilder returnUrl = new StringBuilder()
                     .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
                     .append(coverImgUrl)
-                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}，{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
                     .append(notCoverImgUrl.toString())
                     .append("]}]");
             return returnUrl.toString();
