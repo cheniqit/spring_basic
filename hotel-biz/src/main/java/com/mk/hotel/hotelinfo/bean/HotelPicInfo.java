@@ -119,7 +119,73 @@ public class HotelPicInfo {
 
     public static void main(String[] arg){
         String s = "\n" +
-                "{\"success\":true,\"data\":[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/d1970ddc-3857-49b7-861b-4cdb2dda8fe8500.jpg\"}]},{\"roomTypeId\":31000000600877,\"roomTypeName\":\"特价房\",\"roomTypePic\":[{\"name\":\"def\",\"pic\":[{}]}]},{\"roomTypeId\":1371957,\"roomTypeName\":\"双人房\",\"roomTypePic\":[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/4975799f-9a34-4f59-9692-9f9440ae7f33500.jpg\"}]}]},{\"roomTypeId\":1371956,\"roomTypeName\":\"单人房\",\"roomTypePic\":[{\"name\":\"def\",\"pic\":[{\"url\":\"https://dn-imke-pro.qbox.me/87955dd0-de40-445f-aa89-9f3b21e5d8fc500.jpg\"}]}]}]}";
+                "{\n" +
+                "  \"success\": true,\n" +
+                "  \"data\": [\n" +
+                "    {\n" +
+                "      \"name\": \"def\",\n" +
+                "      \"pic\": [\n" +
+                "        {\n" +
+                "          \"url\": \"https://dn-imke-pro.qbox.me/d1970ddc-3857-49b7-861b-4cdb2dda8fe8500.jpg\"\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"roomTypeId\": 31000000600877,\n" +
+                "      \"roomTypeName\": \"特价房\",\n" +
+                "      \"roomTypePic\": [\n" +
+                "        {\n" +
+                "          \"name\": \"def\",\n" +
+                "          \"pic\": [\n" +
+                "            {}\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"roomTypeId\": 1371957,\n" +
+                "      \"roomTypeName\": \"双人房\",\n" +
+                "      \"roomTypePic\": [\n" +
+                "        {\n" +
+                "          \"name\": \"def\",\n" +
+                "          \"pic\": [\n" +
+                "            {\n" +
+                "              \"url\": \"https://dn-imke-pro.qbox.me/4975799f-9a34-4f59-9692-9f9440ae7f33500.jpg\"\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"roomTypeId\": 1371956,\n" +
+                "      \"roomTypeName\": \"单人房\",\n" +
+                "      \"roomTypePic\": [\n" +
+                "        {\n" +
+                "          \"name\": \"def\",\n" +
+                "          \"pic\": [\n" +
+                "            {\n" +
+                "              \"url\": \"https://dn-imke-pro.qbox.me/87955dd0-de40-445f-aa89-9f3b21e5d8fc500.jpg\"\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"roomTypeId\": 1371956,\n" +
+                "      \"roomTypeName\": \"单人房\",\n" +
+                "      \"roomTypePic\": [\n" +
+                "        {\n" +
+                "          \"name\": \"def\",\n" +
+                "          \"pic\": [\n" +
+                "            {\n" +
+                "              \n" +
+                "            }\n" +
+                "          ]\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
         HotelPicInfo hotelPicInfo = JsonUtils.fromJson(s, HotelPicInfo.class);
         System.out.print(hotelPicInfo);
     }

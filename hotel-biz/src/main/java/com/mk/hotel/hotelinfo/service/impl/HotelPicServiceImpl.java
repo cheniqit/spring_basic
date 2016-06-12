@@ -13,6 +13,7 @@ import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelPicMapper;
 import com.mk.hotel.hotelinfo.mapper.PicResourceMapper;
 import com.mk.hotel.hotelinfo.model.*;
+import com.mk.hotel.remote.dog.TaskFactoryRemoteService;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
@@ -43,6 +44,8 @@ public class HotelPicServiceImpl {
     private HotelServiceImpl hotelService;
     @Autowired
     private RoomTypeServiceImpl roomTypeService;
+    @Autowired
+    private TaskFactoryRemoteService taskFactoryRemoteService;
 
     public void saveHotelPic(Long hotelId, Long roomTypeId, String picType, String url, String updateBy){
         RoomType roomType = null;
@@ -75,7 +78,7 @@ public class HotelPicServiceImpl {
             throw new MyException("没有图片地址信息");
         }
         //将对应的hotel_pic, pic_resource表资源信息更新为无效
-        updateOldResourceInValid(hotelId, hotelPicTypeEnum, updateBy);
+        updateOldResourceInValid(hotelId, roomTypeId, hotelPicTypeEnum, updateBy);
 
         //保存图片
         String[] urlList = url.split(",");
@@ -87,9 +90,11 @@ public class HotelPicServiceImpl {
 
         }
         //刷新索引
-        hotelService.updateRedisHotel(hotelId, hotel, "HotelPicServiceImpl.saveHotelPic");
+
         if(roomType != null){
             roomTypeService.updateRedisRoomType(roomTypeId, roomType, "HotelPicServiceImpl.saveHotelPic");
+        }else{
+            hotelService.updateRedisHotel(hotelId, hotel, "HotelPicServiceImpl.saveHotelPic");
         }
         OtsInterface.initHotel(hotelId);
     }
@@ -171,9 +176,13 @@ public class HotelPicServiceImpl {
         picResourceMapper.updateByExampleSelective(picResource, picExample);
     }
 
-    private void updateOldResourceInValid(Long hotelId, HotelPicTypeEnum hotelPicTypeEnum, String updateBy) {
+    private void updateOldResourceInValid(Long hotelId, Long roomTypeId, HotelPicTypeEnum hotelPicTypeEnum, String updateBy) {
         HotelPicExample hotelPicExample = new HotelPicExample();
-        hotelPicExample.createCriteria().andHotelIdEqualTo(hotelId).andPicTypeEqualTo(hotelPicTypeEnum.getCode()+"").andIsValidEqualTo(ValidEnum.VALID.getCode());
+        HotelPicExample.Criteria criteria = hotelPicExample.createCriteria();
+        criteria.andHotelIdEqualTo(hotelId).andPicTypeEqualTo(hotelPicTypeEnum.getCode()+"").andIsValidEqualTo(ValidEnum.VALID.getCode());
+        if(roomTypeId != null){
+            criteria.andRoomTypeIdEqualTo(roomTypeId);
+        }
         List<HotelPic> hotelPicList = hotelPicMapper.selectByExample(hotelPicExample);
         HotelPic hotelPic = new HotelPic();
         hotelPic.setUpdateBy(updateBy);
@@ -192,7 +201,12 @@ public class HotelPicServiceImpl {
     }
 
     public PicList replacePicList(Long hotelId, Long roomTypeId, PicList picList){
-        HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(picList.getName());
+        HotelPicTypeEnum hotelPicTypeEnum;
+        if(roomTypeId != null){
+            hotelPicTypeEnum = HotelPicTypeEnum.roomType;
+        }else{
+            hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(picList.getName());
+        }
         if(hotelPicTypeEnum == null){
             return picList;
         }
@@ -266,6 +280,11 @@ public class HotelPicServiceImpl {
         if(hpi == null || CollectionUtils.isEmpty(hpi.getData())){
             throw new MyException("hotelPicInfo信息错误");
         }
+        Hotel hotel = hotelMapper.selectByPrimaryKey(Long.valueOf(hotelId));
+        if(hotel == null || hotel.getId() == null){
+            taskFactoryRemoteService.saveHotelPic(hotelId, hotelPicInfo);
+            return;
+        }
         for(HotelPicInfo.Data data : hpi.getData()){
             if(StringUtils.isBlank(data.getRoomTypeId())){
                 //酒店信息
@@ -274,6 +293,9 @@ public class HotelPicServiceImpl {
                 }
                 StringBuffer url = new StringBuffer();
                 for(HotelPicInfo.Pic pic : data.getPic()){
+                    if(StringUtils.isBlank(pic.getUrl())){
+                        continue;
+                    }
                     url.append(pic.getUrl()).append(",");
                 }
                 HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(data.getName());

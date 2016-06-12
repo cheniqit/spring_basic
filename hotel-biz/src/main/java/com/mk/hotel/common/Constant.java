@@ -23,4 +23,5 @@ public class Constant {
     public static final String QINIU_RESOURCE_BUCKET=UrlUtils.getUrl("resourceBucket");
 
     public static final String PUSH_INFO_SET = "PUSH_INFO_SET";
+    public static final String TASK_FACTORY_REMOTE_URL = UrlUtils.getUrl("task.factory.remote.url");
 }
