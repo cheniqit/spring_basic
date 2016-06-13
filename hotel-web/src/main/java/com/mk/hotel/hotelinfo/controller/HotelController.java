@@ -2,14 +2,11 @@ package com.mk.hotel.hotelinfo.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
-import com.mk.framework.AppUtils;
 import com.mk.framework.Constant;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.DateUtils;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
-import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -19,8 +16,15 @@ import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
+import com.mk.hotel.roomtype.bean.PushRoomType;
+import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,7 +33,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -58,6 +66,8 @@ public class HotelController {
     private RoomTypeStockService roomTypeStockService;
     @Autowired
     private HotelPicServiceImpl hotelPicService;
+    @Autowired
+    private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
 
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
@@ -131,6 +141,38 @@ public class HotelController {
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateFanqieRoomTypeInfo", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
+    public @ResponseBody
+    String updateFanqieRoomTypeInfo(HttpServletRequest request){
+        Result result = new Result();
+        BufferedReader br = null;
+        XStream xstream = null;
+        try{
+            br = new BufferedReader(new InputStreamReader(request.getInputStream(),"UTF-8"));
+            String lineStr = null;
+            StringBuffer sb = new StringBuffer();
+            while((lineStr = br.readLine()) != null){
+                sb.append(lineStr);
+            }
+            xstream = new XStream(new DomDriver());
+            xstream.alias("PushRoomType", PushRoomType.class);
+            xstream.autodetectAnnotations(true);
+            String filePath = request.getSession().getServletContext().getRealPath("/")+"fanqieRoomType/" + DateUtils.formatDateTime(new Date());
+            FileUtils.writeStringToFile(new File(filePath),sb.toString()+"\n", true);
+            PushRoomType pushRoomType = (PushRoomType) xstream.fromXML(sb.toString(), new PushRoomType());
+            fanqielaileRoomTypeProxyService.updateFanqieRoomTypeInfo(pushRoomType);
+            result.setMessage("成功");
+            result.setStatus("200");
+        }catch (Exception e){
+            e.printStackTrace();
+            IOUtils.closeQuietly(br);
+            result.setMessage("失败");
+            result.setStatus("400");
+        }
+
+        return xstream.toXML(result);
     }
 
 

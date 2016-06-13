@@ -1,14 +1,14 @@
 package com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  * Created by huangjie on 16/6/7.
  */
 public class RoomDetail {
     private String roomDate;
-    private Integer roomPrice;
-    private Integer priRoomPrice;
+    private BigDecimal roomPrice;
+    private BigDecimal priRoomPrice;
     private Integer roomNum;
 
     public String getRoomDate() {
@@ -19,19 +19,19 @@ public class RoomDetail {
         this.roomDate = roomDate;
     }
 
-    public Integer getRoomPrice() {
+    public BigDecimal getRoomPrice() {
         return roomPrice;
     }
 
-    public void setRoomPrice(Integer roomPrice) {
+    public void setRoomPrice(BigDecimal roomPrice) {
         this.roomPrice = roomPrice;
     }
 
-    public Integer getPriRoomPrice() {
+    public BigDecimal getPriRoomPrice() {
         return priRoomPrice;
     }
 
-    public void setPriRoomPrice(Integer priRoomPrice) {
+    public void setPriRoomPrice(BigDecimal priRoomPrice) {
         this.priRoomPrice = priRoomPrice;
     }
 

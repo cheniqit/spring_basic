@@ -8,6 +8,12 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
+import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
+import com.mk.hotel.hotelinfo.mapper.HotelMapper;
+import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMappingExample;
 import com.mk.hotel.remote.fanqielaile.hotel.json.FacilitiesMap;
 import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomDetail;
@@ -15,6 +21,7 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomDetailList;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.bean.PushRoomType;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
@@ -22,9 +29,11 @@ import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +64,10 @@ public class FanqielaileRoomTypeProxyService {
     private RoomTypeFacilityService roomTypeFacilityService;
     @Autowired
     private RoomTypeStockService roomTypeStockService;
+    @Autowired
+    private HotelFanqieMappingMapper hotelFanqieMappingMapper;
+    @Autowired
+    private HotelMapper hotelMapper;
 
     private static Logger logger = LoggerFactory.getLogger(FanqielaileRoomTypeProxyService.class);
 
@@ -209,11 +222,11 @@ public class FanqielaileRoomTypeProxyService {
             e.printStackTrace();
         }
         //下单价格
-        BigDecimal price = new BigDecimal(roomDetail.getRoomPrice());
+        BigDecimal price = roomDetail.getRoomPrice();
         price = price.setScale(2, BigDecimal.ROUND_HALF_UP);
 
         //原价格
-        BigDecimal cost = new BigDecimal(roomDetail.getPriRoomPrice());
+        BigDecimal cost = roomDetail.getPriRoomPrice();
         cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
 
         //
@@ -357,5 +370,50 @@ public class FanqielaileRoomTypeProxyService {
                     .append("]}]");
             return returnUrl.toString();
         }
+    }
+
+    public void updateFanqieRoomTypeInfo(PushRoomType pushRoomType) {
+        List<PushRoomType.RoomType> pushRoomTypeList = pushRoomType.getRoomType();
+        for(PushRoomType.RoomType proom : pushRoomTypeList){
+            String accId = proom.getAccountId();
+            HotelFanqieMappingExample example = new HotelFanqieMappingExample();
+            example.createCriteria().andAccountIdEqualTo(Long.valueOf(accId));
+            List<HotelFanqieMapping> hotelFanqieMappingList = hotelFanqieMappingMapper.selectByExample(example);
+            if(CollectionUtils.isEmpty(hotelFanqieMappingList)){
+                continue;
+            }
+            Long innId = hotelFanqieMappingList.get(0).getHotelId();
+            HotelExample hotelExample = new HotelExample();
+            hotelExample.createCriteria().andFangIdEqualTo(innId);
+            List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+            if(CollectionUtils.isEmpty(hotelList)){
+                continue;
+            }
+            RoomDetailList roomDetailList = new RoomDetailList();
+            roomDetailList.setRoomTypeId(Integer.valueOf(proom.getRoomTypeId()));
+            roomDetailList.setRoomTypeName(proom.getRoomTypeName());
+            List<RoomDetail> roomDetails = convertRoomTypeDetails(proom.getRoomDetails());
+            roomDetailList.setRoomDetail(roomDetails);
+            saveOrUpdateRoomDetail(hotelList.get(0).getId(), roomDetailList);
+
+
+        }
+
+    }
+
+    private List<RoomDetail> convertRoomTypeDetails(List<PushRoomType.RoomDetail> roomDetails) {
+        if(CollectionUtils.isEmpty(roomDetails)){
+            return null;
+        }
+        List<RoomDetail> roomDetailList = new ArrayList<RoomDetail>();
+        for(PushRoomType.RoomDetail r : roomDetails){
+            RoomDetail roomDetail = new RoomDetail();
+            roomDetail.setRoomDate(r.getRoomDate());
+            roomDetail.setRoomNum(Integer.valueOf(r.getRoomNum()));
+            roomDetail.setPriRoomPrice(new BigDecimal(r.getPriRoomPrice()));
+            roomDetail.setRoomPrice(new BigDecimal(r.getRoomPrice()));
+            roomDetailList.add(roomDetail);
+        }
+        return roomDetailList;
     }
 }

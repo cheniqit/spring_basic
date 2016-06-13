@@ -1,4 +1,4 @@
-package com.mk.hotel.order.controller.json;
+package com.mk.hotel.roomtype.bean;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
