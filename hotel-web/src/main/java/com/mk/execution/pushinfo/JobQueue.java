@@ -45,6 +45,9 @@ class JobQueue {
                 jedis.close();
             }
         }
+
+
+
     }
 
     JobQueueMessage brpop() {
@@ -63,6 +66,7 @@ class JobQueue {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Cat.logError(e);
         } finally {
             if ( jedis != null ) {
                 jedis.close();

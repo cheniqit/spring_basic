@@ -1,5 +1,6 @@
 package com.mk.execution.pushinfo;
 
+import com.dianping.cat.Cat;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -42,12 +43,14 @@ class ExecutorManager {
                     }
 
                 } catch (RejectedExecutionException e) {
+                    Cat.logError(e);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {
                         break;
                     }
                 }catch (Exception e){
+                    Cat.logError(e);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {
