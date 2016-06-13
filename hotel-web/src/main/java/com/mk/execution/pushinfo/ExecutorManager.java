@@ -1,5 +1,6 @@
 package com.mk.execution.pushinfo;
 
+import com.dianping.cat.Cat;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ class ExecutorManager {
 
                 LOGGER.info("+++++++++++++ refresh hotel is running... ++++++++++++++");
 
+                JobQueueMessage jobQueueMessage = JobQueue.getInstance().brpop();
                 try {
-                    JobQueueMessage jobQueueMessage = JobQueue.getInstance().brpop();
                     if (jobQueueMessage != null){
                         PushInfoRefresh pushInfoRefresh = new PushInfoRefresh(jobQueueMessage);
                         PUSH_INFO_REFRESH_POOL.execute(pushInfoRefresh);
@@ -40,14 +41,16 @@ class ExecutorManager {
                             e.printStackTrace();
                         }
                     }
-
                 } catch (RejectedExecutionException e) {
+                    JobQueue.getInstance().push(jobQueueMessage);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {
                         break;
                     }
                 }catch (Exception e){
+                    JobQueue.getInstance().push(jobQueueMessage);
+                    Cat.logError(e);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {

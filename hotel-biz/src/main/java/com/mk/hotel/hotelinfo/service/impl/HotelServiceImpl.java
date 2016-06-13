@@ -53,6 +53,7 @@ import redis.clients.jedis.Jedis;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -453,7 +454,7 @@ public class HotelServiceImpl implements HotelService {
             hotelInRedis.setCacheTime(strDate);
             hotelInRedis.setCacheFrom(cacheFrom);
 
-            hotelInRedis.setSoucreType(hotel.getSourceType());
+            hotelInRedis.setHotelSource(hotel.getSourceType());
             //
             jedis.set(hotelKeyName, JsonUtils.toJson(hotelInRedis));
 
@@ -615,8 +616,15 @@ public class HotelServiceImpl implements HotelService {
                 /*
                     3 房态
                  */
+                //查询30天的房态
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                calendar.add(Calendar.DAY_OF_MONTH,30);
+                Date nextMonth = calendar.getTime();
+
+                //
                 RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
-                        accountId.longValue(), new Date() , new Date());
+                        accountId.longValue(), new Date() , nextMonth);
                 if (null != roomList) {
 
                     List<RoomDetailList> roomDetailLists = roomList.getList();
