@@ -3,6 +3,7 @@ package com.mk.hotel.hotelinfo.service.impl;
 import com.mk.framework.Constant;
 import com.mk.framework.coordinate.Coordinate;
 import com.mk.framework.coordinate.CoordinateUtils;
+import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
@@ -69,19 +70,22 @@ public class FanqielaileHotelProxyService {
     public Hotel saveOrUpdateHotel(Integer innId, Inn inn) {
 
         //
-        Hotel hotel = convertHotel(innId, inn);
-
-        //
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(innId.longValue()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
         List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
 
+        Hotel hotel = null;
         if (hotelList.isEmpty()) {
+            //
+            hotel = convertHotel(innId, inn, null);
             this.hotelMapper.insert(hotel);
             saveOrUpdateHotelFacility(innId.longValue(), hotel.getId(), inn.getFacilitiesMap());
         } else {
             //db
             Hotel dbHotel = hotelList.get(0);
+
+            //
+            hotel = convertHotel(innId, inn, dbHotel);
 
             hotel.setId(dbHotel.getId());
             hotel.setCreateBy(dbHotel.getCreateBy());
@@ -173,7 +177,7 @@ public class FanqielaileHotelProxyService {
         return mapping;
     }
 
-    private Hotel convertHotel(Integer innId, Inn inn) {
+    private Hotel convertHotel(Integer innId, Inn inn, Hotel dbHotel) {
         if(null == innId || null == inn){
             return null;
         }
@@ -214,7 +218,15 @@ public class FanqielaileHotelProxyService {
         }
 
         //pic
-        String pic = this.processPic(inn.getImgList());
+        String picSign = this.calcPicSign(inn.getImgList());
+        String pic = null;
+        if (null != picSign && null != dbHotel && picSign.equals(dbHotel.getPicsSign())) {
+            //签名相同不转换
+            pic = dbHotel.getPic();
+        } else {
+            //其他情况
+            pic = this.processPic(inn.getImgList());
+        }
 
         //HotelLandMark
         if(CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
@@ -287,9 +299,25 @@ public class FanqielaileHotelProxyService {
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
 
+        hotel.setPicsSign(picSign);
         hotel.setPic(pic);
         hotel.setSourceType(HotelSourceEnum.FANQIE.getId());
         return hotel;
+    }
+
+    private String calcPicSign(List<ImgList> imgList) {
+
+        if (null == imgList || imgList.isEmpty()) {
+            return null;
+        }
+
+        //
+        StringBuilder pics = new StringBuilder();
+
+        for (ImgList img : imgList) {
+            pics.append(img.toString());
+        }
+        return MD5.MD5Encode(pics.toString());
     }
 
     public String processPic(List<ImgList> imgList){
@@ -310,7 +338,7 @@ public class FanqielaileHotelProxyService {
 
                 //(imgList) isCover 是否封面 number (1封面,0 null不是封面)
                 Integer isCover = img.getIsCover();
-                if (Integer.valueOf(1).equals(isCover)) {
+                if (Integer.valueOf(1).equals(isCover) && "".equals(coverImgUrl)) {
                     //
                     try {
                         coverImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);

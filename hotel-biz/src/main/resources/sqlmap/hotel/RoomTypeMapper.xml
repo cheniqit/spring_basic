@@ -12,6 +12,7 @@
     <result column="room_num" property="roomNum" jdbcType="SMALLINT" />
     <result column="prepay" property="prepay" jdbcType="SMALLINT" />
     <result column="breakfast" property="breakfast" jdbcType="SMALLINT" />
+    <result column="status" property="status" jdbcType="SMALLINT" />
     <result column="refund" property="refund" jdbcType="SMALLINT" />
     <result column="max_room_num" property="maxRoomNum" jdbcType="SMALLINT" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
@@ -19,6 +20,7 @@
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="is_valid" property="isValid" jdbcType="CHAR" />
+    <result column="pics_sign" property="picsSign" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.mk.hotel.roomtype.model.RoomType" extends="BaseResultMap" >
     <result column="room_type_pics" property="roomTypePics" jdbcType="LONGVARCHAR" />
@@ -83,7 +85,8 @@
   </sql>
   <sql id="Base_Column_List" >
     id, fang_id, hotel_id, name, area, bed_type, bed_size, room_num, prepay, breakfast, 
-    refund, max_room_num, create_date, create_by, update_date, update_by, is_valid
+    status, refund, max_room_num, create_date, create_by, update_date, update_by, is_valid, 
+    pics_sign
   </sql>
   <sql id="Blob_Column_List" >
     room_type_pics
@@ -142,17 +145,17 @@
     insert into room_type (id, fang_id, hotel_id, 
       name, area, bed_type, 
       bed_size, room_num, prepay, 
-      breakfast, refund, max_room_num, 
-      create_date, create_by, update_date, 
-      update_by, is_valid, room_type_pics
-      )
+      breakfast, status, refund, 
+      max_room_num, create_date, create_by, 
+      update_date, update_by, is_valid, 
+      pics_sign, room_type_pics)
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{hotelId,jdbcType=BIGINT}, 
       #{name,jdbcType=VARCHAR}, #{area,jdbcType=SMALLINT}, #{bedType,jdbcType=SMALLINT}, 
       #{bedSize,jdbcType=VARCHAR}, #{roomNum,jdbcType=SMALLINT}, #{prepay,jdbcType=SMALLINT}, 
-      #{breakfast,jdbcType=SMALLINT}, #{refund,jdbcType=SMALLINT}, #{maxRoomNum,jdbcType=SMALLINT}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, #{roomTypePics,jdbcType=LONGVARCHAR}
-      )
+      #{breakfast,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}, #{refund,jdbcType=SMALLINT}, 
+      #{maxRoomNum,jdbcType=SMALLINT}, #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, 
+      #{picsSign,jdbcType=VARCHAR}, #{roomTypePics,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomType" useGeneratedKeys="true" keyProperty="id">
     insert into room_type
@@ -187,6 +190,9 @@
       <if test="breakfast != null" >
         breakfast,
       </if>
+      <if test="status != null" >
+        status,
+      </if>
       <if test="refund != null" >
         refund,
       </if>
@@ -207,6 +213,9 @@
       </if>
       <if test="isValid != null" >
         is_valid,
+      </if>
+      <if test="picsSign != null" >
+        pics_sign,
       </if>
       <if test="roomTypePics != null" >
         room_type_pics,
@@ -243,6 +252,9 @@
       <if test="breakfast != null" >
         #{breakfast,jdbcType=SMALLINT},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=SMALLINT},
+      </if>
       <if test="refund != null" >
         #{refund,jdbcType=SMALLINT},
       </if>
@@ -263,6 +275,9 @@
       </if>
       <if test="isValid != null" >
         #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="picsSign != null" >
+        #{picsSign,jdbcType=VARCHAR},
       </if>
       <if test="roomTypePics != null" >
         #{roomTypePics,jdbcType=LONGVARCHAR},
@@ -308,6 +323,9 @@
       <if test="record.breakfast != null" >
         breakfast = #{record.breakfast,jdbcType=SMALLINT},
       </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=SMALLINT},
+      </if>
       <if test="record.refund != null" >
         refund = #{record.refund,jdbcType=SMALLINT},
       </if>
@@ -329,6 +347,9 @@
       <if test="record.isValid != null" >
         is_valid = #{record.isValid,jdbcType=CHAR},
       </if>
+      <if test="record.picsSign != null" >
+        pics_sign = #{record.picsSign,jdbcType=VARCHAR},
+      </if>
       <if test="record.roomTypePics != null" >
         room_type_pics = #{record.roomTypePics,jdbcType=LONGVARCHAR},
       </if>
@@ -349,6 +370,7 @@
       room_num = #{record.roomNum,jdbcType=SMALLINT},
       prepay = #{record.prepay,jdbcType=SMALLINT},
       breakfast = #{record.breakfast,jdbcType=SMALLINT},
+      status = #{record.status,jdbcType=SMALLINT},
       refund = #{record.refund,jdbcType=SMALLINT},
       max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
@@ -356,6 +378,7 @@
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       is_valid = #{record.isValid,jdbcType=CHAR},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR},
       room_type_pics = #{record.roomTypePics,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -373,13 +396,15 @@
       room_num = #{record.roomNum,jdbcType=SMALLINT},
       prepay = #{record.prepay,jdbcType=SMALLINT},
       breakfast = #{record.breakfast,jdbcType=SMALLINT},
+      status = #{record.status,jdbcType=SMALLINT},
       refund = #{record.refund,jdbcType=SMALLINT},
       max_room_num = #{record.maxRoomNum,jdbcType=SMALLINT},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
-      is_valid = #{record.isValid,jdbcType=CHAR}
+      is_valid = #{record.isValid,jdbcType=CHAR},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -414,6 +439,9 @@
       <if test="breakfast != null" >
         breakfast = #{breakfast,jdbcType=SMALLINT},
       </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=SMALLINT},
+      </if>
       <if test="refund != null" >
         refund = #{refund,jdbcType=SMALLINT},
       </if>
@@ -435,6 +463,9 @@
       <if test="isValid != null" >
         is_valid = #{isValid,jdbcType=CHAR},
       </if>
+      <if test="picsSign != null" >
+        pics_sign = #{picsSign,jdbcType=VARCHAR},
+      </if>
       <if test="roomTypePics != null" >
         room_type_pics = #{roomTypePics,jdbcType=LONGVARCHAR},
       </if>
@@ -452,6 +483,7 @@
       room_num = #{roomNum,jdbcType=SMALLINT},
       prepay = #{prepay,jdbcType=SMALLINT},
       breakfast = #{breakfast,jdbcType=SMALLINT},
+      status = #{status,jdbcType=SMALLINT},
       refund = #{refund,jdbcType=SMALLINT},
       max_room_num = #{maxRoomNum,jdbcType=SMALLINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -459,6 +491,7 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=CHAR},
+      pics_sign = #{picsSign,jdbcType=VARCHAR},
       room_type_pics = #{roomTypePics,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -473,13 +506,15 @@
       room_num = #{roomNum,jdbcType=SMALLINT},
       prepay = #{prepay,jdbcType=SMALLINT},
       breakfast = #{breakfast,jdbcType=SMALLINT},
+      status = #{status,jdbcType=SMALLINT},
       refund = #{refund,jdbcType=SMALLINT},
       max_room_num = #{maxRoomNum,jdbcType=SMALLINT},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      is_valid = #{isValid,jdbcType=CHAR}
+      is_valid = #{isValid,jdbcType=CHAR},
+      pics_sign = #{picsSign,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

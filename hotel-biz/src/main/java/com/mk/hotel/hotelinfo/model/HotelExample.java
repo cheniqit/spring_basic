@@ -2067,6 +2067,76 @@ public class HotelExample extends PageBean{
             addCriterion("source_type not between", value1, value2, "sourceType");
             return (Criteria) this;
         }
+
+        public Criteria andPicsSignIsNull() {
+            addCriterion("pics_sign is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIsNotNull() {
+            addCriterion("pics_sign is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignEqualTo(String value) {
+            addCriterion("pics_sign =", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotEqualTo(String value) {
+            addCriterion("pics_sign <>", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThan(String value) {
+            addCriterion("pics_sign >", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThanOrEqualTo(String value) {
+            addCriterion("pics_sign >=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThan(String value) {
+            addCriterion("pics_sign <", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThanOrEqualTo(String value) {
+            addCriterion("pics_sign <=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLike(String value) {
+            addCriterion("pics_sign like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotLike(String value) {
+            addCriterion("pics_sign not like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIn(List<String> values) {
+            addCriterion("pics_sign in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotIn(List<String> values) {
+            addCriterion("pics_sign not in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignBetween(String value1, String value2) {
+            addCriterion("pics_sign between", value1, value2, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotBetween(String value1, String value2) {
+            addCriterion("pics_sign not between", value1, value2, "picsSign");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

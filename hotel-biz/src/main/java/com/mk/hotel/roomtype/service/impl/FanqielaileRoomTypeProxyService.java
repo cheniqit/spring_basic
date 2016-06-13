@@ -5,6 +5,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
@@ -73,18 +74,22 @@ public class FanqielaileRoomTypeProxyService {
     private static Logger logger = LoggerFactory.getLogger(FanqielaileRoomTypeProxyService.class);
 
     public RoomType saveOrUpdateRoomType(Integer innId,Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType) {
-        RoomType roomType = convertRoomType(hotelId,fanqieRoomType);
+
 
         RoomTypeExample example = new RoomTypeExample();
-        example.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(roomType.getFangId());
+        example.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(innId.longValue());
         List<RoomType> dbRoomTypeList = this.roomTypeMapper.selectByExample(example);
 
+        RoomType roomType = null;
         if (dbRoomTypeList.isEmpty()) {
+            roomType = convertRoomType(hotelId,fanqieRoomType, null);
             this.roomTypeMapper.insert(roomType);
             saveOrUpdateRoomTypeFacility(innId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
 
         } else {
             RoomType dbRoomType = dbRoomTypeList.get(0);
+
+            roomType = convertRoomType(hotelId,fanqieRoomType, dbRoomType);
             roomType.setId(dbRoomType.getId());
             roomType.setCreateBy(dbRoomType.getCreateBy());
             roomType.setCreateDate(dbRoomType.getCreateDate());
@@ -122,10 +127,17 @@ public class FanqielaileRoomTypeProxyService {
 
 
 
-    private RoomType convertRoomType(Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType){
-
-        //
-        String pic = processPic(fanqieRoomType.getImgList());
+    private RoomType convertRoomType(Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType,RoomType dbRoomType){
+        //pic
+        String picSign = this.calcPicSign(fanqieRoomType.getImgList());
+        String pic = null;
+        if (null != picSign && null != dbRoomType && picSign.equals(dbRoomType.getPicsSign())) {
+            //签名相同不转换
+            pic = dbRoomType.getRoomTypePics();
+        } else {
+            //其他情况
+            pic = this.processPic(fanqieRoomType.getImgList());
+        }
 
         //hasBreakfast
         boolean hasBreakfast = hasBreakfast(fanqieRoomType.getFacilitiesMap());
@@ -165,6 +177,7 @@ public class FanqielaileRoomTypeProxyService {
         //1、预付
         roomType.setPrepay(1);
         roomType.setRoomNum(0);
+        roomType.setPicsSign(picSign);
         roomType.setRoomTypePics(pic);
 
         roomType.setUpdateBy(Constant.SYSTEM_USER_NAME);
@@ -173,6 +186,21 @@ public class FanqielaileRoomTypeProxyService {
         roomType.setCreateDate(new Date());
         roomType.setIsValid(ValidEnum.VALID.getCode());
         return roomType;
+    }
+
+    private String calcPicSign(List<ImgList> imgList) {
+
+        if (null == imgList || imgList.isEmpty()) {
+            return null;
+        }
+
+        //
+        StringBuilder pics = new StringBuilder();
+
+        for (ImgList img : imgList) {
+            pics.append(img.toString());
+        }
+        return MD5.MD5Encode(pics.toString());
     }
 
     private boolean hasBreakfast(List<FacilitiesMap> facilitiesMap) {
@@ -277,7 +305,7 @@ public class FanqielaileRoomTypeProxyService {
                     roomTypeDto.getId(),
                     stock.getDay(),
                     detail.getRoomNum(),
-                    detail.getRoomNum());
+                    0);
         } finally {
             this.roomTypeStockService.unlock(
                     roomTypeDto.getHotelId().toString(),
@@ -346,7 +374,7 @@ public class FanqielaileRoomTypeProxyService {
 
                 //(imgList) isCover 是否封面 number (1封面,0 null不是封面)
                 Integer isCover = img.getIsCover();
-                if (Integer.valueOf(1).equals(isCover)) {
+                if (Integer.valueOf(1).equals(isCover) && "".equals(coverImgUrl)) {
                     //
                     try {
                         coverImgUrl = QiniuUtils.upload(imgUrl, com.mk.hotel.common.Constant.QINIU_BUCKET);
