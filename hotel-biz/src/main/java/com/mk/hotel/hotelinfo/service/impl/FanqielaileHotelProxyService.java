@@ -3,12 +3,12 @@ package com.mk.hotel.hotelinfo.service.impl;
 import com.mk.framework.Constant;
 import com.mk.framework.coordinate.Coordinate;
 import com.mk.framework.coordinate.CoordinateUtils;
-import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
-import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
-import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
+import com.mk.hotel.hotelinfo.enums.FanqieHotelFacilityEnum;
+import com.mk.hotel.hotelinfo.enums.HotelFacilityEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.enums.HotelTypeEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
@@ -19,25 +19,19 @@ import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
 import com.mk.hotel.hotelinfo.model.HotelFanqieMappingExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
+import com.mk.hotel.remote.fanqielaile.hotel.json.FacilitiesMap;
 import com.mk.hotel.remote.fanqielaile.hotel.json.ImgList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.inn.Inn;
 import com.mk.hotel.remote.ots.CityRemoteService;
 import com.mk.hotel.remote.ots.json.City;
-import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
-import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
-import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;
-import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -45,7 +39,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by chenqi on 16/5/13.
@@ -68,6 +61,8 @@ public class FanqielaileHotelProxyService {
 
     @Autowired
     private CityRemoteService cityRemoteService;
+    @Autowired
+    private HotelFacilityServiceImpl hotelFacilityServiceImpl;
 
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
@@ -83,21 +78,40 @@ public class FanqielaileHotelProxyService {
 
         if (hotelList.isEmpty()) {
             this.hotelMapper.insert(hotel);
-            //TODO facilitiesMap
+            saveOrUpdateHotelFacility(innId.longValue(), hotel.getId(), inn.getFacilitiesMap());
         } else {
             //db
             Hotel dbHotel = hotelList.get(0);
 
-            //
             hotel.setId(dbHotel.getId());
             hotel.setCreateBy(dbHotel.getCreateBy());
             hotel.setCreateDate(dbHotel.getCreateDate());
             this.hotelMapper.updateByPrimaryKeySelective(hotel);
-            //TODO facilitiesMap
+            saveOrUpdateHotelFacility(innId.longValue(), dbHotel.getId(), inn.getFacilitiesMap());
         }
 
         hotelService.updateRedisHotel(hotel.getId(), hotel, "FanqielaileHotelProxyService.updateHotel");
         return hotel;
+    }
+
+    public void saveOrUpdateHotelFacility(Long fangHotelId, Long hotelId, List<FacilitiesMap> facilitiesMap){
+        List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
+        for (FacilitiesMap faMap : facilitiesMap) {
+            HotelFacilityDto dto = new HotelFacilityDto();
+            dto.setHotelId(hotelId);
+            dto.setFangHotelId(fangHotelId);
+            HotelFacilityEnum hotelFacilityEnum = null;
+            dto.setFacilityId(hotelFacilityEnum.getId().longValue());
+            dto.setFacilityName(hotelFacilityEnum.getName());
+            //dto.setFacilityType(Long.valueOf(tags.getTaggroupid()));
+            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+            dto.setUpdateDate(new Date());
+            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+            dto.setCreateDate(new Date());
+            dto.setIsValid(ValidEnum.VALID.getCode());
+            hotelFacilityDtoList.add(dto);
+        }
+        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
     }
 
     public HotelFanqieMapping saveOrUpdateMapping (Long innId, Integer pattern, Long accountId) {
