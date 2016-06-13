@@ -67,7 +67,7 @@ public class FanqielaileRoomTypeProxyService {
 
         if (dbRoomTypeList.isEmpty()) {
             this.roomTypeMapper.insert(roomType);
-            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
+            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
 
         } else {
             RoomType dbRoomType = dbRoomTypeList.get(0);
@@ -76,7 +76,7 @@ public class FanqielaileRoomTypeProxyService {
             roomType.setCreateDate(dbRoomType.getCreateDate());
 
             this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
-            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
+            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
         }
 
         roomTypeService.updateRedisRoomType(roomType.getId(), roomType, "FanqielaileRoomTypeProxyService.saveOrUpdateRoomType");
@@ -84,12 +84,13 @@ public class FanqielaileRoomTypeProxyService {
         return roomType;
     }
 
-    private void saveOrUpdateRoomTypeFacility(Long fangHotelId, Long fangRoomTypeId, List<FacilitiesMap> facilitiesMap) {
+    private void saveOrUpdateRoomTypeFacility(Long fangHotelId, Long fangRoomTypeId, Long roomTypeID, List<FacilitiesMap> facilitiesMap) {
         List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
         for (FacilitiesMap faMap : facilitiesMap) {
             RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
             dto.setFangHotelId(fangHotelId);
             dto.setFangRoomTypeId(fangRoomTypeId);
+            dto.setRoomTypeId(roomTypeID);
             dto.setFacilityId(faMap.getValue().longValue());
             dto.setFacilityName(faMap.getName());
             dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
