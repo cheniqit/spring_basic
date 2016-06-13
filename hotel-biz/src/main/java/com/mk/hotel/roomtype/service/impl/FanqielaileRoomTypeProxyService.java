@@ -124,10 +124,13 @@ public class FanqielaileRoomTypeProxyService {
 
     private RoomType convertRoomType(Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType){
 
-
+        //
         String pic = processPic(fanqieRoomType.getImgList());
 
+        //hasBreakfast
+        boolean hasBreakfast = hasBreakfast(fanqieRoomType.getFacilitiesMap());
 
+        //
         RoomType roomType = new RoomType();
 
         //
@@ -148,9 +151,12 @@ public class FanqielaileRoomTypeProxyService {
         }
 
         roomType.setBedSize(String.valueOf(fanqieRoomType.getBedWid()));
-
-        //TODO 待 设施解析
-        roomType.setBreakfast(0);
+        //0、无早；1、含早
+        if (hasBreakfast) {
+            roomType.setBreakfast(1);
+        } else {
+            roomType.setBreakfast(0);
+        }
         roomType.setFangId(fanqieRoomType.getRoomTypeId().longValue());
         roomType.setHotelId(hotelId);
         roomType.setMaxRoomNum(8);
@@ -169,6 +175,15 @@ public class FanqielaileRoomTypeProxyService {
         return roomType;
     }
 
+    private boolean hasBreakfast(List<FacilitiesMap> facilitiesMap) {
+        for (FacilitiesMap facility : facilitiesMap) {
+            FacilityEnum facilityEnum = FacilityEnum.getByFanqieType(facility.getValue());
+            if (FacilityEnum.FREE_WIRELESS.equals(facilityEnum)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public void saveOrUpdateRoomDetail(Long hotelId, RoomDetailList roomDetailList) {
 
         Integer roomTypeId = roomDetailList.getRoomTypeId();
