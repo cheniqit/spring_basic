@@ -1,8 +1,5 @@
 package com.mk.hotel.common.enums;
 
-
-import com.dianping.cat.Cat;
-
 public enum FacilityEnum {
     BUSINESS_MEETING(1,"商务会议"),
     SPA_RESORT(2,"温泉度假"),

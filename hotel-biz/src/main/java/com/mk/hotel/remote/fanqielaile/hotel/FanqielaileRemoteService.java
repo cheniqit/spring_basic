@@ -164,19 +164,19 @@ public class FanqielaileRemoteService {
         String signAndSoOn = service.getSignAndSoOn();
         System.out.println(signAndSoOn);
 
-        SaleList saleList = service.queryHotelList();
-
-        InnList innList = service.queryInn(49955l);
-
-        RoomTypeList roomTypeList = service.queryRoomType(49955l);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 10);
-        Date nextDate = calendar.getTime();
-
-        RoomList roomList = service.queryRoomStatus(49955l, new Date(), nextDate);
-
-        System.out.println(signAndSoOn);
+//        SaleList saleList = service.queryHotelList();
+//
+//        InnList innList = service.queryInn(49955l);
+//
+//        RoomTypeList roomTypeList = service.queryRoomType(49955l);
+//
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DAY_OF_MONTH, 10);
+//        Date nextDate = calendar.getTime();
+//
+//        RoomList roomList = service.queryRoomStatus(49955l, new Date(), nextDate);
+//
+//        System.out.println(signAndSoOn);
 
     }
 }
