@@ -96,7 +96,7 @@ public class Hotel {
 
     private String cacheFrom;
 
-    private Integer soucreType;
+    private Integer hotelSource;
 
     public Long getId() {
         return id;
@@ -322,11 +322,11 @@ public class Hotel {
         this.online = online;
     }
 
-    public Integer getSoucreType() {
-        return soucreType;
+    public Integer getHotelSource() {
+        return hotelSource;
     }
 
-    public void setSoucreType(Integer soucreType) {
-        this.soucreType = soucreType;
+    public void setHotelSource(Integer hotelSource) {
+        this.hotelSource = hotelSource;
     }
 }

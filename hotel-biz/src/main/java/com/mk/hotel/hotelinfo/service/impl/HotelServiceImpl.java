@@ -451,7 +451,7 @@ public class HotelServiceImpl implements HotelService {
             hotelInRedis.setCacheTime(strDate);
             hotelInRedis.setCacheFrom(cacheFrom);
 
-            hotelInRedis.setSoucreType(hotel.getSourceType());
+            hotelInRedis.setHotelSource(hotel.getSourceType());
             //
             jedis.set(hotelKeyName, JsonUtils.toJson(hotelInRedis));
 
