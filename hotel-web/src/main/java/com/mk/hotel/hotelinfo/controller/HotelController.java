@@ -9,10 +9,13 @@ import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
 import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
+import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -39,7 +42,7 @@ import java.util.List;
 public class HotelController {
 
     @Autowired
-    private HotelService hotelService;
+    private HotelServiceImpl hotelService;
 
     @Autowired
     private HotelFacilityService hotelFacilityService;
@@ -187,6 +190,26 @@ public class HotelController {
             HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("hotel", hotelDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/findHotelMappingByHotelId", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelMappingByHotelId(Long hotelId) {
+        try {
+            HotelFanqieMapping hotelFanqieMapping = hotelService.findHotelMappingByHotelId(hotelId);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("hotelFanqieMapping", hotelFanqieMapping);
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

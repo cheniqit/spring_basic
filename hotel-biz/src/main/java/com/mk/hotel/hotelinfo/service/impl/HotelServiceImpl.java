@@ -18,6 +18,8 @@ import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMappingExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import com.mk.hotel.remote.fanqielaile.hotel.FanqielaileRemoteService;
@@ -629,4 +631,15 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
+    public HotelFanqieMapping findHotelMappingByHotelId(Long hotelId) {
+        HotelFanqieMappingExample example = new HotelFanqieMappingExample();
+        example.createCriteria().andHotelIdEqualTo(hotelId);
+        List<HotelFanqieMapping> hotelFanqieMappingList =  hotelFanqieMappingMapper.selectByExample(example);
+        if(org.apache.commons.collections.CollectionUtils.isEmpty(hotelFanqieMappingList)){
+            return null;
+        }else if(hotelFanqieMappingList.size() > 1){
+            throw new MyException("酒店信息错误,根据hotelId找到多天映射酒店信息");
+        }
+        return hotelFanqieMappingList.get(0);
+    }
 }
