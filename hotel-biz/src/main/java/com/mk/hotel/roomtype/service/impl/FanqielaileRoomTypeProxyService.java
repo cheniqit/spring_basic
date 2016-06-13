@@ -5,6 +5,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
+import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
@@ -71,7 +72,7 @@ public class FanqielaileRoomTypeProxyService {
 
     private static Logger logger = LoggerFactory.getLogger(FanqielaileRoomTypeProxyService.class);
 
-    public RoomType saveOrUpdateRoomType(Integer fangHotelId,Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType) {
+    public RoomType saveOrUpdateRoomType(Integer innId,Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType) {
         RoomType roomType = convertRoomType(hotelId,fanqieRoomType);
 
         RoomTypeExample example = new RoomTypeExample();
@@ -80,7 +81,7 @@ public class FanqielaileRoomTypeProxyService {
 
         if (dbRoomTypeList.isEmpty()) {
             this.roomTypeMapper.insert(roomType);
-            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
+            saveOrUpdateRoomTypeFacility(innId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
 
         } else {
             RoomType dbRoomType = dbRoomTypeList.get(0);
@@ -88,8 +89,8 @@ public class FanqielaileRoomTypeProxyService {
             roomType.setCreateBy(dbRoomType.getCreateBy());
             roomType.setCreateDate(dbRoomType.getCreateDate());
 
-            this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
-            saveOrUpdateRoomTypeFacility(fangHotelId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
+            this.roomTypeMapper.updateByPrimaryKey(roomType);
+            saveOrUpdateRoomTypeFacility(innId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
         }
 
         roomTypeService.updateRedisRoomType(roomType.getId(), roomType, "FanqielaileRoomTypeProxyService.saveOrUpdateRoomType");
@@ -99,13 +100,16 @@ public class FanqielaileRoomTypeProxyService {
 
     private void saveOrUpdateRoomTypeFacility(Long fangHotelId, Long fangRoomTypeId, Long roomTypeID, List<FacilitiesMap> facilitiesMap) {
         List<RoomTypeFacilityDto> roomTypeFacilityDtoList = new ArrayList<RoomTypeFacilityDto>();
-        for (FacilitiesMap faMap : facilitiesMap) {
+
+        for (FacilitiesMap facility : facilitiesMap) {
+            FacilityEnum facilityEnum = FacilityEnum.getByFanqieType(facility.getValue());
+
             RoomTypeFacilityDto dto = new RoomTypeFacilityDto();
             dto.setFangHotelId(fangHotelId);
             dto.setFangRoomTypeId(fangRoomTypeId);
             dto.setRoomTypeId(roomTypeID);
-            dto.setFacilityId(faMap.getValue().longValue());
-            dto.setFacilityName(faMap.getName());
+            dto.setFacilityId(facilityEnum.getId().longValue());
+            dto.setFacilityName(facilityEnum.getTitle());
             dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
             dto.setUpdateDate(new Date());
             dto.setCreateBy(Constant.SYSTEM_USER_NAME);
@@ -365,8 +369,9 @@ public class FanqielaileRoomTypeProxyService {
             StringBuilder returnUrl = new StringBuilder()
                     .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
                     .append(coverImgUrl)
-                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append("\"}]},{\"name\":\"bed\",\"pic\":[")
                     .append(notCoverImgUrl.toString())
+                    .append("]},{\"name\":\"toilet\",\"pic\":[")
                     .append("]}]");
             return returnUrl.toString();
         }

@@ -3,11 +3,11 @@ package com.mk.hotel.hotelinfo.service.impl;
 import com.mk.framework.Constant;
 import com.mk.framework.coordinate.Coordinate;
 import com.mk.framework.coordinate.CoordinateUtils;
+import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
-import com.mk.hotel.hotelinfo.enums.HotelFacilityEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.enums.HotelTypeEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
@@ -86,7 +86,7 @@ public class FanqielaileHotelProxyService {
             hotel.setId(dbHotel.getId());
             hotel.setCreateBy(dbHotel.getCreateBy());
             hotel.setCreateDate(dbHotel.getCreateDate());
-            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.hotelMapper.updateByPrimaryKey(hotel);
             saveOrUpdateHotelFacility(innId.longValue(), dbHotel.getId(), inn.getFacilitiesMap());
         }
 
@@ -99,24 +99,25 @@ public class FanqielaileHotelProxyService {
         return hotel;
     }
 
-    public void saveOrUpdateHotelFacility(Long fangHotelId, Long hotelId, List<FacilitiesMap> facilitiesMap){
+    public void saveOrUpdateHotelFacility(Long innId, Long hotelId, List<FacilitiesMap> facilitiesMap){
         List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
-//        for (FacilitiesMap faMap : facilitiesMap) {
-//            HotelFacilityDto dto = new HotelFacilityDto();
-//            dto.setHotelId(hotelId);
-//            dto.setFangHotelId(fangHotelId);
-//            HotelFacilityEnum hotelFacilityEnum = null;
-//            dto.setFacilityId(hotelFacilityEnum.getId().longValue());
-//            dto.setFacilityName(hotelFacilityEnum.getName());
-//            //dto.setFacilityType(Long.valueOf(tags.getTaggroupid()));
-//            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
-//            dto.setUpdateDate(new Date());
-//            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
-//            dto.setCreateDate(new Date());
-//            dto.setIsValid(ValidEnum.VALID.getCode());
-//            hotelFacilityDtoList.add(dto);
-//        }
-        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
+        for (FacilitiesMap facility : facilitiesMap) {
+            //
+            FacilityEnum facilityEnum = FacilityEnum.getByFanqieType(facility.getValue());
+
+            HotelFacilityDto dto = new HotelFacilityDto();
+            dto.setHotelId(hotelId);
+            dto.setFangHotelId(innId);
+            dto.setFacilityId(facilityEnum.getId().longValue());
+            dto.setFacilityName(facilityEnum.getTitle());
+            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+            dto.setUpdateDate(new Date());
+            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+            dto.setCreateDate(new Date());
+            dto.setIsValid(ValidEnum.VALID.getCode());
+            hotelFacilityDtoList.add(dto);
+        }
+        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.FANQIE);
     }
 
     public HotelFanqieMapping saveOrUpdateMapping (Long innId, Integer pattern, Long accountId) {
@@ -347,7 +348,7 @@ public class FanqielaileHotelProxyService {
             StringBuilder returnUrl = new StringBuilder()
                     .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
                     .append(coverImgUrl)
-                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[]},{\"name\":\"mainHousing\",\"pic\":[")
                     .append(notCoverImgUrl.toString())
                     .append("]}]");
             return returnUrl.toString();
