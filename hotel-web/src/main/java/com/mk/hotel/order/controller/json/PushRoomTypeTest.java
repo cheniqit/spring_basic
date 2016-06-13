@@ -1,5 +1,6 @@
 package com.mk.hotel.order.controller.json;
 
+import com.mk.hotel.roomtype.bean.PushRoomType;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.junit.Test;
