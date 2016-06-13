@@ -101,22 +101,22 @@ public class FanqielaileHotelProxyService {
 
     public void saveOrUpdateHotelFacility(Long fangHotelId, Long hotelId, List<FacilitiesMap> facilitiesMap){
         List<HotelFacilityDto> hotelFacilityDtoList = new ArrayList<HotelFacilityDto>();
-        for (FacilitiesMap faMap : facilitiesMap) {
-            HotelFacilityDto dto = new HotelFacilityDto();
-            dto.setHotelId(hotelId);
-            dto.setFangHotelId(fangHotelId);
-            HotelFacilityEnum hotelFacilityEnum = null;
-            dto.setFacilityId(hotelFacilityEnum.getId().longValue());
-            dto.setFacilityName(hotelFacilityEnum.getName());
-            //dto.setFacilityType(Long.valueOf(tags.getTaggroupid()));
-            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
-            dto.setUpdateDate(new Date());
-            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
-            dto.setCreateDate(new Date());
-            dto.setIsValid(ValidEnum.VALID.getCode());
-            hotelFacilityDtoList.add(dto);
-        }
-        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
+//        for (FacilitiesMap faMap : facilitiesMap) {
+//            HotelFacilityDto dto = new HotelFacilityDto();
+//            dto.setHotelId(hotelId);
+//            dto.setFangHotelId(fangHotelId);
+//            HotelFacilityEnum hotelFacilityEnum = null;
+//            dto.setFacilityId(hotelFacilityEnum.getId().longValue());
+//            dto.setFacilityName(hotelFacilityEnum.getName());
+//            //dto.setFacilityType(Long.valueOf(tags.getTaggroupid()));
+//            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+//            dto.setUpdateDate(new Date());
+//            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+//            dto.setCreateDate(new Date());
+//            dto.setIsValid(ValidEnum.VALID.getCode());
+//            hotelFacilityDtoList.add(dto);
+//        }
+//        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
     }
 
     public HotelFanqieMapping saveOrUpdateMapping (Long innId, Integer pattern, Long accountId) {

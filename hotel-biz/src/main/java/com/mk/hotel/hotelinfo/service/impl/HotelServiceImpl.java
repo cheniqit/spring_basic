@@ -371,7 +371,7 @@ public class HotelServiceImpl implements HotelService {
             Integer intProvCode = null;
             try {
                 intProvCode = Integer.parseInt(hotel.getProvCode());
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
@@ -379,7 +379,7 @@ public class HotelServiceImpl implements HotelService {
             Integer intCityCode = null;
             try {
                 intCityCode = Integer.valueOf(hotel.getCityCode());
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
@@ -387,7 +387,7 @@ public class HotelServiceImpl implements HotelService {
             Integer intDisCode = null;
             try {
                 intDisCode = Integer.valueOf(hotel.getDisCode());
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 Cat.logError(e);
             }
@@ -396,7 +396,7 @@ public class HotelServiceImpl implements HotelService {
             if(StringUtils.isNotBlank(townCode)){
                 try {
                     intTownCode = Integer.parseInt(townCode);
-                } catch (NumberFormatException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     Cat.logError(e);
                 }
