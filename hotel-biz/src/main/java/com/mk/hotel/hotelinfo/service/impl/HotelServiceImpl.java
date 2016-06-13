@@ -8,6 +8,7 @@ import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.PicList;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -25,6 +26,7 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.inn.InnList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.PricePatterns;
 import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.ProxyInns;
 import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
+import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomDetailList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
@@ -608,14 +610,21 @@ public class HotelServiceImpl implements HotelService {
                     }
                 }
 
-                        /*
-                            3 房态
-                         */
+                /*
+                    3 房态
+                 */
                 RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
                         accountId.longValue(), new Date() , new Date());
                 if (null != roomList) {
 
+                    List<RoomDetailList> roomDetailLists = roomList.getList();
+                    for (RoomDetailList detailList : roomDetailLists) {
+                        this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+                    }
                 }
+
+                //
+                OtsInterface.initHotel(hotel.getId());
             }
         }
     }

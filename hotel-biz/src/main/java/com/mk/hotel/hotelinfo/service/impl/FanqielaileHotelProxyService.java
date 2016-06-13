@@ -7,7 +7,6 @@ import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.QiniuUtils;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
-import com.mk.hotel.hotelinfo.enums.FanqieHotelFacilityEnum;
 import com.mk.hotel.hotelinfo.enums.HotelFacilityEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.enums.HotelTypeEnum;
@@ -30,6 +29,7 @@ import com.mk.ots.model.LandMarkExample;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -90,7 +90,12 @@ public class FanqielaileHotelProxyService {
             saveOrUpdateHotelFacility(innId.longValue(), dbHotel.getId(), inn.getFacilitiesMap());
         }
 
-        hotelService.updateRedisHotel(hotel.getId(), hotel, "FanqielaileHotelProxyService.updateHotel");
+        //更新到redis
+        //redis中使用accountId
+        Hotel redisHotel = new Hotel();
+        BeanUtils.copyProperties(hotel, redisHotel);
+        redisHotel.setFangId(inn.getAccountId());
+        hotelService.updateRedisHotel(redisHotel.getId(), redisHotel, "FanqielaileHotelProxyService.updateHotel");
         return hotel;
     }
 
@@ -171,6 +176,7 @@ public class FanqielaileHotelProxyService {
         if(null == innId || null == inn){
             return null;
         }
+
         // 转换 坐标
         Coordinate baiduCoordinate = new Coordinate();
         baiduCoordinate.setLon(inn.getBaiduLon());
@@ -209,7 +215,7 @@ public class FanqielaileHotelProxyService {
         //pic
         String pic = this.processPic(inn.getImgList());
 
-        //
+        //HotelLandMark
         if(CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
             LandMarkExample example = new LandMarkExample();
             List<LandMark> landMarks = landMarkMapper.selectByExample(example);
@@ -221,6 +227,36 @@ public class FanqielaileHotelProxyService {
                 Constant.HOTEL_TO_HOT_AREA_DISTANCE,
                 hotelService.getAllLandMarkList());
 
+        //hotelType
+        HotelTypeEnum hotelTypeEnum = HotelTypeEnum.getByName(inn.getInnType());
+
+        //repairTime
+        String repairTime = inn.getLastDecorateTime();
+        try {
+            //只含年份的,补全
+            if (StringUtils.isNotBlank(repairTime)) {
+                Integer.parseInt(repairTime);
+                repairTime = repairTime + "-01-01";
+            } else {
+                repairTime = null;
+            }
+        } catch (Exception e) {
+            //不处理
+        }
+        //openTime
+        String openTime = inn.getOpenTime();
+        try {
+            //只含年份的,补全
+            if (StringUtils.isNotBlank(openTime)) {
+                Integer.parseInt(openTime);
+                openTime = openTime + "-01-01";
+            } else {
+                openTime = null;
+            }
+        } catch (Exception e) {
+            //不处理
+        }
+        //
         Hotel hotel = new Hotel();
         hotel.setFangId(innId.longValue());
         hotel.setName(inn.getBrandName());
@@ -229,31 +265,21 @@ public class FanqielaileHotelProxyService {
         hotel.setLon(new BigDecimal(gaodiCoordinate.getLon()));
         hotel.setLat(new BigDecimal(gaodiCoordinate.getLat()));
         hotel.setDefaultLeaveTime("120000");
-        //TODO
-        hotel.setHotelType(String.valueOf(HotelTypeEnum.INNER.getId()));
+        hotel.setHotelType(hotelTypeEnum.getId().toString());
         hotel.setRetentionTime("180000");
-        if (null != inn.getLastDecorateTime()) {
-            hotel.setRepairTime(inn.getLastDecorateTime() + "-01-01");
-        }
-
+        hotel.setRepairTime(repairTime);
         hotel.setIntroduction(inn.getInnInfo());
         hotel.setProvCode(provCode);
         hotel.setCityCode(cityCode);
         hotel.setDisCode(disCode);
         hotel.setTownCode(townCode);
-
-        if (null != inn.getOpenTime()) {
-            hotel.setOpenTime(inn.getOpenTime() + "-01-01");
-        }
-
+        hotel.setOpenTime(openTime);
         hotel.setRegTime(null);
-
         hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
         hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
         hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
         hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
         hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
-
         hotel.setUpdateBy(Constant.SYSTEM_USER_NAME);
         hotel.setUpdateDate(new Date());
         hotel.setCreateBy(Constant.SYSTEM_USER_NAME);
@@ -321,7 +347,7 @@ public class FanqielaileHotelProxyService {
             StringBuilder returnUrl = new StringBuilder()
                     .append("[{\"name\":\"def\",\"pic\":[{\"url\":\"")
                     .append(coverImgUrl)
-                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}，{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
+                    .append("\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[")
                     .append(notCoverImgUrl.toString())
                     .append("]}]");
             return returnUrl.toString();

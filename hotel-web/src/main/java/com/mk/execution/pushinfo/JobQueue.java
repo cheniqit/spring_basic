@@ -1,5 +1,6 @@
 package com.mk.execution.pushinfo;
 
+import com.dianping.cat.Cat;
 import com.mk.hotel.common.Constant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -38,14 +39,12 @@ class JobQueue {
 
         }catch (Exception e){
             e.printStackTrace();
+            Cat.logError(e);
         }finally {
             if ( jedis != null ) {
                 jedis.close();
             }
         }
-
-
-
     }
 
     JobQueueMessage brpop() {
