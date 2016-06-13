@@ -312,8 +312,8 @@ public class FanqielaileRoomTypeProxyService {
     public String processPic(List<ImgList> imgList){
         String fanqieImgDomain = "http://img.fanqiele.com";
 
-        if (null == imgList) {
-            return "[{\"name\":\"def\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"\"}]}]";
+        if (null == imgList || imgList.isEmpty()) {
+            return null;
         } else {
             //
             String coverImgUrl = "";
@@ -382,7 +382,7 @@ public class FanqielaileRoomTypeProxyService {
             if(CollectionUtils.isEmpty(hotelFanqieMappingList)){
                 continue;
             }
-            Long innId = hotelFanqieMappingList.get(0).getHotelId();
+            Long innId = hotelFanqieMappingList.get(0).getInnId();
             HotelExample hotelExample = new HotelExample();
             hotelExample.createCriteria().andFangIdEqualTo(innId);
             List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);

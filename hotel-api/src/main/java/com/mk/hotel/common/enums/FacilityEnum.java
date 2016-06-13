@@ -113,69 +113,69 @@ public enum FacilityEnum {
     }
 
 
-    public static FacilityEnum getByFanqieType (String fanqieType) {
+    public static FacilityEnum getByFanqieType (Integer fanqieType) {
 
-//        免费wifi 1
-//        自助厨房 2
-//        酒吧 3
-//        自行车租赁 4
-//        公共电脑 5
-//        接送服务 6
-//        旅游咨询 7
-//        物品寄存 8
-//        洗衣房 9
-//        传真/打印 10
-//        电影 11
-//        会议室 12
-//        图书室 13
-//        茶室 14
-//        台球 15
-//        咖啡厅 16
-//        免费旅游交通图 17
-//        送餐服务 18
+        //
+        FacilityEnum result = null;
+        switch (fanqieType) {
+            case 1:
+                result = FREE_WIRELESS;
+                break;
+            case 2:
+                result = KITCHEN;
+                break;
+            case 3:
+                result = BAR;
+                break;
+            case 4:
+                result = CYCLE;
+                break;
+            case 5:
+                result = PUBLIC_COMPUTER;
+                break;
+            case 6:
+                result = TRANSFER_SERVICE;
+                break;
+            case 7:
+                result = TOURISM_CONSULTING;
+                break;
+            case 8:
+                result = PERSONAL_EFFECTS;
+                break;
+            case 9:
+                result = LAUNDRY_SELF;
+                break;
+            case 10:
+                result = FAX_PRINT;
+                break;
+            case 11:
+                result = FILE;
+                break;
+            case 12:
+                result = CONFERENCE_ROOM;
+                break;
+            case 13:
+                result = LIBRARY;
+                break;
+            case 14:
+                result = TEA_HOUSE;
+                break;
+            case 15:
+                result = POOL;
+                break;
+            case 16:
+                result = CAFE;
+                break;
+            case 17:
+                result = FREE_TRAVEL_MAP;
+                break;
+            case 18:
+                result = PAID_BREAKFAST;
+                break;
+            default:
+                result = OTHER;
+        }
 
-//        Integer hotelTypeValue = null;
-//        try {
-//            hotelTypeValue = Integer.parseInt(fanqieHotelTypeValue);
-//        } catch (Exception e) {
-//            Cat.logError(e);
-//        }
-//
-//        //
-//        HotelTypeEnum result = null;
-//        switch (hotelTypeValue) {
-//            case 1:
-//                result = HotelTypeEnum.INNER;
-//                break;
-//            case 2:
-//                result = HotelTypeEnum.YHA;
-//                break;
-//            case 3:
-//                result = HotelTypeEnum.STANDARD;
-//                break;
-//            case 4:
-//                result = HotelTypeEnum.HOTEL_APARTMENT;
-//                break;
-//            case 5:
-//                result = HotelTypeEnum.ECONOMY_HOTEL;
-//                break;
-//            case 6:
-//                result = HotelTypeEnum.PLAZAHOTEL;
-//                break;
-//            case 7:
-//                result = HotelTypeEnum.HOLIDAY_HOTEL;
-//                break;
-//            case 8:
-//                result = HotelTypeEnum.SHORT_RENT_APARTMENT;
-//                break;
-//            case 9:
-//                result = HotelTypeEnum.FARMHOUSE;
-//                break;
-//            default:
-//                result = HMSHOTEL;
-//        }
-//
-//        return result;
-        return OTHER;
+        return result;
     }
 }

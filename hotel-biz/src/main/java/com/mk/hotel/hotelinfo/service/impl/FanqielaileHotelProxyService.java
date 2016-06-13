@@ -116,18 +116,18 @@ public class FanqielaileHotelProxyService {
 //            dto.setIsValid(ValidEnum.VALID.getCode());
 //            hotelFacilityDtoList.add(dto);
 //        }
-//        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
+        hotelFacilityServiceImpl.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
     }
 
     public HotelFanqieMapping saveOrUpdateMapping (Long innId, Integer pattern, Long accountId) {
 
         HotelFanqieMappingExample example = new HotelFanqieMappingExample();
-        example.createCriteria().andHotelIdEqualTo(innId);
+        example.createCriteria().andInnIdEqualTo(innId);
         List<HotelFanqieMapping> mappingList =  this.hotelFanqieMappingMapper.selectByExample(example);
 
         //
         HotelFanqieMapping mapping = new HotelFanqieMapping();
-        mapping.setHotelId(innId);
+        mapping.setInnId(innId);
         mapping.setAccountId(accountId);
         mapping.setPattern(pattern);
         mapping.setCreateBy(Constant.SYSTEM_USER_NAME);
@@ -294,8 +294,8 @@ public class FanqielaileHotelProxyService {
     public String processPic(List<ImgList> imgList){
         String fanqieImgDomain = "http://img.fanqiele.com";
 
-        if (null == imgList) {
-            return "[{\"name\":\"def\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"lobby\",\"pic\":[{\"url\":\"\"}]},{\"name\":\"mainHousing\",\"pic\":[{\"url\":\"\"}]}]";
+        if (null == imgList || imgList.isEmpty()) {
+            return null;
         } else {
             //
             String coverImgUrl = "";

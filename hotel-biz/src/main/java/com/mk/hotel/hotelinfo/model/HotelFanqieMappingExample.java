@@ -165,63 +165,63 @@ public class HotelFanqieMappingExample {
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIsNull() {
-            addCriterion("hotel_id is null");
+        public Criteria andInnIdIsNull() {
+            addCriterion("inn_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIsNotNull() {
-            addCriterion("hotel_id is not null");
+        public Criteria andInnIdIsNotNull() {
+            addCriterion("inn_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdEqualTo(Long value) {
-            addCriterion("hotel_id =", value, "hotelId");
+        public Criteria andInnIdEqualTo(Long value) {
+            addCriterion("inn_id =", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotEqualTo(Long value) {
-            addCriterion("hotel_id <>", value, "hotelId");
+        public Criteria andInnIdNotEqualTo(Long value) {
+            addCriterion("inn_id <>", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdGreaterThan(Long value) {
-            addCriterion("hotel_id >", value, "hotelId");
+        public Criteria andInnIdGreaterThan(Long value) {
+            addCriterion("inn_id >", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("hotel_id >=", value, "hotelId");
+        public Criteria andInnIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("inn_id >=", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdLessThan(Long value) {
-            addCriterion("hotel_id <", value, "hotelId");
+        public Criteria andInnIdLessThan(Long value) {
+            addCriterion("inn_id <", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdLessThanOrEqualTo(Long value) {
-            addCriterion("hotel_id <=", value, "hotelId");
+        public Criteria andInnIdLessThanOrEqualTo(Long value) {
+            addCriterion("inn_id <=", value, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdIn(List<Long> values) {
-            addCriterion("hotel_id in", values, "hotelId");
+        public Criteria andInnIdIn(List<Long> values) {
+            addCriterion("inn_id in", values, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotIn(List<Long> values) {
-            addCriterion("hotel_id not in", values, "hotelId");
+        public Criteria andInnIdNotIn(List<Long> values) {
+            addCriterion("inn_id not in", values, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdBetween(Long value1, Long value2) {
-            addCriterion("hotel_id between", value1, value2, "hotelId");
+        public Criteria andInnIdBetween(Long value1, Long value2) {
+            addCriterion("inn_id between", value1, value2, "innId");
             return (Criteria) this;
         }
 
-        public Criteria andHotelIdNotBetween(Long value1, Long value2) {
-            addCriterion("hotel_id not between", value1, value2, "hotelId");
+        public Criteria andInnIdNotBetween(Long value1, Long value2) {
+            addCriterion("inn_id not between", value1, value2, "innId");
             return (Criteria) this;
         }
 

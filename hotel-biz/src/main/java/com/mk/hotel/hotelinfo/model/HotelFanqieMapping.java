@@ -5,7 +5,7 @@ import java.util.Date;
 public class HotelFanqieMapping {
     private Long id;
 
-    private Long hotelId;
+    private Long innId;
 
     private Integer pattern;
 
@@ -29,12 +29,12 @@ public class HotelFanqieMapping {
         this.id = id;
     }
 
-    public Long getHotelId() {
-        return hotelId;
+    public Long getInnId() {
+        return innId;
     }
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
+    public void setInnId(Long innId) {
+        this.innId = innId;
     }
 
     public Integer getPattern() {

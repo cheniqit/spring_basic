@@ -639,9 +639,9 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
-    public HotelFanqieMapping findHotelMappingByHotelId(Long hotelId) {
+    public HotelFanqieMapping findHotelMappingByHotelId(Long innId) {
         HotelFanqieMappingExample example = new HotelFanqieMappingExample();
-        example.createCriteria().andHotelIdEqualTo(hotelId);
+        example.createCriteria().andInnIdEqualTo(innId);
         List<HotelFanqieMapping> hotelFanqieMappingList =  hotelFanqieMappingMapper.selectByExample(example);
         if(org.apache.commons.collections.CollectionUtils.isEmpty(hotelFanqieMappingList)){
             return null;
