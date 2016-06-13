@@ -27,6 +27,8 @@ class ExecutorManager {
                 LOGGER.info("+++++++++++++ refresh hotel is running... ++++++++++++++");
 
                 JobQueueMessage jobQueueMessage = JobQueue.getInstance().brpop();
+                Long leftInfo =  JobQueue.getInstance().getLeftInfo();
+                LOGGER.info("+++++++++++++ left info is {} ++++++++++++++", leftInfo);
                 try {
                     if (jobQueueMessage != null){
                         PushInfoRefresh pushInfoRefresh = new PushInfoRefresh(jobQueueMessage);

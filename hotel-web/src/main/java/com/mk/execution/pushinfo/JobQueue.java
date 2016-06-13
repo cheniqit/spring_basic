@@ -31,6 +31,21 @@ class JobQueue {
     }
 
 
+    Long getLeftInfo () {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtil.get();
+            return jedis.scard(Constant.PUSH_INFO_SET);
+        }catch (Exception e){
+            e.printStackTrace();
+            Cat.logError(e);
+        }finally {
+            if ( jedis != null ) {
+                jedis.close();
+            }
+        }
+        return 0l;
+    }
     void push(JobQueueMessage msg) {
         Jedis jedis = null;
         try {
@@ -45,9 +60,6 @@ class JobQueue {
                 jedis.close();
             }
         }
-
-
-
     }
 
     JobQueueMessage brpop() {
