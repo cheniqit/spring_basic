@@ -22,25 +22,23 @@ class ExecutorClearStockManager {
     private class QueueListener implements Runnable {
         @Override
         public void run() {
-            while (true) {
+            try {
+                ClearRefresh clearRefresh = new ClearRefresh();
+                CLEAR_POOL.execute(clearRefresh);
+            } catch (RejectedExecutionException e) {
                 try {
-                    ClearRefresh clearRefresh = new ClearRefresh();
-                    CLEAR_POOL.execute(clearRefresh);
-                } catch (RejectedExecutionException e) {
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException e1) {
-                        break;
-                    }
-                }catch (Exception e){
-                    Cat.logError(e);
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException e1) {
-                        break;
-                    }
-                    e.printStackTrace();
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e1) {
+
                 }
+            }catch (Exception e){
+                Cat.logError(e);
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e1) {
+
+                }
+                e.printStackTrace();
             }
         }
     }
@@ -49,14 +47,14 @@ class ExecutorClearStockManager {
 
     ExecutorClearStockManager() {
         CLEAR_POOL = new ThreadPoolExecutor(
-                Config.POOL_SIZE,
-                Config.POOL_SIZE,
+                1,
+                1,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(Config.POOL_SIZE),
-                new PushInfoRefreshFactory()
+                new ClearRefreshFactory()
         );
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             Thread queueListener = new Thread(new QueueListener(), "clear-job-queue-listener");
             queueListeners.add(queueListener);
         }
