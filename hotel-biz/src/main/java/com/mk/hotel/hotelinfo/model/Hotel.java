@@ -62,6 +62,8 @@ public class Hotel {
 
     private Integer sourceType;
 
+    private String picsSign;
+
     private String pic;
 
     public Long getId() {
@@ -294,6 +296,14 @@ public class Hotel {
 
     public void setSourceType(Integer sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getPicsSign() {
+        return picsSign;
+    }
+
+    public void setPicsSign(String picsSign) {
+        this.picsSign = picsSign == null ? null : picsSign.trim();
     }
 
     public String getPic() {

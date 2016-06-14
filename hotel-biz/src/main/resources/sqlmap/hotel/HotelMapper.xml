@@ -31,6 +31,7 @@
     <result column="colleges_info" property="collegesInfo" jdbcType="VARCHAR" />
     <result column="reg_time" property="regTime" jdbcType="VARCHAR" />
     <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="pics_sign" property="picsSign" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.mk.hotel.hotelinfo.model.Hotel" extends="BaseResultMap" >
     <result column="pic" property="pic" jdbcType="LONGVARCHAR" />
@@ -97,7 +98,7 @@
     id, fang_id, name, addr, phone, hotel_type, lat, lon, default_leave_time, retention_time, 
     repair_time, introduction, prov_code, city_code, dis_code, town_code, open_time, 
     create_date, create_by, update_date, update_by, is_valid, business_zone_info, airport_station_info, 
-    scenic_spots_info, hospital_info, colleges_info, reg_time, source_type
+    scenic_spots_info, hospital_info, colleges_info, reg_time, source_type, pics_sign
   </sql>
   <sql id="Blob_Column_List" >
     pic
@@ -119,8 +120,8 @@
       order by ${orderByClause}
     </if>
     <if test="start != null and start != 0" >
-      limit ${start},${pageCount}
-    </if>
+    limit ${start},${pageCount}
+  </if>
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.hotelinfo.model.HotelExample" >
     select
@@ -158,7 +159,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id">
     insert into hotel (id, fang_id, name, 
       addr, phone, hotel_type, 
       lat, lon, default_leave_time, 
@@ -168,8 +169,8 @@
       create_by, update_date, update_by, 
       is_valid, business_zone_info, airport_station_info, 
       scenic_spots_info, hospital_info, colleges_info, 
-      reg_time, source_type, pic
-      )
+      reg_time, source_type, pics_sign, 
+      pic)
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{addr,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{hotelType,jdbcType=VARCHAR}, 
       #{lat,jdbcType=DECIMAL}, #{lon,jdbcType=DECIMAL}, #{defaultLeaveTime,jdbcType=VARCHAR}, 
@@ -179,10 +180,10 @@
       #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
       #{isValid,jdbcType=CHAR}, #{businessZoneInfo,jdbcType=VARCHAR}, #{airportStationInfo,jdbcType=VARCHAR}, 
       #{scenicSpotsInfo,jdbcType=VARCHAR}, #{hospitalInfo,jdbcType=VARCHAR}, #{collegesInfo,jdbcType=VARCHAR}, 
-      #{regTime,jdbcType=VARCHAR}, #{sourceType,jdbcType=INTEGER}, #{pic,jdbcType=LONGVARCHAR}
-      )
+      #{regTime,jdbcType=VARCHAR}, #{sourceType,jdbcType=INTEGER}, #{picsSign,jdbcType=VARCHAR}, 
+      #{pic,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id">
     insert into hotel
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -271,6 +272,9 @@
       </if>
       <if test="sourceType != null" >
         source_type,
+      </if>
+      <if test="picsSign != null" >
+        pics_sign,
       </if>
       <if test="pic != null" >
         pic,
@@ -363,6 +367,9 @@
       </if>
       <if test="sourceType != null" >
         #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="picsSign != null" >
+        #{picsSign,jdbcType=VARCHAR},
       </if>
       <if test="pic != null" >
         #{pic,jdbcType=LONGVARCHAR},
@@ -465,6 +472,9 @@
       <if test="record.sourceType != null" >
         source_type = #{record.sourceType,jdbcType=INTEGER},
       </if>
+      <if test="record.picsSign != null" >
+        pics_sign = #{record.picsSign,jdbcType=VARCHAR},
+      </if>
       <if test="record.pic != null" >
         pic = #{record.pic,jdbcType=LONGVARCHAR},
       </if>
@@ -504,6 +514,7 @@
       colleges_info = #{record.collegesInfo,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=VARCHAR},
       source_type = #{record.sourceType,jdbcType=INTEGER},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR},
       pic = #{record.pic,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -539,7 +550,8 @@
       hospital_info = #{record.hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{record.collegesInfo,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=VARCHAR},
-      source_type = #{record.sourceType,jdbcType=INTEGER}
+      source_type = #{record.sourceType,jdbcType=INTEGER},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -631,6 +643,9 @@
       <if test="sourceType != null" >
         source_type = #{sourceType,jdbcType=INTEGER},
       </if>
+      <if test="picsSign != null" >
+        pics_sign = #{picsSign,jdbcType=VARCHAR},
+      </if>
       <if test="pic != null" >
         pic = #{pic,jdbcType=LONGVARCHAR},
       </if>
@@ -667,6 +682,7 @@
       colleges_info = #{collegesInfo,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=VARCHAR},
       source_type = #{sourceType,jdbcType=INTEGER},
+      pics_sign = #{picsSign,jdbcType=VARCHAR},
       pic = #{pic,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -699,7 +715,8 @@
       hospital_info = #{hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{collegesInfo,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=VARCHAR},
-      source_type = #{sourceType,jdbcType=INTEGER}
+      source_type = #{sourceType,jdbcType=INTEGER},
+      pics_sign = #{picsSign,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
