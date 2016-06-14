@@ -62,6 +62,10 @@ class PushInfoRefresh implements Runnable {
                     case hotelFanqie:
                         hotelCopyService.handleHotelFanqie(body);
                         break;
+
+                    case roomTypeStatusFanqie:
+                        hotelCopyService.handleRoomStatusFanqie(body);
+                        break;
                     default:
                         //TODO
                 }

@@ -303,4 +303,11 @@ public class HotelCopyService {
         HotelService hotelService = AppUtils.getBean(HotelService.class);
         hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
     }
+
+
+    public void handleRoomStatusFanqie (String mappingJson) {
+        //
+        HotelService hotelService = AppUtils.getBean(HotelService.class);
+        hotelService.mergeFangqieRoomStatusByHotelFanqieMappingJson(mappingJson);
+    }
 }

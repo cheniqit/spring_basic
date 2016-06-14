@@ -77,7 +77,7 @@ public class FanqielaileRoomTypeProxyService {
 
 
         RoomTypeExample example = new RoomTypeExample();
-        example.createCriteria().andHotelIdEqualTo(hotelId);
+        example.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(fanqieRoomType.getRoomTypeId().longValue());
         List<RoomType> dbRoomTypeList = this.roomTypeMapper.selectByExampleWithBLOBs(example);
 
         RoomType roomType = null;

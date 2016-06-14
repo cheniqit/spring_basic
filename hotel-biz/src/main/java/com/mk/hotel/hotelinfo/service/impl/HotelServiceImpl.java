@@ -37,11 +37,9 @@ import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
-import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
-import com.qiniu.util.Json;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -558,15 +556,15 @@ public class HotelServiceImpl implements HotelService {
         }
 
         //for debug
-        result.add("{\n" +
-                "      \"innId\": 4831,\n" +
-                "      \"pricePatterns\": [\n" +
-                "        {\n" +
-                "          \"pattern\": \"2\",\n" +
-                "          \"accountId\": 27941\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }");
+//        result.add("{\n" +
+//                "      \"innId\": 4831,\n" +
+//                "      \"pricePatterns\": [\n" +
+//                "        {\n" +
+//                "          \"pattern\": \"2\",\n" +
+//                "          \"accountId\": 27941\n" +
+//                "        }\n" +
+//                "      ]\n" +
+//                "    }");
 
         return result;
     }
@@ -625,31 +623,64 @@ public class HotelServiceImpl implements HotelService {
                     }
                 }
 
-                /*
-                    3 房态
-                 */
-                //查询30天的房态
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
-                calendar.add(Calendar.DAY_OF_MONTH,30);
-                Date nextMonth = calendar.getTime();
-
-                //
-                RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
-                        accountId.longValue(), new Date() , nextMonth);
-                if (null != roomList) {
-
-                    List<RoomDetailList> roomDetailLists = roomList.getList();
-                    for (RoomDetailList detailList : roomDetailLists) {
-                        this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
-                    }
-                }
-
                 //
                 OtsInterface.initHotel(hotel.getId());
             }
         }
     }
+
+    public List<String> mergeFangqieRoomStatus () {
+
+        HotelFanqieMappingExample example = new HotelFanqieMappingExample();
+        example.createCriteria().andIsValidEqualTo("T");
+        List<HotelFanqieMapping> hotelFanqieMappingList = this.hotelFanqieMappingMapper.selectByExample(example);
+
+        //
+        List<String> result = new ArrayList<String>();
+        for (HotelFanqieMapping mapping : hotelFanqieMappingList) {
+            result.add(JsonUtils.toJson(mapping));
+        }
+        return result;
+    }
+
+    public void mergeFangqieRoomStatusByHotelFanqieMappingJson (String hotelFanqieMappingJson) {
+        HotelFanqieMapping hotelFanqieMapping = JsonUtils.fromJson(hotelFanqieMappingJson, HotelFanqieMapping.class);
+
+        Long accountId = hotelFanqieMapping.getAccountId();
+        Long innId = hotelFanqieMapping.getInnId();
+
+        //
+        Hotel hotel = null;
+        HotelExample hotelExample = new HotelExample();
+        hotelExample.createCriteria().andFangIdEqualTo(innId).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId()).andIsValidEqualTo("T");
+        List<Hotel> hotelList = this.hotelMapper.selectByExample(hotelExample);
+        if (hotelList.isEmpty()) {
+            return;
+        } else {
+            hotel = hotelList.get(0);
+        }
+
+        //查询30天的房态
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH,30);
+        Date nextMonth = calendar.getTime();
+
+        //
+        RoomList roomList = this.fanqielaileRemoteService.queryRoomStatus(
+                accountId, new Date() , nextMonth);
+        if (null != roomList) {
+
+            List<RoomDetailList> roomDetailLists = roomList.getList();
+            for (RoomDetailList detailList : roomDetailLists) {
+                this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+            }
+        }
+
+        //
+        OtsInterface.initHotel(hotel.getId());
+    }
+
 
     public HotelFanqieMapping findHotelMappingByHotelId(Long hotelId) {
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);

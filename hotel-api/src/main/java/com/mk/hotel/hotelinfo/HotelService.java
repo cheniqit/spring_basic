@@ -36,4 +36,8 @@ public interface HotelService {
     List<String> mergeFanqieHotel ();
 
     void mergeFangqieHotelByProxyInnJson (String proxyInnJson);
+
+    List<String> mergeFangqieRoomStatus();
+
+    void mergeFangqieRoomStatusByHotelFanqieMappingJson (String hotelFanqieMappingJson);
 }
