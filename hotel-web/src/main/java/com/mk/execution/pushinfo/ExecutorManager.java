@@ -25,8 +25,8 @@ class ExecutorManager {
 
                 LOGGER.info("+++++++++++++ refresh hotel is running... ++++++++++++++");
 
+                JobQueueMessage jobQueueMessage = JobQueue.getInstance().brpop();
                 try {
-                    JobQueueMessage jobQueueMessage = JobQueue.getInstance().brpop();
                     if (jobQueueMessage != null){
                         PushInfoRefresh pushInfoRefresh = new PushInfoRefresh(jobQueueMessage);
                         PUSH_INFO_REFRESH_POOL.execute(pushInfoRefresh);
@@ -42,12 +42,14 @@ class ExecutorManager {
                     }
 
                 } catch (RejectedExecutionException e) {
+                    JobQueue.getInstance().push(jobQueueMessage);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {
                         break;
                     }
                 }catch (Exception e){
+                    JobQueue.getInstance().push(jobQueueMessage);
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e1) {
