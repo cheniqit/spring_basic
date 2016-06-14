@@ -14,6 +14,8 @@ public enum LogPushTypeEnum {
 	roomTypeStock(260l,"房型库存(房爸爸)"),
 	fanqieRoomTypeInfo(310l,"房型库存(房爸爸)"),
 
+	roomTypeStatusFanqie(300l,"房态(番茄)"),
+
 	orderStatus(900l,"订单状态(房爸爸)"),
 	other(999l,"其他"),
 	;

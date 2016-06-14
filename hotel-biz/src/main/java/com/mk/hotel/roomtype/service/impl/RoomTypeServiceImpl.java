@@ -2,7 +2,6 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -43,6 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -616,5 +616,103 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+    }
+
+    public void clearStockAndPrice() {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            //
+            int pageSize = 1000;
+
+            //count
+            RoomTypeExample example = new RoomTypeExample();
+            example.setOrderByClause(" id");
+            int count = this.roomTypeMapper.countByExample(example);
+            int pageCount = 0;
+            if (count <= 0) {
+                pageCount = 0;
+            } else {
+                pageCount = (count - 1) / pageSize + 1;
+            }
+
+            //
+            for (int i = 0; i < pageCount; i++) {
+                int start = pageSize * i;
+                int end = pageSize * (i + 1);
+                example.setStart(start);
+                example.setEnd(end);
+                //
+                List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
+
+                //
+                Set<String> stockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_STOCK_", roomTypeList);
+                for (String key : stockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> promoStockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PROMO_STOCK_", roomTypeList);
+                for (String key : promoStockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> priceSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PRICE_", roomTypeList);
+                for (String key : priceSet) {
+                    this.clearRedisHash(jedis, key, "yyyyMMdd");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
+    private Set<String> fillRedisKeyName(String keyName, List<RoomType> roomTypeIdList) {
+
+        Set<String> result = new HashSet<String>();
+
+        for (RoomType roomType : roomTypeIdList) {
+            result.add(keyName + roomType.getId());
+        }
+        return result;
+    }
+    private void clearRedisHash(Jedis jedis, String hKey, String fieldFormat) {
+        if (null == jedis || StringUtils.isBlank(hKey) || StringUtils.isBlank(fieldFormat)) {
+            return;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat(fieldFormat);
+
+        //toDay
+        String strToday = format.format(new Date());
+        Date today = null;
+        try {
+            today = format.parse(strToday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //
+        Map<String,String> map = jedis.hgetAll(hKey);
+        for (String field : map.keySet()) {
+            try {
+                Date keyDate = format.parse(field);
+                //若keyDate 早于 今天,清理掉
+                if (today.after(keyDate)) {
+                    logger.info("RoomTypeServiceImpl.clearRedisHash key:{} field:{}", hKey, field);
+                    jedis.hdel(hKey, field);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

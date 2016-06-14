@@ -1,10 +1,12 @@
 package com.mk.hotel.roomtype.model;
 
+import com.mk.hotel.common.bean.PageBean;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoomTypeExample {
+public class RoomTypeExample extends PageBean{
     protected String orderByClause;
 
     protected boolean distinct;

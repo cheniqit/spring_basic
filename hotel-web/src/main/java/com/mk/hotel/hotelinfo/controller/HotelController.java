@@ -410,4 +410,23 @@ public class HotelController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+
+
+
+
+    @RequestMapping(value = "/mergeFangqieRoomStatus")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeFangqieRoomStatus() {
+
+        //
+        List<String> proxyInnJsonList = this.hotelService.mergeFangqieRoomStatus();
+
+        for (String proxyInnJson : proxyInnJsonList) {
+            JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.roomTypeStatusFanqie);
+        }
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
 }
