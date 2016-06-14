@@ -12,6 +12,7 @@ public enum LogPushTypeEnum {
 	roomTypeDelete(210l,"删除房型(房爸爸)"),
 	roomTypePrice(250l,"房型价格(房爸爸)"),
 	roomTypeStock(260l,"房型库存(房爸爸)"),
+	fanqieRoomTypeInfo(310l,"房型库存(房爸爸)"),
 
 	roomTypeStatusFanqie(300l,"房态(番茄)"),
 

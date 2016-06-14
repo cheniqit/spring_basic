@@ -24,6 +24,7 @@ public class PushRoomType {
         private String AccountId;
         private String RoomTypeId;
         private String RoomTypeName;
+        private String innId;
         @XStreamAlias(value="RoomDetails")
         public List<RoomDetail> RoomDetails;
 
@@ -57,6 +58,14 @@ public class PushRoomType {
 
         public void setRoomDetails(List<PushRoomType.RoomDetail> roomDetails) {
             RoomDetails = roomDetails;
+        }
+
+        public String getInnId() {
+            return innId;
+        }
+
+        public void setInnId(String innId) {
+            this.innId = innId;
         }
     }
 
