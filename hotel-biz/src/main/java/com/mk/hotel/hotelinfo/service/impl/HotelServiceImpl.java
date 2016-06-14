@@ -547,21 +547,23 @@ public class HotelServiceImpl implements HotelService {
             return result;
         }
 
-        //TODO
-//        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
-//        if (null != proxyInnsList) {
-//
-//            for (ProxyInns proxyInns: proxyInnsList) {
-//                String proxyInnJson = JsonUtils.toJson(proxyInns);
-//                result.add(proxyInnJson);
-//            }
-//        }
+        //
+        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
+        if (null != proxyInnsList) {
+
+            for (ProxyInns proxyInns: proxyInnsList) {
+                String proxyInnJson = JsonUtils.toJson(proxyInns);
+                result.add(proxyInnJson);
+            }
+        }
+
+        //for debug
         result.add("{\n" +
-                "      \"innId\": 621,\n" +
+                "      \"innId\": 4831,\n" +
                 "      \"pricePatterns\": [\n" +
                 "        {\n" +
                 "          \"pattern\": \"2\",\n" +
-                "          \"accountId\": 36620\n" +
+                "          \"accountId\": 27941\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    }");
