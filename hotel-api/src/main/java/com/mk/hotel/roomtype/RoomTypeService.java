@@ -39,4 +39,6 @@ public interface RoomTypeService {
     void mergeRoomTypeDayStock(Integer pageNo);
 
     void mergeRoomTypeByHotelId(Long hotelId);
+
+    void clearStockAndPrice();
 }

@@ -2,7 +2,6 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -43,6 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -616,5 +616,68 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+    }
+
+    public void clearStockAndPrice() {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            Set<String> stockSet = jedis.keys("HOTEL_ROOMTYPE_STOCK_*");
+            for (String key : stockSet) {
+                this.clearRedisHash(jedis, key);
+            }
+            Set<String> promoStockSet = jedis.keys("HOTEL_ROOMTYPE_PROMO_STOCK_*");
+            for (String key : promoStockSet) {
+                this.clearRedisHash(jedis, key);
+            }
+
+            Set<String> priceSet = jedis.keys("HOTEL_ROOMTYPE_PRICE_*");
+            for (String key : priceSet) {
+                this.clearRedisHash(jedis, key);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
+    private void clearRedisHash(Jedis jedis, String hKey) {
+        if (null == jedis || StringUtils.isBlank(hKey)) {
+            return;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //toDay
+        String strToday = format.format(new Date());
+        Date today = null;
+        try {
+            today = format.parse(strToday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //
+        Map<String,String> map = jedis.hgetAll(hKey);
+        for (String field : map.keySet()) {
+            try {
+                Date keyDate = format.parse(field);
+                //若keyDate 早于 今天,清理掉
+                if (today.after(keyDate)) {
+                    logger.info("RoomTypeServiceImpl.clearRedisHash key:{} field:{}", hKey, field);
+                    jedis.hdel(hKey, field);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
