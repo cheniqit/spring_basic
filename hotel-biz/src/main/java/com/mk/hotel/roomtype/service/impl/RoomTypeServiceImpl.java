@@ -625,16 +625,16 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
             Set<String> stockSet = jedis.keys("HOTEL_ROOMTYPE_STOCK_*");
             for (String key : stockSet) {
-                this.clearRedisHash(jedis, key);
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
             }
             Set<String> promoStockSet = jedis.keys("HOTEL_ROOMTYPE_PROMO_STOCK_*");
             for (String key : promoStockSet) {
-                this.clearRedisHash(jedis, key);
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
             }
 
             Set<String> priceSet = jedis.keys("HOTEL_ROOMTYPE_PRICE_*");
             for (String key : priceSet) {
-                this.clearRedisHash(jedis, key);
+                this.clearRedisHash(jedis, key, "yyyyMMdd");
             }
 
 
@@ -648,13 +648,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
     }
 
-    private void clearRedisHash(Jedis jedis, String hKey) {
-        if (null == jedis || StringUtils.isBlank(hKey)) {
+    private void clearRedisHash(Jedis jedis, String hKey, String fieldFormat) {
+        if (null == jedis || StringUtils.isBlank(hKey) || StringUtils.isBlank(fieldFormat)) {
             return;
         }
 
         //
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat(fieldFormat);
 
         //toDay
         String strToday = format.format(new Date());
