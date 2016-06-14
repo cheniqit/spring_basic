@@ -623,21 +623,47 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         try {
             jedis = RedisUtil.getJedis();
 
-            Set<String> stockSet = jedis.keys("HOTEL_ROOMTYPE_STOCK_*");
-            for (String key : stockSet) {
-                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
-            }
-            Set<String> promoStockSet = jedis.keys("HOTEL_ROOMTYPE_PROMO_STOCK_*");
-            for (String key : promoStockSet) {
-                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+            //
+            int pageSize = 1000;
+
+            //count
+            RoomTypeExample example = new RoomTypeExample();
+            example.setOrderByClause(" id");
+            int count = this.roomTypeMapper.countByExample(example);
+            int pageCount = 0;
+            if (count <= 0) {
+                pageCount = 0;
+            } else {
+                pageCount = (count - 1) / pageSize + 1;
             }
 
-            Set<String> priceSet = jedis.keys("HOTEL_ROOMTYPE_PRICE_*");
-            for (String key : priceSet) {
-                this.clearRedisHash(jedis, key, "yyyyMMdd");
+            //
+            for (int i = 0; i < pageCount; i++) {
+                int start = pageSize * i;
+                int end = pageSize * (i + 1);
+                example.setStart(start);
+                example.setEnd(end);
+                //
+                List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
+
+                //
+                Set<String> stockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_STOCK_", roomTypeList);
+                for (String key : stockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> promoStockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PROMO_STOCK_", roomTypeList);
+                for (String key : promoStockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> priceSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PRICE_", roomTypeList);
+                for (String key : priceSet) {
+                    this.clearRedisHash(jedis, key, "yyyyMMdd");
+                }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -648,6 +674,15 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
     }
 
+    private Set<String> fillRedisKeyName(String keyName, List<RoomType> roomTypeIdList) {
+
+        Set<String> result = new HashSet<String>();
+
+        for (RoomType roomType : roomTypeIdList) {
+            result.add(keyName + roomType.getId());
+        }
+        return result;
+    }
     private void clearRedisHash(Jedis jedis, String hKey, String fieldFormat) {
         if (null == jedis || StringUtils.isBlank(hKey) || StringUtils.isBlank(fieldFormat)) {
             return;

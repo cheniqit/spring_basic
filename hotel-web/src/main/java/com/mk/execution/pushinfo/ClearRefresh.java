@@ -25,7 +25,7 @@ class ClearRefresh implements Runnable {
             RoomTypeService roomTypeService = AppUtils.getBean(RoomTypeService.class);
 
             //TODO
-//            roomTypeService.clearStockAndPrice();
+            roomTypeService.clearStockAndPrice();
 
             LOGGER.info("ClearRefresh end");
         } catch (Exception e) {
