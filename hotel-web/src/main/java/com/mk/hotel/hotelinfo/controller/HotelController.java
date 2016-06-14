@@ -144,7 +144,7 @@ public class HotelController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateFanqieRoomTypeInfo", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/updateFanqieRoomTypeInfo", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE+";charset=utf-8")
     public @ResponseBody
     String updateFanqieRoomTypeInfo(HttpServletRequest request){
         Result result = new Result();
