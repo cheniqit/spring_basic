@@ -160,8 +160,17 @@ public class HotelController {
             xstream = new XStream(new DomDriver());
             xstream.alias("PushRoomType", PushRoomType.class);
             xstream.autodetectAnnotations(true);
-            String filePath = request.getSession().getServletContext().getRealPath("/")+"fanqieRoomType/" + DateUtils.formatDateTime(new Date());
-            FileUtils.writeStringToFile(new File(filePath),sb.toString()+"\n", true);
+            try {
+                //log
+                LogPushDto logPushDto = new LogPushDto();
+                logPushDto.setMsg(sb.toString());
+                logPushDto.setType(LogPushTypeEnum.fanqieRoomTypeInfo.getId());
+
+                this.logPushService.save(logPushDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
             PushRoomType pushRoomType = (PushRoomType) xstream.fromXML(sb.toString(), new PushRoomType());
             fanqielaileRoomTypeProxyService.updateFanqieRoomTypeInfo(pushRoomType);
             result.setMessage("成功");
