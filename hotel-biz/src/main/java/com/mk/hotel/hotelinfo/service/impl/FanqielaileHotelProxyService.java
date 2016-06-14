@@ -72,7 +72,7 @@ public class FanqielaileHotelProxyService {
         //
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(innId.longValue()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
-        List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
+        List<Hotel> hotelList = this.hotelMapper.selectByExampleWithBLOBs(example);
 
         Hotel hotel = null;
         if (hotelList.isEmpty()) {
@@ -90,7 +90,7 @@ public class FanqielaileHotelProxyService {
             hotel.setId(dbHotel.getId());
             hotel.setCreateBy(dbHotel.getCreateBy());
             hotel.setCreateDate(dbHotel.getCreateDate());
-            this.hotelMapper.updateByPrimaryKey(hotel);
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
             saveOrUpdateHotelFacility(innId.longValue(), dbHotel.getId(), inn.getFacilitiesMap());
         }
 

@@ -78,7 +78,7 @@ public class FanqielaileRoomTypeProxyService {
 
         RoomTypeExample example = new RoomTypeExample();
         example.createCriteria().andHotelIdEqualTo(hotelId).andFangIdEqualTo(innId.longValue());
-        List<RoomType> dbRoomTypeList = this.roomTypeMapper.selectByExample(example);
+        List<RoomType> dbRoomTypeList = this.roomTypeMapper.selectByExampleWithBLOBs(example);
 
         RoomType roomType = null;
         if (dbRoomTypeList.isEmpty()) {
@@ -94,7 +94,7 @@ public class FanqielaileRoomTypeProxyService {
             roomType.setCreateBy(dbRoomType.getCreateBy());
             roomType.setCreateDate(dbRoomType.getCreateDate());
 
-            this.roomTypeMapper.updateByPrimaryKey(roomType);
+            this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
             saveOrUpdateRoomTypeFacility(innId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
         }
 
