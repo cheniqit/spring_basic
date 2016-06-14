@@ -639,14 +639,18 @@ public class HotelServiceImpl implements HotelService {
         }
     }
 
-    public HotelFanqieMapping findHotelMappingByHotelId(Long innId) {
+    public HotelFanqieMapping findHotelMappingByHotelId(Long hotelId) {
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        if(hotel == null) {
+            return null;
+        }
         HotelFanqieMappingExample example = new HotelFanqieMappingExample();
-        example.createCriteria().andInnIdEqualTo(innId);
+        example.createCriteria().andInnIdEqualTo(hotel.getFangId());
         List<HotelFanqieMapping> hotelFanqieMappingList =  hotelFanqieMappingMapper.selectByExample(example);
         if(org.apache.commons.collections.CollectionUtils.isEmpty(hotelFanqieMappingList)){
             return null;
         }else if(hotelFanqieMappingList.size() > 1){
-            throw new MyException("酒店信息错误,根据hotelId找到多天映射酒店信息");
+            throw new MyException("酒店信息错误,根据hotelId找到多个映射酒店信息");
         }
         return hotelFanqieMappingList.get(0);
     }
