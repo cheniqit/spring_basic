@@ -94,7 +94,7 @@ public class FanqielaileRoomTypeProxyService {
             roomType.setCreateBy(dbRoomType.getCreateBy());
             roomType.setCreateDate(dbRoomType.getCreateDate());
 
-            this.roomTypeMapper.updateByPrimaryKey(roomType);
+            this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
             saveOrUpdateRoomTypeFacility(innId.longValue(), roomType.getFangId(), roomType.getId(), fanqieRoomType.getFacilitiesMap());
         }
 

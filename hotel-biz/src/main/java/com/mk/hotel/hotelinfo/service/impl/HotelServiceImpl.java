@@ -547,14 +547,24 @@ public class HotelServiceImpl implements HotelService {
             return result;
         }
 
-        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
-        if (null != proxyInnsList) {
-
-            for (ProxyInns proxyInns: proxyInnsList) {
-                String proxyInnJson = JsonUtils.toJson(proxyInns);
-                result.add(proxyInnJson);
-            }
-        }
+        //TODO
+//        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
+//        if (null != proxyInnsList) {
+//
+//            for (ProxyInns proxyInns: proxyInnsList) {
+//                String proxyInnJson = JsonUtils.toJson(proxyInns);
+//                result.add(proxyInnJson);
+//            }
+//        }
+        result.add("{\n" +
+                "      \"innId\": 621,\n" +
+                "      \"pricePatterns\": [\n" +
+                "        {\n" +
+                "          \"pattern\": \"2\",\n" +
+                "          \"accountId\": 31830\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }");
 
         return result;
     }

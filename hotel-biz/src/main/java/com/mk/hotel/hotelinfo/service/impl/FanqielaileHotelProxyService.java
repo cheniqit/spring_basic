@@ -90,7 +90,7 @@ public class FanqielaileHotelProxyService {
             hotel.setId(dbHotel.getId());
             hotel.setCreateBy(dbHotel.getCreateBy());
             hotel.setCreateDate(dbHotel.getCreateDate());
-            this.hotelMapper.updateByPrimaryKey(hotel);
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
             saveOrUpdateHotelFacility(innId.longValue(), dbHotel.getId(), inn.getFacilitiesMap());
         }
 
