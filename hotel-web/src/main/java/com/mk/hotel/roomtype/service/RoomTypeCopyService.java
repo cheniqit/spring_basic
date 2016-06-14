@@ -97,7 +97,11 @@ public class RoomTypeCopyService {
             roomTypeDto.setRoomNum(roomTypeJson.getRoomnum());
             roomTypeDto.setPrepay(roomTypeJson.getPrepay());
             roomTypeDto.setBreakfast(roomTypeJson.getBreakfast());
-            roomTypeDto.setStatus(roomTypeJson.getStatus());
+
+            //默认T,不考虑push状态
+//            roomTypeDto.setStatus(roomTypeJson.getStatus());
+            roomTypeDto.setIsValid("T");
+
             roomTypeDto.setRefund(roomTypeJson.getRefund());
             roomTypeDto.setMaxRoomNum(roomTypeJson.getMaxroomnum());
             roomTypeDto.setRoomTypePics(roomTypeJson.getRoomtypepics());
