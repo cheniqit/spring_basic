@@ -104,7 +104,7 @@ public class HotelProxyService {
         hotel.setId(hotelId);
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
-        hotelMapper.updateByExampleSelective(hotel, example);
+        hotelMapper.updateByExampleWithBLOBs(hotel, example);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.updateHotel");
         return hotel;
     }

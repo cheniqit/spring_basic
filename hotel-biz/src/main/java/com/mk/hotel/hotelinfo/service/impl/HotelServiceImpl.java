@@ -109,14 +109,14 @@ public class HotelServiceImpl implements HotelService {
         HotelExample hotelExample = new HotelExample();
         hotelExample.createCriteria().andFangIdEqualTo(id).andSourceTypeEqualTo(hotelSourceEnum.getId());
 
-        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        List<Hotel> hotelList = hotelMapper.selectByExampleWithBLOBs(hotelExample);
         if (!hotelList.isEmpty()) {
             Hotel hotel = hotelList.get(0);
             hotel.setIsValid("F");
             hotel.setUpdateBy("hotel_system");
             hotel.setUpdateDate(new Date());
 
-            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
             this.updateRedisHotel(hotel.getId(), hotel, "HotelService.deleteByFangId");
         }
 
@@ -131,7 +131,7 @@ public class HotelServiceImpl implements HotelService {
         //
         HotelExample hotelExample = new HotelExample();
         hotelExample.createCriteria().andFangIdEqualTo(hotelDto.getFangId()).andSourceTypeEqualTo(hotelSourceEnum.getId());
-        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        List<Hotel> hotelList = hotelMapper.selectByExampleWithBLOBs(hotelExample);
 
         //
         Long hotelId = null;
@@ -199,7 +199,7 @@ public class HotelServiceImpl implements HotelService {
             hotel.setSourceType(hotelSourceEnum.getId());
 
             hotelId = hotel.getId();
-            this.hotelMapper.updateByPrimaryKeySelective(hotel);
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
             hotelDto.setId(hotelId);
             this.updateRedisHotel(hotelId, hotel, "HotelService.saveOrUpdateByFangId(HotelDto)");
 
@@ -215,7 +215,7 @@ public class HotelServiceImpl implements HotelService {
     public List<HotelDto> findHotelByName(String hotelName, String cityCode) {
         HotelExample hotelExample = new HotelExample();
         hotelExample.createCriteria().andNameEqualTo(hotelName.trim()).andCityCodeEqualTo(cityCode.trim());
-        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        List<Hotel> hotelList = hotelMapper.selectByExampleWithBLOBs(hotelExample);
         if(CollectionUtils.isEmpty(hotelList)){
             return null;
         }
@@ -243,7 +243,7 @@ public class HotelServiceImpl implements HotelService {
     public HotelDto findByName(String name) {
         HotelExample hotelExample = new HotelExample();
         hotelExample.createCriteria().andNameEqualTo(name);
-        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        List<Hotel> hotelList = hotelMapper.selectByExampleWithBLOBs(hotelExample);
         if(CollectionUtils.isEmpty(hotelList)){
             return null;
         }
@@ -256,7 +256,7 @@ public class HotelServiceImpl implements HotelService {
 
         HotelExample hotelExample = new HotelExample();
         hotelExample.createCriteria().andFangIdEqualTo(fangId).andSourceTypeEqualTo(hotelSourceEnum.getId());
-        List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+        List<Hotel> hotelList = hotelMapper.selectByExampleWithBLOBs(hotelExample);
 
         if (hotelList.isEmpty()) {
             return null;
@@ -561,7 +561,7 @@ public class HotelServiceImpl implements HotelService {
                 "      \"pricePatterns\": [\n" +
                 "        {\n" +
                 "          \"pattern\": \"2\",\n" +
-                "          \"accountId\": 31830\n" +
+                "          \"accountId\": 36620\n" +
                 "        }\n" +
                 "      ]\n" +
                 "    }");

@@ -72,7 +72,7 @@ public class FanqielaileHotelProxyService {
         //
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(innId.longValue()).andSourceTypeEqualTo(HotelSourceEnum.FANQIE.getId());
-        List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
+        List<Hotel> hotelList = this.hotelMapper.selectByExampleWithBLOBs(example);
 
         Hotel hotel = null;
         if (hotelList.isEmpty()) {
