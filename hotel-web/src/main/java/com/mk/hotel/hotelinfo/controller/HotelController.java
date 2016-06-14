@@ -7,6 +7,7 @@ import com.mk.framework.DateUtils;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -229,6 +230,33 @@ public class HotelController {
     public ResponseEntity<HashMap<String, Object>> findHotelById(Long hotelId) {
         try {
             HotelDto hotelDto = hotelService.findById(hotelId);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("hotel", hotelDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/findHotelByFangId", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelByFangId(Long fangId, Integer hotelSource) {
+        try {
+            HotelSourceEnum hotelSourceEnum = HotelSourceEnum.getById(hotelSource);
+            if(hotelSourceEnum == null){
+                HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+                result.put("success", "F");
+                result.put("errmsg", "hotelSource参数错误");
+                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            }
+            HotelDto hotelDto = hotelService.findByFangId(fangId, hotelSourceEnum);
             HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("hotel", hotelDto);
