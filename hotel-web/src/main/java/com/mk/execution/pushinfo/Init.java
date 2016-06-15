@@ -14,11 +14,9 @@ import org.springframework.stereotype.Component;
 public class Init implements ApplicationListener<ContextRefreshedEvent>, DisposableBean {
 
     private Thread jobManagerThread;
-    private Thread clearJobManagerThread;
 
     Init(){
         jobManagerThread = new Thread(new ThreadJobManager(), "init-pushinfo-manager-thread");
-        clearJobManagerThread = new Thread(new ThreadClearStockJobManager(), "init-clear-manager-thread");
     }
 
     @Override
@@ -27,9 +25,6 @@ public class Init implements ApplicationListener<ContextRefreshedEvent>, Disposa
         if (contextRefreshedEvent.getApplicationContext().getParent() == null || contextRefreshedEvent.getApplicationContext().getParent().getParent() == null) {
             jobManagerThread.setDaemon(true);
             jobManagerThread.start();
-
-            clearJobManagerThread.setDaemon(true);
-            clearJobManagerThread.start();
         }
     }
 
@@ -37,10 +32,6 @@ public class Init implements ApplicationListener<ContextRefreshedEvent>, Disposa
     public void destroy() throws Exception {
         if (jobManagerThread != null){
             jobManagerThread.interrupt();
-        }
-
-        if (clearJobManagerThread != null) {
-            clearJobManagerThread.interrupt();
         }
     }
 }
