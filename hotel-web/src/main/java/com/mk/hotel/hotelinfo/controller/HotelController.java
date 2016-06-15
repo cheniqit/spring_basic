@@ -3,20 +3,29 @@ package com.mk.hotel.hotelinfo.controller;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.Constant;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.DateUtils;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
-import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
+import com.mk.hotel.hotelinfo.model.HotelFanqieMapping;
 import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
+import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
+import com.mk.hotel.roomtype.bean.PushRoomType;
+import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +34,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,7 +51,7 @@ import java.util.List;
 public class HotelController {
 
     @Autowired
-    private HotelService hotelService;
+    private HotelServiceImpl hotelService;
 
     @Autowired
     private HotelFacilityService hotelFacilityService;
@@ -54,6 +67,8 @@ public class HotelController {
     private RoomTypeStockService roomTypeStockService;
     @Autowired
     private HotelPicServiceImpl hotelPicService;
+    @Autowired
+    private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
 
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
@@ -67,7 +82,7 @@ public class HotelController {
             logPushDto.setType(LogPushTypeEnum.hotelAll.getId());
 
             this.logPushService.save(logPushDto);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
         }
@@ -76,7 +91,7 @@ public class HotelController {
         //
         JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelAll);
 
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
@@ -92,7 +107,7 @@ public class HotelController {
             logPushDto.setType(LogPushTypeEnum.hotelDelete.getId());
 
             this.logPushService.save(logPushDto);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
         }
@@ -100,7 +115,7 @@ public class HotelController {
         //
         JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelDelete);
 
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
@@ -116,7 +131,7 @@ public class HotelController {
             logPushDto.setType(LogPushTypeEnum.hotelFacility.getId());
 
             this.logPushService.save(logPushDto);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
         }
@@ -124,9 +139,50 @@ public class HotelController {
         //
         JobManager.addPushInfoToRefreshJob(body, LogPushTypeEnum.hotelFacility);
 
-        HashMap<String,Object> result= new LinkedHashMap<String, Object>();
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateFanqieRoomTypeInfo", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE+";charset=utf-8")
+    public @ResponseBody
+    String updateFanqieRoomTypeInfo(HttpServletRequest request){
+        Result result = new Result();
+        BufferedReader br = null;
+        XStream xstream = null;
+        try{
+            br = new BufferedReader(new InputStreamReader(request.getInputStream(),"UTF-8"));
+            String lineStr = null;
+            StringBuffer sb = new StringBuffer();
+            while((lineStr = br.readLine()) != null){
+                sb.append(lineStr);
+            }
+            xstream = new XStream(new DomDriver());
+            xstream.alias("PushRoomType", PushRoomType.class);
+            xstream.autodetectAnnotations(true);
+            try {
+                //log
+                LogPushDto logPushDto = new LogPushDto();
+                logPushDto.setMsg(sb.toString());
+                logPushDto.setType(LogPushTypeEnum.fanqieRoomTypeInfo.getId());
+
+                this.logPushService.save(logPushDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
+            PushRoomType pushRoomType = (PushRoomType) xstream.fromXML(sb.toString(), new PushRoomType());
+            fanqielaileRoomTypeProxyService.updateFanqieRoomTypeInfo(pushRoomType);
+            result.setMessage("成功");
+            result.setStatus("200");
+        }catch (Exception e){
+            e.printStackTrace();
+            IOUtils.closeQuietly(br);
+            result.setMessage("失败");
+            result.setStatus("400");
+        }
+
+        return xstream.toXML(result);
     }
 
 
@@ -134,24 +190,24 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> mergePmsHotel(Long hotelId, Integer pageNo) {
         try {
-           if(pageNo == null){
-               pageNo = 1;
-           }
-            if(hotelId == null){
+            if (pageNo == null) {
+                pageNo = 1;
+            }
+            if (hotelId == null) {
                 hotelService.mergePmsHotel(pageNo);
-            }else{
+            } else {
                 hotelService.mergePmsHotelByHotelId(hotelId);
             }
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
-        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
@@ -161,19 +217,19 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> mergeHotelFacility(Integer pageNo) {
         try {
-            if(pageNo == null){
+            if (pageNo == null) {
                 pageNo = 1;
             }
             hotelFacilityService.mergeHotelFacility(pageNo);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
-        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
@@ -183,14 +239,61 @@ public class HotelController {
     public ResponseEntity<HashMap<String, Object>> findHotelById(Long hotelId) {
         try {
             HotelDto hotelDto = hotelService.findById(hotelId);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("hotel", hotelDto);
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/findHotelByFangId", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelByFangId(Long fangId, Integer hotelSource) {
+        try {
+            HotelSourceEnum hotelSourceEnum = HotelSourceEnum.getById(hotelSource);
+            if(hotelSourceEnum == null){
+                HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+                result.put("success", "F");
+                result.put("errmsg", "hotelSource参数错误");
+                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            }
+            HotelDto hotelDto = hotelService.findByFangId(fangId, hotelSourceEnum);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("hotel", hotelDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+    @RequestMapping(value = "/findHotelMappingByHotelId", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotelMappingByHotelId(Long hotelId) {
+        try {
+            HotelFanqieMapping hotelFanqieMapping = hotelService.findHotelMappingByHotelId(hotelId);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("hotelFanqieMapping", hotelFanqieMapping);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -202,10 +305,10 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> findHotelByName(Integer pageNo, Integer pageSize) {
         try {
-            if(pageNo == null) {
+            if (pageNo == null) {
                 pageNo = 1;
             }
-            if(pageSize == null){
+            if (pageSize == null) {
                 pageSize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
             }
             //酒店分页
@@ -216,14 +319,14 @@ public class HotelController {
             example.setStart(pageBean.getStart());
             example.setPageCount(pageBean.getPageCount());
             List<Hotel> hotelList = hotelMapper.selectByExample(example);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("data", hotelList);
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -236,14 +339,14 @@ public class HotelController {
     public ResponseEntity<HashMap<String, Object>> updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum) {
 
         try {
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             roomTypeStockService.updatePromoRedisStock(hotelId, roomTypeId, promoNum);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -260,10 +363,10 @@ public class HotelController {
             hotelPicService.saveHotelPic(hotelId, hotelPicInfo, updateBy);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -273,17 +376,17 @@ public class HotelController {
 
     @RequestMapping(value = "/delpicture", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> delPicture(Long hotelId,Long roomTypeId, String picType, String url, String updateBy) {
+    public ResponseEntity<HashMap<String, Object>> delPicture(Long hotelId, Long roomTypeId, String picType, String url, String updateBy) {
 
         try {
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             hotelPicService.delPicture(hotelId, roomTypeId, picType, url, updateBy);
             result.put("success", "T");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
-            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "F");
             result.put("errmsg", e.getMessage());
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -291,6 +394,39 @@ public class HotelController {
 
     }
 
+    @RequestMapping(value = "/mergeFanqieHotel")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeFanqieHotel() {
 
+        //
+        List<String> proxyInnJsonList = this.hotelService.mergeFanqieHotel();
+
+        for (String proxyInnJson : proxyInnJsonList) {
+            JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.hotelFanqie);
+        }
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+
+
+
+
+    @RequestMapping(value = "/mergeFangqieRoomStatus")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> mergeFangqieRoomStatus() {
+
+        //
+        List<String> proxyInnJsonList = this.hotelService.mergeFangqieRoomStatus();
+
+        for (String proxyInnJson : proxyInnJsonList) {
+            JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.roomTypeStatusFanqie);
+        }
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
 }
-

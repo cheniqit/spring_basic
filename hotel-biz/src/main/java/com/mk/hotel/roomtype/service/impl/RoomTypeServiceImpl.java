@@ -2,7 +2,6 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -14,6 +13,7 @@ import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -68,13 +69,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
-    public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId) {
+    public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId, HotelSourceEnum hotelSourceEnum) {
         if (null == fangHotelId || null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
         }
 
         //hotelDto
-        HotelDto hotelDto = hotelService.findByFangId(fangHotelId);
+        HotelDto hotelDto = hotelService.findByFangId(fangHotelId, hotelSourceEnum);
         if (null == hotelDto) {
             return null;
         }
@@ -117,14 +118,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
-    public RoomTypeDto selectByFangId(Long fangRoomTypeId) {
+    public RoomTypeDto selectByFangId(Long fangRoomTypeId, Long hotelId) {
         if (null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
         }
 
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andFangIdEqualTo(fangRoomTypeId);
+        roomTypeExample.createCriteria().andFangIdEqualTo(fangRoomTypeId).andHotelIdEqualTo(hotelId);
 
         //
         List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
@@ -213,7 +214,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
 
     }
-    public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList) {
+    public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == hotelId || null == roomTypeDtoList) {
             throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
         }
@@ -223,7 +224,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             dtoMap.put(dto.getFangId(), dto);
 
             //
-            this.saveOrUpdateByFangId(dto);
+            this.saveOrUpdateByFangId(dto, hotelSourceEnum);
         }
 
         //找出hotel下所有roomType
@@ -248,14 +249,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 //        this.mergeRoomTypeStockByHotel(hotelId);
     }
 
-    public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto) {
+    public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypeDto) {
             throw new MyException("-99", "-99", "roomTypeDto 不可为空");
         }
 
         //hotelDto
-        HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId());
+        HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId(), hotelSourceEnum);
         if (null == hotelDto) {
             throw new MyException("-99", "-99", "错误的roomTypeDto.FangHotelId");
         }
@@ -263,7 +264,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
 
         //db
-        RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId());
+        RoomTypeDto dbDto = this.selectByFangId(roomTypeDto.getFangHotelId(),roomTypeDto.getFangId(), hotelSourceEnum);
 
         if (null == dbDto) {
             RoomType roomType = new RoomType();
@@ -422,6 +423,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             List<PicList> picLists = new ArrayList<PicList>();
 
             if (StringUtils.isNotBlank(strPics)) {
+                logger.info("updateRedisRoomType strPics :{}", strPics);
                 JSONArray picArray = JSONArray.parseArray(strPics);
                 for (int i = 0; i < picArray.size(); i++) {
                     String strPic = picArray.getString(i);
@@ -502,7 +504,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
             return;
         }
-        roomTypeProxyService.saveRoomTypePrice(response.getData());
+        roomTypeProxyService.saveRoomTypePrice(response.getData(), hotelId);
         OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
@@ -528,7 +530,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
                 return;
             }
-            roomTypeProxyService.saveRoomTypePrice(response.getData());
+            roomTypeProxyService.saveRoomTypePrice(response.getData(), hotel.getId());
             OtsInterface.initHotel(new Long(hotel.getId()));
         }
         logger.info("end mergeRoomTypePrice pageNo {}", pageNo);
@@ -622,5 +624,103 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             return;
         }
         roomTypeProxyService.saveRoomTypeStock(hotel, response.getData());
+    }
+
+    public void clearStockAndPrice() {
+        Jedis jedis = null;
+        try {
+            jedis = RedisUtil.getJedis();
+
+            //
+            int pageSize = 1000;
+
+            //count
+            RoomTypeExample example = new RoomTypeExample();
+            example.setOrderByClause(" id");
+            int count = this.roomTypeMapper.countByExample(example);
+            int pageCount = 0;
+            if (count <= 0) {
+                pageCount = 0;
+            } else {
+                pageCount = (count - 1) / pageSize + 1;
+            }
+
+            //
+            for (int i = 0; i < pageCount; i++) {
+                int start = pageSize * i;
+                int end = pageSize * (i + 1);
+                example.setStart(start);
+                example.setEnd(end);
+                //
+                List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
+
+                //
+                Set<String> stockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_STOCK_", roomTypeList);
+                for (String key : stockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> promoStockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PROMO_STOCK_", roomTypeList);
+                for (String key : promoStockSet) {
+                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+                }
+
+                //
+                Set<String> priceSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PRICE_", roomTypeList);
+                for (String key : priceSet) {
+                    this.clearRedisHash(jedis, key, "yyyyMMdd");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
+    private Set<String> fillRedisKeyName(String keyName, List<RoomType> roomTypeIdList) {
+
+        Set<String> result = new HashSet<String>();
+
+        for (RoomType roomType : roomTypeIdList) {
+            result.add(keyName + roomType.getId());
+        }
+        return result;
+    }
+    private void clearRedisHash(Jedis jedis, String hKey, String fieldFormat) {
+        if (null == jedis || StringUtils.isBlank(hKey) || StringUtils.isBlank(fieldFormat)) {
+            return;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat(fieldFormat);
+
+        //toDay
+        String strToday = format.format(new Date());
+        Date today = null;
+        try {
+            today = format.parse(strToday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //
+        Map<String,String> map = jedis.hgetAll(hKey);
+        for (String field : map.keySet()) {
+            try {
+                Date keyDate = format.parse(field);
+                //若keyDate 早于 今天,清理掉
+                if (today.after(keyDate)) {
+                    logger.info("RoomTypeServiceImpl.clearRedisHash key:{} field:{}", hKey, field);
+                    jedis.hdel(hKey, field);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

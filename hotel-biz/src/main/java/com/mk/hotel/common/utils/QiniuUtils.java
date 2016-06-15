@@ -1,5 +1,6 @@
 package com.mk.hotel.common.utils;
 
+import com.dianping.cat.Cat;
 import com.mk.hotel.common.Constant;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
@@ -8,9 +9,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class QiniuUtils {
 
@@ -165,4 +173,78 @@ public class QiniuUtils {
 		return null;
 	}
 
+
+
+	/**
+	 * 根据地址获得数据的字节流
+	 * @param strUrl 网络连接地址
+	 * @return
+	 */
+	private static BufferedImage getImageFromNetByUrl(String strUrl){
+		InputStream inStream = null;
+
+		try {
+			URL url = new URL(strUrl);
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setConnectTimeout(5 * 1000);
+			inStream =  conn.getInputStream();//通过输入流获取图片数据
+			BufferedImage sourceImg = ImageIO.read(inStream);
+
+			//inStream.close();
+			return sourceImg;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			if (null != inStream){
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+
+	public static String upload(String url, String bucket) throws IOException {
+
+		String fileName = UUID.randomUUID().toString();
+		String address = Constant.QINIU_DOWNLOAD_ADDRESS;
+		//check
+		if (org.apache.commons.lang3.StringUtils.isBlank(url)) {
+			throw new IOException("上传url不可为空");
+		}
+
+		if (org.apache.commons.lang3.StringUtils.isBlank(bucket)) {
+			throw new IOException("上传空间名不可为空");
+		}
+
+		//upload
+		ByteArrayOutputStream bao = null;
+		try {
+			//
+			BufferedImage img = getImageFromNetByUrl(url);
+			if (null == img) {
+				return null;
+			}
+			bao = new ByteArrayOutputStream();
+			ImageIO.write(img, "jpg", bao);
+
+			//
+			upload(bao.toByteArray(), fileName, bucket);
+
+			return address + "/" + fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Cat.logError(e);
+
+		} finally {
+			if (null != bao) {
+				bao.close();
+			}
+		}
+
+		return null;
+	}
 }

@@ -438,6 +438,76 @@ public class HotelExample extends PageBean{
             return (Criteria) this;
         }
 
+        public Criteria andHotelTypeIsNull() {
+            addCriterion("hotel_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeIsNotNull() {
+            addCriterion("hotel_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeEqualTo(String value) {
+            addCriterion("hotel_type =", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotEqualTo(String value) {
+            addCriterion("hotel_type <>", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeGreaterThan(String value) {
+            addCriterion("hotel_type >", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("hotel_type >=", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLessThan(String value) {
+            addCriterion("hotel_type <", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLessThanOrEqualTo(String value) {
+            addCriterion("hotel_type <=", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeLike(String value) {
+            addCriterion("hotel_type like", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotLike(String value) {
+            addCriterion("hotel_type not like", value, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeIn(List<String> values) {
+            addCriterion("hotel_type in", values, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotIn(List<String> values) {
+            addCriterion("hotel_type not in", values, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeBetween(String value1, String value2) {
+            addCriterion("hotel_type between", value1, value2, "hotelType");
+            return (Criteria) this;
+        }
+
+        public Criteria andHotelTypeNotBetween(String value1, String value2) {
+            addCriterion("hotel_type not between", value1, value2, "hotelType");
+            return (Criteria) this;
+        }
+
         public Criteria andLatIsNull() {
             addCriterion("lat is null");
             return (Criteria) this;
@@ -625,76 +695,6 @@ public class HotelExample extends PageBean{
 
         public Criteria andDefaultLeaveTimeNotBetween(String value1, String value2) {
             addCriterion("default_leave_time not between", value1, value2, "defaultLeaveTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeIsNull() {
-            addCriterion("hotel_type is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeIsNotNull() {
-            addCriterion("hotel_type is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeEqualTo(String value) {
-            addCriterion("hotel_type =", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeNotEqualTo(String value) {
-            addCriterion("hotel_type <>", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeGreaterThan(String value) {
-            addCriterion("hotel_type >", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeGreaterThanOrEqualTo(String value) {
-            addCriterion("hotel_type >=", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeLessThan(String value) {
-            addCriterion("hotel_type <", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeLessThanOrEqualTo(String value) {
-            addCriterion("hotel_type <=", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeLike(String value) {
-            addCriterion("hotel_type like", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeNotLike(String value) {
-            addCriterion("hotel_type not like", value, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeIn(List<String> values) {
-            addCriterion("hotel_type in", values, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeNotIn(List<String> values) {
-            addCriterion("hotel_type not in", values, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeBetween(String value1, String value2) {
-            addCriterion("hotel_type between", value1, value2, "hotelType");
-            return (Criteria) this;
-        }
-
-        public Criteria andHotelTypeNotBetween(String value1, String value2) {
-            addCriterion("hotel_type not between", value1, value2, "hotelType");
             return (Criteria) this;
         }
 
@@ -1118,6 +1118,146 @@ public class HotelExample extends PageBean{
             return (Criteria) this;
         }
 
+        public Criteria andTownCodeIsNull() {
+            addCriterion("town_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeIsNotNull() {
+            addCriterion("town_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeEqualTo(String value) {
+            addCriterion("town_code =", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeNotEqualTo(String value) {
+            addCriterion("town_code <>", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeGreaterThan(String value) {
+            addCriterion("town_code >", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("town_code >=", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeLessThan(String value) {
+            addCriterion("town_code <", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeLessThanOrEqualTo(String value) {
+            addCriterion("town_code <=", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeLike(String value) {
+            addCriterion("town_code like", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeNotLike(String value) {
+            addCriterion("town_code not like", value, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeIn(List<String> values) {
+            addCriterion("town_code in", values, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeNotIn(List<String> values) {
+            addCriterion("town_code not in", values, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeBetween(String value1, String value2) {
+            addCriterion("town_code between", value1, value2, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andTownCodeNotBetween(String value1, String value2) {
+            addCriterion("town_code not between", value1, value2, "townCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIsNull() {
+            addCriterion("open_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIsNotNull() {
+            addCriterion("open_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeEqualTo(String value) {
+            addCriterion("open_time =", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotEqualTo(String value) {
+            addCriterion("open_time <>", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeGreaterThan(String value) {
+            addCriterion("open_time >", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeGreaterThanOrEqualTo(String value) {
+            addCriterion("open_time >=", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLessThan(String value) {
+            addCriterion("open_time <", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLessThanOrEqualTo(String value) {
+            addCriterion("open_time <=", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeLike(String value) {
+            addCriterion("open_time like", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotLike(String value) {
+            addCriterion("open_time not like", value, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeIn(List<String> values) {
+            addCriterion("open_time in", values, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotIn(List<String> values) {
+            addCriterion("open_time not in", values, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeBetween(String value1, String value2) {
+            addCriterion("open_time between", value1, value2, "openTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpenTimeNotBetween(String value1, String value2) {
+            addCriterion("open_time not between", value1, value2, "openTime");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateDateIsNull() {
             addCriterion("create_date is null");
             return (Criteria) this;
@@ -1445,76 +1585,6 @@ public class HotelExample extends PageBean{
 
         public Criteria andIsValidNotBetween(String value1, String value2) {
             addCriterion("is_valid not between", value1, value2, "isValid");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeIsNull() {
-            addCriterion("town_code is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeIsNotNull() {
-            addCriterion("town_code is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeEqualTo(String value) {
-            addCriterion("town_code =", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeNotEqualTo(String value) {
-            addCriterion("town_code <>", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeGreaterThan(String value) {
-            addCriterion("town_code >", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("town_code >=", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeLessThan(String value) {
-            addCriterion("town_code <", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeLessThanOrEqualTo(String value) {
-            addCriterion("town_code <=", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeLike(String value) {
-            addCriterion("town_code like", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeNotLike(String value) {
-            addCriterion("town_code not like", value, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeIn(List<String> values) {
-            addCriterion("town_code in", values, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeNotIn(List<String> values) {
-            addCriterion("town_code not in", values, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeBetween(String value1, String value2) {
-            addCriterion("town_code between", value1, value2, "townCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andTownCodeNotBetween(String value1, String value2) {
-            addCriterion("town_code not between", value1, value2, "townCode");
             return (Criteria) this;
         }
 
@@ -1868,76 +1938,6 @@ public class HotelExample extends PageBean{
             return (Criteria) this;
         }
 
-        public Criteria andOpenTimeIsNull() {
-            addCriterion("open_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeIsNotNull() {
-            addCriterion("open_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeEqualTo(String value) {
-            addCriterion("open_time =", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeNotEqualTo(String value) {
-            addCriterion("open_time <>", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeGreaterThan(String value) {
-            addCriterion("open_time >", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeGreaterThanOrEqualTo(String value) {
-            addCriterion("open_time >=", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeLessThan(String value) {
-            addCriterion("open_time <", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeLessThanOrEqualTo(String value) {
-            addCriterion("open_time <=", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeLike(String value) {
-            addCriterion("open_time like", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeNotLike(String value) {
-            addCriterion("open_time not like", value, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeIn(List<String> values) {
-            addCriterion("open_time in", values, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeNotIn(List<String> values) {
-            addCriterion("open_time not in", values, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeBetween(String value1, String value2) {
-            addCriterion("open_time between", value1, value2, "openTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOpenTimeNotBetween(String value1, String value2) {
-            addCriterion("open_time not between", value1, value2, "openTime");
-            return (Criteria) this;
-        }
-
         public Criteria andRegTimeIsNull() {
             addCriterion("reg_time is null");
             return (Criteria) this;
@@ -2005,6 +2005,136 @@ public class HotelExample extends PageBean{
 
         public Criteria andRegTimeNotBetween(String value1, String value2) {
             addCriterion("reg_time not between", value1, value2, "regTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeIsNull() {
+            addCriterion("source_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeIsNotNull() {
+            addCriterion("source_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeEqualTo(Integer value) {
+            addCriterion("source_type =", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotEqualTo(Integer value) {
+            addCriterion("source_type <>", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeGreaterThan(Integer value) {
+            addCriterion("source_type >", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("source_type >=", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeLessThan(Integer value) {
+            addCriterion("source_type <", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("source_type <=", value, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeIn(List<Integer> values) {
+            addCriterion("source_type in", values, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotIn(List<Integer> values) {
+            addCriterion("source_type not in", values, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeBetween(Integer value1, Integer value2) {
+            addCriterion("source_type between", value1, value2, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("source_type not between", value1, value2, "sourceType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIsNull() {
+            addCriterion("pics_sign is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIsNotNull() {
+            addCriterion("pics_sign is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignEqualTo(String value) {
+            addCriterion("pics_sign =", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotEqualTo(String value) {
+            addCriterion("pics_sign <>", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThan(String value) {
+            addCriterion("pics_sign >", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThanOrEqualTo(String value) {
+            addCriterion("pics_sign >=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThan(String value) {
+            addCriterion("pics_sign <", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThanOrEqualTo(String value) {
+            addCriterion("pics_sign <=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLike(String value) {
+            addCriterion("pics_sign like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotLike(String value) {
+            addCriterion("pics_sign not like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIn(List<String> values) {
+            addCriterion("pics_sign in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotIn(List<String> values) {
+            addCriterion("pics_sign not in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignBetween(String value1, String value2) {
+            addCriterion("pics_sign between", value1, value2, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotBetween(String value1, String value2) {
+            addCriterion("pics_sign not between", value1, value2, "picsSign");
             return (Criteria) this;
         }
     }

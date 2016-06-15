@@ -14,6 +14,7 @@ import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.dto.HotelFacilityDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.json.facility.FacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.HotelFacilityJson;
 import com.mk.hotel.hotelinfo.json.facility.RoomTypeFacilityJson;
@@ -184,7 +185,7 @@ public class HotelCopyService {
         logger.info("handleHotelDetail: hotelId:{} start", hotelDto.getId());
 
         HotelService hotelService = AppUtils.getBean(HotelService.class);
-        hotelService.saveOrUpdateByFangId(hotelDto);
+        hotelService.saveOrUpdateByFangId(hotelDto, HotelSourceEnum.LEZHU);
 
         //
         OtsInterface.initHotel(hotelDto.getId());
@@ -213,7 +214,7 @@ public class HotelCopyService {
             HotelService hotelService = AppUtils.getBean(HotelService.class);
             //
             for (Long id : idList) {
-                hotelService.deleteByFangId(id);
+                hotelService.deleteByFangId(id, HotelSourceEnum.LEZHU);
 
                 //
                 OtsInterface.initHotel(id);
@@ -258,7 +259,7 @@ public class HotelCopyService {
                 hotelFacilityDtoList.add(dto);
             }
 
-            hotelFacilityService.saveOrUpdateByFangId(hotelFacilityDtoList);
+            hotelFacilityService.saveOrUpdateByFangId(hotelFacilityDtoList, HotelSourceEnum.LEZHU);
         }
 
         //
@@ -285,16 +286,30 @@ public class HotelCopyService {
                         roomTypeFacilityDtoList.add(dto);
                     }
 
-                    roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList);
+                    roomTypeFacilityService.saveOrUpdateByFangid(roomTypeFacilityDtoList, HotelSourceEnum.LEZHU);
                 }
             }
         }
 
         //
-        HotelDto dbHotel = hotelService.findByFangId(fangHotelId);
+        HotelDto dbHotel = hotelService.findByFangId(fangHotelId, HotelSourceEnum.LEZHU);
         if (null != dbHotel) {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+    }
+
+
+    public void handleHotelFanqie (String proxyInnJson) {
+        //
+        HotelService hotelService = AppUtils.getBean(HotelService.class);
+        hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
+    }
+
+
+    public void handleRoomStatusFanqie (String mappingJson) {
+        //
+        HotelService hotelService = AppUtils.getBean(HotelService.class);
+        hotelService.mergeFangqieRoomStatusByHotelFanqieMappingJson(mappingJson);
     }
 }

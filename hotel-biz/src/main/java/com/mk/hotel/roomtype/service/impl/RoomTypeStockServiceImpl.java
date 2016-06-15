@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
+
     @Autowired
     private HotelStockRemoteService hotelStockRemoteService;
     @Autowired

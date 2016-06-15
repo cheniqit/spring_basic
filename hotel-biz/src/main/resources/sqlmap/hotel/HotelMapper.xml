@@ -7,29 +7,31 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="addr" property="addr" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="hotel_type" property="hotelType" jdbcType="VARCHAR" />
     <result column="lat" property="lat" jdbcType="DECIMAL" />
     <result column="lon" property="lon" jdbcType="DECIMAL" />
     <result column="default_leave_time" property="defaultLeaveTime" jdbcType="VARCHAR" />
-    <result column="hotel_type" property="hotelType" jdbcType="VARCHAR" />
     <result column="retention_time" property="retentionTime" jdbcType="VARCHAR" />
     <result column="repair_time" property="repairTime" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
     <result column="prov_code" property="provCode" jdbcType="VARCHAR" />
     <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
     <result column="dis_code" property="disCode" jdbcType="VARCHAR" />
+    <result column="town_code" property="townCode" jdbcType="VARCHAR" />
+    <result column="open_time" property="openTime" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="is_valid" property="isValid" jdbcType="CHAR" />
-    <result column="town_code" property="townCode" jdbcType="VARCHAR" />
     <result column="business_zone_info" property="businessZoneInfo" jdbcType="VARCHAR" />
     <result column="airport_station_info" property="airportStationInfo" jdbcType="VARCHAR" />
     <result column="scenic_spots_info" property="scenicSpotsInfo" jdbcType="VARCHAR" />
     <result column="hospital_info" property="hospitalInfo" jdbcType="VARCHAR" />
     <result column="colleges_info" property="collegesInfo" jdbcType="VARCHAR" />
-    <result column="open_time" property="openTime" jdbcType="VARCHAR" />
     <result column="reg_time" property="regTime" jdbcType="VARCHAR" />
+    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+    <result column="pics_sign" property="picsSign" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.mk.hotel.hotelinfo.model.Hotel" extends="BaseResultMap" >
     <result column="pic" property="pic" jdbcType="LONGVARCHAR" />
@@ -93,10 +95,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, fang_id, name, addr, phone, lat, lon, default_leave_time, hotel_type, retention_time, 
-    repair_time, introduction, prov_code, city_code, dis_code, create_date, create_by, 
-    update_date, update_by, is_valid, town_code, business_zone_info, airport_station_info, 
-    scenic_spots_info, hospital_info, colleges_info, open_time, reg_time
+    id, fang_id, name, addr, phone, hotel_type, lat, lon, default_leave_time, retention_time, 
+    repair_time, introduction, prov_code, city_code, dis_code, town_code, open_time, 
+    create_date, create_by, update_date, update_by, is_valid, business_zone_info, airport_station_info, 
+    scenic_spots_info, hospital_info, colleges_info, reg_time, source_type, pics_sign
   </sql>
   <sql id="Blob_Column_List" >
     pic
@@ -117,6 +119,9 @@
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
+    <if test="start != null and start != 0" >
+    limit ${start},${pageCount}
+  </if>
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.hotelinfo.model.HotelExample" >
     select
@@ -154,29 +159,31 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insert" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id">
     insert into hotel (id, fang_id, name, 
-      addr, phone, lat, lon, 
-      default_leave_time, hotel_type, retention_time, 
-      repair_time, introduction, prov_code, 
-      city_code, dis_code, create_date, 
+      addr, phone, hotel_type, 
+      lat, lon, default_leave_time, 
+      retention_time, repair_time, introduction, 
+      prov_code, city_code, dis_code, 
+      town_code, open_time, create_date, 
       create_by, update_date, update_by, 
-      is_valid, town_code, business_zone_info, 
-      airport_station_info, scenic_spots_info, hospital_info, 
-      colleges_info, open_time, reg_time, 
+      is_valid, business_zone_info, airport_station_info, 
+      scenic_spots_info, hospital_info, colleges_info, 
+      reg_time, source_type, pics_sign, 
       pic)
     values (#{id,jdbcType=BIGINT}, #{fangId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{addr,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{lat,jdbcType=DECIMAL}, #{lon,jdbcType=DECIMAL}, 
-      #{defaultLeaveTime,jdbcType=VARCHAR}, #{hotelType,jdbcType=VARCHAR}, #{retentionTime,jdbcType=VARCHAR}, 
-      #{repairTime,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, #{provCode,jdbcType=VARCHAR}, 
-      #{cityCode,jdbcType=VARCHAR}, #{disCode,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{addr,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{hotelType,jdbcType=VARCHAR}, 
+      #{lat,jdbcType=DECIMAL}, #{lon,jdbcType=DECIMAL}, #{defaultLeaveTime,jdbcType=VARCHAR}, 
+      #{retentionTime,jdbcType=VARCHAR}, #{repairTime,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
+      #{provCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{disCode,jdbcType=VARCHAR}, 
+      #{townCode,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{isValid,jdbcType=CHAR}, #{townCode,jdbcType=VARCHAR}, #{businessZoneInfo,jdbcType=VARCHAR}, 
-      #{airportStationInfo,jdbcType=VARCHAR}, #{scenicSpotsInfo,jdbcType=VARCHAR}, #{hospitalInfo,jdbcType=VARCHAR}, 
-      #{collegesInfo,jdbcType=VARCHAR}, #{openTime,jdbcType=VARCHAR}, #{regTime,jdbcType=VARCHAR}, 
+      #{isValid,jdbcType=CHAR}, #{businessZoneInfo,jdbcType=VARCHAR}, #{airportStationInfo,jdbcType=VARCHAR}, 
+      #{scenicSpotsInfo,jdbcType=VARCHAR}, #{hospitalInfo,jdbcType=VARCHAR}, #{collegesInfo,jdbcType=VARCHAR}, 
+      #{regTime,jdbcType=VARCHAR}, #{sourceType,jdbcType=INTEGER}, #{picsSign,jdbcType=VARCHAR}, 
       #{pic,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.hotelinfo.model.Hotel" useGeneratedKeys="true" keyProperty="id">
     insert into hotel
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -194,6 +201,9 @@
       <if test="phone != null" >
         phone,
       </if>
+      <if test="hotelType != null" >
+        hotel_type,
+      </if>
       <if test="lat != null" >
         lat,
       </if>
@@ -202,9 +212,6 @@
       </if>
       <if test="defaultLeaveTime != null" >
         default_leave_time,
-      </if>
-      <if test="hotelType != null" >
-        hotel_type,
       </if>
       <if test="retentionTime != null" >
         retention_time,
@@ -224,6 +231,12 @@
       <if test="disCode != null" >
         dis_code,
       </if>
+      <if test="townCode != null" >
+        town_code,
+      </if>
+      <if test="openTime != null" >
+        open_time,
+      </if>
       <if test="createDate != null" >
         create_date,
       </if>
@@ -238,9 +251,6 @@
       </if>
       <if test="isValid != null" >
         is_valid,
-      </if>
-      <if test="townCode != null" >
-        town_code,
       </if>
       <if test="businessZoneInfo != null" >
         business_zone_info,
@@ -257,11 +267,14 @@
       <if test="collegesInfo != null" >
         colleges_info,
       </if>
-      <if test="openTime != null" >
-        open_time,
-      </if>
       <if test="regTime != null" >
         reg_time,
+      </if>
+      <if test="sourceType != null" >
+        source_type,
+      </if>
+      <if test="picsSign != null" >
+        pics_sign,
       </if>
       <if test="pic != null" >
         pic,
@@ -283,6 +296,9 @@
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="hotelType != null" >
+        #{hotelType,jdbcType=VARCHAR},
+      </if>
       <if test="lat != null" >
         #{lat,jdbcType=DECIMAL},
       </if>
@@ -291,9 +307,6 @@
       </if>
       <if test="defaultLeaveTime != null" >
         #{defaultLeaveTime,jdbcType=VARCHAR},
-      </if>
-      <if test="hotelType != null" >
-        #{hotelType,jdbcType=VARCHAR},
       </if>
       <if test="retentionTime != null" >
         #{retentionTime,jdbcType=VARCHAR},
@@ -313,6 +326,12 @@
       <if test="disCode != null" >
         #{disCode,jdbcType=VARCHAR},
       </if>
+      <if test="townCode != null" >
+        #{townCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null" >
+        #{openTime,jdbcType=VARCHAR},
+      </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -327,9 +346,6 @@
       </if>
       <if test="isValid != null" >
         #{isValid,jdbcType=CHAR},
-      </if>
-      <if test="townCode != null" >
-        #{townCode,jdbcType=VARCHAR},
       </if>
       <if test="businessZoneInfo != null" >
         #{businessZoneInfo,jdbcType=VARCHAR},
@@ -346,11 +362,14 @@
       <if test="collegesInfo != null" >
         #{collegesInfo,jdbcType=VARCHAR},
       </if>
-      <if test="openTime != null" >
-        #{openTime,jdbcType=VARCHAR},
-      </if>
       <if test="regTime != null" >
         #{regTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="picsSign != null" >
+        #{picsSign,jdbcType=VARCHAR},
       </if>
       <if test="pic != null" >
         #{pic,jdbcType=LONGVARCHAR},
@@ -381,6 +400,9 @@
       <if test="record.phone != null" >
         phone = #{record.phone,jdbcType=VARCHAR},
       </if>
+      <if test="record.hotelType != null" >
+        hotel_type = #{record.hotelType,jdbcType=VARCHAR},
+      </if>
       <if test="record.lat != null" >
         lat = #{record.lat,jdbcType=DECIMAL},
       </if>
@@ -389,9 +411,6 @@
       </if>
       <if test="record.defaultLeaveTime != null" >
         default_leave_time = #{record.defaultLeaveTime,jdbcType=VARCHAR},
-      </if>
-      <if test="record.hotelType != null" >
-        hotel_type = #{record.hotelType,jdbcType=VARCHAR},
       </if>
       <if test="record.retentionTime != null" >
         retention_time = #{record.retentionTime,jdbcType=VARCHAR},
@@ -411,6 +430,12 @@
       <if test="record.disCode != null" >
         dis_code = #{record.disCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.townCode != null" >
+        town_code = #{record.townCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openTime != null" >
+        open_time = #{record.openTime,jdbcType=VARCHAR},
+      </if>
       <if test="record.createDate != null" >
         create_date = #{record.createDate,jdbcType=TIMESTAMP},
       </if>
@@ -425,9 +450,6 @@
       </if>
       <if test="record.isValid != null" >
         is_valid = #{record.isValid,jdbcType=CHAR},
-      </if>
-      <if test="record.townCode != null" >
-        town_code = #{record.townCode,jdbcType=VARCHAR},
       </if>
       <if test="record.businessZoneInfo != null" >
         business_zone_info = #{record.businessZoneInfo,jdbcType=VARCHAR},
@@ -444,11 +466,14 @@
       <if test="record.collegesInfo != null" >
         colleges_info = #{record.collegesInfo,jdbcType=VARCHAR},
       </if>
-      <if test="record.openTime != null" >
-        open_time = #{record.openTime,jdbcType=VARCHAR},
-      </if>
       <if test="record.regTime != null" >
         reg_time = #{record.regTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sourceType != null" >
+        source_type = #{record.sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="record.picsSign != null" >
+        pics_sign = #{record.picsSign,jdbcType=VARCHAR},
       </if>
       <if test="record.pic != null" >
         pic = #{record.pic,jdbcType=LONGVARCHAR},
@@ -465,29 +490,31 @@
       name = #{record.name,jdbcType=VARCHAR},
       addr = #{record.addr,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
+      hotel_type = #{record.hotelType,jdbcType=VARCHAR},
       lat = #{record.lat,jdbcType=DECIMAL},
       lon = #{record.lon,jdbcType=DECIMAL},
       default_leave_time = #{record.defaultLeaveTime,jdbcType=VARCHAR},
-      hotel_type = #{record.hotelType,jdbcType=VARCHAR},
       retention_time = #{record.retentionTime,jdbcType=VARCHAR},
       repair_time = #{record.repairTime,jdbcType=VARCHAR},
       introduction = #{record.introduction,jdbcType=VARCHAR},
       prov_code = #{record.provCode,jdbcType=VARCHAR},
       city_code = #{record.cityCode,jdbcType=VARCHAR},
       dis_code = #{record.disCode,jdbcType=VARCHAR},
+      town_code = #{record.townCode,jdbcType=VARCHAR},
+      open_time = #{record.openTime,jdbcType=VARCHAR},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       is_valid = #{record.isValid,jdbcType=CHAR},
-      town_code = #{record.townCode,jdbcType=VARCHAR},
       business_zone_info = #{record.businessZoneInfo,jdbcType=VARCHAR},
       airport_station_info = #{record.airportStationInfo,jdbcType=VARCHAR},
       scenic_spots_info = #{record.scenicSpotsInfo,jdbcType=VARCHAR},
       hospital_info = #{record.hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{record.collegesInfo,jdbcType=VARCHAR},
-      open_time = #{record.openTime,jdbcType=VARCHAR},
       reg_time = #{record.regTime,jdbcType=VARCHAR},
+      source_type = #{record.sourceType,jdbcType=INTEGER},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR},
       pic = #{record.pic,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -500,29 +527,31 @@
       name = #{record.name,jdbcType=VARCHAR},
       addr = #{record.addr,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
+      hotel_type = #{record.hotelType,jdbcType=VARCHAR},
       lat = #{record.lat,jdbcType=DECIMAL},
       lon = #{record.lon,jdbcType=DECIMAL},
       default_leave_time = #{record.defaultLeaveTime,jdbcType=VARCHAR},
-      hotel_type = #{record.hotelType,jdbcType=VARCHAR},
       retention_time = #{record.retentionTime,jdbcType=VARCHAR},
       repair_time = #{record.repairTime,jdbcType=VARCHAR},
       introduction = #{record.introduction,jdbcType=VARCHAR},
       prov_code = #{record.provCode,jdbcType=VARCHAR},
       city_code = #{record.cityCode,jdbcType=VARCHAR},
       dis_code = #{record.disCode,jdbcType=VARCHAR},
+      town_code = #{record.townCode,jdbcType=VARCHAR},
+      open_time = #{record.openTime,jdbcType=VARCHAR},
       create_date = #{record.createDate,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=VARCHAR},
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       is_valid = #{record.isValid,jdbcType=CHAR},
-      town_code = #{record.townCode,jdbcType=VARCHAR},
       business_zone_info = #{record.businessZoneInfo,jdbcType=VARCHAR},
       airport_station_info = #{record.airportStationInfo,jdbcType=VARCHAR},
       scenic_spots_info = #{record.scenicSpotsInfo,jdbcType=VARCHAR},
       hospital_info = #{record.hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{record.collegesInfo,jdbcType=VARCHAR},
-      open_time = #{record.openTime,jdbcType=VARCHAR},
-      reg_time = #{record.regTime,jdbcType=VARCHAR}
+      reg_time = #{record.regTime,jdbcType=VARCHAR},
+      source_type = #{record.sourceType,jdbcType=INTEGER},
+      pics_sign = #{record.picsSign,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -542,6 +571,9 @@
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="hotelType != null" >
+        hotel_type = #{hotelType,jdbcType=VARCHAR},
+      </if>
       <if test="lat != null" >
         lat = #{lat,jdbcType=DECIMAL},
       </if>
@@ -550,9 +582,6 @@
       </if>
       <if test="defaultLeaveTime != null" >
         default_leave_time = #{defaultLeaveTime,jdbcType=VARCHAR},
-      </if>
-      <if test="hotelType != null" >
-        hotel_type = #{hotelType,jdbcType=VARCHAR},
       </if>
       <if test="retentionTime != null" >
         retention_time = #{retentionTime,jdbcType=VARCHAR},
@@ -572,6 +601,12 @@
       <if test="disCode != null" >
         dis_code = #{disCode,jdbcType=VARCHAR},
       </if>
+      <if test="townCode != null" >
+        town_code = #{townCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openTime != null" >
+        open_time = #{openTime,jdbcType=VARCHAR},
+      </if>
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
@@ -586,9 +621,6 @@
       </if>
       <if test="isValid != null" >
         is_valid = #{isValid,jdbcType=CHAR},
-      </if>
-      <if test="townCode != null" >
-        town_code = #{townCode,jdbcType=VARCHAR},
       </if>
       <if test="businessZoneInfo != null" >
         business_zone_info = #{businessZoneInfo,jdbcType=VARCHAR},
@@ -605,11 +637,14 @@
       <if test="collegesInfo != null" >
         colleges_info = #{collegesInfo,jdbcType=VARCHAR},
       </if>
-      <if test="openTime != null" >
-        open_time = #{openTime,jdbcType=VARCHAR},
-      </if>
       <if test="regTime != null" >
         reg_time = #{regTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceType != null" >
+        source_type = #{sourceType,jdbcType=INTEGER},
+      </if>
+      <if test="picsSign != null" >
+        pics_sign = #{picsSign,jdbcType=VARCHAR},
       </if>
       <if test="pic != null" >
         pic = #{pic,jdbcType=LONGVARCHAR},
@@ -623,29 +658,31 @@
       name = #{name,jdbcType=VARCHAR},
       addr = #{addr,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
+      hotel_type = #{hotelType,jdbcType=VARCHAR},
       lat = #{lat,jdbcType=DECIMAL},
       lon = #{lon,jdbcType=DECIMAL},
       default_leave_time = #{defaultLeaveTime,jdbcType=VARCHAR},
-      hotel_type = #{hotelType,jdbcType=VARCHAR},
       retention_time = #{retentionTime,jdbcType=VARCHAR},
       repair_time = #{repairTime,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
       prov_code = #{provCode,jdbcType=VARCHAR},
       city_code = #{cityCode,jdbcType=VARCHAR},
       dis_code = #{disCode,jdbcType=VARCHAR},
+      town_code = #{townCode,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=CHAR},
-      town_code = #{townCode,jdbcType=VARCHAR},
       business_zone_info = #{businessZoneInfo,jdbcType=VARCHAR},
       airport_station_info = #{airportStationInfo,jdbcType=VARCHAR},
       scenic_spots_info = #{scenicSpotsInfo,jdbcType=VARCHAR},
       hospital_info = #{hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{collegesInfo,jdbcType=VARCHAR},
-      open_time = #{openTime,jdbcType=VARCHAR},
       reg_time = #{regTime,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=INTEGER},
+      pics_sign = #{picsSign,jdbcType=VARCHAR},
       pic = #{pic,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -655,29 +692,31 @@
       name = #{name,jdbcType=VARCHAR},
       addr = #{addr,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
+      hotel_type = #{hotelType,jdbcType=VARCHAR},
       lat = #{lat,jdbcType=DECIMAL},
       lon = #{lon,jdbcType=DECIMAL},
       default_leave_time = #{defaultLeaveTime,jdbcType=VARCHAR},
-      hotel_type = #{hotelType,jdbcType=VARCHAR},
       retention_time = #{retentionTime,jdbcType=VARCHAR},
       repair_time = #{repairTime,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
       prov_code = #{provCode,jdbcType=VARCHAR},
       city_code = #{cityCode,jdbcType=VARCHAR},
       dis_code = #{disCode,jdbcType=VARCHAR},
+      town_code = #{townCode,jdbcType=VARCHAR},
+      open_time = #{openTime,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=CHAR},
-      town_code = #{townCode,jdbcType=VARCHAR},
       business_zone_info = #{businessZoneInfo,jdbcType=VARCHAR},
       airport_station_info = #{airportStationInfo,jdbcType=VARCHAR},
       scenic_spots_info = #{scenicSpotsInfo,jdbcType=VARCHAR},
       hospital_info = #{hospitalInfo,jdbcType=VARCHAR},
       colleges_info = #{collegesInfo,jdbcType=VARCHAR},
-      open_time = #{openTime,jdbcType=VARCHAR},
-      reg_time = #{regTime,jdbcType=VARCHAR}
+      reg_time = #{regTime,jdbcType=VARCHAR},
+      source_type = #{sourceType,jdbcType=INTEGER},
+      pics_sign = #{picsSign,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

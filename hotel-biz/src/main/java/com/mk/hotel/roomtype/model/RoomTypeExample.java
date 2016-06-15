@@ -1,10 +1,12 @@
 package com.mk.hotel.roomtype.model;
 
+import com.mk.hotel.common.bean.PageBean;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class RoomTypeExample {
+public class RoomTypeExample extends PageBean{
     protected String orderByClause;
 
     protected boolean distinct;
@@ -725,6 +727,66 @@ public class RoomTypeExample {
             return (Criteria) this;
         }
 
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Short value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Short value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Short value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Short value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Short value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Short value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Short> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Short> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Short value1, Short value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Short value1, Short value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
         public Criteria andRefundIsNull() {
             addCriterion("refund is null");
             return (Criteria) this;
@@ -1172,6 +1234,76 @@ public class RoomTypeExample {
 
         public Criteria andIsValidNotBetween(String value1, String value2) {
             addCriterion("is_valid not between", value1, value2, "isValid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIsNull() {
+            addCriterion("pics_sign is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIsNotNull() {
+            addCriterion("pics_sign is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignEqualTo(String value) {
+            addCriterion("pics_sign =", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotEqualTo(String value) {
+            addCriterion("pics_sign <>", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThan(String value) {
+            addCriterion("pics_sign >", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignGreaterThanOrEqualTo(String value) {
+            addCriterion("pics_sign >=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThan(String value) {
+            addCriterion("pics_sign <", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLessThanOrEqualTo(String value) {
+            addCriterion("pics_sign <=", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignLike(String value) {
+            addCriterion("pics_sign like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotLike(String value) {
+            addCriterion("pics_sign not like", value, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignIn(List<String> values) {
+            addCriterion("pics_sign in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotIn(List<String> values) {
+            addCriterion("pics_sign not in", values, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignBetween(String value1, String value2) {
+            addCriterion("pics_sign between", value1, value2, "picsSign");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicsSignNotBetween(String value1, String value2) {
+            addCriterion("pics_sign not between", value1, value2, "picsSign");
             return (Criteria) this;
         }
     }

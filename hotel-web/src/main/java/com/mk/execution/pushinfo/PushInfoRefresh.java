@@ -59,7 +59,15 @@ class PushInfoRefresh implements Runnable {
                     case roomTypePrice:
                         roomTypeCopyService.handleRoomTypePrice(body);
                         break;
+                    case hotelFanqie:
+                        hotelCopyService.handleHotelFanqie(body);
+                        break;
 
+                    case roomTypeStatusFanqie:
+                        hotelCopyService.handleRoomStatusFanqie(body);
+                        break;
+                    default:
+                        //TODO
                 }
 
                 JobQueue.getInstance().rem(msg);

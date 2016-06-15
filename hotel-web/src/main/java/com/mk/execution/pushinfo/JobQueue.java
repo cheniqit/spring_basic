@@ -1,5 +1,6 @@
 package com.mk.execution.pushinfo;
 
+import com.dianping.cat.Cat;
 import com.mk.hotel.common.Constant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,21 @@ class JobQueue {
     }
 
 
+    Long getLeftInfo () {
+        Jedis jedis = null;
+        try {
+            jedis = JedisUtil.get();
+            return jedis.scard(Constant.PUSH_INFO_SET);
+        }catch (Exception e){
+            e.printStackTrace();
+            Cat.logError(e);
+        }finally {
+            if ( jedis != null ) {
+                jedis.close();
+            }
+        }
+        return 0l;
+    }
     void push(JobQueueMessage msg) {
         Jedis jedis = null;
         try {
@@ -38,14 +54,12 @@ class JobQueue {
 
         }catch (Exception e){
             e.printStackTrace();
+            Cat.logError(e);
         }finally {
             if ( jedis != null ) {
                 jedis.close();
             }
         }
-
-
-
     }
 
     JobQueueMessage brpop() {
@@ -64,6 +78,7 @@ class JobQueue {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Cat.logError(e);
         } finally {
             if ( jedis != null ) {
                 jedis.close();

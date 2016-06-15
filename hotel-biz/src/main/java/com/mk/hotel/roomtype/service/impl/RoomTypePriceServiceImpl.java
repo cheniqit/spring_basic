@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -29,16 +30,16 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
     @Autowired
     private RoomTypePriceMapper roomTypePriceMapper;
 
-    public int saveOrUpdateByFangId(List<RoomTypePriceDto> roomTypePriceDtoList) {
+    public int saveOrUpdateByFangId(List<RoomTypePriceDto> roomTypePriceDtoList, HotelSourceEnum hotelSourceEnum) {
 
         for (RoomTypePriceDto dto : roomTypePriceDtoList) {
-            this.saveOrUpdateByFangId(dto);
+            this.saveOrUpdateByFangId(dto, hotelSourceEnum);
         }
 
         return 1;
     }
 
-    public int saveOrUpdateByFangId(RoomTypePriceDto roomTypePriceDto) {
+    public int saveOrUpdateByFangId(RoomTypePriceDto roomTypePriceDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypePriceDto) {
             throw new MyException("-99", "-99", "roomTypePriceDto 不可为空");
@@ -47,7 +48,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         //roomType
         RoomTypeDto roomTypeDto =
                 this.roomTypeService.selectByFangId(
-                        roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId());
+                        roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId(), hotelSourceEnum);
         if (null == roomTypeDto) {
             throw new MyException("-99", "-99", "roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId() 错误");
         }

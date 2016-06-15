@@ -96,6 +96,8 @@ public class Hotel {
 
     private String cacheFrom;
 
+    private Integer hotelSource;
+
     public Long getId() {
         return id;
     }
@@ -318,5 +320,13 @@ public class Hotel {
 
     public void setOnline(String online) {
         this.online = online;
+    }
+
+    public Integer getHotelSource() {
+        return hotelSource;
+    }
+
+    public void setHotelSource(Integer hotelSource) {
+        this.hotelSource = hotelSource;
     }
 }

@@ -23,6 +23,8 @@ public class RoomType {
 
     private Integer breakfast;
 
+    private Integer status;
+
     private Integer refund;
 
     private Integer maxRoomNum;
@@ -36,6 +38,8 @@ public class RoomType {
     private String updateBy;
 
     private String isValid;
+
+    private String picsSign;
 
     private String roomTypePics;
 
@@ -92,7 +96,7 @@ public class RoomType {
     }
 
     public void setBedSize(String bedSize) {
-        this.bedSize = bedSize == null ? null : bedSize.trim();
+        this.bedSize = bedSize;
     }
 
     public Integer getRoomNum() {
@@ -117,6 +121,14 @@ public class RoomType {
 
     public void setBreakfast(Integer breakfast) {
         this.breakfast = breakfast;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getRefund() {
@@ -148,7 +160,7 @@ public class RoomType {
     }
 
     public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
+        this.createBy = createBy;
     }
 
     public Date getUpdateDate() {
@@ -164,7 +176,7 @@ public class RoomType {
     }
 
     public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy == null ? null : updateBy.trim();
+        this.updateBy = updateBy;
     }
 
     public String getIsValid() {
@@ -172,7 +184,15 @@ public class RoomType {
     }
 
     public void setIsValid(String isValid) {
-        this.isValid = isValid == null ? null : isValid.trim();
+        this.isValid = isValid;
+    }
+
+    public String getPicsSign() {
+        return picsSign;
+    }
+
+    public void setPicsSign(String picsSign) {
+        this.picsSign = picsSign;
     }
 
     public String getRoomTypePics() {
@@ -180,6 +200,6 @@ public class RoomType {
     }
 
     public void setRoomTypePics(String roomTypePics) {
-        this.roomTypePics = roomTypePics == null ? null : roomTypePics.trim();
+        this.roomTypePics = roomTypePics;
     }
 }

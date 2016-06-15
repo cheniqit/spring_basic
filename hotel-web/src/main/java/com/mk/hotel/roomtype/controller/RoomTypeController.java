@@ -7,6 +7,7 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -128,7 +129,7 @@ public class RoomTypeController {
                 e.printStackTrace();
                 throw new MyException("-99", "-99", "hotelid 格式错误");
             }
-            HotelDto hotelDto = this.hotelService.findByFangId(hotelId);
+            HotelDto hotelDto = this.hotelService.findByFangId(hotelId, HotelSourceEnum.LEZHU);
             if (null == hotelDto) {
                 throw new MyException("-99", "-99", "hotel未找到");
             }

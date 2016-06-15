@@ -65,6 +65,8 @@ public class HotelDto {
 
     private String pic;
 
+    private Integer sourceType;
+
     private String pics;
 
     private List<RoomTypeDto> roomTypeDtoList;
@@ -315,5 +317,13 @@ public class HotelDto {
 
     public void setPics(String pics) {
         this.pics = pics;
+    }
+
+    public Integer getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 }
