@@ -9,6 +9,8 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +30,7 @@ public class FanqielaileRemoteService {
 
     private final String HOTEL_QUERY_STATUS = "/api/queryRoomStatus";
 
+    private Logger logger = LoggerFactory.getLogger(FanqielaileRemoteService.class);
     public SaleList queryHotelList(){
 
         String signAndSoOn = this.getSignAndSoOn();
@@ -66,6 +69,7 @@ public class FanqielaileRemoteService {
 
         InnList response = null;
         if (StringUtils.isNotBlank(remoteResult)) {
+
             response = JsonUtils.fromJson(remoteResult, InnList.class);
         }
 
@@ -91,6 +95,7 @@ public class FanqielaileRemoteService {
         RoomTypeList response = null;
 
         if (StringUtils.isNotBlank(remoteResult)) {
+            logger.info(remoteResult);
             response = JsonUtils.fromJson(remoteResult, RoomTypeList.class);
         }
 
