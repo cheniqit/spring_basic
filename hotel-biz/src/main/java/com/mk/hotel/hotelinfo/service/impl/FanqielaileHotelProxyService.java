@@ -3,6 +3,7 @@ package com.mk.hotel.hotelinfo.service.impl;
 import com.mk.framework.Constant;
 import com.mk.framework.coordinate.Coordinate;
 import com.mk.framework.coordinate.CoordinateUtils;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -34,6 +35,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -306,6 +308,23 @@ public class FanqielaileHotelProxyService {
     }
 
     private String calcPicSign(List<ImgList> imgList) {
+
+        //全刷图片开关,当有值时返回null,全部刷新图片
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String key = jedis.get("fanqieFlushAllPic");
+            if (StringUtils.isNotBlank(key)) {
+                return null;
+            }
+        } catch (Exception e) {
+
+        }finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
 
         if (null == imgList || imgList.isEmpty()) {
             return null;

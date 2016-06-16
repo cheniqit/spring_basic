@@ -229,7 +229,11 @@ public class QiniuUtils {
 				return null;
 			}
 			bao = new ByteArrayOutputStream();
-			ImageIO.write(img, "jpg", bao);
+			if (url.toLowerCase().endsWith("png")) {
+				ImageIO.write(img, "png", bao);
+			} else if (url.toLowerCase().endsWith("jpg")) {
+				ImageIO.write(img, "jpg", bao);
+			}
 
 			//
 			upload(bao.toByteArray(), fileName, bucket);
