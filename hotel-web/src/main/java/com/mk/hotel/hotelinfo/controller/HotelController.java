@@ -3,8 +3,8 @@ package com.mk.hotel.hotelinfo.controller;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.Constant;
-import com.mk.framework.DateUtils;
 import com.mk.hotel.common.bean.PageBean;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
@@ -17,15 +17,18 @@ import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
-import com.mk.hotel.roomtype.bean.PushRoomType;
 import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.bean.PushRoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,9 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ public class HotelController {
     @Autowired
     private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
 
+    private Logger logger = LoggerFactory.getLogger(HotelController.class);
 
     @RequestMapping(value = "/hotelall", method = RequestMethod.POST)
     @ResponseBody
@@ -423,6 +425,56 @@ public class HotelController {
 
         for (String proxyInnJson : proxyInnJsonList) {
             JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.roomTypeStatusFanqie);
+        }
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateHotelIndex")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updateHotelIndex(String hotelIdList) {
+        if(StringUtils.isBlank(hotelIdList)){
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("errMsg", "参数错误");
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        String[] idList = hotelIdList.split(",");
+
+        for (String hotelId : idList) {
+            OtsInterface.initHotel(Long.valueOf(hotelId));
+        }
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/updateHotelIndexAll")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updateHotelIndexAll(Integer hotelSource) {
+        if(hotelSource == null){
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("errMsg", "参数错误");
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        HotelExample example = new HotelExample();
+        example.createCriteria().andSourceTypeEqualTo(hotelSource);
+
+        int pageNo = 1;
+        while (true){
+            List<Hotel> hotelList = hotelService.findHotelByPage(example, pageNo, 1000);
+            if(CollectionUtils.isEmpty(hotelList)){
+                break;
+            }
+            for (Hotel hotel : hotelList) {
+                OtsInterface.initHotel(hotel.getId());
+            }
+            logger.info("updateHotelIndexAll params pagerNo {} end", pageNo);
+            pageNo++;
         }
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();

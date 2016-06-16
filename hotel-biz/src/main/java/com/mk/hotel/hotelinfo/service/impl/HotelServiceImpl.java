@@ -266,6 +266,13 @@ public class HotelServiceImpl implements HotelService {
     }
 
 
+    public List<Hotel> findHotelByPage(HotelExample example, int pageNo, int size){
+        example.setStart((pageNo-1)*size);
+        example.setPageCount(size);
+        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        return hotelList;
+    }
+
     public void mergePmsHotel(){
         //查询pms所有的信息房间列表id
         int pageNo = 1;
