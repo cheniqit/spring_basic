@@ -535,37 +535,39 @@ public class HotelServiceImpl implements HotelService {
         return hotelLandMark;
     }
 
-    public List<String> mergeFanqieHotel (){
+    public List<String> mergeFanqieHotel (Long innId, Long accountId){
 
         List<String> result = new ArrayList<String>();
-        //
-        SaleList saleList = this.fanqielaileRemoteService.queryHotelList();
 
-        if (null == saleList) {
-            return result;
-        }
+        if (null == innId || null == accountId) {
 
-        //
-        List<ProxyInns> proxyInnsList = saleList.getProxyInns();
-        if (null != proxyInnsList) {
+            //
+            SaleList saleList = this.fanqielaileRemoteService.queryHotelList();
 
-            for (ProxyInns proxyInns: proxyInnsList) {
-                String proxyInnJson = JsonUtils.toJson(proxyInns);
-                result.add(proxyInnJson);
+            if (null == saleList) {
+                return result;
             }
+
+            //
+            List<ProxyInns> proxyInnsList = saleList.getProxyInns();
+            if (null != proxyInnsList) {
+
+                for (ProxyInns proxyInns: proxyInnsList) {
+                    String proxyInnJson = JsonUtils.toJson(proxyInns);
+                    result.add(proxyInnJson);
+                }
+            }
+        } else {
+            result.add("{\n" +
+                    "      \"innId\": "+ innId + ",\n" +
+                    "      \"pricePatterns\": [\n" +
+                    "        {\n" +
+                    "          \"pattern\": \"2\",\n" +
+                    "          \"accountId\": " + accountId + "\n" +
+                    "        }\n" +
+                    "      ]\n" +
+                    "    }");
         }
-
-        //for debug
-//        result.add("{\n" +
-//                "      \"innId\": 4831,\n" +
-//                "      \"pricePatterns\": [\n" +
-//                "        {\n" +
-//                "          \"pattern\": \"2\",\n" +
-//                "          \"accountId\": 27941\n" +
-//                "        }\n" +
-//                "      ]\n" +
-//                "    }");
-
         return result;
     }
 

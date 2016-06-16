@@ -650,7 +650,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 int start = pageSize * i;
                 int end = pageSize * (i + 1);
                 example.setStart(start);
-                example.setEnd(end);
+                example.setPageCount(pageSize);
                 //
                 List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
 

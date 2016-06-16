@@ -16,6 +16,8 @@ import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,8 @@ public class RoomTypeController {
 
     @Autowired
     private LogPushService logPushService;
+
+    private static final Logger logger = LoggerFactory.getLogger(RoomTypeController.class);
 
     @RequestMapping(value = "/roomtype", method = RequestMethod.POST)
     @ResponseBody
@@ -358,5 +362,18 @@ public class RoomTypeController {
         }
 
     }
+
+
+    @RequestMapping(value = "/clearStockAndPrice")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> clearStockAndPrice() {
+
+        this.roomTypeService.clearStockAndPrice();
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+
+    }
+
 }
 

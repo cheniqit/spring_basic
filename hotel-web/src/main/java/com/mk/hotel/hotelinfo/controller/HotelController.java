@@ -396,10 +396,10 @@ public class HotelController {
 
     @RequestMapping(value = "/mergeFanqieHotel")
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergeFanqieHotel() {
+    public ResponseEntity<HashMap<String, Object>> mergeFanqieHotel(Long innId, Long accountId) {
 
         //
-        List<String> proxyInnJsonList = this.hotelService.mergeFanqieHotel();
+        List<String> proxyInnJsonList = this.hotelService.mergeFanqieHotel(innId, accountId);
 
         for (String proxyInnJson : proxyInnJsonList) {
             JobManager.addPushInfoToRefreshJob(proxyInnJson, LogPushTypeEnum.hotelFanqie);
