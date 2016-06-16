@@ -209,7 +209,7 @@ public class QiniuUtils {
 
 	public static String upload(String url, String bucket) throws IOException {
 
-		String fileName = UUID.randomUUID().toString();
+		String fileName = UUID.randomUUID().toString().replace("-","");
 		String address = Constant.QINIU_DOWNLOAD_ADDRESS;
 		//check
 		if (org.apache.commons.lang3.StringUtils.isBlank(url)) {
@@ -228,11 +228,14 @@ public class QiniuUtils {
 			if (null == img) {
 				return null;
 			}
+
 			bao = new ByteArrayOutputStream();
 			if (url.toLowerCase().endsWith("png")) {
 				ImageIO.write(img, "png", bao);
+				fileName = fileName + ".png";
 			} else if (url.toLowerCase().endsWith("jpg")) {
 				ImageIO.write(img, "jpg", bao);
+				fileName = fileName + ".jpg";
 			}
 
 			//
@@ -250,5 +253,14 @@ public class QiniuUtils {
 		}
 
 		return null;
+	}
+
+	public static void main(String []args) {
+		try {
+			String s = QiniuUtils.upload("http://img.fanqiele.com/files/wd/1744/1744_0_0.png","hotelpic");
+			System.out.println(s);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
