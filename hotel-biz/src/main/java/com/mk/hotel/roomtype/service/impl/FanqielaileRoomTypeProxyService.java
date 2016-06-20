@@ -164,7 +164,13 @@ public class FanqielaileRoomTypeProxyService {
             roomType.setBedType(bedTypeEnum.getId());
         }
 
-        roomType.setBedSize(String.valueOf(fanqieRoomType.getBedWid()));
+        Integer bedSize = fanqieRoomType.getBedWid();
+        if (null == bedSize) {
+            roomType.setBedSize(null);
+        } else {
+            roomType.setBedSize(String.valueOf(bedSize / 100));
+        }
+
         //0、无早；1、含早
         if (hasBreakfast) {
             roomType.setBreakfast(1);
