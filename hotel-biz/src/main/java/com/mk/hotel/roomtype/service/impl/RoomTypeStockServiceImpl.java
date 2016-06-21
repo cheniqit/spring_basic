@@ -99,7 +99,12 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     public void updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
         if(null == hotel){
-            throw new MyException("-99", "-99", "酒店不存在");
+            Date date = new Date();
+            for (int i =0 ; i<= 30; i++) {
+                Date addDate =  DateUtils.addDays(date, i);
+                updateRedisStock(hotelId, roomTypeId, addDate, 100, promoNum);
+            }
+            return;
         }
 
         RoomTypeDto roomTypeDto = this.roomTypeService.selectById(roomTypeId);
