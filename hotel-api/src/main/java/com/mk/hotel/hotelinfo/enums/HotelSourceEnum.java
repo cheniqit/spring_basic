@@ -5,6 +5,7 @@ public enum HotelSourceEnum {
     LEZHU(1, "LEZHU"),
     OTA(2, "OTA"),
     FANQIE(3, "FANQIE"),
+    CRM(4, "CRM"),
     ;
     private final Integer id;
     private final String name;

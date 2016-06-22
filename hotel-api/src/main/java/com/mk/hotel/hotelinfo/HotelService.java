@@ -27,6 +27,8 @@ public interface HotelService {
 
     void mergePmsHotelByHotelId(Long hotelId);
 
+    HotelDto updateCrmHotel(Long fangId);
+
     void saveOrUpdateByFangId(HotelDto hotelDto, HotelSourceEnum hotelSourceEnum);
 
     List<HotelDto> findHotelByName(String hotelName, String cityCode);

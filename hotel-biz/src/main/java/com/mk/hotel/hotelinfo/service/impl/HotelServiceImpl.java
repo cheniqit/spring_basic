@@ -293,6 +293,10 @@ public class HotelServiceImpl implements HotelService {
         mergePmsHotel(pageNo);
     }
 
+    public HotelDto updateCrmHotel(Long fangId){
+        return this.hotelProxyService.mergeCrmHotel(fangId);
+    }
+
     public void mergePmsHotelByHotelId(Long hotelId){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
         hotelProxyService.mergeHotel(hotel.getFangId());
