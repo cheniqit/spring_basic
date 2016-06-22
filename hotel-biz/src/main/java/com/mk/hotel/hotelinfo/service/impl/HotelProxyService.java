@@ -1,5 +1,6 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -62,6 +63,56 @@ public class HotelProxyService {
         }
     }
 
+    public HotelDto mergeCrmHotel(Long pmsHotelId) {
+        //根据房间列表id查找房间详细信息
+        PmsAuthHeader pmsAuthHeader = new PmsAuthHeader();
+
+        //
+        HotelQueryDetailRequest hotelQueryDetailRequest = new HotelQueryDetailRequest();
+        hotelQueryDetailRequest.setChannelid(pmsAuthHeader.getChannelId());
+        hotelQueryDetailRequest.setHotelid(pmsHotelId.toString());
+
+        //
+        HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryCrmHotel(hotelQueryDetailRequest);
+        if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
+            logger.info(String.format("hotelQueryDetailResponse info is empty"));
+            return null;
+        }
+
+        //根据调用结果更新hotel表
+        HotelDto hotelDto = hotelService.findByFangId(pmsHotelId, HotelSourceEnum.CRM);
+
+        try {
+            //
+            Hotel hotel = convertHotel(hotelQueryDetailResponse, HotelSourceEnum.CRM);
+
+            if(null != hotelDto) {
+                hotel.setId(hotelDto.getId());
+                hotel.setCreateBy(hotelDto.getCreateBy());
+                hotel.setCreateDate(hotelDto.getCreateDate());
+                hotel.setIsValid("T");
+                this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
+
+                //
+                HotelDto dto = new HotelDto();
+                BeanUtils.copyProperties(hotel, dto);
+                return dto;
+            } else {
+                    this.hotelMapper.insert(hotel);
+
+                    //
+                    HotelDto dto = new HotelDto();
+                    BeanUtils.copyProperties(hotel, dto);
+                    return dto;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        return null;
+
+    }
+
     public void mergeHotel(Long pmsHotelId){
         //根据房间列表id查找房间详细信息
         HotelQueryDetailRequest hotelQueryDetailRequest = new HotelQueryDetailRequest();
@@ -93,14 +144,14 @@ public class HotelProxyService {
     }
 
     public Hotel saveHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
-        Hotel hotel = convertHotel(hotelQueryDetailResponse);
+        Hotel hotel = convertHotel(hotelQueryDetailResponse, HotelSourceEnum.LEZHU);
         hotelMapper.insertSelective(hotel);
         hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.saveHotel");
         return hotel;
     }
 
     public Hotel updateHotel(Long hotelId, HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
-        Hotel hotel = convertHotel(hotelQueryDetailResponse);
+        Hotel hotel = convertHotel(hotelQueryDetailResponse, HotelSourceEnum.LEZHU);
         hotel.setId(hotelId);
         HotelExample example = new HotelExample();
         example.createCriteria().andFangIdEqualTo(Long.parseLong(hotelQueryDetailResponse.getData().getHotel().getId()+""));
@@ -109,7 +160,7 @@ public class HotelProxyService {
         return hotel;
     }
 
-    private Hotel convertHotel(HotelQueryDetailResponse hotelQueryDetailResponse) throws Exception {
+    private Hotel convertHotel(HotelQueryDetailResponse hotelQueryDetailResponse, HotelSourceEnum hotelSourceEnum) throws Exception {
         if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
             throw new Exception("参数错误,酒店信息为空");
         }
@@ -156,7 +207,7 @@ public class HotelProxyService {
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
 
-        hotel.setSourceType(HotelSourceEnum.LEZHU.getId());
+        hotel.setSourceType(hotelSourceEnum.getId());
         return hotel;
     }
 }
