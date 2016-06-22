@@ -190,6 +190,11 @@ public class HotelController {
     @RequestMapping(value = "/updateCrmHotel", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateCrmHotel(Long fangId) {
+        if (null == fangId) {
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
         HotelDto dto = this.hotelService.updateCrmHotel(fangId);
 
         //
