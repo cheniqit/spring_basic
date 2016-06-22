@@ -187,9 +187,9 @@ public class HotelController {
         return xstream.toXML(result);
     }
 
-    @RequestMapping(value = "/mergePmsHotel", method = RequestMethod.POST)
+    @RequestMapping(value = "/mergeCrmHotel", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergePmsHotel(Long fangId) {
+    public ResponseEntity<HashMap<String, Object>> mergeCrmHotel(Long fangId) {
         HotelDto dto = this.hotelService.mergeCrmHotel(fangId);
 
         //
