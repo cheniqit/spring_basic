@@ -16,6 +16,8 @@ import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
+import com.mk.hotel.roomtype.RoomTypeService;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
@@ -48,6 +50,8 @@ public class HotelProxyService {
     @Autowired
     private HotelServiceImpl hotelService;
 
+    @Autowired
+    private RoomTypeService roomTypeService;
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
 
@@ -74,7 +78,7 @@ public class HotelProxyService {
 
         //
         HotelQueryDetailResponse hotelQueryDetailResponse = hotelRemoteService.queryCrmHotel(hotelQueryDetailRequest);
-        if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
+        if (hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null) {
             logger.info(String.format("hotelQueryDetailResponse info is empty"));
             return null;
         }
@@ -86,7 +90,7 @@ public class HotelProxyService {
             //
             Hotel hotel = convertHotel(hotelQueryDetailResponse, HotelSourceEnum.CRM);
 
-            if(null != hotelDto) {
+            if (null != hotelDto) {
                 hotel.setId(hotelDto.getId());
                 hotel.setCreateBy(hotelDto.getCreateBy());
                 hotel.setCreateDate(hotelDto.getCreateDate());
@@ -98,12 +102,22 @@ public class HotelProxyService {
                 BeanUtils.copyProperties(hotel, dto);
                 return dto;
             } else {
-                    this.hotelMapper.insert(hotel);
+                this.hotelMapper.insert(hotel);
 
-                    //
-                    HotelDto dto = new HotelDto();
-                    BeanUtils.copyProperties(hotel, dto);
-                    return dto;
+                //增加 客房
+                RoomTypeDto roomTypeDto = new RoomTypeDto();
+                roomTypeDto.setFangId(1l);
+                roomTypeDto.setFangHotelId(hotel.getFangId());
+                roomTypeDto.setName("客房");
+                roomTypeDto.setIsValid("T");
+                roomTypeDto.setCreateBy(Constant.SYSTEM_USER_NAME);
+                roomTypeDto.setUpdateDate(new Date());
+
+                roomTypeService.saveOrUpdateByFangId(roomTypeDto, HotelSourceEnum.CRM);
+                //
+                HotelDto dto = new HotelDto();
+                BeanUtils.copyProperties(hotel, dto);
+                return dto;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,7 +185,7 @@ public class HotelProxyService {
         hotel.setName(hotelInfo.getHotelname());
         hotel.setAddr(hotelInfo.getDetailaddr());
         hotel.setPhone(hotelInfo.getHotelphone());
-        hotel.setPic(hotelInfo.getHotelpics());
+        hotel.setPic(hotelInfo.getHotelpic());
         hotel.setLat(new BigDecimal(hotelInfo.getLatitude()));
         hotel.setLon(new BigDecimal(hotelInfo.getLongitude()));
         hotel.setDefaultLeaveTime(hotelInfo.getDefaultleavetime());

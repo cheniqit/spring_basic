@@ -187,10 +187,10 @@ public class HotelController {
         return xstream.toXML(result);
     }
 
-    @RequestMapping(value = "/mergeCrmHotel", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateCrmHotel", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> mergeCrmHotel(Long fangId) {
-        HotelDto dto = this.hotelService.mergeCrmHotel(fangId);
+    public ResponseEntity<HashMap<String, Object>> updateCrmHotel(Long fangId) {
+        HotelDto dto = this.hotelService.updateCrmHotel(fangId);
 
         //
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
@@ -200,7 +200,7 @@ public class HotelController {
             result.put("success", "T");
             result.put("id", dto.getId());
             result.put("name", dto.getName());
-            result.put("pics", dto.getPics());
+            result.put("pic", dto.getPic());
         }
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }

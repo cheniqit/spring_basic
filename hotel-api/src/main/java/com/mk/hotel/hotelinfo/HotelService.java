@@ -27,7 +27,7 @@ public interface HotelService {
 
     void mergePmsHotelByHotelId(Long hotelId);
 
-    HotelDto mergeCrmHotel(Long fangId);
+    HotelDto updateCrmHotel(Long fangId);
 
     void saveOrUpdateByFangId(HotelDto hotelDto, HotelSourceEnum hotelSourceEnum);
 
