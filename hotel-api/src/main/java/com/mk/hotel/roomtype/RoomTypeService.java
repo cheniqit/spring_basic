@@ -41,4 +41,6 @@ public interface RoomTypeService {
     void mergeRoomTypeByHotelId(Long hotelId);
 
     void clearStockAndPrice();
+
+    RoomTypeDto selectByHotelId(Long hotelId);
 }

@@ -118,6 +118,27 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
+    public RoomTypeDto selectByHotelId(Long hotelId) {
+        if (null == hotelId) {
+            throw new MyException("-99", "-99", "hotelId 不可为空");
+        }
+        //
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId);
+        //
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+        if (roomTypeList.isEmpty()) {
+            return null;
+        }
+        RoomType roomType = roomTypeList.get(0);
+
+        //
+        RoomTypeDto dto = new RoomTypeDto();
+        BeanUtils.copyProperties(roomType, dto);
+
+        return dto;
+    }
+
     public RoomTypeDto selectByFangId(Long fangRoomTypeId, Long hotelId) {
         if (null == fangRoomTypeId) {
             throw new MyException("-99", "-99", "fangId 不可为空");
