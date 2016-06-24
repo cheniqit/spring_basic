@@ -108,7 +108,7 @@
       order by ${orderByClause}
     </if>
 
-    <if test="start != null" >
+    <if test="start != null and pageCount != 0" >
       limit ${start},${pageCount}
     </if>
   </select>
@@ -126,7 +126,7 @@
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
-    <if test="start != null" >
+    <if test="start != null and pageCount != 0" >
       limit ${start},${pageCount}
     </if>
   </select>
