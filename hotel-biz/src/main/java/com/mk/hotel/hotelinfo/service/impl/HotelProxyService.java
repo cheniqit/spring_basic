@@ -89,14 +89,17 @@ public class HotelProxyService {
         try {
             //
             Hotel hotel = convertHotel(hotelQueryDetailResponse, HotelSourceEnum.CRM);
+            hotel.setIsValid("F");
 
             if (null != hotelDto) {
                 hotel.setId(hotelDto.getId());
                 hotel.setCreateBy(hotelDto.getCreateBy());
                 hotel.setCreateDate(hotelDto.getCreateDate());
-                hotel.setIsValid("T");
+                hotel.setIsValid("F");
                 this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
 
+                hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.mergeCrmHotel");
+                OtsInterface.initHotel(hotel.getId());
                 //
                 HotelDto dto = new HotelDto();
                 BeanUtils.copyProperties(hotel, dto);
@@ -114,6 +117,8 @@ public class HotelProxyService {
                 roomTypeDto.setUpdateDate(new Date());
 
                 roomTypeService.saveOrUpdateByFangId(roomTypeDto, HotelSourceEnum.CRM);
+                hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelProxyService.mergeCrmHotel");
+                OtsInterface.initHotel(hotel.getId());
                 //
                 HotelDto dto = new HotelDto();
                 BeanUtils.copyProperties(hotel, dto);
