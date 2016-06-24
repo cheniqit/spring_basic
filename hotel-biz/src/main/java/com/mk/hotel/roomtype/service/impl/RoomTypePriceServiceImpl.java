@@ -134,4 +134,10 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             }
         }
     }
+
+    public List<RoomTypePrice> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){
+        RoomTypePriceExample example = new RoomTypePriceExample();
+        example.createCriteria().andDayBetween(fromDate, toDate).andRoomTypeIdEqualTo(roomTypeId);
+        return roomTypePriceMapper.selectByExample(example);
+    }
 }
