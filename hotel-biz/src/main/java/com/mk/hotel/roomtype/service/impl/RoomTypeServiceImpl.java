@@ -18,6 +18,7 @@ import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
+import com.mk.hotel.remote.hawk.HawkRemoteService;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
@@ -66,6 +67,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private RoomTypeProxyService roomTypeProxyService;
     @Autowired
     private HotelPicServiceImpl hotelPicService;
+
+    @Autowired
+    private HawkRemoteService hawkRemoteService;
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
@@ -207,6 +211,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 roomType.setUpdateBy("hotel_system");
                 this.roomTypeMapper.updateByPrimaryKeySelective(roomType);
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.deleteByHotelId");
+
+                //通知hawk
+                hawkRemoteService.hotelOffline(roomType.getId());
             }
         }
 

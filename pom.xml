@@ -340,6 +340,10 @@
                 <!--ots -->
                 <ots.domain>http://huidu.imike.cn</ots.domain>
                 <!--ots -->
+
+                <!--hawk -->
+                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <!--hawk -->
             </properties>
         </profile>
 
@@ -392,6 +396,10 @@
                 <!--ots -->
                 <ots.domain>http://huidu.imike.cn</ots.domain>
                 <!--ots -->
+
+                <!--hawk -->
+                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <!--hawk -->
             </properties>
         </profile>
 
@@ -441,6 +449,10 @@
                 <!--ots -->
                 <ots.domain>http://api.imike.com</ots.domain>
                 <!--ots -->
+
+                <!--hawk -->
+                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <!--hawk -->
             </properties>
         </profile>
 

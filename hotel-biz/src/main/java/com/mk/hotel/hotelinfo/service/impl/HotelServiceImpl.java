@@ -32,6 +32,7 @@ import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomDetailList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomTypeList;
+import com.mk.hotel.remote.hawk.HawkRemoteService;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryListResponse;
@@ -85,6 +86,9 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
 
+    @Autowired
+    private HawkRemoteService hawkRemoteService;
+
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     private static List<LandMark> allLandMarkList = new ArrayList<LandMark>();
@@ -116,6 +120,11 @@ public class HotelServiceImpl implements HotelService {
 
             this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
             this.updateRedisHotel(hotel.getId(), hotel, "HotelService.deleteByFangId");
+
+            //若是乐住的酒店,通知hawk
+            if (HotelSourceEnum.LEZHU.getId().equals(hotel.getSourceType())) {
+                hawkRemoteService.hotelOffline(hotel.getId());
+            }
         }
 
     }
