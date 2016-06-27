@@ -3,6 +3,7 @@ package com.mk.hotel.roomtype.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
+import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -15,6 +16,9 @@ import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.model.RoomTypePrice;
+import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
+import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/roomtype", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +44,7 @@ public class RoomTypeController {
     private RoomTypeService roomTypeService;
 
     @Autowired
-    private RoomTypePriceService roomTypePriceService;
+    private RoomTypePriceServiceImpl roomTypePriceService;
 
     @Autowired
     private LogPushService logPushService;
@@ -401,5 +402,17 @@ public class RoomTypeController {
 
     }
 
+    @RequestMapping(value = "/getRoomTypePrice")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> getRoomTypePrice(Long roomTypeId, String fromDate, String toDate) {
+        List<RoomTypePrice>  roomTypePriceList = roomTypePriceService.getRoomTypePrice(roomTypeId,
+                DateUtils.getDateFromString(fromDate, DateUtils.FORMAT_DATE),
+                DateUtils.getDateFromString(toDate, DateUtils.FORMAT_DATE));
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        result.put("roomTypePriceList", roomTypePriceList);
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+
+    }
 }
 
