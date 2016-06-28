@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
@@ -195,7 +196,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         Hotel hotel = this.hotelMapper.selectByPrimaryKey(hotelId);
-        if (null == hotel) {
+        if (null == hotel || HotelSourceEnum.LEZHU.getId().equals(hotel.getSourceType())) {
             return result;
         }
 
