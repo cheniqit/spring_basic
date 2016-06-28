@@ -12,15 +12,20 @@ import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
+import com.mk.hotel.roomtype.model.RoomTypeStock;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -173,5 +178,65 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 jedis.close();
             }
         }
+    }
+
+
+    public List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end) {
+
+        List<StockInfoDto> result = new ArrayList<StockInfoDto>();
+        if (null == roomTypeId || null == begin || null == end) {
+            return result;
+        }
+
+        //
+        Long hotelId = this.roomTypeService.getHotelIdByRedis(roomTypeId);
+        if (null == hotelId) {
+            return result;
+        }
+
+        Hotel hotel = this.hotelMapper.selectByPrimaryKey(hotelId);
+        if (null == hotel) {
+            return result;
+        }
+
+        //
+        QueryStockRequest queryStockRequest = new QueryStockRequest();
+        queryStockRequest.setHotelid(hotel.getFangId().toString());
+        queryStockRequest.setBegintime(DateUtils.formatDateTime(begin, DateUtils.FORMAT_DATE));
+        queryStockRequest.setEndtime(DateUtils.formatDateTime(end, DateUtils.FORMAT_DATE));
+
+        //
+        QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
+
+        if (null == response) {
+            return result;
+        }
+
+        QueryStockResponse.Roominfo roominfo = response.getData();
+        if (null == roominfo) {
+            return result;
+        }
+        List<QueryStockResponse.Roomtypestocks>  roomtypestocksList = roominfo.getRoomtypestocks();
+        if (null == roomtypestocksList || roomtypestocksList.isEmpty()) {
+            return result;
+        }
+
+        //
+        for (QueryStockResponse.Roomtypestocks roomtypestocks : roomtypestocksList) {
+            int responseRoomTypeId = roomtypestocks.getRoomtypeid();
+            if (roomTypeId.intValue() == responseRoomTypeId) {
+                List<QueryStockResponse.Stockinfos> stockList = roomtypestocks.getStockinfos();
+                for (QueryStockResponse.Stockinfos stockinfo : stockList) {
+                    StockInfoDto infoDto = new StockInfoDto();
+                    BeanUtils.copyProperties(stockinfo, infoDto);
+                    result.add(infoDto);
+                }
+                return result;
+            }
+
+        }
+
+        return result;
+
     }
 }
