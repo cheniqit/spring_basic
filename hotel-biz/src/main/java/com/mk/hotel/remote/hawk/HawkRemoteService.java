@@ -25,9 +25,6 @@ public class HawkRemoteService {
     private final String HOTEL_OFFLINE = "/hotelcallback/hoteloffline";
     private final String ROOMTYPE_OFFLINE = "/hotelcallback/roomtypeoffline";
     private final String ORDER_NOTIFY = "/order/orderNotify";
-    private final String ORDER_NOTIFY_1_MINUTE_JOB = "/order/orderNotify1MinuteJob";
-    private final String ORDER_NOTIFY_5_MINUTE_JOB = "/order/orderNotify5MinuteJob";
-    private final String ORDER_NOTIFY_15_MINUTE_JOB = "/order/orderNotify15MinuteJob";
 
     private Logger logger = LoggerFactory.getLogger(HawkRemoteService.class);
 
@@ -90,30 +87,5 @@ public class HawkRemoteService {
         return remoteResult;
     }
 
-    public String orderNotify1MinuteJob() {
-        StringBuilder url = new StringBuilder()
-                .append(DOMAIN)
-                .append(ORDER_NOTIFY_1_MINUTE_JOB);
-        Map<String, String> param = new HashMap();
-        String remoteResult = HttpUtils.doPost(url.toString(), param);
-        return remoteResult;
-    }
-    public String orderNotify5MinuteJob() {
-        StringBuilder url = new StringBuilder()
-                .append(DOMAIN)
-                .append(ORDER_NOTIFY_5_MINUTE_JOB);
-        Map<String, String> param = new HashMap();
-        String remoteResult = HttpUtils.doPost(url.toString(), param);
-        return remoteResult;
-    }
-
-    public String orderNotify15MinuteJob() {
-        StringBuilder url = new StringBuilder()
-                .append(DOMAIN)
-                .append(ORDER_NOTIFY_15_MINUTE_JOB);
-        Map<String, String> param = new HashMap();
-        String remoteResult = HttpUtils.doPost(url.toString(), param);
-        return remoteResult;
-    }
 
 }
