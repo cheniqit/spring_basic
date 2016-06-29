@@ -190,13 +190,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         //
-        Long hotelId = this.roomTypeService.getHotelIdByRedis(roomTypeId);
-        if (null == hotelId) {
+        RoomTypeDto roomTypeDto = roomTypeService.selectById(roomTypeId);
+        if (null == roomTypeDto) {
             return result;
         }
 
-        Hotel hotel = this.hotelMapper.selectByPrimaryKey(hotelId);
-        if (null == hotel || HotelSourceEnum.LEZHU.getId().equals(hotel.getSourceType())) {
+        Hotel hotel = this.hotelMapper.selectByPrimaryKey(roomTypeDto.getHotelId());
+        if (null == hotel || !HotelSourceEnum.LEZHU.getId().equals(hotel.getSourceType())) {
             return result;
         }
 
@@ -225,7 +225,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         //
         for (QueryStockResponse.Roomtypestocks roomtypestocks : roomtypestocksList) {
             int responseRoomTypeId = roomtypestocks.getRoomtypeid();
-            if (roomTypeId.intValue() == responseRoomTypeId) {
+            if (roomTypeDto.getFangId().intValue() == responseRoomTypeId) {
                 List<QueryStockResponse.Stockinfos> stockList = roomtypestocks.getStockinfos();
                 for (QueryStockResponse.Stockinfos stockinfo : stockList) {
                     StockInfoDto infoDto = new StockInfoDto();
