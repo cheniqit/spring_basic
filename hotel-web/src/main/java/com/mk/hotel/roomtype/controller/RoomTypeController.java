@@ -20,6 +20,7 @@ import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -390,12 +392,44 @@ public class RoomTypeController {
 
     }
 
-
     @RequestMapping(value = "/clearStockAndPrice")
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> clearStockAndPrice() {
 
         this.roomTypeService.clearStockAndPrice();
+        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/fullStock")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> fullStock(Long hotelId, Long roomTypeId, String fromDate, String toDate) {
+
+        if (null == hotelId || null == roomTypeId || StringUtils.isBlank(fromDate) || StringUtils.isBlank(toDate)) {
+            throw new MyException("参数错误");
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date from = null;
+        Date to = null;
+        try {
+            from = format.parse(fromDate);
+            to = format.parse(toDate);
+        } catch (Exception e) {
+            throw new MyException("日期参数应为 yyyy-MM-dd ");
+        }
+
+        //若开始时间晚于结束时间
+        if (from.after(to)) {
+            throw new MyException("开始时间晚于结束时间 ");
+        }
+
+        //
+        this.roomTypeStockService.fullStock(hotelId, roomTypeId, from, to);
+
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);

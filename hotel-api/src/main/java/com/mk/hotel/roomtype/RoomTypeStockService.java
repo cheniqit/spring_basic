@@ -44,4 +44,13 @@ public interface RoomTypeStockService {
      */
     void updatePromoRedisStock(Long hotelId, Long roomTypeId, Integer promoNum);
 
+    /**
+     * 库存满
+     * @param hotelId
+     * @param roomTypeId
+     * @param from 开始日期
+     * @param to 结束日期
+     */
+    void fullStock(Long hotelId, Long roomTypeId, Date from, Date to);
+
 }

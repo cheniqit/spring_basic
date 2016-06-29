@@ -174,4 +174,32 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
         }
     }
+
+    public void fullStock(Long hotelId, Long roomTypeId, Date from, Date to) {
+
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+
+        try {
+            //lock
+            for (Date day : dates) {
+                this.lock(String.valueOf(hotelId), String.valueOf(roomTypeId), day, RoomTypeStockService.LOCK_TIIME,
+                        RoomTypeStockService.MAX_WAIT_TIME_OUT);
+            }
+
+            //full
+            for (Date day : dates) {
+                    this.updateRedisStock(
+                            hotelId,
+                            roomTypeId,
+                            day,
+                            0,
+                            0);
+            }
+        } finally {
+            //unlock
+            for (Date day : dates) {
+                this.unlock(String.valueOf(hotelId), String.valueOf(roomTypeId), day);
+            }
+        }
+    }
 }
