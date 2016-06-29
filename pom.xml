@@ -342,7 +342,7 @@
                 <!--ots -->
 
                 <!--hawk -->
-                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <hawk.domain>http://api.imike.cn/open</hawk.domain>
                 <!--hawk -->
             </properties>
         </profile>
@@ -398,7 +398,7 @@
                 <!--ots -->
 
                 <!--hawk -->
-                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <hawk.domain>http://api.imike.cn/open</hawk.domain>
                 <!--hawk -->
             </properties>
         </profile>
@@ -451,7 +451,7 @@
                 <!--ots -->
 
                 <!--hawk -->
-                <hawk.domain>http://hawk.imike.cn</hawk.domain>
+                <hawk.domain>http://api.imike.com/open</hawk.domain>
                 <!--hawk -->
             </properties>
         </profile>

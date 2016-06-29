@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class HawkRemoteService {
 
-    private String DOMAIN = UrlUtils.getUrl("fanqielaile.domain");
+    private String DOMAIN = UrlUtils.getUrl("hawk.domain");
 
     private final String HOTEL_OFFLINE = "/hotelcallback/hoteloffline";
     private final String ROOMTYPE_OFFLINE = "/hotelcallback/roomtypeoffline";
