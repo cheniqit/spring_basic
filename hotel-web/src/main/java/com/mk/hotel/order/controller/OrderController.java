@@ -62,6 +62,7 @@ public class OrderController {
                 OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
             }
             if(PmsOrderStatusEnum.channelCanceled.getCode().equals(pmsOrderStatus)
+                    || PmsOrderStatusEnum.pmsFullStock.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.pmsCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.customerServiceCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.serviceCanceled.getCode().equals(pmsOrderStatus)){

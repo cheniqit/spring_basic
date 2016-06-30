@@ -12,6 +12,7 @@ public enum PmsOrderStatusEnum {
      * 已经客服确认，等待老板确认
      */
     waitingBossConfirmed(5, "已经客服确认，等待老板确认"),
+    pmsFullStock(7, "pms满房"),
     // /**
     // * 确认中
     // */
