@@ -18,7 +18,7 @@ public class FileControllerTest {
     @Test
     public void testUpload() throws Exception {
         File f = new File("/Users/chenqi/Desktop/827_151228114203_1.png");
-        PostMethod filePost = new PostMethod( "http://localhost:9060/file/upload?picType=1&hotelId=1470&updateBy=1&fileName=11.jpg");
+        PostMethod filePost = new PostMethod( "http://localhost:9080/file/upload?picType=1&hotelId=1470&updateBy=1&fileName=11.jpg");
         Part[] parts = { new FilePart("filename", f)
         };
         filePost.setRequestEntity(new MultipartRequestEntity(parts, filePost .getParams()));

@@ -16,6 +16,8 @@ public enum LogPushTypeEnum {
 
 	roomTypeStatusFanqie(300l,"房态(番茄)"),
 
+	updateRoomTypePrice(400l,"房价更新"),
+
 	orderStatus(900l,"订单状态(房爸爸)"),
 	other(999l,"其他"),
 	;

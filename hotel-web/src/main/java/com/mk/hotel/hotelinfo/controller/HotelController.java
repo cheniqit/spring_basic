@@ -18,6 +18,7 @@ import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.Result;
+import com.mk.hotel.remote.dog.TaskFactoryRemoteService;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,6 +72,8 @@ public class HotelController {
     private HotelPicServiceImpl hotelPicService;
     @Autowired
     private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
+    @Autowired
+    private TaskFactoryRemoteService taskFactoryRemoteService;
 
     private Logger logger = LoggerFactory.getLogger(HotelController.class);
 
@@ -499,6 +503,33 @@ public class HotelController {
             pageNo++;
         }
 
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateHotelPrice")
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updateHotelPrice(Long hotelId, Long roomTypeId, BigDecimal price) {
+        if(hotelId == null || roomTypeId == null || price == null){
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("errMsg", "参数错误");
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        try {
+            //log
+            LogPushDto logPushDto = new LogPushDto();
+            logPushDto.setMsg(hotelId+"|"+roomTypeId+"|"+price);
+            logPushDto.setType(LogPushTypeEnum.updateRoomTypePrice.getId());
+
+            this.logPushService.save(logPushDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+        taskFactoryRemoteService.updateHotelPrice(hotelId.toString(), roomTypeId.toString(), price.toString());
+        OtsInterface.initHotel(hotelId);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
