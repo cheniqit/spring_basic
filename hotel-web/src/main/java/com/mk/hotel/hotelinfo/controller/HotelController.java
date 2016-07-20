@@ -529,7 +529,6 @@ public class HotelController {
             Cat.logError(e);
         }
         taskFactoryRemoteService.updateHotelPrice(hotelId.toString(), roomTypeId.toString(), price.toString());
-        OtsInterface.initHotel(hotelId);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
