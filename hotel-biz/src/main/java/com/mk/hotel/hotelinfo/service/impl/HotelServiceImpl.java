@@ -13,6 +13,7 @@ import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelCacheEnum;
+import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelFanqieMappingMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -354,6 +355,11 @@ public class HotelServiceImpl implements HotelService {
                     picList = hotelPicService.replacePicList(hotelId, null, picList);
                     picLists.add(picList);
                 }
+            }else{
+                PicList picList = new PicList();
+                picList.setName(HotelPicTypeEnum.def.getPmsPicCode());
+                picList = hotelPicService.replacePicList(hotelId, null, picList);
+                picLists.add(picList);
             }
 
             //hotel type
