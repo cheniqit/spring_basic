@@ -541,7 +541,7 @@ public class HotelController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getLandMark", method = RequestMethod.GET)
+    @RequestMapping(value = "/getLandMark", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HotelLandMark> updateHotelPrice(Double lon, Double lat) {
         if(lon == null || lat == null){
