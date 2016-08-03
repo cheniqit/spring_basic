@@ -3,9 +3,11 @@ package com.mk.hotel.hotelinfo.controller;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.Constant;
+import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
+import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -23,6 +25,9 @@ import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
+import com.mk.ots.mapper.LandMarkMapper;
+import com.mk.ots.model.LandMark;
+import com.mk.ots.model.LandMarkExample;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.collections.CollectionUtils;
@@ -74,6 +79,8 @@ public class HotelController {
     private FanqielaileRoomTypeProxyService fanqielaileRoomTypeProxyService;
     @Autowired
     private TaskFactoryRemoteService taskFactoryRemoteService;
+    @Autowired
+    private LandMarkMapper landMarkMapper;
 
     private Logger logger = LoggerFactory.getLogger(HotelController.class);
 
@@ -532,5 +539,24 @@ public class HotelController {
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getLandMark", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<HotelLandMark> updateHotelPrice(Double lon, Double lat) {
+        if(lon == null || lat == null){
+            throw new MyException("参数错误");
+        }
+        if(org.springframework.util.CollectionUtils.isEmpty(hotelService.getAllLandMarkList())){
+            LandMarkExample example = new LandMarkExample();
+            List<LandMark> landMarks = landMarkMapper.selectByExample(example);
+            hotelService.setAllLandMarkList(landMarks);
+        }
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(
+                lon,
+                lat,
+                Constant.HOTEL_TO_HOT_AREA_DISTANCE,
+                hotelService.getAllLandMarkList());
+        return new ResponseEntity<HotelLandMark>(hotelLandMark, HttpStatus.OK);
     }
 }
