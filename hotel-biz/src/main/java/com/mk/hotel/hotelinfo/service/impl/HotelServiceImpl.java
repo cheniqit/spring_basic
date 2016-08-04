@@ -348,12 +348,17 @@ public class HotelServiceImpl implements HotelService {
             String strPics = hotel.getPic();
             List<PicList> picLists = new ArrayList<PicList>();
             if (StringUtils.isNotBlank(strPics) ) {
-                JSONArray picArray = JSONArray.parseArray(strPics);
-                for (int i = 0; i < picArray.size(); i++) {
-                    String strPic = picArray.getString(i);
-                    PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                    picList = hotelPicService.replacePicList(hotelId, null, picList);
-                    picLists.add(picList);
+                try {
+                    JSONArray picArray = JSONArray.parseArray(strPics);
+                    for (int i = 0; i < picArray.size(); i++) {
+                        String strPic = picArray.getString(i);
+                        PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                        picList = hotelPicService.replacePicList(hotelId, null, picList);
+                        picLists.add(picList);
+                    }
+                } catch (Exception e) {
+                    logger.info("strPics error :{}", strPics);
+                    Cat.logError(e);
                 }
             }else{
                 PicList picList = new PicList();
