@@ -362,6 +362,7 @@ public class HotelServiceImpl implements HotelService {
                         picList.setPic(pic);
                         picList.setName(HotelPicTypeEnum.def.getPmsPicCode());
                         picLists.add(picList);
+
                     }else{
                         JSONArray picArray = JSONArray.parseArray(strPics);
                         for (int i = 0; i < picArray.size(); i++) {
