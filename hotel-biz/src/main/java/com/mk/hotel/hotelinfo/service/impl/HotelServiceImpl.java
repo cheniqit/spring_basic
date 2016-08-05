@@ -7,6 +7,7 @@ import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.redisbean.Pic;
 import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -349,12 +350,26 @@ public class HotelServiceImpl implements HotelService {
             List<PicList> picLists = new ArrayList<PicList>();
             if (StringUtils.isNotBlank(strPics) ) {
                 try {
-                    JSONArray picArray = JSONArray.parseArray(strPics);
-                    for (int i = 0; i < picArray.size(); i++) {
-                        String strPic = picArray.getString(i);
-                        PicList picList = JsonUtils.fromJson(strPic, PicList.class);
-                        picList = hotelPicService.replacePicList(hotelId, null, picList);
+                    if(strPics.startsWith("http")){
+                        PicList picList = new PicList();
+                        List<Pic> pic = new ArrayList<>();
+                        String[] picArr = strPics.split(",");
+                        for(String p : picArr){
+                            Pic pic1 = new Pic();
+                            pic1.setUrl(p);
+                            pic.add(pic1);
+                        }
+                        picList.setPic(pic);
+                        picList.setName(HotelPicTypeEnum.def.getPmsPicCode());
                         picLists.add(picList);
+                    }else{
+                        JSONArray picArray = JSONArray.parseArray(strPics);
+                        for (int i = 0; i < picArray.size(); i++) {
+                            String strPic = picArray.getString(i);
+                            PicList picList = JsonUtils.fromJson(strPic, PicList.class);
+                            picList = hotelPicService.replacePicList(hotelId, null, picList);
+                            picLists.add(picList);
+                        }
                     }
                 } catch (Exception e) {
                     logger.info("strPics error :{}", strPics);
