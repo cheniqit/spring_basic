@@ -352,7 +352,7 @@ public class HotelServiceImpl implements HotelService {
                 try {
                     if(strPics.startsWith("http")){
                         PicList picList = new PicList();
-                        List<Pic> pic = new ArrayList<>();
+                        List<Pic> pic = new ArrayList<Pic>();
                         String[] picArr = strPics.split(",");
                         for(String p : picArr){
                             Pic pic1 = new Pic();
