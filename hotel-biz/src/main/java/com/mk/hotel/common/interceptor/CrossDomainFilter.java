@@ -29,6 +29,7 @@ public class CrossDomainFilter implements Filter {
 		request.setAttribute("startTime", startTime);
 
 		String url = ((HttpServletRequest) request).getRequestURI();
+		((HttpServletResponse)response).setHeader("Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization, Accept, X-Requested-With, token");
 		if (this.matchCrossDomainPatterns(((HttpServletRequest) request).getContextPath(), url)) {
 			((HttpServletResponse)response).setHeader("Access-Control-Allow-Origin", "*");
 			((HttpServletResponse)response).setHeader("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE");
