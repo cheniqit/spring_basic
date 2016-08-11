@@ -32,8 +32,11 @@ import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
+import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
+import com.mk.hotel.roomtype.model.RoomTypePrice;
+import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -70,6 +73,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Autowired
     private HawkRemoteService hawkRemoteService;
+    @Autowired
+    private RoomTypePriceServiceImpl roomTypePriceService;
+    @Autowired
+    private RoomTypeStockServiceImpl roomTypeStockService;
+    @Autowired
+    private RoomTypeStockMapper roomTypeStockMapper;
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
@@ -122,6 +131,18 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         return dto;
     }
 
+
+    public RoomType selectRoomTypeById(Long roomTypeId) {
+        if (null == roomTypeId) {
+            throw new MyException("-99", "-99", "roomTypeId 不可为空");
+        }
+        //
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andIdEqualTo(roomTypeId);
+        //
+        return this.roomTypeMapper.selectByPrimaryKey(roomTypeId);
+    }
+
     public RoomTypeDto selectByHotelId(Long hotelId) {
         if (null == hotelId) {
             throw new MyException("-99", "-99", "hotelId 不可为空");
@@ -142,6 +163,19 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
         return dto;
     }
+
+
+    public List<RoomType> selectRoomTypeByHotelId(Long hotelId) {
+        if (null == hotelId) {
+            throw new MyException("-99", "-99", "hotelId 不可为空");
+        }
+        //
+        RoomTypeExample roomTypeExample = new RoomTypeExample();
+        roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId);
+        //
+        return this.roomTypeMapper.selectByExample(roomTypeExample);
+    }
+
 
     public RoomTypeDto selectByFangId(Long fangRoomTypeId, Long hotelId) {
         if (null == fangRoomTypeId) {
@@ -749,6 +783,24 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    public void updateRoomTypeToRedis(Long hotelId, Long roomTypeId){
+        RoomType roomType = selectRoomTypeById(roomTypeId);
+        //房型信息
+        this.updateRedisRoomType(roomTypeId, roomType, "RoomTypeService.updateRoomTypeToRedis");
+        List<RoomTypePrice> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
+        //酒店价格
+        for(RoomTypePrice roomTypePrice : roomTypePriceList){
+            roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(), roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), "RoomTypeService.updateRoomTypeToRedis");
+        }
+        List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
+        //库存
+        for(RoomTypeStock roomTypeStock : roomTypeStockList){
+            roomTypeStockService.updateRedisStock(hotelId, roomTypeId,
+                    roomTypeStock.getDay(), roomTypeStock.getNumber().intValue(), 0);
         }
     }
 }

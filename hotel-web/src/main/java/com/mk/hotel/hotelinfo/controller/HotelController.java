@@ -5,6 +5,7 @@ import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.bean.PageBean;
+import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
@@ -21,13 +22,18 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.remote.dog.TaskFactoryRemoteService;
+import com.mk.hotel.remote.dog.common.HotelCommonResponse;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
+import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
+import com.sun.javafx.tools.packager.CommonParams;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.collections.CollectionUtils;
@@ -81,6 +87,8 @@ public class HotelController {
     private TaskFactoryRemoteService taskFactoryRemoteService;
     @Autowired
     private LandMarkMapper landMarkMapper;
+    @Autowired
+    private RoomTypeServiceImpl roomTypeService;
 
     private Logger logger = LoggerFactory.getLogger(HotelController.class);
 
@@ -558,5 +566,23 @@ public class HotelController {
                 Constant.HOTEL_TO_HOT_AREA_DISTANCE,
                 hotelService.getAllLandMarkList());
         return new ResponseEntity<HotelLandMark>(hotelLandMark, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateHotelToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HotelCommonResponse> updateHotelPrice(Long hotelId, Long roomTypeId) {
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        hotelService.updateRedisHotel(hotelId, hotel, "HotelController.updateHotelPrice");
+        if(roomTypeId == null){
+            List<RoomType>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
+            for(RoomType roomType : roomTypeList){
+                roomTypeService.updateRoomTypeToRedis(hotelId, roomType.getId());
+            }
+        }else{
+            roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
+        }
+        HotelCommonResponse commonResponse = new HotelCommonResponse();
+        commonResponse.setSuccess(ValidEnum.VALID.getCode());
+        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
     }
 }

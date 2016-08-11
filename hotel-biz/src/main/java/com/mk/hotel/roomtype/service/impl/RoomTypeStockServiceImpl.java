@@ -13,6 +13,9 @@ import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
+import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
+import com.mk.hotel.roomtype.model.RoomTypeStock;
+import com.mk.hotel.roomtype.model.RoomTypeStockExample;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import redis.clients.jedis.Jedis;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +40,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     private HotelMapper hotelMapper;
     @Autowired
     private RoomTypeService roomTypeService;
+    @Autowired
+    private RoomTypeStockMapper roomTypeStockMapper;
 
     public void lock(String hotelId, String roomTypeId, Date day, int lockTime, long maxWaitTimeOut) {
 
@@ -201,5 +207,11 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 this.unlock(String.valueOf(hotelId), String.valueOf(roomTypeId), day);
             }
         }
+    }
+
+    public List<RoomTypeStock> queryRoomStockByRoomTypeId(Long roomTypeId, Date fromDate, Date toDate){
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
+        return roomTypeStockMapper.selectByExample(example);
     }
 }
