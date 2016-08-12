@@ -145,8 +145,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer promoNum) {
-        if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == promoNum) {
+    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer availableNum, Integer promoNum) {
+        if (null == hotelId || null == roomTypeId || null == day || null == availableNum || null == promoNum) {
             throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -161,13 +161,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
             String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
 
-            if (totalNum.compareTo(promoNum) <= 0) {
+            if (availableNum.compareTo(promoNum) <= 0) {
                 //
                 jedis.hset(availableHashName, strDate, "0");
-                jedis.hset(promoHashName, strDate, String.valueOf(totalNum));
-            } else if (totalNum.compareTo(promoNum) > 0) {
+                jedis.hset(promoHashName, strDate, String.valueOf(availableNum));
+            } else if (availableNum.compareTo(promoNum) > 0) {
                 //
-                jedis.hset(availableHashName, strDate, String.valueOf(totalNum - promoNum));
+                jedis.hset(availableHashName, strDate, String.valueOf(availableNum - promoNum));
                 jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
             }
 
