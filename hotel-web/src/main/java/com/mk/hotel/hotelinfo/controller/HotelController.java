@@ -581,6 +581,7 @@ public class HotelController {
         }else{
             roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
         }
+        OtsInterface.initHotel(hotelId);
         HotelCommonResponse commonResponse = new HotelCommonResponse();
         commonResponse.setSuccess(ValidEnum.VALID.getCode());
         return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
