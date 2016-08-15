@@ -26,14 +26,12 @@ import com.mk.hotel.remote.dog.common.HotelCommonResponse;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
-import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
-import com.sun.javafx.tools.packager.CommonParams;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.collections.CollectionUtils;
@@ -581,6 +579,7 @@ public class HotelController {
         }else{
             roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
         }
+        OtsInterface.initHotel(hotelId);
         HotelCommonResponse commonResponse = new HotelCommonResponse();
         commonResponse.setSuccess(ValidEnum.VALID.getCode());
         return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
