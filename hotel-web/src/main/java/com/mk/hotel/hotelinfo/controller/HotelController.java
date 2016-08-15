@@ -578,13 +578,16 @@ public class HotelController {
         hotelService.updateRedisHotel(hotelId, hotel, "HotelController.updateHotelPrice");
 
         //
+        StringBuilder result = new StringBuilder();
         if(roomTypeId == null){
             List<RoomType>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
             for(RoomType roomType : roomTypeList){
-                roomTypeService.updateRoomTypeToRedis(hotelId, roomType.getId());
+                String subResult = roomTypeService.updateRoomTypeToRedis(hotelId, roomType.getId());
+                result.append(subResult);
             }
         }else{
-            roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
+            String subResult = roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
+            result.append(subResult);
         }
 
         //
@@ -593,6 +596,12 @@ public class HotelController {
         //
         HotelCommonResponse commonResponse = new HotelCommonResponse();
         commonResponse.setSuccess(ValidEnum.VALID.getCode());
+        if (result.length() > 0) {
+            commonResponse.setResult(result.toString());
+        } else {
+            commonResponse.setResult(null);
+        }
+
         return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
     }
 }

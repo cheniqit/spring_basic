@@ -31,12 +31,12 @@ public interface RoomTypeStockService {
      * @param roomTypeId 房型id
      * @param day        日期
      * @param totalNum   总可用房量
-     * @param promoNum   特价房房量
+     * @param promoNum   计划投放特价房量
      */
-    void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer promoNum);
+    String updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer promoNum);
 
     /**
-     * 更新房量
+     * 更新房量(仅供房爸爸接口使用)
      *
      * @param hotelId    酒店id
      * @param roomTypeId 房型id
@@ -54,5 +54,15 @@ public interface RoomTypeStockService {
     void fullStock(Long hotelId, Long roomTypeId, Date from, Date to);
 
 
-    void updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
+    /**
+     * 更新房量
+     *
+     * @param hotelId       酒店id
+     * @param roomTypeId    房型id
+     * @param day           日期
+     * @param totalNum      签约房量
+     * @param totalPromoNum 计划投放特价房量
+     * @return
+     */
+    String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
 }

@@ -787,7 +787,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-    public void updateRoomTypeToRedis(Long hotelId, Long roomTypeId){
+    public String updateRoomTypeToRedis(Long hotelId, Long roomTypeId){
         RoomType roomType = selectRoomTypeById(roomTypeId);
         if(roomType == null || roomType.getId() == null){
             throw new MyException("roomTypeId错误,没有找到房型信息");
@@ -801,9 +801,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //库存
+        StringBuilder result = new StringBuilder();
         for(RoomTypeStock roomTypeStock : roomTypeStockList){
-            roomTypeStockService.updateRedisStockByTotal(hotelId, roomTypeId,
+            String subResult = roomTypeStockService.updateRedisStockByTotal(hotelId, roomTypeId,
                     roomTypeStock.getDay(), roomTypeStock.getTotalNumber().intValue(), 0);
+            result.append(subResult);
         }
+
+        return result.toString();
     }
 }

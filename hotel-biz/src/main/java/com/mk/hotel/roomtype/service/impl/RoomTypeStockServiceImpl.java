@@ -11,6 +11,7 @@ import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.bean.RoomTypeStockBean;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
@@ -145,7 +146,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer allAvailableNum, Integer totalPromoNum) {
+    public String updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer allAvailableNum, Integer totalPromoNum) {
         if (null == hotelId || null == roomTypeId || null == day || null == allAvailableNum || null == totalPromoNum) {
             throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,availableNum,promoNum必填");
         }
@@ -225,6 +226,19 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
             jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
             jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
+
+            //
+            StringBuilder result = new StringBuilder();
+            if (promoNum < 0) {
+                RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
+                result.append(dto.getName()).append("房型,").append(strDate).append(" 特价房超卖:").append(promoNum * -1).append("间\n");
+            }
+
+            if (availableNum < 0) {
+                RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
+                result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
+            }
+            return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -233,11 +247,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 jedis.close();
             }
         }
+
+        return "库存更新失败,请联系管理员3";
     }
 
-    public void updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum) {
-        if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == totalPromoNum) {
-            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
+    private RoomTypeStockBean calcStockByTotal(Long roomTypeId, String strDate, Integer totalNum, Integer totalPromoNum, Jedis jedis) {
+        if (null == roomTypeId || StringUtils.isBlank(strDate) || null == totalNum || null == totalPromoNum) {
+            throw new MyException("-99", "-99", "更新库存时,roomTypeIdk,day,totalNum,promoNum必填");
         }
 
         if (totalNum.compareTo(totalPromoNum) < 0) {
@@ -246,14 +262,12 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         //
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = format.format(day);
-
-        //
-        Jedis jedis = null;
+        boolean isNeedCloseJedis = false;
         try {
-            //
-            jedis = RedisUtil.getJedis();
+            if (null == jedis) {
+                isNeedCloseJedis = true;
+                jedis = RedisUtil.getJedis();
+            }
 
             //key
             String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
@@ -349,7 +363,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
 
             //计算 新普通房可售数量
-            if(promoNum < 0) {
+            if (promoNum < 0) {
                 //若特价房 已超卖, 普通可售房 = 普通房可售数量 - 特价房超卖数量
                 availableNum = availableNum + promoNum;
             } else {
@@ -358,11 +372,79 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
 
             //
+            RoomTypeStockBean stockBean = new RoomTypeStockBean();
+            stockBean.setTotalNum(totalNum);
+            stockBean.setTotalPromoNum(totalPromoNum);
+            stockBean.setAvailableNum(availableNum);
+            stockBean.setPromoNum(promoNum);
+            return stockBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (isNeedCloseJedis && null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return null;
+    }
+
+    public String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum) {
+        if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == totalPromoNum) {
+            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
+        }
+
+        if (totalNum.compareTo(totalPromoNum) < 0) {
+            //totalNum 大于或等于 promoNum时, 认为计划特价房量 = 签约房量
+            totalPromoNum = totalNum;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+
+            //key
+            String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
+            String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
+
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
+            String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
+
+            //
+            RoomTypeStockBean stockBean = this.calcStockByTotal(roomTypeId, strDate,totalNum, totalPromoNum, jedis);
+            if (null == stockBean) {
+                return "库存更新失败,请联系管理员1";
+            }
+
+            //
+            Integer availableNum = stockBean.getAvailableNum();
+            Integer promoNum = stockBean.getPromoNum();
+
+            //
             jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
             jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
             jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
             jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
 
+            //
+            StringBuilder result = new StringBuilder();
+            if (promoNum < 0) {
+                RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
+                result.append(dto.getName()).append("房型,").append(strDate).append(" 特价房超卖:").append(promoNum * -1).append("间\n");
+            }
+
+            if (availableNum < 0) {
+                RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
+                result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
+            }
+            return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -371,6 +453,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 jedis.close();
             }
         }
+
+        return "库存更新失败,请联系管理员2";
     }
 
     public void fullStock(Long hotelId, Long roomTypeId, Date from, Date to) {
