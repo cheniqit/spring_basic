@@ -451,10 +451,13 @@ public class RoomTypeController {
 
     @RequestMapping(value = "/test")
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> test() {
+    public ResponseEntity<HashMap<String, Object>> test(Long hotelId, Long roomTypeId, String day, Integer totalNum, Integer totalPromoNum) {
 
         //Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum
-//        this.roomTypeStockService.updateRedisStockByTotal();
+
+        this.roomTypeStockService.updateRedisStockByTotal(
+                hotelId, roomTypeId, DateUtils.getDateFromString(day, DateUtils.FORMAT_DATE),
+                totalNum, totalPromoNum);
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);

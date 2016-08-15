@@ -202,32 +202,23 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             if (null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
                 //更新 (都有值)
 
-                //原已售出特价房数量
+                //原已售出特价房数量 = 原计划特价房量 - 原特价房可售数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
 
-                //计算 新可售数量
+                //计算 新特价房可售数量 = 计划特价房量 - 原已售出特价房数量
                 promoNum = totalPromoNum - originalTotalPromoSale;
-
-                if (promoNum < 0) {
-                    promoNum = 0;
-                    availableNum = allAvailableNum - originalTotalPromoSale;
-                } else {
-                    availableNum = allAvailableNum - totalPromoNum;
-                }
-
-
-                if (availableNum < 0) {
-                    availableNum = 0;
-                }
             }  else {
                 //其他情况 新增, 直接覆盖
                 promoNum = totalPromoNum;
-                availableNum = allAvailableNum - totalPromoNum;
+            }
 
-                if (availableNum < 0) {
-                    availableNum = 0;
-                    promoNum = allAvailableNum;
-                }
+            //计算 新普通房可售数量
+            if(promoNum < 0) {
+                //若特价房 已超卖, 普通可售房 = 总可售数量 - 计划特价房量 - 特价房超卖数量
+                availableNum = allAvailableNum - totalPromoNum + promoNum;
+            } else {
+                //若特价房 未超卖, 普通可售房 = 总可售数量 - 计划特价房量
+                availableNum = allAvailableNum - totalPromoNum;
             }
 
             //
@@ -250,7 +241,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         if (totalNum.compareTo(totalPromoNum) < 0) {
-            throw new MyException("-99", "-99", "更新库存时,totalNum 大于或等于 promoNum");
+            //totalNum 大于或等于 promoNum时, 认为计划特价房量 = 签约房量
+            totalPromoNum = totalNum;
         }
 
         //
@@ -317,61 +309,48 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             Integer promoNum = null;
 
             if (null != originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
-                //更新 (都有值)
+                //更新 (都有值), 以负数记录超卖情况
 
-                //变化量 负数为 增长, 正数为 减少
-                Integer delta = originalTotalNum - totalNum;
-
-                //原库存数量 =  原可售普通房量 + 原可售特价房量
-                Integer originalTotalLast = originalAvailableNum + originalPromoNum;
-                //原已售出特价房数量 = 原计划特价房量 - 原特价数量
+                //原已售出特价房数量 = 原计划特价房量 - 原特价房可售数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
+                //原已售出普通房数量 = 原签约普通房量 - 原签约普通房可售数量
+                Integer originalTotalSale = originalTotalNum - originalTotalPromoNum - originalAvailableNum;
 
-                //现总可售数量 = 原库存数量 - 变化量
-                Integer totalSale = originalTotalLast - delta;
+                //可售普通房 = 签约总量 - 计划特价房量 - 原已售出普通房量
+                availableNum = totalNum - totalPromoNum - originalTotalSale;
+                //可售特价房量 = 计划特价房量 - 原已售出特价房数量;
+                promoNum = totalPromoNum - originalTotalPromoSale;
 
-                //变化量 减少, 且 现总可售数量 为0 或负数
-                if (delta > 0 && totalSale <= 0) {
-                    //减少签约量时,发现超卖情况,直接满房
-                    availableNum = 0;
-                    promoNum = 0;
-                } else {
-                    //计算 新可售数量 = 计划特价房量 - 原已售出特价房数量
-                    promoNum = totalPromoNum - originalTotalPromoSale;
-
-                    //当 计划销售特价房数量大于总可售数量时,
-                    if (promoNum >= totalSale) {
-                        promoNum = totalSale;
-                        availableNum = 0;
-                    } else {
-                        availableNum = totalSale - promoNum;
-                    }
-                }
             } else if (null == originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
                 //错误情况, originalTotalNum 为空
 
                 //原已售出特价房数量 = 原计划特价房量 - 原特价数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
 
-                //计算 新可售数量 = 计划特价房量 - 原已售出特价房数量
+                //计算 新特价房可售数量 = 计划特价房量 - 原已售出特价房数量
                 promoNum = totalPromoNum - originalTotalPromoSale;
-                if(promoNum < 0) {
-                    availableNum = totalNum - totalPromoNum + promoNum;
-                    promoNum = 0;
-                } else {
-                    availableNum = totalNum - totalPromoNum;
-                }
+
+                //计算 新普通房可售数量 = 签约总量 - 计划特价房量
+                availableNum = totalNum - totalPromoNum;
 
             } else {
                 //其他情况 新增, 直接覆盖
                 promoNum = totalPromoNum;
+
+                //计算 新普通房可售数量 = 签约总量 - 计划特价房量
                 availableNum = totalNum - totalPromoNum;
             }
 
 
-            if (availableNum < 0) {
-                availableNum = 0;
+            //计算 新普通房可售数量
+            if(promoNum < 0) {
+                //若特价房 已超卖, 普通可售房 = 普通房可售数量 - 特价房超卖数量
+                availableNum = availableNum + promoNum;
+            } else {
+                //若特价房 未超卖, 普通可售房 = 普通可售房
+                //不变
             }
+
             //
             jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
             jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));

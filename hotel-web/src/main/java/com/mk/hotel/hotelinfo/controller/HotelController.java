@@ -583,6 +583,6 @@ public class HotelController {
         }
         HotelCommonResponse commonResponse = new HotelCommonResponse();
         commonResponse.setSuccess(ValidEnum.VALID.getCode());
-        return new ResponseEntity<>(commonResponse, HttpStatus.OK);
+        return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
     }
 }
