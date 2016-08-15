@@ -789,6 +789,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void updateRoomTypeToRedis(Long hotelId, Long roomTypeId){
         RoomType roomType = selectRoomTypeById(roomTypeId);
+        if(roomType == null || roomType.getId() == null){
+            throw new MyException("roomTypeId错误,没有找到房型信息");
+        }
         //房型信息
         this.updateRedisRoomType(roomTypeId, roomType, "RoomTypeService.updateRoomTypeToRedis");
         List<RoomTypePrice> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
