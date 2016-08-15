@@ -802,8 +802,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //库存
         for(RoomTypeStock roomTypeStock : roomTypeStockList){
-            /*roomTypeStockService.updateRedisStock(hotelId, roomTypeId,
-                    roomTypeStock.getDay(), roomTypeStock.getNumber().intValue(), 0);*/
+            roomTypeStockService.updateRedisStockByTotal(hotelId, roomTypeId,
+                    roomTypeStock.getDay(), roomTypeStock.getTotalNumber().intValue(), 0);
         }
     }
 }
