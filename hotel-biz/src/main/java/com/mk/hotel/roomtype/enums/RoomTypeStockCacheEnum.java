@@ -10,8 +10,11 @@ public enum RoomTypeStockCacheEnum {
     AVAILABLE_KEY(20l, "HOTEL_ROOMTYPE_STOCK_"),     //普通房可用数量
 //    OtsUsingKey(30l, "RoomTypeStockUsing"),
 //    PmsUsingKey(40l, "RoomTypeStockPmsUsing"),
-    PROMO_KEY(50l, "HOTEL_ROOMTYPE_PROMO_STOCK_"),   //特价房数量
-    TOTAL_KEY(50l, "HOTEL_ROOMTYPE_TOTAL_STOCK_"),   //总的数量(签约数量)
+    PROMO_KEY(50l, "HOTEL_ROOMTYPE_PROMO_STOCK_"),   //特价房可用数量
+
+
+    TOTAL_KEY(200l, "HOTEL_ROOMTYPE_TOTAL_STOCK_"),   //总的数量(签约数量)
+    TOTAL_PROMO_KEY(210l, "HOTEL_ROOMTYPE_TOTAL_PROMO_STOCK_"),   //总的特价房数量(特价房数量)
     ;
     private final Long id;
     private final String name;
@@ -90,6 +93,20 @@ public enum RoomTypeStockCacheEnum {
         //
         StringBuilder result = new StringBuilder()
                 .append(RoomTypeStockCacheEnum.TOTAL_KEY.getName())
+                .append(roomTypeId);
+
+        return result.toString();
+    }
+
+
+    public static String getTotalPromoHashName(String roomTypeId) {
+        if (StringUtils.isBlank(roomTypeId)) {
+            return "";
+        }
+
+        //
+        StringBuilder result = new StringBuilder()
+                .append(RoomTypeStockCacheEnum.TOTAL_PROMO_KEY.getName())
                 .append(roomTypeId);
 
         return result.toString();

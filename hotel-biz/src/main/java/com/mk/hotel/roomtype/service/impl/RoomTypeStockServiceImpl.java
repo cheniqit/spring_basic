@@ -145,9 +145,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer availableNum, Integer promoNum) {
-        if (null == hotelId || null == roomTypeId || null == day || null == availableNum || null == promoNum) {
-            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
+    public void updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer allAvailableNum, Integer totalPromoNum) {
+        if (null == hotelId || null == roomTypeId || null == day || null == allAvailableNum || null == totalPromoNum) {
+            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,availableNum,promoNum必填");
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = format.format(day);
@@ -161,15 +161,169 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
             String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
 
-            if (availableNum.compareTo(promoNum) <= 0) {
+            if (allAvailableNum.compareTo(totalPromoNum) <= 0) {
                 //
                 jedis.hset(availableHashName, strDate, "0");
-                jedis.hset(promoHashName, strDate, String.valueOf(availableNum));
-            } else if (availableNum.compareTo(promoNum) > 0) {
+                jedis.hset(promoHashName, strDate, String.valueOf(allAvailableNum));
+            } else if (allAvailableNum.compareTo(totalPromoNum) > 0) {
                 //
-                jedis.hset(availableHashName, strDate, String.valueOf(availableNum - promoNum));
-                jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
+                jedis.hset(availableHashName, strDate, String.valueOf(allAvailableNum - totalPromoNum));
+                jedis.hset(promoHashName, strDate, String.valueOf(totalPromoNum));
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+    }
+
+    public void updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum) {
+        if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == totalPromoNum) {
+            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
+        }
+
+        if (totalNum.compareTo(totalPromoNum) < 0) {
+            throw new MyException("-99", "-99", "更新库存时,totalNum 大于或等于 promoNum");
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+
+            //key
+            String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
+            String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
+
+            String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
+            String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
+
+            //value
+            String strOriginalTotalNum = jedis.hget(totalHashName, strDate);
+            String strOriginalTotalPromoNum = jedis.hget(totalPromoHashName, strDate);
+            String strOriginalAvailableNum = jedis.hget(availableHashName, strDate);
+            String strOriginalPromoNum = jedis.hget(promoHashName, strDate);
+
+            Integer originalTotalNum = null;
+            Integer originalTotalPromoNum = null;
+            Integer originalAvailableNum = null;
+            Integer originalPromoNum = null;
+
+            if (StringUtils.isNotBlank(strOriginalTotalNum)) {
+                try {
+                    originalTotalNum = Integer.parseInt(strOriginalTotalNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+
+            if (StringUtils.isNotBlank(strOriginalTotalPromoNum)) {
+                try {
+                    originalTotalPromoNum = Integer.parseInt(strOriginalTotalPromoNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+
+            if (StringUtils.isNotBlank(strOriginalAvailableNum)) {
+                try {
+                    originalAvailableNum = Integer.parseInt(strOriginalAvailableNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+            if (StringUtils.isNotBlank(strOriginalPromoNum)) {
+                try {
+                    originalPromoNum = Integer.parseInt(strOriginalPromoNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+
+            //计算 availableNum promoNum
+            Integer availableNum = null;
+            Integer promoNum = null;
+
+            if (null != originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+                //更新 (都有值)
+
+                //变化量 负数为 增长, 正数为 减少
+                Integer delta = originalTotalNum - totalNum;
+
+                //原库存数量
+                Integer originalTotalLast = originalAvailableNum + originalPromoNum;
+                //原已售出特价房数量
+                Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
+
+                //现总可售数量
+                Integer totalSale = originalTotalLast - delta;
+
+                if (delta > 0 && totalSale <= 0) {
+                    //减少签约量时,发现超卖情况,直接满房
+                    availableNum = 0;
+                    promoNum = 0;
+                } else {
+                    //计算 新可售数量
+                    promoNum = totalPromoNum - originalTotalPromoSale;
+
+                    //当 计划销售特价房数量大于总可售数量时,
+                    if (promoNum >= totalSale) {
+                        promoNum = totalSale;
+                        availableNum = 0;
+                    } else {
+                        availableNum = totalSale - promoNum;
+                    }
+                }
+            } else if (null == originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+                //错误情况, originalTotalNum 为空
+
+                //原已售出特价房数量
+                Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
+
+                //计算 新可售数量
+                promoNum = totalPromoNum - originalTotalPromoSale;
+                if(promoNum < 0) {
+                    availableNum = totalNum - totalPromoNum + promoNum;
+                    promoNum = 0;
+                } else {
+                    availableNum = totalNum - totalPromoNum;
+                }
+            } else if (null != originalTotalNum && null == originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+                //错误情况,originalTotalPromoNum 为空
+
+                //原已售出普通房数量
+                Integer originalTotalSale = originalTotalNum - originalAvailableNum;
+
+                //计算 新可售数量
+                availableNum = totalNum - totalPromoNum - originalTotalSale;
+                if(availableNum < 0) {
+                    promoNum = totalPromoNum + availableNum;
+                    availableNum = 0;
+                } else {
+                    promoNum = totalPromoNum;
+                }
+
+            } else {
+                //其他情况 新增, 直接覆盖
+                promoNum = totalPromoNum;
+                availableNum = totalNum - totalPromoNum;
+            }
+
+
+            //
+            jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
+            jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
+            jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
+            jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
 
         } catch (Exception e) {
             e.printStackTrace();
