@@ -199,38 +199,41 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             //计算 availableNum promoNum
             Integer availableNum = null;
             Integer promoNum = null;
-//            if (null != originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
-//                //更新 (都有值)
-//
-//            } else if (null == originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
-//                //错误情况, originalTotalNum 为空
-//
-//            } else if (null != originalTotalNum && null == originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
-//                //错误情况,originalTotalPromoNum 为空
-//
-//
-//            } else {
-//                //其他情况 新增, 直接覆盖
-//                promoNum = totalPromoNum;
-//                availableNum = totalNum - totalPromoNum;
-//            }
+            if (null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+                //更新 (都有值)
+
+                //原已售出特价房数量
+                Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
+
+                //计算 新可售数量
+                promoNum = totalPromoNum - originalTotalPromoSale;
+
+                if (promoNum < 0) {
+                    promoNum = 0;
+                    availableNum = allAvailableNum - originalTotalPromoSale;
+                } else {
+                    availableNum = allAvailableNum - totalPromoNum;
+                }
+
+
+                if (availableNum < 0) {
+                    availableNum = 0;
+                }
+            }  else {
+                //其他情况 新增, 直接覆盖
+                promoNum = totalPromoNum;
+                availableNum = allAvailableNum - totalPromoNum;
+
+                if (availableNum < 0) {
+                    availableNum = 0;
+                    promoNum = allAvailableNum;
+                }
+            }
 
             //
             jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
             jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
             jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
-
-
-            if (allAvailableNum.compareTo(totalPromoNum) <= 0) {
-                //
-                jedis.hset(availableHashName, strDate, "0");
-                jedis.hset(promoHashName, strDate, String.valueOf(allAvailableNum));
-            } else if (allAvailableNum.compareTo(totalPromoNum) > 0) {
-                //
-                jedis.hset(availableHashName, strDate, String.valueOf(allAvailableNum - totalPromoNum));
-                jedis.hset(promoHashName, strDate, String.valueOf(totalPromoNum));
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -319,20 +322,21 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 //变化量 负数为 增长, 正数为 减少
                 Integer delta = originalTotalNum - totalNum;
 
-                //原库存数量
+                //原库存数量 =  原可售普通房量 + 原可售特价房量
                 Integer originalTotalLast = originalAvailableNum + originalPromoNum;
-                //原已售出特价房数量
+                //原已售出特价房数量 = 原计划特价房量 - 原特价数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
 
-                //现总可售数量
+                //现总可售数量 = 原库存数量 - 变化量
                 Integer totalSale = originalTotalLast - delta;
 
+                //变化量 减少, 且 现总可售数量 为0 或负数
                 if (delta > 0 && totalSale <= 0) {
                     //减少签约量时,发现超卖情况,直接满房
                     availableNum = 0;
                     promoNum = 0;
                 } else {
-                    //计算 新可售数量
+                    //计算 新可售数量 = 计划特价房量 - 原已售出特价房数量
                     promoNum = totalPromoNum - originalTotalPromoSale;
 
                     //当 计划销售特价房数量大于总可售数量时,
@@ -346,30 +350,16 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             } else if (null == originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
                 //错误情况, originalTotalNum 为空
 
-                //原已售出特价房数量
+                //原已售出特价房数量 = 原计划特价房量 - 原特价数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
 
-                //计算 新可售数量
+                //计算 新可售数量 = 计划特价房量 - 原已售出特价房数量
                 promoNum = totalPromoNum - originalTotalPromoSale;
                 if(promoNum < 0) {
                     availableNum = totalNum - totalPromoNum + promoNum;
                     promoNum = 0;
                 } else {
                     availableNum = totalNum - totalPromoNum;
-                }
-            } else if (null != originalTotalNum && null == originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
-                //错误情况,originalTotalPromoNum 为空
-
-                //原已售出普通房数量
-                Integer originalTotalSale = originalTotalNum - originalAvailableNum;
-
-                //计算 新可售数量
-                availableNum = totalNum - totalPromoNum - originalTotalSale;
-                if(availableNum < 0) {
-                    promoNum = totalPromoNum + availableNum;
-                    availableNum = 0;
-                } else {
-                    promoNum = totalPromoNum;
                 }
 
             } else {
@@ -379,6 +369,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
 
 
+            if (availableNum < 0) {
+                availableNum = 0;
+            }
             //
             jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
             jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
