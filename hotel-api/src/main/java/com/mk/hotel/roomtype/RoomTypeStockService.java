@@ -53,4 +53,6 @@ public interface RoomTypeStockService {
      */
     void fullStock(Long hotelId, Long roomTypeId, Date from, Date to);
 
+
+    void updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
 }

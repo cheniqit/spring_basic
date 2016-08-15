@@ -158,8 +158,68 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             //
             jedis = RedisUtil.getJedis();
 
+            //
+            String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
             String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
             String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
+
+            //value
+            String strOriginalTotalPromoNum = jedis.hget(totalPromoHashName, strDate);
+            String strOriginalAvailableNum = jedis.hget(availableHashName, strDate);
+            String strOriginalPromoNum = jedis.hget(promoHashName, strDate);
+
+            //
+            Integer originalTotalPromoNum = null;
+            Integer originalAvailableNum = null;
+            Integer originalPromoNum = null;
+
+            if (StringUtils.isNotBlank(strOriginalTotalPromoNum)) {
+                try {
+                    originalTotalPromoNum = Integer.parseInt(strOriginalTotalPromoNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+
+            if (StringUtils.isNotBlank(strOriginalAvailableNum)) {
+                try {
+                    originalAvailableNum = Integer.parseInt(strOriginalAvailableNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+            if (StringUtils.isNotBlank(strOriginalPromoNum)) {
+                try {
+                    originalPromoNum = Integer.parseInt(strOriginalPromoNum);
+                } catch (Exception e) {
+                    Cat.logError(e);
+                }
+            }
+
+            //计算 availableNum promoNum
+            Integer availableNum = null;
+            Integer promoNum = null;
+//            if (null != originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+//                //更新 (都有值)
+//
+//            } else if (null == originalTotalNum && null != originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+//                //错误情况, originalTotalNum 为空
+//
+//            } else if (null != originalTotalNum && null == originalTotalPromoNum && null != originalAvailableNum && null != originalPromoNum) {
+//                //错误情况,originalTotalPromoNum 为空
+//
+//
+//            } else {
+//                //其他情况 新增, 直接覆盖
+//                promoNum = totalPromoNum;
+//                availableNum = totalNum - totalPromoNum;
+//            }
+
+            //
+            jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
+            jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
+            jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
+
 
             if (allAvailableNum.compareTo(totalPromoNum) <= 0) {
                 //
