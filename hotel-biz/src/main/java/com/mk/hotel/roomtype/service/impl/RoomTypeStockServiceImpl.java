@@ -313,8 +313,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
                 //原已售出特价房数量 = 原计划特价房量 - 原特价房可售数量
                 Integer originalTotalPromoSale = originalTotalPromoNum - originalPromoNum;
-                //原已售出普通房数量 = 原签约普通房量 - 原签约普通房可售数量
+
+                //原已售出普通房数量 = 原签约普通房量 - 原计划特价房量 - 原签约普通房可售数量
                 Integer originalTotalSale = originalTotalNum - originalTotalPromoNum - originalAvailableNum;
+                //若有超卖情况, 原已售出普通房数量 = 原已售出普通房数量 - 超卖数量
+                if (originalTotalPromoSale < 0) {
+                    originalTotalSale = originalTotalSale + originalTotalPromoSale;
+                }
 
                 //可售普通房 = 签约总量 - 计划特价房量 - 原已售出普通房量
                 availableNum = totalNum - totalPromoNum - originalTotalSale;
