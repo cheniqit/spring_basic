@@ -570,7 +570,14 @@ public class HotelController {
     @ResponseBody
     public ResponseEntity<HotelCommonResponse> updateHotelPrice(Long hotelId, Long roomTypeId) {
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+
+        if (HotelSourceEnum.SHUIME2.getId().equals(hotel.getSourceType())) {
+            throw new MyException("酒店非睡么自建类型!");
+        }
+
         hotelService.updateRedisHotel(hotelId, hotel, "HotelController.updateHotelPrice");
+
+        //
         if(roomTypeId == null){
             List<RoomType>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
             for(RoomType roomType : roomTypeList){
@@ -579,7 +586,11 @@ public class HotelController {
         }else{
             roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
         }
+
+        //
         OtsInterface.initHotel(hotelId);
+
+        //
         HotelCommonResponse commonResponse = new HotelCommonResponse();
         commonResponse.setSuccess(ValidEnum.VALID.getCode());
         return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
