@@ -94,7 +94,7 @@ public class HotelPicInfo {
 
     }
 
-    public class RoomTypePic {
+    public static class RoomTypePic {
 
         private String name;
         private List<Pic> pic;
