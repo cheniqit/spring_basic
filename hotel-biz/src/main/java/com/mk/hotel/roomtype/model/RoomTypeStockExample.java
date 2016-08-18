@@ -701,6 +701,66 @@ public class RoomTypeStockExample {
             addCriterion("is_valid not between", value1, value2, "isValid");
             return (Criteria) this;
         }
+
+        public Criteria andTotalNumberIsNull() {
+            addCriterion("total_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberIsNotNull() {
+            addCriterion("total_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberEqualTo(Long value) {
+            addCriterion("total_number =", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberNotEqualTo(Long value) {
+            addCriterion("total_number <>", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberGreaterThan(Long value) {
+            addCriterion("total_number >", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberGreaterThanOrEqualTo(Long value) {
+            addCriterion("total_number >=", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberLessThan(Long value) {
+            addCriterion("total_number <", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberLessThanOrEqualTo(Long value) {
+            addCriterion("total_number <=", value, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberIn(List<Long> values) {
+            addCriterion("total_number in", values, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberNotIn(List<Long> values) {
+            addCriterion("total_number not in", values, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberBetween(Long value1, Long value2) {
+            addCriterion("total_number between", value1, value2, "totalNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalNumberNotBetween(Long value1, Long value2) {
+            addCriterion("total_number not between", value1, value2, "totalNumber");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

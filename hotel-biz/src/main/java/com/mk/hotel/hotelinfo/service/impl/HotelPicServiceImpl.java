@@ -9,11 +9,13 @@ import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelPicInfo;
 import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
+import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.mapper.HotelPicMapper;
 import com.mk.hotel.hotelinfo.mapper.PicResourceMapper;
 import com.mk.hotel.hotelinfo.model.*;
 import com.mk.hotel.remote.dog.TaskFactoryRemoteService;
+import com.mk.hotel.roomtype.enums.RoomTypePictureEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
@@ -284,49 +286,155 @@ public class HotelPicServiceImpl {
         if(hpi == null || CollectionUtils.isEmpty(hpi.getData())){
             throw new MyException("hotelPicInfo信息错误");
         }
+
+        //hotel
         Hotel hotel = hotelMapper.selectByPrimaryKey(Long.valueOf(hotelId));
         if(hotel == null || hotel.getId() == null){
+            //若不是hotel库(可能是高德库),转到job处理
             taskFactoryRemoteService.saveHotelPic(hotelId, hotelPicInfo);
             return;
         }
-        hpi = convertHotelPicInfo(hpi);
-        for(HotelPicInfo.Data data : hpi.getData()){
-            if(StringUtils.isBlank(data.getRoomTypeId())){
-                //酒店信息
-                if(CollectionUtils.isEmpty(data.getPic())){
-                    continue;
-                }
-                StringBuffer url = new StringBuffer();
-                for(HotelPicInfo.Pic pic : data.getPic()){
-                    if(StringUtils.isBlank(pic.getUrl())){
-                        continue;
+
+        //SHUIME2 自建酒店直接更新hotel 及 roomType
+        Integer sourceType = hotel.getSourceType();
+        if (HotelSourceEnum.SHUIME2.getId().equals(sourceType)) {
+
+            //拆分 hotel 及 roomType
+            List<HotelPicInfo.Data> hotelData = new ArrayList<HotelPicInfo.Data>();
+            List<HotelPicInfo.Data> roomTypeData = new ArrayList<HotelPicInfo.Data>();
+            for (HotelPicInfo.Data data : hpi.getData()) {
+                String strRoomTypeId = data.getRoomTypeId();
+                if (StringUtils.isBlank(strRoomTypeId)) {
+                    //酒店图片数据
+                    hotelData.add(data);
+                } else {
+                    try {
+                        Long.parseLong(strRoomTypeId);
+                    }catch (Exception e) {
+                        throw new MyException("房型id:" + strRoomTypeId + " 必须是数字.");
                     }
-                    url.append(pic.getUrl()).append(",");
+                    //房型数据
+                    roomTypeData.add(data);
                 }
-                HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(data.getName());
-                if(hotelPicTypeEnum == null){
-                    continue;
-                }
-                saveHotelPic(Long.valueOf(hotelId), null, hotelPicTypeEnum.getCode()+"", url.toString(), updateBy);
-            }else{
-                if(CollectionUtils.isEmpty(data.getRoomTypePic())){
-                    continue;
-                }
-                if(StringUtils.isBlank(data.getRoomTypeId())){
-                    continue;
-                }
-                StringBuffer url = new StringBuffer();
-                for(HotelPicInfo.RoomTypePic roomTypePic : data.getRoomTypePic()){
-                    if(CollectionUtils.isEmpty(roomTypePic.getPic())){
-                        continue;
-                    }
-                    for(HotelPicInfo.Pic pic : roomTypePic.getPic()){
-                        url.append(pic.getUrl()).append(",");
-                    }
-                }
-                saveHotelPic(Long.valueOf(hotelId), Long.valueOf(data.getRoomTypeId()), HotelPicTypeEnum.roomType.getCode()+"", url.toString(), updateBy);
             }
 
+            //处理酒店图片
+            List<String> hotelPicTypeList = new ArrayList<String>();
+            hotelPicTypeList.add(HotelPicTypeEnum.def.getPmsPicCode());
+            hotelPicTypeList.add(HotelPicTypeEnum.lobby.getPmsPicCode());
+            hotelPicTypeList.add(HotelPicTypeEnum.mainHousing.getPmsPicCode());
+            for (String typeCode : hotelPicTypeList) {
+                boolean isExists = false;
+                for (HotelPicInfo.Data data : hotelData) {
+                    if (typeCode.equals(data.getName())) {
+                        isExists = true;
+                        continue;
+                    }
+                }
+
+                //not exists
+                if (!isExists) {
+                    HotelPicInfo.Data data = new HotelPicInfo.Data();
+                    data.setName(typeCode);
+                    data.setPic(new ArrayList<HotelPicInfo.Pic>());
+                    hotelData.add(data);
+                }
+            }
+            String hotelPic = JsonUtils.toJson(hotelData);
+            hotel.setPic(hotelPic);
+            hotel.setUpdateBy(updateBy);
+            hotel.setUpdateDate(new Date());
+
+            //处理房型
+            List<RoomType> roomTypeSaveList = new ArrayList<RoomType>();
+            List<String> roomTypePicTypeList = new ArrayList<String>();
+            roomTypePicTypeList.add(RoomTypePictureEnum.PIC_DEF.getName());
+            roomTypePicTypeList.add(RoomTypePictureEnum.PIC_BED.getName());
+            roomTypePicTypeList.add(RoomTypePictureEnum.PIC_TOILET.getName());
+
+            for (HotelPicInfo.Data data : roomTypeData) {
+
+                for (String typeCode : roomTypePicTypeList) {
+                    boolean isExists = false;
+                    for (HotelPicInfo.RoomTypePic picList : data.getRoomTypePic()) {
+                        if (typeCode.equals(picList.getName())) {
+                            isExists = true;
+                            continue;
+                        }
+                    }
+
+                    //not exists
+                    if (!isExists) {
+                        HotelPicInfo.RoomTypePic roomTypePic = new HotelPicInfo.RoomTypePic();
+                        roomTypePic.setName(typeCode);
+                        roomTypePic.setPic(new ArrayList<HotelPicInfo.Pic>());
+                        data.getRoomTypePic().add(roomTypePic);
+                    }
+
+                }
+
+                String roomTypePic = JsonUtils.toJson(data.getRoomTypePic());
+
+                //
+                String strRoomTypeId = data.getRoomTypeId();
+                Long roomTypeId = Long.parseLong(strRoomTypeId);
+
+                RoomType roomType = this.roomTypeMapper.selectByPrimaryKey(roomTypeId);
+                if (null == roomType) {
+
+                }
+                roomType.setRoomTypePics(roomTypePic);
+                roomType.setUpdateBy(updateBy);
+                roomType.setUpdateDate(new Date());
+                roomTypeSaveList.add(roomType);
+
+            }
+
+            //save
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
+            for (RoomType roomType : roomTypeSaveList) {
+                this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
+            }
+        } else {
+            hpi = convertHotelPicInfo(hpi);
+            for (HotelPicInfo.Data data : hpi.getData()) {
+                if (StringUtils.isBlank(data.getRoomTypeId())) {
+                    //酒店信息
+                    if (CollectionUtils.isEmpty(data.getPic())) {
+                        continue;
+                    }
+                    StringBuffer url = new StringBuffer();
+                    for (HotelPicInfo.Pic pic : data.getPic()) {
+                        if (StringUtils.isBlank(pic.getUrl())) {
+                            continue;
+                        }
+                        url.append(pic.getUrl()).append(",");
+                    }
+                    HotelPicTypeEnum hotelPicTypeEnum = HotelPicTypeEnum.getHotelPicTypeEnumByPmsPicCode(data.getName());
+                    if (hotelPicTypeEnum == null) {
+                        continue;
+                    }
+                    saveHotelPic(Long.valueOf(hotelId), null, hotelPicTypeEnum.getCode() + "", url.toString(), updateBy);
+                } else {
+                    if (CollectionUtils.isEmpty(data.getRoomTypePic())) {
+                        continue;
+                    }
+                    if (StringUtils.isBlank(data.getRoomTypeId())) {
+                        continue;
+                    }
+                    StringBuffer url = new StringBuffer();
+                    for (HotelPicInfo.RoomTypePic roomTypePic : data.getRoomTypePic()) {
+                        if (CollectionUtils.isEmpty(roomTypePic.getPic())) {
+                            continue;
+                        }
+                        for (HotelPicInfo.Pic pic : roomTypePic.getPic()) {
+                            url.append(pic.getUrl()).append(",");
+                        }
+                    }
+                    saveHotelPic(Long.valueOf(hotelId), Long.valueOf(data.getRoomTypeId()), HotelPicTypeEnum.roomType.getCode() + "", url.toString(), updateBy);
+                }
+
+            }
         }
     }
 

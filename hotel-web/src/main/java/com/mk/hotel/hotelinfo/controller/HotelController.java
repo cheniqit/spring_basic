@@ -5,6 +5,7 @@ import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.bean.PageBean;
+import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
@@ -21,10 +22,13 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.Result;
 import com.mk.hotel.remote.dog.TaskFactoryRemoteService;
+import com.mk.hotel.remote.dog.common.HotelCommonResponse;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
+import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
+import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.ots.mapper.LandMarkMapper;
 import com.mk.ots.model.LandMark;
 import com.mk.ots.model.LandMarkExample;
@@ -81,6 +85,8 @@ public class HotelController {
     private TaskFactoryRemoteService taskFactoryRemoteService;
     @Autowired
     private LandMarkMapper landMarkMapper;
+    @Autowired
+    private RoomTypeServiceImpl roomTypeService;
 
     private Logger logger = LoggerFactory.getLogger(HotelController.class);
 
@@ -558,5 +564,44 @@ public class HotelController {
                 Constant.HOTEL_TO_HOT_AREA_DISTANCE,
                 hotelService.getAllLandMarkList());
         return new ResponseEntity<HotelLandMark>(hotelLandMark, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateHotelToRedis", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HotelCommonResponse> updateHotelPrice(Long hotelId, Long roomTypeId) {
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+
+        if (!HotelSourceEnum.SHUIME2.getId().equals(hotel.getSourceType())) {
+            throw new MyException("酒店非睡么自建类型!");
+        }
+
+        hotelService.updateRedisHotel(hotelId, hotel, "HotelController.updateHotelPrice");
+
+        //
+        StringBuilder result = new StringBuilder();
+        if(roomTypeId == null){
+            List<RoomType>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
+            for(RoomType roomType : roomTypeList){
+                String subResult = roomTypeService.updateRoomTypeToRedis(hotelId, roomType.getId());
+                result.append(subResult);
+            }
+        }else{
+            String subResult = roomTypeService.updateRoomTypeToRedis(hotelId, roomTypeId);
+            result.append(subResult);
+        }
+
+        //
+        OtsInterface.initHotel(hotelId);
+
+        //
+        HotelCommonResponse commonResponse = new HotelCommonResponse();
+        commonResponse.setSuccess(ValidEnum.VALID.getCode());
+        if (result.length() > 0) {
+            commonResponse.setResult(result.toString());
+        } else {
+            commonResponse.setResult(null);
+        }
+
+        return new ResponseEntity<HotelCommonResponse>(commonResponse, HttpStatus.OK);
     }
 }

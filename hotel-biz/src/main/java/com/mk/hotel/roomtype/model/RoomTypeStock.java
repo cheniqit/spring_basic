@@ -21,6 +21,8 @@ public class RoomTypeStock {
 
     private String isValid;
 
+    private Long totalNumber;
+
     public Long getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class RoomTypeStock {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid == null ? null : isValid.trim();
+    }
+
+    public Long getTotalNumber() {
+        return totalNumber;
+    }
+
+    public void setTotalNumber(Long totalNumber) {
+        this.totalNumber = totalNumber;
     }
 }
