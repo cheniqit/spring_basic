@@ -381,7 +381,7 @@ public class HotelPicServiceImpl {
 
                 RoomType roomType = this.roomTypeMapper.selectByPrimaryKey(roomTypeId);
                 if (null == roomType) {
-
+                    throw new MyException("roomTypeId:" + strRoomTypeId + " 不存在");
                 }
                 roomType.setRoomTypePics(roomTypePic);
                 roomType.setUpdateBy(updateBy);
