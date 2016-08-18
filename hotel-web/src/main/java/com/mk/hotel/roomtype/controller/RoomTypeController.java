@@ -9,6 +9,7 @@ import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
+import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -43,7 +45,7 @@ public class RoomTypeController {
     @Autowired
     private HotelService hotelService;
     @Autowired
-    private RoomTypeService roomTypeService;
+    private RoomTypeServiceImpl roomTypeService;
 
     @Autowired
     private RoomTypePriceServiceImpl roomTypePriceService;
@@ -197,7 +199,7 @@ public class RoomTypeController {
             if(hotelId != null){
                 roomTypeService.mergeRoomTypeByHotelId(hotelId);
             }else{
-                roomTypeService.mergeRoomType(pageNo);
+                mergeRoomType(pageNo);
             }
 
         }catch (Exception e) {
@@ -213,6 +215,18 @@ public class RoomTypeController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    private void mergeRoomType(Integer pageNo){
+        List<Hotel> hotelList = roomTypeService.getHotelByPage(pageNo);
+        if(CollectionUtils.isEmpty(hotelList)){
+            return;
+        }
+        for(Hotel hotel : hotelList){
+            roomTypeService.mergeRoomTypeByHotelId(hotel.getId());
+        }
+        pageNo++;
+        mergeRoomType(pageNo);
+    }
+
     @RequestMapping(value = "/mergeRoomTypePrice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> mergeRoomTypePrice(Long hotelId, Integer pageNo) {
@@ -223,9 +237,8 @@ public class RoomTypeController {
             if(hotelId != null){
                 roomTypeService.mergeRoomTypePriceByHotelId(hotelId);
             }else{
-                roomTypeService.mergeRoomTypePrice(pageNo);
+                mergeRoomTypePriceByPage(pageNo);
             }
-
         }catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -237,6 +250,18 @@ public class RoomTypeController {
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    private void mergeRoomTypePriceByPage(Integer pageNo) {
+        List<Hotel> hotelList = roomTypeService.getHotelByPage(pageNo);
+        if(CollectionUtils.isEmpty(hotelList)){
+           return;
+        }
+        for(Hotel hotel : hotelList){
+            roomTypeService.mergeRoomTypePriceByHotelId(hotel.getId());
+        }
+        pageNo++;
+        mergeRoomTypePriceByPage(pageNo);
     }
 
     @RequestMapping(value = "/mergeRoomTypePriceOnlyOne", method = RequestMethod.POST)

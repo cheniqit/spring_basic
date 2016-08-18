@@ -536,16 +536,27 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
-    public void mergeRoomTypePrice(int pageNo) {
-        logger.info("begin mergeRoomTypePrice pageNo {}", pageNo);
+    public List<Hotel> getHotelByPage(Integer pageNo){
+        return getHotelByPage(pageNo, null);
+    }
+
+    public List<Hotel> getHotelByPage(Integer pageNo, Integer pageSize){
+        logger.info("begin getHotelByPage pageNo {}", pageNo);
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
-        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        if(pageSize == null){
+            pageSize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
+        }
+        PageBean pageBean = new PageBean(pageNo, count, pageSize);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
         example.setPageCount(pageBean.getPageCount());
-        List<Hotel> hotelList = hotelMapper.selectByExample(example);
+        return hotelMapper.selectByExample(example);
+    }
+
+    public void mergeRoomTypePrice(int pageNo) {
+        List<Hotel> hotelList = getHotelByPage(pageNo);
         if(CollectionUtils.isEmpty(hotelList)){
             return;
         }
