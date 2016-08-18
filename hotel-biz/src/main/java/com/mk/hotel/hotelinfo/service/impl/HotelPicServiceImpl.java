@@ -344,9 +344,9 @@ public class HotelPicServiceImpl {
             hotel.setPic(hotelPic);
             hotel.setUpdateBy(updateBy);
             hotel.setUpdateDate(new Date());
-            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
 
             //处理房型
+            List<RoomType> roomTypeSaveList = new ArrayList<RoomType>();
             List<String> roomTypePicTypeList = new ArrayList<String>();
             roomTypePicTypeList.add(RoomTypePictureEnum.PIC_DEF.getName());
             roomTypePicTypeList.add(RoomTypePictureEnum.PIC_BED.getName());
@@ -380,11 +380,20 @@ public class HotelPicServiceImpl {
                 Long roomTypeId = Long.parseLong(strRoomTypeId);
 
                 RoomType roomType = this.roomTypeMapper.selectByPrimaryKey(roomTypeId);
+                if (null == roomType) {
+
+                }
                 roomType.setRoomTypePics(roomTypePic);
                 roomType.setUpdateBy(updateBy);
                 roomType.setUpdateDate(new Date());
-                this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
+                roomTypeSaveList.add(roomType);
 
+            }
+
+            //save
+            this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
+            for (RoomType roomType : roomTypeSaveList) {
+                this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
             }
         } else {
             hpi = convertHotelPicInfo(hpi);
