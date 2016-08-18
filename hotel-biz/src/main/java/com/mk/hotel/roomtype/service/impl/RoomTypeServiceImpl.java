@@ -346,6 +346,17 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         mergeRoomType(pageNo);
     }
 
+    public void mergeRoomTypeByHotelId(Hotel hotel) {
+        HotelRoomTypeQueryRequest hotelRoomTypeQueryRequest = new HotelRoomTypeQueryRequest();
+        hotelRoomTypeQueryRequest.setHotelid(String.valueOf(hotel.getId()));
+        HotelRoomTypeQueryResponse response = hotelRemoteService.queryRoomType(hotelRoomTypeQueryRequest);
+        if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData())){
+            return;
+        }
+        roomTypeProxyService.saveRoomType(hotel, response.getData());
+        OtsInterface.initHotel(hotel.getId());
+    }
+
     public void mergeRoomTypeByHotelId(Long hotelId) {
         //
         HotelExample example = new HotelExample();
@@ -522,8 +533,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         mergeRoomTypePrice(pageNo);
     }
 
-    public void mergeRoomTypePriceByHotelId(Long hotelId){
-        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+    public void mergeRoomTypePriceByHotelId(Hotel hotel){
         HotelPriceRequest hotelPriceRequest = new HotelPriceRequest();
         hotelPriceRequest.setHotelid(hotel.getFangId().toString());
         hotelPriceRequest.setBegintime(DateUtils.formatDate(new Date()));
@@ -532,8 +542,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getRoomtypeprices())){
             return;
         }
-        roomTypeProxyService.saveRoomTypePrice(response.getData(), hotelId);
+        roomTypeProxyService.saveRoomTypePrice(response.getData(), hotel.getId());
         OtsInterface.initHotel(new Long(hotel.getId()));
+    }
+
+    public void mergeRoomTypePriceByHotelId(Long hotelId){
+        Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        mergeRoomTypePriceByHotelId(hotel);
     }
 
     public List<Hotel> getHotelByPage(Integer pageNo){

@@ -221,7 +221,7 @@ public class RoomTypeController {
             return;
         }
         for(Hotel hotel : hotelList){
-            roomTypeService.mergeRoomTypeByHotelId(hotel.getId());
+            roomTypeService.mergeRoomTypeByHotelId(hotel);
         }
         pageNo++;
         mergeRoomType(pageNo);
@@ -258,7 +258,7 @@ public class RoomTypeController {
            return;
         }
         for(Hotel hotel : hotelList){
-            roomTypeService.mergeRoomTypePriceByHotelId(hotel.getId());
+            roomTypeService.mergeRoomTypePriceByHotelId(hotel);
         }
         pageNo++;
         mergeRoomTypePriceByPage(pageNo);
