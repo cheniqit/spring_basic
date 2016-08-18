@@ -392,9 +392,14 @@ public class HotelPicServiceImpl {
 
             //save
             this.hotelMapper.updateByPrimaryKeyWithBLOBs(hotel);
+            hotelService.updateRedisHotel(hotel.getId(), hotel, "HotelPicServiceImpl.saveHotelPic");
+
             for (RoomType roomType : roomTypeSaveList) {
                 this.roomTypeMapper.updateByPrimaryKeyWithBLOBs(roomType);
+                roomTypeService.updateRedisRoomType(roomType.getId(), roomType, "HotelPicServiceImpl.saveHotelPic");
             }
+
+            OtsInterface.initHotel(hotel.getId());
         } else {
             hpi = convertHotelPicInfo(hpi);
             for (HotelPicInfo.Data data : hpi.getData()) {
