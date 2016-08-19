@@ -571,7 +571,7 @@ public class HotelController {
     public ResponseEntity<HotelCommonResponse> updateHotelPrice(Long hotelId, Long roomTypeId) {
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
 
-        if (!HotelSourceEnum.SHUIME2.getId().equals(hotel.getSourceType())) {
+        if (null == hotel || !HotelSourceEnum.SHUIME2.getId().equals(hotel.getSourceType())) {
             throw new MyException("酒店非睡么自建类型!");
         }
 
