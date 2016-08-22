@@ -27,10 +27,14 @@ import com.mk.hotel.remote.pms.hotel.json.HotelRoomTypeQueryResponse;
 import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
+import com.mk.hotel.roomtype.RoomTypeFullStockLogService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
+import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
+import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomType;
@@ -78,7 +82,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Autowired
     private RoomTypeStockServiceImpl roomTypeStockService;
     @Autowired
-    private RoomTypeStockMapper roomTypeStockMapper;
+    private RoomTypeFullStockLogService roomTypeFullStockLogService;
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
@@ -719,53 +723,132 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         try {
             jedis = RedisUtil.getJedis();
 
-            //
-            int pageSize = 1000;
-
-            //count
-            RoomTypeExample example = new RoomTypeExample();
-            example.setOrderByClause(" id");
-            int count = this.roomTypeMapper.countByExample(example);
-            int pageCount = 0;
-            if (count <= 0) {
-                pageCount = 0;
-            } else {
-                pageCount = (count - 1) / pageSize + 1;
+            /*
+                先清除hotel库
+             */
+            try {
+                this.clearStockAndPriceByHotel(jedis);
+            } catch (Exception e) {
+                Cat.logError(e);
             }
 
-            //
-            for (int i = 0; i < pageCount; i++) {
-                int start = pageSize * i;
-                int end = pageSize * (i + 1);
-                example.setStart(start);
-                example.setPageCount(pageSize);
-                //
-                List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
-
-                //
-                Set<String> stockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_STOCK_", roomTypeList);
-                for (String key : stockSet) {
-                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
-                }
-
-                //
-                Set<String> promoStockSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PROMO_STOCK_", roomTypeList);
-                for (String key : promoStockSet) {
-                    this.clearRedisHash(jedis, key, "yyyy-MM-dd");
-                }
-
-                //
-                Set<String> priceSet = this.fillRedisKeyName("HOTEL_ROOMTYPE_PRICE_", roomTypeList);
-                for (String key : priceSet) {
-                    this.clearRedisHash(jedis, key, "yyyyMMdd");
-                }
+            /*
+                再清除 高德库
+             */
+            try {
+                this.clearStockAndPriceByFullStockLog(jedis);
+            } catch (Exception e) {
+                Cat.logError(e);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
         } finally {
             if (null != jedis) {
                 jedis.close();
+            }
+        }
+    }
+
+    private void clearStockAndPriceByFullStockLog(Jedis jedis) {
+
+        if (null == jedis) {
+            return;
+        }
+        //
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(calendar.DATE, -1);
+        Date yesterday = calendar.getTime();
+
+        List<RoomTypeFullStockLogDto> logDtoList = roomTypeFullStockLogService.queryByDay(yesterday);
+        for (RoomTypeFullStockLogDto dto : logDtoList) {
+            Long roomTypeId = dto.getRoomTypeId();
+
+            //key
+            String totalKey = RoomTypeStockCacheEnum.TOTAL_KEY.getName() + roomTypeId;
+            this.clearRedisHash(jedis, totalKey, "yyyy-MM-dd");
+
+            //
+            String totalPromoKey = RoomTypeStockCacheEnum.TOTAL_PROMO_KEY.getName() + roomTypeId;
+            this.clearRedisHash(jedis, totalPromoKey, "yyyy-MM-dd");
+
+            //
+            String availableKey = RoomTypeStockCacheEnum.AVAILABLE_KEY.getName() + roomTypeId;
+            this.clearRedisHash(jedis, availableKey, "yyyy-MM-dd");
+
+            //
+            String promoKey = RoomTypeStockCacheEnum.PROMO_KEY.getName() + roomTypeId;
+            this.clearRedisHash(jedis, promoKey, "yyyy-MM-dd");
+
+            //
+            String roomTypePriceKey = RoomTypePriceCacheEnum.PRICE_KEY.getName() + roomTypeId;
+            this.clearRedisHash(jedis, roomTypePriceKey, "yyyyMMdd");
+        }
+    }
+
+    private void clearStockAndPriceByHotel(Jedis jedis) {
+
+        if (null == jedis) {
+            return;
+        }
+        //
+        int pageSize = 1000;
+
+        //count
+        RoomTypeExample example = new RoomTypeExample();
+        example.setOrderByClause(" id");
+        int count = this.roomTypeMapper.countByExample(example);
+        int pageCount = 0;
+        if (count <= 0) {
+            pageCount = 0;
+        } else {
+            pageCount = (count - 1) / pageSize + 1;
+        }
+
+        //
+        for (int i = 0; i < pageCount; i++) {
+            int start = pageSize * i;
+            int end = pageSize * (i + 1);
+            example.setStart(start);
+            example.setPageCount(pageSize);
+            //
+            List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(example);
+
+            //key
+            String totalKey = RoomTypeStockCacheEnum.TOTAL_KEY.getName();
+            Set<String> totalStockSet = this.fillRedisKeyName(totalKey, roomTypeList);
+            for (String key : totalStockSet) {
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+            }
+
+            //
+            String totalPromoKey = RoomTypeStockCacheEnum.TOTAL_PROMO_KEY.getName();
+            Set<String> totalPromoStockSet = this.fillRedisKeyName(totalPromoKey, roomTypeList);
+            for (String key : totalPromoStockSet) {
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+            }
+
+            //
+            String availableKey = RoomTypeStockCacheEnum.AVAILABLE_KEY.getName();
+            Set<String> availableStockSet = this.fillRedisKeyName(availableKey, roomTypeList);
+            for (String key : availableStockSet) {
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+            }
+
+            //
+            String promoKey = RoomTypeStockCacheEnum.PROMO_KEY.getName();
+            Set<String> promoStockSet = this.fillRedisKeyName(promoKey, roomTypeList);
+            for (String key : promoStockSet) {
+                this.clearRedisHash(jedis, key, "yyyy-MM-dd");
+            }
+
+            //
+            String roomTypePriceKey = RoomTypePriceCacheEnum.PRICE_KEY.getName();
+            Set<String> priceSet = this.fillRedisKeyName(roomTypePriceKey, roomTypeList);
+            for (String key : priceSet) {
+                this.clearRedisHash(jedis, key, "yyyyMMdd");
             }
         }
     }
