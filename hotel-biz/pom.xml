@@ -265,6 +265,11 @@
             <artifactId>motan-transport-netty</artifactId>
             <version>0.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.weibo</groupId>
+            <artifactId>motan-registry-zookeeper</artifactId>
+            <version>0.1.1</version>
+        </dependency>
 
         <!-- only needed for spring-based features -->
         <dependency>
