@@ -9,6 +9,7 @@
     </context:component-scan>
 
 	<import resource="db-context.xml" />
+    <import resource="motan_server.xml" />
 
 
 

@@ -254,6 +254,24 @@
             <artifactId>xstream</artifactId>
             <version>1.4.9</version>
         </dependency>
+        <!--motan-->
+        <dependency>
+            <groupId>com.weibo</groupId>
+            <artifactId>motan-core</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.weibo</groupId>
+            <artifactId>motan-transport-netty</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
+        <!-- only needed for spring-based features -->
+        <dependency>
+            <groupId>com.weibo</groupId>
+            <artifactId>motan-springsupport</artifactId>
+            <version>0.1.1</version>
+        </dependency>
     </dependencies>
 
     <build>
