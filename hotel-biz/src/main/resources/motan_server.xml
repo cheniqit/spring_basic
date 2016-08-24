@@ -9,5 +9,5 @@
     <motan:registry regProtocol="zookeeper" name="my_zookeeper" address="${zk_connect}"/>
 
     <!-- exporting service by Motan -->
-    <motan:service interface="com.mk.hotel.hotelinfo.HotelService" ref="hotelServiceImpl" export="8002" />
+    <motan:service interface="com.mk.hotel.hotelinfo.HotelService" module="hotel" group="group1" ref="hotelServiceImpl" export="8002" />
 </beans>
