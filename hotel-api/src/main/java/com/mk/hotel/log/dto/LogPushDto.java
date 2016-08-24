@@ -1,8 +1,9 @@
 package com.mk.hotel.log.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LogPushDto {
+public class LogPushDto  implements Serializable {
     private Long id;
 
     private Long type;

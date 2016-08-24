@@ -1,9 +1,10 @@
 package com.mk.hotel.roomtype.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class RoomTypePriceDto {
+public class RoomTypePriceDto  implements Serializable {
     private Long id;
 
     //for json

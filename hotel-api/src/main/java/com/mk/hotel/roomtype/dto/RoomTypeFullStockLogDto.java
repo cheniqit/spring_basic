@@ -1,8 +1,9 @@
 package com.mk.hotel.roomtype.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RoomTypeFullStockLogDto {
+public class RoomTypeFullStockLogDto  implements Serializable {
     private Long id;
 
     private Long roomTypeId;

@@ -2,11 +2,12 @@ package com.mk.hotel.hotelinfo.dto;
 
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-public class HotelDto {
+public class HotelDto implements Serializable{
     private Long id;
 
     private Long fangId;
