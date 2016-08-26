@@ -10,4 +10,6 @@
 
     <!-- exporting service by Motan -->
     <motan:service interface="com.mk.hotel.hotelinfo.HotelService" module="hotel" group="group1" ref="hotelServiceImpl" export="8002" />
+    <motan:service interface="com.mk.hotel.roomtype.RoomTypeService" module="hotel" group="group1" ref="roomTypeServiceImpl" export="8003" />
+
 </beans>
