@@ -1,6 +1,9 @@
 package com.mk.hotel.roomtype;
 
+import com.mk.hotel.roomtype.dto.StockInfoDto;
+
 import java.util.Date;
+import java.util.List;
 
 public interface RoomTypeStockService {
 
@@ -65,4 +68,14 @@ public interface RoomTypeStockService {
      * @return
      */
     String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
+
+    /**
+     *
+     * @param roomTypeId
+     * @param begin
+     * @param end
+     * @return
+     */
+    List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
+
 }
