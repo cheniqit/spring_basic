@@ -5,11 +5,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
    http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd">
 
-
-    <motan:registry regProtocol="zookeeper" name="my_zookeeper" address="${zk_connect}"/>
-
+    <motan:protocol id="hotelProtocol" name="hotelProtocol"  maxWorkerThread="800" minWorkerThread="20"/>
+    <motan:registry regProtocol="zookeeper" id="my_zookeeper" address="${zk_connect}" />
+    <motan:basicService id="basicService" module="hotel" group="group1" registry="my_zookeeper"></motan:basicService>
     <!-- exporting service by Motan -->
-    <motan:service interface="com.mk.hotel.hotelinfo.HotelService" module="hotel" group="group1" ref="hotelServiceImpl" export="8002" />
-    <motan:service interface="com.mk.hotel.roomtype.RoomTypeService" module="hotel" group="group1" ref="roomTypeServiceImpl" export="8003" />
+    <motan:service interface="com.mk.hotel.hotelinfo.HotelService" ref="hotelServiceImpl" export="9802"  basicService="basicService" />
+    <motan:service interface="com.mk.hotel.roomtype.RoomTypeService" ref="roomTypeServiceImpl" export="9803"  basicService="basicService"/>
+    <motan:service interface="com.mk.hotel.roomtype.RoomTypeStockService" ref="roomTypeStockServiceImpl" export="9804"  basicService="basicService"/>
 
 </beans>

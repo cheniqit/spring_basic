@@ -15,15 +15,11 @@ import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.RoomTypeStockBean;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
-import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
-import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
-import com.mk.hotel.roomtype.model.RoomTypeFullStockLog;
-import com.mk.hotel.roomtype.model.RoomTypeStock;
-import com.mk.hotel.roomtype.model.RoomTypeStockExample;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
-
+import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
+import com.mk.hotel.roomtype.model.RoomTypeStockExample;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
