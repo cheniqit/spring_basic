@@ -1,9 +1,11 @@
 package com.mk.hotel.roomtype.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by huangjie on 16/6/28.
  */
-public class StockInfoDto {
+public class StockInfoDto implements Serializable {
 
     private String date;
     private String num;
