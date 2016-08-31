@@ -26,6 +26,7 @@ import com.mk.hotel.remote.dog.common.HotelCommonResponse;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.PushRoomType;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
@@ -580,8 +581,8 @@ public class HotelController {
         //
         StringBuilder result = new StringBuilder();
         if(roomTypeId == null){
-            List<RoomType>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
-            for(RoomType roomType : roomTypeList){
+            List<RoomTypeDto>  roomTypeList = roomTypeService.selectRoomTypeByHotelId(hotelId);
+            for(RoomTypeDto roomType : roomTypeList){
                 String subResult = roomTypeService.updateRoomTypeToRedis(hotelId, roomType.getId());
                 result.append(subResult);
             }

@@ -43,4 +43,6 @@ public interface RoomTypeService {
     void clearStockAndPrice();
 
     RoomTypeDto selectByHotelId(Long hotelId);
+
+    List<RoomTypeDto> selectRoomTypeByHotelId(Long hotelId);
 }
