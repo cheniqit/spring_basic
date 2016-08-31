@@ -1,9 +1,12 @@
 package com.mk.hotel.roomtype;
 
+import com.dianping.cat.Cat;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
+import redis.clients.jedis.Jedis;
 
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public interface RoomTypeStockService {
 
@@ -70,12 +73,53 @@ public interface RoomTypeStockService {
     String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
 
     /**
-     *
+     * 查询pms库存
      * @param roomTypeId
      * @param begin
      * @param end
      * @return
      */
     List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
+
+
+    /**
+     * 查询特价库存
+     * @param hotelId
+     * @param roomTypeId
+     * @param from
+     * @param to
+     * @return
+     */
+    Map<String, Integer> getPromoStock(String hotelId, String roomTypeId, Date from, Date to) ;
+
+    /**
+     * 查询普通房库存
+     * @param hotelId
+     * @param roomTypeId
+     * @param from
+     * @param to
+     * @return
+     */
+    Map<String, Integer> getNormalStock(String hotelId, String roomTypeId, Date from, Date to) ;
+
+    /**
+     * 查询连续天内的可用特价库存
+     * @param hotelId
+     * @param roomTypeId
+     * @param from
+     * @param to
+     * @return
+     */
+    Integer getAvailableByPromo(String hotelId, String roomTypeId, String from, String to) ;
+
+    /**
+     * 查询连续天内的可用普通库存
+     * @param hotelId
+     * @param roomTypeId
+     * @param from
+     * @param to
+     * @return
+     */
+    Integer getAvailableByNormal(String hotelId, String roomTypeId, String from, String to);
 
 }
