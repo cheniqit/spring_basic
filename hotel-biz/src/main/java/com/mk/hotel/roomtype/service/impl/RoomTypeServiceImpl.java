@@ -169,7 +169,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
 
-    public List<RoomType> selectRoomTypeByHotelId(Long hotelId) {
+    public List<RoomTypeDto> selectRoomTypeByHotelId(Long hotelId) {
         if (null == hotelId) {
             throw new MyException("-99", "-99", "hotelId 不可为空");
         }
@@ -177,7 +177,12 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomTypeExample roomTypeExample = new RoomTypeExample();
         roomTypeExample.createCriteria().andHotelIdEqualTo(hotelId);
         //
-        return this.roomTypeMapper.selectByExample(roomTypeExample);
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+
+        List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
+
+
+        return roomTypeDtoList;
     }
 
 
