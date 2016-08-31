@@ -78,4 +78,6 @@ public interface RoomTypeStockService {
      */
     List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
 
+    List<StockInfoDto> getStock(Long roomTypeId, Date begin, Date end);
+
 }

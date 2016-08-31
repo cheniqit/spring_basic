@@ -20,6 +20,7 @@ import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.model.RoomTypeStockExample;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -497,6 +498,21 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         RoomTypeStockExample example = new RoomTypeStockExample();
         example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
         return roomTypeStockMapper.selectByExample(example);
+    }
+
+    public List<StockInfoDto> getStock(Long roomTypeId, Date begin, Date end){
+        List<RoomTypeStock> roomTypeStockList = queryRoomStockByRoomTypeId(roomTypeId, begin, end);
+        if(CollectionUtils.isEmpty(roomTypeStockList)){
+            return null;
+        }
+        List<StockInfoDto> result = new ArrayList<StockInfoDto>();
+        for(RoomTypeStock roomTypeStock : roomTypeStockList){
+            StockInfoDto stockInfoDto = new StockInfoDto();
+            stockInfoDto.setDate(DateUtils.formatDateTime(roomTypeStock.getDay(), DateUtils.FORMAT_DATE));
+            stockInfoDto.setNum(roomTypeStock.getNumber().toString());
+            result.add(stockInfoDto);
+        }
+        return result;
     }
 
 
