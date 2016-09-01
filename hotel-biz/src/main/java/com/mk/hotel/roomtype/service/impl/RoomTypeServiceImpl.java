@@ -31,6 +31,7 @@ import com.mk.hotel.roomtype.RoomTypeFullStockLogService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
 import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
@@ -908,9 +909,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
         //房型信息
         this.updateRedisRoomType(roomTypeId, roomType, "RoomTypeService.updateRoomTypeToRedis");
-        List<RoomTypePrice> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
+        List<RoomTypePriceDto> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //酒店价格
-        for(RoomTypePrice roomTypePrice : roomTypePriceList){
+        for(RoomTypePriceDto roomTypePrice : roomTypePriceList){
             roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(), roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), "RoomTypeService.updateRoomTypeToRedis");
         }
         List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));

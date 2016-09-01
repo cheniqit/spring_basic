@@ -19,6 +19,7 @@ import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
@@ -468,7 +469,7 @@ public class RoomTypeController {
     @RequestMapping(value = "/getRoomTypePrice")
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> getRoomTypePrice(Long roomTypeId, String fromDate, String toDate) {
-        List<RoomTypePrice>  roomTypePriceList = roomTypePriceService.getRoomTypePrice(roomTypeId,
+        List<RoomTypePriceDto>  roomTypePriceList = roomTypePriceService.getRoomTypePrice(roomTypeId,
                 DateUtils.getDateFromString(fromDate, DateUtils.FORMAT_DATE),
                 DateUtils.getDateFromString(toDate, DateUtils.FORMAT_DATE));
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();
