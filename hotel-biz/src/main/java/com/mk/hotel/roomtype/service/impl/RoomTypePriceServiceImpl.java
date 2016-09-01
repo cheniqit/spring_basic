@@ -19,6 +19,7 @@ import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -135,9 +136,32 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
-    public List<RoomTypePrice> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){
+    public List<RoomTypePriceDto> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){
         RoomTypePriceExample example = new RoomTypePriceExample();
         example.createCriteria().andDayBetween(fromDate, toDate).andRoomTypeIdEqualTo(roomTypeId);
-        return roomTypePriceMapper.selectByExample(example);
+        List<RoomTypePrice> roomTypePriceList = roomTypePriceMapper.selectByExample(example);
+
+        //convert to dto
+        List<RoomTypePriceDto> roomTypePriceDtoList = new ArrayList<RoomTypePriceDto>();
+        for (RoomTypePrice roomTypePrice : roomTypePriceList) {
+            roomTypePriceDtoList.add(this.convertToDto(roomTypePrice));
+        }
+        return roomTypePriceDtoList;
+    }
+
+    private RoomTypePriceDto convertToDto(RoomTypePrice roomTypePrice) {
+        RoomTypePriceDto dto = new RoomTypePriceDto();
+
+        dto.setId(roomTypePrice.getId());
+        dto.setRoomTypeId(roomTypePrice.getRoomTypeId());
+        dto.setDay(roomTypePrice.getDay());
+        dto.setPrice(roomTypePrice.getPrice());
+        dto.setCreateDate(roomTypePrice.getCreateDate());
+        dto.setCreateBy(roomTypePrice.getCreateBy());
+        dto.setUpdateBy(roomTypePrice.getUpdateBy());
+        dto.setUpdateDate(roomTypePrice.getUpdateDate());
+        dto.setIsValid(roomTypePrice.getIsValid());
+        dto.setCost(roomTypePrice.getCost());
+        return dto;
     }
 }
