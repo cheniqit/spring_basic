@@ -1820,6 +1820,11 @@ public class DateUtils extends Object {
 
             long diff = (end - start) / (1000 * 60 * 60 * 24);
 
+            //最少查询一天
+            if (diff == 0) {
+                diff = 1;
+            }
+
             //
             List<Date> dateList = new ArrayList<>();
             for (int i = 0 ; i< diff;i++) {
@@ -1932,5 +1937,26 @@ public class DateUtils extends Object {
         }
         SimpleDateFormat sdf=new SimpleDateFormat(FORMAT_DATETIME);
         return   sdf.format(date);
+    }
+
+    /**
+     * 将时间 去掉时分秒,2016-09-01 10:10:10 -> 2016-09-01 00:00:00
+     * @return
+     */
+    public static Date roundingDate (Date date) {
+        if (null == date) {
+            return null;
+        }
+        //
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_DATE);
+        String roundingDate = format.format(date);
+
+        try {
+            return format.parse(roundingDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
