@@ -22,9 +22,7 @@ public class HawkRemoteService {
 
     private String DOMAIN = UrlUtils.getUrl("hawk.domain");
 
-    private final String HOTEL_OFFLINE = "/hotelcallback/hoteloffline";
-    private final String ROOMTYPE_OFFLINE = "/hotelcallback/roomtypeoffline";
-    private final String ORDER_NOTIFY = "/order/orderNotify";
+    private final String PUSH_URL = "/push/push";
 
     private Logger logger = LoggerFactory.getLogger(HawkRemoteService.class);
 
@@ -37,10 +35,11 @@ public class HawkRemoteService {
 
         StringBuilder url = new StringBuilder()
                 .append(DOMAIN)
-                .append(HOTEL_OFFLINE);
+                .append(PUSH_URL);
 
         Map<String, String> param = new HashMap();
         param.put("hotelId", String.valueOf(hotelId));
+        param.put("pushType", "HOTEL_DELETE");
 
         //
         String remoteResult = HttpUtils.doPost(url.toString(), param);
@@ -56,10 +55,11 @@ public class HawkRemoteService {
 
         StringBuilder url = new StringBuilder()
                 .append(DOMAIN)
-                .append(ROOMTYPE_OFFLINE);
+                .append(PUSH_URL);
 
         Map<String, String> param = new HashMap();
         param.put("roomTypeId", String.valueOf(roomTypeId));
+        param.put("pushType", "ROOMTYPE_DELETE");
 
         //
         String remoteResult = HttpUtils.doPost(url.toString(), param);
@@ -68,21 +68,18 @@ public class HawkRemoteService {
     }
 
 
-    public String orderNotify(String orderNo, Integer orderStatus) {
+    public String orderNotify(String orderNo) {
         if (StringUtils.isBlank(orderNo)) {
             throw new MyException("orderNo参数错误");
-        }
-        if (orderStatus == null) {
-            throw new MyException("orderStatus参数错误");
         }
 
         StringBuilder url = new StringBuilder()
                 .append(DOMAIN)
-                .append(ORDER_NOTIFY);
+                .append(PUSH_URL);
 
         Map<String, String> param = new HashMap();
         param.put("orderNo", orderNo);
-        param.put("orderStatus", orderStatus.toString());
+        param.put("pushType", "ORDER_STATUS_UPDATE");
         String remoteResult = HttpUtils.doPost(url.toString(), param);
         return remoteResult;
     }

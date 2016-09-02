@@ -1,8 +1,6 @@
 package com.mk.hotel.hotelinfo.enums;
 
 
-import com.dianping.cat.Cat;
-
 public enum HotelTypeEnum {
     // 1、客栈 2、青年旅社 3、酒店 4、酒店式公寓
     // 5、经济型酒店 6、精品酒店 7、度假酒店 8、短租公寓 9、农家乐
@@ -87,7 +85,6 @@ public enum HotelTypeEnum {
         try {
             hotelTypeValue = Integer.parseInt(fanqieHotelTypeValue);
         } catch (Exception e) {
-            Cat.logError(e);
         }
 
         //

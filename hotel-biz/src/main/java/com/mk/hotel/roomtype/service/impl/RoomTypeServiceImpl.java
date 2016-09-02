@@ -257,7 +257,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 this.updateRedisRoomType(roomType.getId(), roomType, "RoomTypeService.deleteByHotelId");
 
                 //通知hawk
-                hawkRemoteService.hotelOffline(roomType.getId());
+                hawkRemoteService.roomTypeOffline(roomType.getId());
             }
         }
 
