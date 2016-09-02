@@ -1,7 +1,6 @@
 package com.mk.hotel.hotelinfo.enums;
 
 
-import com.dianping.cat.Cat;
 
 public enum HotelTypeEnum {
     // 1、客栈 2、青年旅社 3、酒店 4、酒店式公寓
@@ -87,7 +86,7 @@ public enum HotelTypeEnum {
         try {
             hotelTypeValue = Integer.parseInt(fanqieHotelTypeValue);
         } catch (Exception e) {
-            Cat.logError(e);
+           e.printStackTrace();
         }
 
         //
