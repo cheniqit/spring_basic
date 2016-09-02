@@ -10,7 +10,6 @@ import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.OrderStatusPush;
 import com.mk.hotel.remote.hawk.HawkRemoteService;
 import com.mk.hotel.remote.hawk.enums.OrderStatusEnum;
-import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

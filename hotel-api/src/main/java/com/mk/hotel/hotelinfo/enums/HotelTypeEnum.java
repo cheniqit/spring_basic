@@ -85,6 +85,7 @@ public enum HotelTypeEnum {
         try {
             hotelTypeValue = Integer.parseInt(fanqieHotelTypeValue);
         } catch (Exception e) {
+           e.printStackTrace();
         }
 
         //
