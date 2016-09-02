@@ -269,6 +269,11 @@
             <name>Public Repositories</name>
             <url>http://mvn.imike.cn:8081/mkrepo/</url>
         </repository>
+        <repository>
+            <id>CN</id>
+            <name>OSChina Central</name>
+            <url>http://maven.oschina.net/content/groups/public/</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
