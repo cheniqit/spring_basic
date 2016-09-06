@@ -269,6 +269,17 @@
             <name>Public Repositories</name>
             <url>http://mvn.imike.cn:8081/mkrepo/</url>
         </repository>
+        <repository>
+            <id>nexus</id>
+            <name>maven</name>
+            <url>http://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
