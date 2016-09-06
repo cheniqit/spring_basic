@@ -63,7 +63,7 @@ public class OrderController {
             if(PmsOrderStatusEnum.checkIn.getCode().equals(pmsOrderStatus)){
                 boolean resultFlag = OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
                 if(!resultFlag){
-                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid(), OrderStatusEnum.checkIn.getCode());
+                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid());
                 }
             }
             if(PmsOrderStatusEnum.channelCanceled.getCode().equals(pmsOrderStatus)
