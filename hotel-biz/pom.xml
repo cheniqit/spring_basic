@@ -279,11 +279,6 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>
-            <artifactId>rocketmq-all</artifactId>
-            <version>3.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.rocketmq</groupId>
             <artifactId>rocketmq-client</artifactId>
             <version>3.2.6</version>
         </dependency>
