@@ -19,7 +19,7 @@ public class Producer {
          * 因为服务器会回查这个Group下的任意一个Producer
          */
         DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
-        producer.setNamesrvAddr("10.10.169.236:9876;10.10.169.236:9876");
+        producer.setNamesrvAddr("10.10.152.97:9876;10.10.169.236:9876");
         producer.setInstanceName("Producer");
 
         /**
@@ -40,7 +40,7 @@ public class Producer {
                     Message msg = new Message("testbroker",// topic
                             "TagA",// tag
                             "OrderID001",// key
-                            ("Hello MetaQ").getBytes());// body
+                            ("Hello MetaQ").getBytes("UTF-8"));// body
                     SendResult sendResult = producer.send(msg);
                     System.out.println(sendResult);
                 }
@@ -49,7 +49,7 @@ public class Producer {
                     Message msg = new Message("TopicTest2",// topic
                             "TagB",// tag
                             "OrderID0034",// key
-                            ("Hello MetaQ").getBytes());// body
+                            ("Hello MetaQ").getBytes("UTF-8"));// body
                     SendResult sendResult = producer.send(msg);
                     System.out.println(sendResult);
                 }
@@ -58,7 +58,7 @@ public class Producer {
                     Message msg = new Message("TopicTest3",// topic
                             "TagC",// tag
                             "OrderID061",// key
-                            ("Hello MetaQ").getBytes());// body
+                            ("Hello MetaQ").getBytes("UTF-8"));// body
                     SendResult sendResult = producer.send(msg);
                     System.out.println(sendResult);
                 }
