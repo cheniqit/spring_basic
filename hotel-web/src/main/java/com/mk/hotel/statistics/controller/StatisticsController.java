@@ -81,7 +81,7 @@ public class StatisticsController {
         //
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
-        result.put("data", countDtoMap);
+        result.put("data", countDtoMap.values());
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
