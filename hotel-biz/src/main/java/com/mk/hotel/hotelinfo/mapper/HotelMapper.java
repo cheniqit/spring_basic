@@ -3,6 +3,8 @@ package com.mk.hotel.hotelinfo.mapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface HotelMapper {
@@ -33,4 +35,12 @@ public interface HotelMapper {
     int updateByPrimaryKeyWithBLOBs(Hotel record);
 
     int updateByPrimaryKey(Hotel record);
+
+    int countByCreateDate(@Param("date")String date);
+
+    List<Map<String,Object>> countBySourceType();
+
+    List<Map<String,Object>> countByCreateDateGroupProvCode(@Param("date")String date);
+
+    List<Map<String,Object>> countBySourceTypeGroupProvCode(@Param("sourceType")Integer sourceType);
 }
