@@ -2,17 +2,11 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.mk.common.BaseTest;
 import com.mk.framework.Constant;
-import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.ots.mapper.LandMarkMapper;
-import com.mk.ots.model.LandMark;
-import com.mk.ots.model.LandMarkExample;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 /**
  * Created by chenqi on 16/5/10.
@@ -32,7 +26,7 @@ public class HotelServiceImplTest extends BaseTest{
 
     @Test
     public void testMergePmsHotel() throws Exception {
-        hotelService.mergePmsHotel(1);
+        hotelService.neverPmsHotel(1);
     }
 
     @Test

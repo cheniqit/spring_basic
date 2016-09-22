@@ -136,11 +136,11 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
     public void mergeHotelFacility(){
         //查询pms所有的信息房间列表id
         int pageNo = 1;
-        mergeHotelFacility(pageNo);
+        neverHotelFacility(pageNo);
     }
 
-    public void mergeHotelFacility(int pageNo){
-        logger.info("begin mergeHotelFacility pageNo {}", pageNo);
+    public void neverHotelFacility(int pageNo){
+        logger.info("begin neverHotelFacility pageNo {}", pageNo);
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -206,8 +206,8 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
 
             OtsInterface.initHotel(new Long(hotel.getId()));
         }
-        logger.info("end mergeHotelFacility pageNo {}", pageNo);
+        logger.info("end neverHotelFacility pageNo {}", pageNo);
         pageNo++;
-        mergeHotelFacility(pageNo);
+        neverHotelFacility(pageNo);
     }
 }

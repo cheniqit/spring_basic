@@ -13,15 +13,12 @@ import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
-import com.mk.hotel.roomtype.RoomTypePriceService;
-import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,7 +232,7 @@ public class RoomTypeController {
                 pageNo = 1;
             }
             if(hotelId != null){
-                roomTypeService.mergeRoomTypePriceByHotelId(hotelId);
+                roomTypeService.neverRoomTypePriceByHotelId(hotelId);
             }else{
                 mergeRoomTypePriceByPage(pageNo);
             }
@@ -294,7 +291,7 @@ public class RoomTypeController {
                 pageNo = 1;
             }
             if(hotelId == null){
-                roomTypeService.mergeRoomTypeStock(pageNo);
+                roomTypeService.neverRoomTypeStock(pageNo);
             }else{
                 roomTypeService.mergeRoomTypeStockByHotel(hotelId);
             }
@@ -319,7 +316,7 @@ public class RoomTypeController {
                 pageNo = 1;
             }
             if(hotelId == null){
-                roomTypeService.mergeRoomTypeDayStock(pageNo);
+                roomTypeService.neverRoomTypeDayStock(pageNo);
             }else{
                 roomTypeService.mergeRoomTypeDayStockByHotel(hotelId);
             }

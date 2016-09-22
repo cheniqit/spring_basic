@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface HotelFacilityService {
     void saveOrUpdateByFangId (List<HotelFacilityDto> hotelFacilityDtoList, HotelSourceEnum hotelSourceEnum);
-    void mergeHotelFacility(int pageNo);
+    void neverHotelFacility(int pageNo);
 }

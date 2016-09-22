@@ -4,8 +4,6 @@ import com.mk.common.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by chenqi on 16/5/16.
  */
@@ -26,5 +24,10 @@ public class RoomTypeServiceImplTest extends BaseTest{
     @Test
     public void testMergeRoomTypeStock() throws Exception {
         roomTypeService.mergeRoomTypeStock();
+    }
+
+    @Test
+    public void testFindRoomTypeStock() throws Exception {
+        roomTypeService.neverRoomTypeStock(1);
     }
 }

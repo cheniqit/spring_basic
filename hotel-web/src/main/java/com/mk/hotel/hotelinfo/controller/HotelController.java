@@ -235,7 +235,7 @@ public class HotelController {
                 pageNo = 1;
             }
             if (hotelId == null) {
-                hotelService.mergePmsHotel(pageNo);
+                hotelService.neverPmsHotel(pageNo);
             } else {
                 hotelService.mergePmsHotelByHotelId(hotelId);
             }
@@ -261,7 +261,7 @@ public class HotelController {
             if (pageNo == null) {
                 pageNo = 1;
             }
-            hotelFacilityService.mergeHotelFacility(pageNo);
+            hotelFacilityService.neverHotelFacility(pageNo);
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);

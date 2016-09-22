@@ -36,10 +36,8 @@ import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
 import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
-import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
-import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
@@ -584,7 +582,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
-    public void mergeRoomTypePriceByHotelId(Long hotelId){
+    public void neverRoomTypePriceByHotelId(Long hotelId){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
         mergeRoomTypePriceByHotelId(hotel);
     }
@@ -632,10 +630,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void mergeRoomTypeStock(){
         int pageNo = 1;
-        mergeRoomTypeStock(pageNo);
+        neverRoomTypeStock(pageNo);
     }
 
-    public void mergeRoomTypeStock(int pageNo) {
+
+    public void neverRoomTypeStock(int pageNo) {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -651,7 +650,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomTypeStock(pageNo);
+        neverRoomTypeStock(pageNo);
     }
 
 
@@ -683,11 +682,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomTypeDayStock(){
-        mergeRoomTypeDayStock(1);
+        neverRoomTypeDayStock(1);
     }
 
     @Override
-    public void mergeRoomTypeDayStock(Integer pageNo) {
+    public void neverRoomTypeDayStock(Integer pageNo) {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -703,7 +702,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeDayStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomTypeDayStock(pageNo);
+        neverRoomTypeDayStock(pageNo);
     }
 
     public void mergeRoomTypeDayStockByHotel(Hotel hotel){
