@@ -38,6 +38,7 @@ import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
+import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
@@ -659,6 +660,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Override
     public void mergeRoomTypeStockByHotel(Long hotelId){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        if(hotel == null){
+            return;
+        }
         mergeRoomTypeStockByHotel(hotel);
     }
 
