@@ -762,6 +762,66 @@ public class RoomTypePriceExample {
             addCriterion("cost not between", value1, value2, "cost");
             return (Criteria) this;
         }
+
+        public Criteria andSettlePriceIsNull() {
+            addCriterion("settle_price is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceIsNotNull() {
+            addCriterion("settle_price is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceEqualTo(BigDecimal value) {
+            addCriterion("settle_price =", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceNotEqualTo(BigDecimal value) {
+            addCriterion("settle_price <>", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceGreaterThan(BigDecimal value) {
+            addCriterion("settle_price >", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("settle_price >=", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceLessThan(BigDecimal value) {
+            addCriterion("settle_price <", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("settle_price <=", value, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceIn(List<BigDecimal> values) {
+            addCriterion("settle_price in", values, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceNotIn(List<BigDecimal> values) {
+            addCriterion("settle_price not in", values, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("settle_price between", value1, value2, "settlePrice");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlePriceNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("settle_price not between", value1, value2, "settlePrice");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

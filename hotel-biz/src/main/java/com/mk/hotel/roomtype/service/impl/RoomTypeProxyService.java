@@ -148,7 +148,7 @@ public class RoomTypeProxyService {
 
                 roomTypePriceService.updateRedisPrice(
                         roomTypeDto.getId(), roomTypeDto.getName(),
-                        roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(),
+                        roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
                         "RoomTypeProxyService.saveRoomTypePrice");
 
             }

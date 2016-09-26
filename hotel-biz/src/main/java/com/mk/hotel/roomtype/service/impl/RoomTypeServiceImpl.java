@@ -909,7 +909,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         List<RoomTypePrice> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //酒店价格
         for(RoomTypePrice roomTypePrice : roomTypePriceList){
-            roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(), roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), "RoomTypeService.updateRoomTypeToRedis");
+            roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(),
+                    roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
+                    "RoomTypeService.updateRoomTypeToRedis");
         }
         List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //库存

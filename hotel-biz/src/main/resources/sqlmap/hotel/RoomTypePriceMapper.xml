@@ -12,6 +12,7 @@
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="is_valid" property="isValid" jdbcType="CHAR" />
     <result column="cost" property="cost" jdbcType="DECIMAL" />
+    <result column="settle_price" property="settlePrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, room_type_id, day, price, create_date, create_by, update_date, update_by, is_valid, 
-    cost
+    cost, settle_price
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.roomtype.model.RoomTypePriceExample" >
     select
@@ -106,17 +107,17 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomTypePrice" >
+  <insert id="insert" parameterType="com.mk.hotel.roomtype.model.RoomTypePrice" useGeneratedKeys="true" keyProperty="id">
     insert into room_type_price (id, room_type_id, day, 
       price, create_date, create_by, 
       update_date, update_by, is_valid, 
-      cost)
+      cost, settle_price)
     values (#{id,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{day,jdbcType=DATE}, 
       #{price,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR}, 
-      #{cost,jdbcType=DECIMAL})
+      #{cost,jdbcType=DECIMAL}, #{settlePrice,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomTypePrice" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.roomtype.model.RoomTypePrice" useGeneratedKeys="true" keyProperty="id">
     insert into room_type_price
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -149,6 +150,9 @@
       <if test="cost != null" >
         cost,
       </if>
+      <if test="settlePrice != null" >
+        settle_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -180,6 +184,9 @@
       </if>
       <if test="cost != null" >
         #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="settlePrice != null" >
+        #{settlePrice,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -222,6 +229,9 @@
       <if test="record.cost != null" >
         cost = #{record.cost,jdbcType=DECIMAL},
       </if>
+      <if test="record.settlePrice != null" >
+        settle_price = #{record.settlePrice,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -238,7 +248,8 @@
       update_date = #{record.updateDate,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
       is_valid = #{record.isValid,jdbcType=CHAR},
-      cost = #{record.cost,jdbcType=DECIMAL}
+      cost = #{record.cost,jdbcType=DECIMAL},
+      settle_price = #{record.settlePrice,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -273,6 +284,9 @@
       <if test="cost != null" >
         cost = #{cost,jdbcType=DECIMAL},
       </if>
+      <if test="settlePrice != null" >
+        settle_price = #{settlePrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -286,7 +300,8 @@
       update_date = #{updateDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       is_valid = #{isValid,jdbcType=CHAR},
-      cost = #{cost,jdbcType=DECIMAL}
+      cost = #{cost,jdbcType=DECIMAL},
+      settle_price = #{settlePrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

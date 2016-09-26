@@ -24,6 +24,8 @@ public class RoomTypePrice {
 
     private BigDecimal cost;
 
+    private BigDecimal settlePrice;
+
     public Long getId() {
         return id;
     }
@@ -102,5 +104,13 @@ public class RoomTypePrice {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public BigDecimal getSettlePrice() {
+        return settlePrice;
+    }
+
+    public void setSettlePrice(BigDecimal settlePrice) {
+        this.settlePrice = settlePrice;
     }
 }

@@ -271,7 +271,7 @@ public class FanqielaileRoomTypeProxyService {
         //redis
         this.roomTypePriceService.updateRedisPrice(
                 roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(),
+                roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
                 "FanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail");
 
         //db
