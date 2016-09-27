@@ -88,15 +88,32 @@ public class RoomTypeProxyService {
     private RoomType convertRoomType(Hotel hotel, HotelRoomTypeQueryResponse.HotelRoomType hotelRoomType){
         RoomType roomType = new RoomType();
         if(StringUtils.isNotBlank(hotelRoomType.getArea())) {
-            roomType.setArea(Integer.valueOf(hotelRoomType.getArea()));
+            try {
+                BigDecimal area = new BigDecimal(hotelRoomType.getArea());
+                roomType.setArea(area.intValue());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
         }
         if(StringUtils.isNotBlank(hotelRoomType.getBedtype())){
-            roomType.setBedType(Integer.valueOf(hotelRoomType.getBedtype()));
+            try {
+                Integer bedType = Integer.parseInt(hotelRoomType.getBedtype());
+                roomType.setBedType(bedType);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Cat.logError(e);
+            }
         }
 
         roomType.setBedSize(hotelRoomType.getBedsize());
         if(StringUtils.isNotBlank(hotelRoomType.getBreakfast())) {
-            roomType.setBreakfast(Integer.valueOf(hotelRoomType.getBreakfast()));
+            try {
+                Integer breakfast = Integer.parseInt(hotelRoomType.getBreakfast());
+                roomType.setBreakfast(breakfast);
+            } catch (Exception e){
+
+            }
         }
         roomType.setFangId(Long.valueOf(hotelRoomType.getId()+""));
         roomType.setHotelId(hotel.getId());

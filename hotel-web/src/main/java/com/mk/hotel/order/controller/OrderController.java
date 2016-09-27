@@ -8,6 +8,8 @@ import com.mk.hotel.log.LogPushService;
 import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.OrderStatusPush;
+import com.mk.hotel.remote.hawk.HawkRemoteService;
+import com.mk.hotel.remote.hawk.enums.OrderStatusEnum;
 import com.mk.hotel.roomtype.service.impl.FanqielaileRoomTypeProxyService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,8 @@ public class OrderController {
 
     @Autowired
     private LogPushService logPushService;
-
+    @Autowired
+    private HawkRemoteService hawkRemoteService;
 
     @RequestMapping(value = "/orderstatus", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -59,14 +62,22 @@ public class OrderController {
             //状态判断
             Integer pmsOrderStatus = Integer.valueOf(orderStatusPush.getOrderstatus());
             if(PmsOrderStatusEnum.checkIn.getCode().equals(pmsOrderStatus)){
-                OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
+                boolean resultFlag = OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
+                if(!resultFlag){
+                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid(), OrderStatusEnum.checkIn.getCode());
+                }
             }
             if(PmsOrderStatusEnum.pmsFullStock.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.pmsCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.customerServiceCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.serviceCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.confirmed.getCode().equals(pmsOrderStatus)){
-                OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
+
+                //通知订单失败
+                boolean resultFlag = OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
+                if(!resultFlag){
+                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid(), OrderStatusEnum.refuse.getCode());
+                }
             }
             if(PmsOrderStatusEnum.noshow.getCode().equals(pmsOrderStatus)){
                 OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);

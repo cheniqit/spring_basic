@@ -1,7 +1,10 @@
 package com.mk.hotel.common.utils;
 
 import com.mk.framework.HttpUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.UrlUtils;
+import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +34,7 @@ public class OtsInterface {
         logger.info(s);
     }
 
-    public static void updateOrderStatusByPms(String thirdPartyOrderNo, Integer pmsOrderStatus) {
+    public static boolean updateOrderStatusByPms(String thirdPartyOrderNo, Integer pmsOrderStatus) {
         String url = otsUrl + updateOrderStatusByPms;
         //
         Map<String, String> param = new HashMap<String, String>();
@@ -40,7 +43,16 @@ public class OtsInterface {
         param.put("thirdPartyOrderNo", String.valueOf(thirdPartyOrderNo));
         param.put("pmsOrderStatus", pmsOrderStatus.toString());
         String s = HttpUtils.doPost(url, param);
-        logger.info(s);
+        try {
+            FbbCommonResponse fbbCommonResponse = JsonUtils.fromJson(s, FbbCommonResponse.class);
+            if(fbbCommonResponse == null || !ValidEnum.VALID.getCode().equals(fbbCommonResponse.getSuccess())){
+                return false;
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

@@ -15,6 +15,7 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
+import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
@@ -471,20 +472,18 @@ public class RoomTypeController {
 
     }
 
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "/getRoomTypeStock")
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> test(Long hotelId, Long roomTypeId, String day, Integer totalNum, Integer totalPromoNum) {
+    public ResponseEntity<HashMap<String, Object>> getRoomTypeStock(Long roomTypeId, String fromDate, String toDate) {
+        Date from = DateUtils.getDateFromString(fromDate, DateUtils.FORMAT_DATE);
+        Date to = DateUtils.getDateFromString(toDate, DateUtils.FORMAT_DATE);
 
-        //Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum
-
-        this.roomTypeStockService.updateRedisStockByTotal(
-                hotelId, roomTypeId, DateUtils.getDateFromString(day, DateUtils.FORMAT_DATE),
-                totalNum, totalPromoNum);
-        HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+        List<StockInfoDto> roomTypeStockList = roomTypeStockService.getRemoteStock(roomTypeId, from, to);
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
+        result.put("roomTypeStockList", roomTypeStockList);
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
 
     }
-
 }
 
