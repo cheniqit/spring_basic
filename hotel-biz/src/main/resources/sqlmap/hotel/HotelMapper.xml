@@ -36,6 +36,12 @@
   <resultMap id="ResultMapWithBLOBs" type="com.mk.hotel.hotelinfo.model.Hotel" extends="BaseResultMap" >
     <result column="pic" property="pic" jdbcType="LONGVARCHAR" />
   </resultMap>
+
+  <resultMap id="groupCount" type="java.util.Map" >
+    <result column="strKey" property="strKey" jdbcType="VARCHAR" />
+    <result column="countValue" property="countValue" jdbcType="INTEGER" />
+  </resultMap>
+
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -719,4 +725,45 @@
       pics_sign = #{picsSign,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="countByCreateDate" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    select count(*) from hotel
+    <where >
+      <if test="date != null" >
+        and DATE_FORMAT(create_date,'%Y-%m-%d') = #{date}
+      </if>
+      and is_valid = 'T'
+    </where>
+  </select>
+
+  <select id="countByCreateDateGroupProvCode" parameterType="java.lang.String" resultMap="groupCount" >
+    select prov_code strKey,count(*) countValue from hotel
+    <where >
+      <if test="date != null" >
+        and DATE_FORMAT(create_date,'%Y-%m-%d') = #{date}
+      </if>
+      and is_valid = 'T'
+    </where>
+    group by prov_code
+  </select>
+
+  <select id="countBySourceType" resultMap="groupCount" >
+    select source_type strKey,count(*) countValue  from hotel
+    <where >
+      and is_valid = 'T'
+    </where>
+    group by source_type order by source_type
+  </select>
+
+  <select id="countBySourceTypeGroupProvCode" parameterType="java.lang.Integer" resultMap="groupCount" >
+    select prov_code strKey, count(*) countValue from hotel
+    <where >
+      <if test="sourceType != null" >
+        and source_type = #{sourceType}
+      </if>
+      and is_valid = 'T'
+    </where>
+    group by prov_code
+  </select>
+
 </mapper>
