@@ -44,6 +44,7 @@ public class StatisticsController {
         Map<String, Object> newCountMap = new HashMap<String, Object>();
         newCountMap.put("name", "新上线酒店");
         newCountMap.put("countValue", newCount);
+        newCountMap.put("isNew", "T");
         dataList.add(newCountMap);
 
         //

@@ -58,6 +58,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
 
             String name = hotelSourceEnum.getName() + "酒店";
             objMap.put("name", name);
+            objMap.put("sourceType", key);
         }
         return result;
     }
