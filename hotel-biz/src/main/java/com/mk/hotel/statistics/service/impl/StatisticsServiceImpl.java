@@ -75,7 +75,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
         } else {
             //format date
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.format(date);
+            strDate = format.format(date);
         }
         List<Map<String, Object>> result = this.hotelMapper.countByCreateDateGroupProvCode(strDate);
 
