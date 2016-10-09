@@ -44,7 +44,7 @@ public class RoomStatesController {
                                                                        BigDecimal totalStock) {
 
         //TODO
-        this.roomstatesService.updatepriceandstock(roomTypeId, null, null, marketPrice, salePrice, settlePrice, totalStock);
+        this.roomstatesService.updatePriceAndStock(roomTypeId, null, null, marketPrice, salePrice, settlePrice, totalStock);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");

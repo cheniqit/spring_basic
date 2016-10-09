@@ -13,9 +13,9 @@ public interface IRoomStatesService {
 
     List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate);
 
-    int updatepriceandstock(Long roomTypeId, Date startDate, Date endDate,
-                                            BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                            BigDecimal totalStock);
+    int updatePriceAndStock(Long roomTypeId, Date startDate, Date endDate,
+                            BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
+                            BigDecimal totalStock);
 
     int updatePrice(Long roomTypeId, String startDate, String endDate,
                                     BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice);
