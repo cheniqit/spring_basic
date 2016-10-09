@@ -17,9 +17,9 @@ public interface IRoomStatesService {
                             BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
                             BigDecimal totalStock);
 
-    int updatePrice(Long roomTypeId, String startDate, String endDate,
+    int updatePrice(Long roomTypeId, Date startDate, Date endDate,
                                     BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice);
 
-    int updateStock(Long roomTypeId, String startDate, String endDate,
+    int updateStock(Long roomTypeId, Date startDate, Date endDate,
                                     BigDecimal totalStock);
 }

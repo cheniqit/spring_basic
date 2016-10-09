@@ -2,6 +2,8 @@ package com.mk.hotel.roomstates.controller;
 
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/roomstates", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoomStatesController {
+
+    private static Logger logger = LoggerFactory.getLogger(RoomStatesController.class);
 
     @Autowired
     private IRoomStatesService roomstatesService;
