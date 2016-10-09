@@ -27,4 +27,7 @@ public class Constant {
 
     /**topic**/
     public static final String TOPIC_ROOMTYPE_PRICE = "hotel_roomtype_price";
+
+
+    public static final String CONSUMER_GROUP_NAME = "hotelConsumerGroupName";
 }

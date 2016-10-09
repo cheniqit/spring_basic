@@ -69,6 +69,8 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             roomTypePrice.setRoomTypeId(roomTypeDto.getId());
             roomTypePrice.setDay(roomTypePriceDto.getDay());
             roomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            roomTypePrice.setCost(roomTypePriceDto.getCost());
+            roomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
             roomTypePrice.setIsValid("T");
 
             roomTypePrice.setCreateDate(new Date());
@@ -82,7 +84,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             RoomTypePrice dbRoomTypePrice = roomTypePriceList.get(0);
             dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
             dbRoomTypePrice.setCost(roomTypePriceDto.getCost());
-
+            dbRoomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
             dbRoomTypePrice.setUpdateDate(new Date());
             dbRoomTypePrice.setUpdateBy("hotel_system");
             return this.roomTypePriceMapper.updateByPrimaryKeySelective(dbRoomTypePrice);
