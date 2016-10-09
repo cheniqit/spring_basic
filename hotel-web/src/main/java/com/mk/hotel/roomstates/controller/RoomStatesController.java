@@ -1,7 +1,7 @@
 package com.mk.hotel.roomstates.controller;
 
-import com.mk.hotel.roomstates.IRoomStatesService1;
-import com.mk.hotel.roomstates.dto.RoomStatesDto1;
+import com.mk.hotel.roomstates.IRoomStatesService;
+import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +21,7 @@ import java.util.List;
 public class RoomStatesController {
 
     @Autowired
-    private IRoomStatesService1 roomstatesService;
+    private IRoomStatesService roomstatesService;
 
     @RequestMapping(value = "/querystates", method = RequestMethod.POST)
     @ResponseBody
@@ -29,7 +29,7 @@ public class RoomStatesController {
 
 
         //TODO
-        List<RoomStatesDto1> dataList = this.roomstatesService.queryStates(roomTypeId, null, null);
+        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, null, null);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
