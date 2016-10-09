@@ -1,0 +1,122 @@
+CREATE TABLE `room_type_price_normal` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
+
+  `mon_market_price` decimal(12,2) DEFAULT NULL COMMENT '周一市场价挂牌价',
+  `mon_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周一预付销售价',
+  `mon_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周一预付结算价',
+
+  `tue_market_price` decimal(12,2) DEFAULT NULL COMMENT '周二市场价挂牌价',
+  `tue_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周二预付销售价',
+  `tue_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周二预付结算价',
+
+  `wed_market_price` decimal(12,2) DEFAULT NULL COMMENT '周三市场价挂牌价',
+  `wed_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周三预付销售价',
+  `wed_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周三预付结算价',
+
+  `thu_market_price` decimal(12,2) DEFAULT NULL COMMENT '周四市场价挂牌价',
+  `thu_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周四预付销售价',
+  `thu_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周四预付结算价',
+
+  `fri_market_price` decimal(12,2) DEFAULT NULL COMMENT '周五市场价挂牌价',
+  `fri_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周五预付销售价',
+  `fri_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周五预付结算价',
+
+  `sat_market_price` decimal(12,2) DEFAULT NULL COMMENT '周六市场价挂牌价',
+  `sat_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周六预付销售价',
+  `sat_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周六预付结算价',
+
+  `sun_market_price` decimal(12,2) DEFAULT NULL COMMENT '周日市场价挂牌价',
+  `sun_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周日预付销售价',
+  `sun_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周日预付结算价',
+
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
+  `is_valid` char(1) NOT NULL DEFAULT 'T' COMMENT '是否有效标记 F,无效 T,有效',
+    PRIMARY KEY (`id`),
+  KEY `idx_room_type_id` (`room_type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='房型普通日价格表';
+
+
+CREATE TABLE `room_type_price_special` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
+
+  `day` date NOT NULL COMMENT '日期',
+  `market_price` decimal(12,2) DEFAULT NULL COMMENT '市场价挂牌价',
+  `sale_price` decimal(12,2) DEFAULT NULL COMMENT '预付销售价',
+  `settle_price` decimal(12,2) DEFAULT NULL COMMENT '预付结算价',
+
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
+  `is_valid` char(1) NOT NULL DEFAULT 'T' COMMENT '是否有效标记 F,无效 T,有效',
+  PRIMARY KEY (`id`),
+  KEY `idx_room_type_id` (`room_type_id`,`day`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='房型指定日价格表';
+
+
+
+
+CREATE TABLE `room_type_price_normal_log` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
+
+  `mon_market_price` decimal(12,2) DEFAULT NULL COMMENT '周一市场价挂牌价',
+  `mon_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周一预付销售价',
+  `mon_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周一预付结算价',
+
+  `tue_market_price` decimal(12,2) DEFAULT NULL COMMENT '周二市场价挂牌价',
+  `tue_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周二预付销售价',
+  `tue_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周二预付结算价',
+
+  `wed_market_price` decimal(12,2) DEFAULT NULL COMMENT '周三市场价挂牌价',
+  `wed_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周三预付销售价',
+  `wed_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周三预付结算价',
+
+  `thu_market_price` decimal(12,2) DEFAULT NULL COMMENT '周四市场价挂牌价',
+  `thu_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周四预付销售价',
+  `thu_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周四预付结算价',
+
+  `fri_market_price` decimal(12,2) DEFAULT NULL COMMENT '周五市场价挂牌价',
+  `fri_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周五预付销售价',
+  `fri_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周五预付结算价',
+
+  `sat_market_price` decimal(12,2) DEFAULT NULL COMMENT '周六市场价挂牌价',
+  `sat_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周六预付销售价',
+  `sat_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周六预付结算价',
+
+  `sun_market_price` decimal(12,2) DEFAULT NULL COMMENT '周日市场价挂牌价',
+  `sun_sale_price` decimal(12,2) DEFAULT NULL COMMENT '周日预付销售价',
+  `sun_settle_price` decimal(12,2) DEFAULT NULL COMMENT '周日预付结算价',
+
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
+  `is_valid` char(1) NOT NULL DEFAULT 'T' COMMENT '是否有效标记 F,无效 T,有效',
+    PRIMARY KEY (`id`),
+  KEY `idx_room_type_id` (`room_type_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='房型普通日价格表log';
+
+
+CREATE TABLE `room_type_price_special_log` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
+
+  `day` date NOT NULL COMMENT '日期',
+  `market_price` decimal(12,2) DEFAULT NULL COMMENT '市场价挂牌价',
+  `sale_price` decimal(12,2) DEFAULT NULL COMMENT '预付销售价',
+  `settle_price` decimal(12,2) DEFAULT NULL COMMENT '预付结算价',
+
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_by` varchar(50) DEFAULT NULL COMMENT '更新人',
+  `is_valid` char(1) NOT NULL DEFAULT 'T' COMMENT '是否有效标记 F,无效 T,有效',
+  PRIMARY KEY (`id`),
+  KEY `idx_room_type_id` (`room_type_id`,`day`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='房型指定日价格表log';
