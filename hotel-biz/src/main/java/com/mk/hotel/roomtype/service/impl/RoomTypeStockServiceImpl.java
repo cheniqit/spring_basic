@@ -16,6 +16,7 @@ import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.RoomTypeStockBean;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
@@ -421,6 +422,57 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         return "库存更新失败,请联系管理员2";
+    }
+
+    @Override
+    public RoomTypeStockDto queryStockFromRedis(Long roomTypeId, Date day) {
+        if (null == roomTypeId || null == day ) {
+            return null;
+        }
+
+        //key
+        String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
+        String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
+
+        String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
+        String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            //
+            Integer totalNum = getValueByRedisKeyName(jedis, totalHashName, strDate);
+            Integer totalPromoNum = getValueByRedisKeyName(jedis, totalPromoHashName, strDate);
+            Integer availableNum = getValueByRedisKeyName(jedis, availableHashName, strDate);
+            Integer promoNum = getValueByRedisKeyName(jedis, promoHashName, strDate);
+
+            //
+            RoomTypeStockDto dto = new RoomTypeStockDto();
+            dto.setRoomTypeId(roomTypeId);
+            dto.setDay(day);
+            dto.setTotalNum(totalNum);
+            dto.setTotalPromoNum(totalPromoNum);
+            dto.setAvailableNum(availableNum);
+            dto.setPromoNum(promoNum);
+
+            return dto;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return null;
     }
 
     public void fullStock(Long hotelId, Long roomTypeId, Date from, Date to) {

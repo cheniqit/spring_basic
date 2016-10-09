@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtype;
 
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 
 import java.util.Date;
@@ -68,6 +69,14 @@ public interface RoomTypeStockService {
      * @return
      */
     String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
+
+    /**
+     * 查询redis中库存量
+     * @param roomTypeId
+     * @param day
+     * @return
+     */
+    RoomTypeStockDto queryStockFromRedis(Long roomTypeId, Date day);
 
     /**
      *
