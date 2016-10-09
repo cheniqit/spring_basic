@@ -10,6 +10,12 @@
 
 	<import resource="db-context.xml" />
 
+    <bean id="msgProducer" class="com.mk.hotel.message.MsgProducer" scope="singleton" init-method="startProducer" destroy-method="shutdownProducer">
+        <property name="namesrvAddr" value="${rocketmq.namesrvAddr}"/>
+        <property name="producerGroupName" value="hotelProducerGroup"/>
+        <property name="instanceName" value="hotelProducer"/>
+
+    </bean>
 
 
 </beans>

@@ -24,4 +24,7 @@ public class Constant {
 
     public static final String PUSH_INFO_SET = "PUSH_INFO_SET";
     public static final String TASK_FACTORY_REMOTE_URL = UrlUtils.getUrl("task.factory.remote.url");
+
+    /**topic**/
+    public static final String TOPIC_ROOMTYPE_PRICE = "hotel_roomtype_price";
 }
