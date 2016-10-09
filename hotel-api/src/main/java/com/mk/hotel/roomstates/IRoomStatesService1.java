@@ -1,6 +1,6 @@
 package com.mk.hotel.roomstates;
 
-import com.mk.hotel.roomstates.dto.RoomstatesDto;
+import com.mk.hotel.roomstates.dto.RoomStatesDto1;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,9 +9,9 @@ import java.util.List;
 /**
  * Created by huangjie on 16/10/9.
  */
-public interface IRoomstatesService {
+public interface IRoomStatesService1 {
 
-    List<RoomstatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate);
+    List<RoomStatesDto1> queryStates(Long roomTypeId, Date startDate, Date endDate);
 
     int updatepriceandstock(Long roomTypeId, Date startDate, Date endDate,
                                             BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
