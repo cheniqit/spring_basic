@@ -138,6 +138,48 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         }
     }
 
+    @Override
+    public RoomTypePriceDto queryPriceFromRedis(Long roomTypeId, Date day) {
+        if (null == roomTypeId || null == day) {
+            return null;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = RedisUtil.getJedis();
+            String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(String.valueOf(roomTypeId));
+            //get
+            String priceJson = jedis.hget(priceHashName, strDate);
+
+            com.mk.hotel.roomtype.redisbean.RoomTypePrice roomTypePrice =
+                    JsonUtils.fromJson(priceJson, com.mk.hotel.roomtype.redisbean.RoomTypePrice.class);
+
+            //
+            RoomTypePriceDto dto = new RoomTypePriceDto();
+            dto.setRoomTypeId(roomTypeId);
+            dto.setPrice(roomTypePrice.getPrice());
+            dto.setCost(roomTypePrice.getOriginPrice());
+            dto.setSettlePrice(roomTypePrice.getSettlePrice());
+            dto.setDay(day);
+
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+        return null;
+    }
+
     public List<RoomTypePrice> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){
         RoomTypePriceExample example = new RoomTypePriceExample();
         example.createCriteria().andDayBetween(fromDate, toDate).andRoomTypeIdEqualTo(roomTypeId);
