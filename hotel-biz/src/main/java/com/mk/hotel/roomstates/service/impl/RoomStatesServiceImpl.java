@@ -12,12 +12,9 @@ import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialLogService;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialService;
-import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialLogDto;
-import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialLog;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialLogService;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
-import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialLogDto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +38,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     @Autowired
     private RoomTypePriceSpecialService roomTypePriceSpecialService;
 
+    @Autowired
     private RoomTypePriceSpecialLogService roomTypePriceSpecialLogService;
 
     @Autowired
