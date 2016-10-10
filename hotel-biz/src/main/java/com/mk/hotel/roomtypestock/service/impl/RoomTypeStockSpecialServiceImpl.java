@@ -6,6 +6,7 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.message.MsgProducer;
+import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialMapper;
@@ -115,12 +116,16 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 	@Override
 	public RoomTypeStockSpecialDto selectByDay(Long roomTypeId, Date day) {
 		RoomTypeStockSpecialExample example = new RoomTypeStockSpecialExample();
-			example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
-		List<RoomTypeStockSpecial> roomTypeStockSpecialList = roomTypeStockSpecialMapper.selectByExample(example);
-		if (null != roomTypeStockSpecialList && 0 < roomTypeStockSpecialList.size()) {
-			return toDto(roomTypeStockSpecialList.get(0));
+		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
+		List<RoomTypeStockSpecial> list = this.roomTypeStockSpecialMapper.selectByExample(example);
+		if (list.isEmpty()) {
+			return null;
+		} else if (list.size() == 1) {
+			RoomTypeStockSpecial special = list.get(0);
+			return toDto(special);
+		} else {
+			throw new MyException("库存配置错误,根据房型和时间查到多条配置信息");
 		}
-		return null;
 	}
 
 	/**

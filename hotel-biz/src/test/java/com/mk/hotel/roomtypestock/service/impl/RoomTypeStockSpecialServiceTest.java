@@ -60,13 +60,16 @@ public class RoomTypeStockSpecialServiceTest extends BaseTest {
 	}
 
 	@Test
-	public void testSelcetByDay() throws ParseException {
-		Long roomTypeId = new Long(9);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date day = sdf.parse("2016-10-10");
-		RoomTypeStockSpecialDto dto = roomTypeStockSpecialService.selectByDay(roomTypeId, day);
-		if (null != dto) {
-			logger.info("room_type_id:{}", dto.getRoomTypeId());
+	public void testSelectByDay() {
+		//
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date d = format.parse("2016-11-01");
+			RoomTypeStockSpecialDto dto = roomTypeStockSpecialService.selectByDay(31877l, d);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+
 	}
 }
