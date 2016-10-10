@@ -618,26 +618,56 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void mergeRoomTypeStock(Long roomTypeId, Date date, Long totalNumber, String operator){
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
-        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
+    public RoomTypeStock mergeRoomTypeStock(Long roomTypeId, Date date, Long number, Long totalNumber, String operator){
+
+        //
         RoomTypeStock roomTypeStock = new RoomTypeStock();
         roomTypeStock.setDay(date);
         roomTypeStock.setRoomTypeId(roomTypeId);
-        roomTypeStock.setNumber(totalNumber);
+        roomTypeStock.setNumber(number);
+        roomTypeStock.setTotalNumber(totalNumber);
         roomTypeStock.setUpdateBy(operator);
         roomTypeStock.setUpdateDate(new Date());
         roomTypeStock.setCreateBy(operator);
         roomTypeStock.setCreateDate(new Date());
         roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
+
+        //
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
+        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
+
         if(CollectionUtils.isEmpty(roomTypeStockList)){
             roomTypeStockMapper.insert(roomTypeStock);
+            return roomTypeStock;
         }else if(roomTypeStockList.size() == 1){
-            roomTypeStock.setCreateDate(null);
-            roomTypeStockMapper.updateByExample(roomTypeStock ,example);
+            RoomTypeStock stock = roomTypeStockList.get(0);
+
+            if (null != number) {
+                stock.setNumber(number);
+            }
+            stock.setTotalNumber(totalNumber);
+            stock.setUpdateBy(operator);
+            stock.setUpdateDate(new Date());
+            roomTypeStockMapper.updateByPrimaryKey(stock);
+
+            return stock;
         }else{
-            throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
+            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
         }
     }
+
+
+    public int saveOrUpdate(RoomTypeStock stock) {
+        if (null == stock) {
+            return -1;
+        }
+
+        if (null == stock.getId()) {
+            return this.roomTypeStockMapper.insert(stock);
+        } else {
+            return this.roomTypeStockMapper.updateByPrimaryKey(stock);
+        }
+    }
+
 }

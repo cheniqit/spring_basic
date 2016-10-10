@@ -12,9 +12,12 @@ import com.mk.hotel.common.Constant;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtype.model.RoomType;
+import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -80,7 +84,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                                 e.printStackTrace();
                             }
                             logger.info(msg);
-                            RoomTypeStockSpecial roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecial.class);
+                            RoomTypeStockSpecialDto roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypeStockSpecial.getRoomTypeId());
                             if(roomType == null){
@@ -90,10 +94,35 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             if(hotelDto == null){
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
-                            roomTypeStockService.mergeRoomTypeStock(roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
-                                    roomTypeStockSpecial.getTotalNumber(),roomTypeStockSpecial.getCreateBy());
+                            //保存 total
+                            RoomTypeStock stock = roomTypeStockService.mergeRoomTypeStock(roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
+                                    null, roomTypeStockSpecial.getTotalNumber(),roomTypeStockSpecial.getCreateBy());
+                            //放入redis
                             roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
                                     roomTypeStockSpecial.getTotalNumber().intValue(), 0);
+
+                            //读取redis 可用销售量
+                            RoomTypeStockDto redisDto = roomTypeStockService.queryStockFromRedis(
+                                    roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay());
+                            if (null != redisDto) {
+                                Integer availableNum = redisDto.getAvailableNum();
+                                Integer promoNum = redisDto.getPromoNum();
+
+                                Integer num = null;
+                                if (null != availableNum && null != promoNum) {
+                                    num = availableNum + promoNum;
+                                } else if (null != availableNum) {
+                                    num = availableNum;
+                                } else if (null != promoNum) {
+                                    num = promoNum;
+                                } else {
+                                    num = null;
+                                }
+
+                                stock.setNumber(num.longValue());
+                                stock.setUpdateDate(new Date());
+                                roomTypeStockService.saveOrUpdate(stock);
+                            }
                         }else{
 
                         }

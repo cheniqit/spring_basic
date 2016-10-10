@@ -17,6 +17,7 @@ import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 e.printStackTrace();
                             }
                             logger.info(msg);
-                            RoomTypePriceSpecial roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecial.class);
+                            RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
                             if(roomType == null){
