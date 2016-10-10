@@ -1,4 +1,4 @@
-package com.mk.hotel.roomtypeprice.service;
+package com.mk.hotel.roomtypeprice.service.impl;
 
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
@@ -25,7 +25,24 @@ public class RoomTypePriceServiceImpl {
     private RoomTypePriceSpecialMapper roomTypePriceSpecialMapper;
 
     public void updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
-
+        if(roomTypeId == null){
+            throw new MyException("参数错误");
+        }
+        if(date == null){
+            throw new MyException("参数错误");
+        }
+        if(marketPrice == null){
+            throw new MyException("参数错误");
+        }
+        if(salePrice == null){
+            throw new MyException("参数错误");
+        }
+        if(settlePrice == null){
+            throw new MyException("参数错误");
+        }
+        if(operator == null){
+            throw new MyException("参数错误");
+        }
         //转换保存
         RoomTypePriceSpecial roomTypePriceSpecial = convertToRoomTypePriceSpecial(roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
         //保存
@@ -36,6 +53,7 @@ public class RoomTypePriceServiceImpl {
         if(CollectionUtils.isEmpty(roomTypePriceSpecialList)){
             roomTypePriceSpecialMapper.insert(roomTypePriceSpecial);
         }else if(roomTypePriceSpecialList.size() == 1){
+            roomTypePriceSpecial.setCreateDate(null);
             roomTypePriceSpecialMapper.updateByExample(roomTypePriceSpecial ,example);
         }else{
             throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
@@ -54,7 +72,6 @@ public class RoomTypePriceServiceImpl {
         roomTypePriceSpecial.setMarketPrice(marketPrice);
         roomTypePriceSpecial.setSalePrice(salePrice);
         roomTypePriceSpecial.setSettlePrice(settlePrice);
-        roomTypePriceSpecial.setDay(new Date());
         roomTypePriceSpecial.setIsValid(ValidEnum.VALID.getCode());
         roomTypePriceSpecial.setUpdateBy(operator);
         roomTypePriceSpecial.setCreateBy(operator);
