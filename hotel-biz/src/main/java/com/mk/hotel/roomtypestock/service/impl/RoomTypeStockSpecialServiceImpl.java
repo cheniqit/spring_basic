@@ -11,10 +11,12 @@ import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialMapper;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecial;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecialExample;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,22 +30,6 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 	private MsgProducer msgProducer;
 	@Autowired
 	private RoomTypeStockSpecialMapper roomTypeStockSpecialMapper;
-
-	@Override
-	public int batchInsert(List<RoomTypeStockSpecialDto> roomTypeStockSpecialDtoList) {
-		return 0;
-	}
-
-	@Override
-	public int saveOrUpdate(RoomTypeStockSpecialDto dto) {
-		return 0;
-	}
-
-	@Override
-	public RoomTypeStockSpecialDto selectById(Long id) {
-		return null;
-	}
-
 
 	public void updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
 		if(roomTypeId == null){
@@ -91,5 +77,62 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		roomTypeStockSpecial.setUpdateDate(new Date());
 		roomTypeStockSpecial.setCreateDate(new Date());
 		return roomTypeStockSpecial;
+	}
+
+	@Override
+	public int batchInsert(List<RoomTypeStockSpecialDto> roomTypeStockSpecialDtoList) {
+		if (null != roomTypeStockSpecialDtoList) {
+			List<RoomTypeStockSpecial> list = new ArrayList<RoomTypeStockSpecial>();
+			for (RoomTypeStockSpecialDto dto : roomTypeStockSpecialDtoList) {
+				list.add(toModel(dto));
+			}
+			return roomTypeStockSpecialMapper.batchInsert(list);
+		}
+		return 0;
+	}
+
+	@Override
+	public int saveOrUpdate(RoomTypeStockSpecialDto dto) {
+		if (null != dto) {
+			return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
+		}
+		return 0;
+	}
+
+	@Override
+	public RoomTypeStockSpecialDto selectById(Long id) {
+		if (null != id) {
+			RoomTypeStockSpecial model = roomTypeStockSpecialMapper.selectByPrimaryKey(id);
+			return toDto(model);
+		}
+		return null;
+	}
+
+	/**
+	 * dto转model
+	 * @param dto
+	 * @return
+	 */
+	public RoomTypeStockSpecial toModel(RoomTypeStockSpecialDto dto) {
+		if (null != dto) {
+			RoomTypeStockSpecial model = new RoomTypeStockSpecial();
+			BeanUtils.copyProperties(dto, model);
+			return model;
+		}
+		return null;
+	}
+
+	/**
+	 * model转dto
+	 * @param model
+	 * @return
+	 */
+	public RoomTypeStockSpecialDto toDto(RoomTypeStockSpecial model) {
+		if (null != model) {
+			RoomTypeStockSpecialDto dto = new RoomTypeStockSpecialDto();
+			BeanUtils.copyProperties(model, dto);
+			return dto;
+		}
+		return null;
 	}
 }
