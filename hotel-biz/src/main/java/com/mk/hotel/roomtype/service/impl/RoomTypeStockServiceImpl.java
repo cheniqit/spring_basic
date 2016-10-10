@@ -624,7 +624,11 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         RoomTypeStock roomTypeStock = new RoomTypeStock();
         roomTypeStock.setDay(date);
         roomTypeStock.setRoomTypeId(roomTypeId);
-        roomTypeStock.setNumber(number);
+        if (null == number) {
+            roomTypeStock.setNumber(totalNumber);
+        } else {
+            roomTypeStock.setNumber(number);
+        }
         roomTypeStock.setTotalNumber(totalNumber);
         roomTypeStock.setUpdateBy(operator);
         roomTypeStock.setUpdateDate(new Date());
