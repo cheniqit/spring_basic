@@ -74,8 +74,18 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
                 dto.setSettlePrice(priceDto.getSettlePrice());
             }
             if (null != stockDto) {
-                dto.setTotalStock(BigDecimal.valueOf(stockDto.getTotalNum()));
-                dto.setStock(BigDecimal.valueOf(stockDto.getAvailableNum() + stockDto.getPromoNum()));
+                dto.setTotalStock(stockDto.getTotalNum());
+                Integer availableNum = stockDto.getAvailableNum();
+                Integer promoNum = stockDto.getPromoNum();
+
+                if (null != availableNum && null != promoNum) {
+                    dto.setStock(availableNum + promoNum);
+                } else if (null != availableNum) {
+                    dto.setStock(availableNum);
+                } else if (null != promoNum) {
+                    dto.setStock(promoNum);
+                }
+
             }
 
             roomStatesDtoList.add(dto);
