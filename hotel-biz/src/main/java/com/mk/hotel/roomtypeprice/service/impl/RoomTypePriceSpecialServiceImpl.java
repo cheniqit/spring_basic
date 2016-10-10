@@ -55,6 +55,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		}
 		//转换保存
 		RoomTypePriceSpecial roomTypePriceSpecial = convertToRoomTypePriceSpecial(roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
+
 		//保存
 		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
 		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
@@ -62,12 +63,17 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 		if(CollectionUtils.isEmpty(roomTypePriceSpecialList)){
 			roomTypePriceSpecialMapper.insert(roomTypePriceSpecial);
-		}else if(roomTypePriceSpecialList.size() == 1){
+		}else if(!CollectionUtils.isEmpty(roomTypePriceSpecialList)){
 			roomTypePriceSpecial.setCreateDate(null);
-			roomTypePriceSpecialMapper.updateByExample(roomTypePriceSpecial ,example);
+			roomTypePriceSpecial.setCreateBy(null);
+			roomTypePriceSpecialMapper.updateByExampleSelective(roomTypePriceSpecial ,example);
 		}else{
 			throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
 		}
+
+		//保存log
+
+		//send msg
 		try{
 			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", JsonUtils.toJson(roomTypePriceSpecial));
 		}catch (Exception e){
