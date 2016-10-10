@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtypeprice.service.impl;
 
+import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.Constant;
@@ -84,7 +85,8 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 		//send msg
 		try{
-			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", JsonUtils.toJson(roomTypePriceSpecial));
+			String message = JsonUtils.toJson(roomTypePriceSpecial, DateUtils.FORMAT_DATETIME);
+			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", message);
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
 		}

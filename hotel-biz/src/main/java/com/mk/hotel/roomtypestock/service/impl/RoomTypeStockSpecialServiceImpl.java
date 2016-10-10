@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtypestock.service.impl;
 
+import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.Constant;
@@ -60,7 +61,8 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 			throw new MyException("库存价格配置错误,根据房型和时间查到多条配置信息");
 		}
 		try{
-			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_STOCK, "special", "", JsonUtils.toJson(roomTypeStockSpecial));
+			String message = JsonUtils.toJson(roomTypeStockSpecial, DateUtils.FORMAT_DATETIME);
+			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_STOCK, "special", "", message);
 		}catch (Exception e){
 			throw new MyException("库存价格配置错误,发送消息错误");
 		}
