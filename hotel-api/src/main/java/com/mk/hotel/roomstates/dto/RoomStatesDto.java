@@ -14,8 +14,8 @@ public class RoomStatesDto {
     private BigDecimal marketPrice;
     private BigDecimal salePrice;
     private BigDecimal settlePrice;
-    private BigDecimal totalStock;
-    private BigDecimal stock;
+    private Integer totalStock;
+    private Integer stock;
 
     public Date getDay() {
         return day;
@@ -49,19 +49,19 @@ public class RoomStatesDto {
         this.settlePrice = settlePrice;
     }
 
-    public BigDecimal getTotalStock() {
+    public Integer getTotalStock() {
         return totalStock;
     }
 
-    public void setTotalStock(BigDecimal totalStock) {
+    public void setTotalStock(Integer totalStock) {
         this.totalStock = totalStock;
     }
 
-    public BigDecimal getStock() {
+    public Integer getStock() {
         return stock;
     }
 
-    public void setStock(BigDecimal stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
     }
 }
