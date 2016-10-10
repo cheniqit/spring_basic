@@ -90,7 +90,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
                             RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
-                            roomTypePriceDto.setFangHotelId(hotelDto.getFangId());
+                            roomTypePriceDto.setRoomTypeId(roomType.getId());
                             roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
                             roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
                             roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
