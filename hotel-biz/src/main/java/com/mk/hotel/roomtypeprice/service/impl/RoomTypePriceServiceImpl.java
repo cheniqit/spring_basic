@@ -27,6 +27,14 @@ public class RoomTypePriceServiceImpl {
     private RoomTypePriceSpecialMapper roomTypePriceSpecialMapper;
 
     public void updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
+        if(settlePrice == null){
+            throw new MyException("参数错误");
+        }
+        if(marketPrice == null || salePrice == null){
+            salePrice = settlePrice;
+            marketPrice = settlePrice.multiply(new BigDecimal("0.5")).add(settlePrice);
+            marketPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
+        }
         if(roomTypeId == null){
             throw new MyException("参数错误");
         }
@@ -39,9 +47,7 @@ public class RoomTypePriceServiceImpl {
         if(salePrice == null){
             throw new MyException("参数错误");
         }
-        if(settlePrice == null){
-            throw new MyException("参数错误");
-        }
+
         if(operator == null){
             throw new MyException("参数错误");
         }
