@@ -11,7 +11,6 @@ import com.mk.framework.JsonUtils;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
@@ -96,7 +95,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
                             roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
                             roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
-                            roomTypePriceService.saveOrUpdateByFangId(roomTypePriceDto , HotelSourceEnum.SHUIME2);
+                            roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
                             roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
                                     roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
                             OtsInterface.initHotel(hotelDto.getId());
