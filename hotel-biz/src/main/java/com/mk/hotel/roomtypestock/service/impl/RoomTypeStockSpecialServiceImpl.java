@@ -2,12 +2,14 @@ package com.mk.hotel.roomtypestock.service.impl;
 
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by yanbaobin on 2016/10/10 9:45.
  */
+@Service
 public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialService {
 
 	@Override

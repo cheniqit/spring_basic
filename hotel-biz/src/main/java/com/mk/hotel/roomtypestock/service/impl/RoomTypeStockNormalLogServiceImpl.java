@@ -2,12 +2,14 @@ package com.mk.hotel.roomtypestock.service.impl;
 
 import com.mk.hotel.roomtypestock.RoomTypeStockNormalLogService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalLogDto;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by yanbaobin on 2016/10/10 9:46.
  */
+@Service
 public class RoomTypeStockNormalLogServiceImpl implements RoomTypeStockNormalLogService {
 	@Override
 	public int batchInsert(List<RoomTypeStockNormalLogDto> roomTypeStockNormalLogDtoList) {

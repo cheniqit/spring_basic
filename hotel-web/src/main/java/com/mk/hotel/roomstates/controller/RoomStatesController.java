@@ -29,11 +29,11 @@ public class RoomStatesController {
 
     @RequestMapping(value = "/querystates", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> queryStates(Long roomTypeId, String startDate, String endDate) {
+    public ResponseEntity<HashMap<String, Object>> queryStates(Long roomTypeId, String startDate, String endDate, String token) {
 
 
         //TODO
-        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, null, null);
+        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, null, null, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -45,10 +45,10 @@ public class RoomStatesController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(Long roomTypeId, String startDate, String endDate,
                                                                        BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                                                       BigDecimal totalStock) {
+                                                                       BigDecimal totalStock, String operatorId, String token) {
 
         //TODO
-        this.roomstatesService.updatePriceAndStock(roomTypeId, null, null, marketPrice, salePrice, settlePrice, totalStock);
+        this.roomstatesService.updatePriceAndStock(roomTypeId, null, null, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -58,10 +58,10 @@ public class RoomStatesController {
     @RequestMapping(value = "/updateprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updatePrice(Long roomTypeId, String startDate, String endDate,
-                                                               BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice) {
+                                                               BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token) {
 
         //TODO
-        this.roomstatesService.updatePrice(roomTypeId, null, null, marketPrice, salePrice, settlePrice);
+        this.roomstatesService.updatePrice(roomTypeId, null, null, marketPrice, salePrice, settlePrice, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -71,10 +71,10 @@ public class RoomStatesController {
     @RequestMapping(value = "/updatestock", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateStock(Long roomTypeId, String startDate, String endDate,
-                                                               BigDecimal totalStock) {
+                                                               BigDecimal totalStock, String operatorId, String token) {
 
         //TODO
-        this.roomstatesService.updateStock(roomTypeId, null, null, totalStock);
+        this.roomstatesService.updateStock(roomTypeId, null, null, totalStock, operatorId, token);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
