@@ -46,23 +46,21 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		if(operator == null){
 			throw new MyException("参数错误");
 		}
-		//转换保存
-		RoomTypeStockSpecial roomTypeStockSpecial = convertToRoomTypeStockSpecial(roomTypeId, date, totalNumber, operator);
-		//保存
-		RoomTypeStockSpecialExample example = new RoomTypeStockSpecialExample();
-		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
-		List<RoomTypeStockSpecial> roomTypeStockSpecialList = roomTypeStockSpecialMapper.selectByExample(example);
+		RoomTypeStockSpecialDto dto = this.selectByDay(roomTypeId, date);
 
-		if(CollectionUtils.isEmpty(roomTypeStockSpecialList)){
-			roomTypeStockSpecialMapper.insert(roomTypeStockSpecial);
-		}else if(roomTypeStockSpecialList.size() == 1){
-			roomTypeStockSpecial.setCreateDate(null);
-			roomTypeStockSpecialMapper.updateByExample(roomTypeStockSpecial ,example);
-		}else{
-			throw new MyException("库存价格配置错误,根据房型和时间查到多条配置信息");
+		if (null == dto) {
+			//转换保存
+			dto = convertToDto(null, roomTypeId, date, totalNumber, operator);
+		} else {
+			dto = convertToDto(dto, roomTypeId, date, totalNumber, operator);
 		}
+
+		//保存
+		this.saveOrUpdate(dto);
+
+		//
 		try{
-			String message = JsonUtils.toJson(roomTypeStockSpecial, DateUtils.FORMAT_DATETIME);
+			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
 			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_STOCK, "special", "", message);
 		}catch (Exception e){
 			throw new MyException("库存价格配置错误,发送消息错误");
@@ -71,17 +69,24 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		return 1;
 	}
 
-	private RoomTypeStockSpecial convertToRoomTypeStockSpecial(Long roomTypeId, Date date, Long totalNumber, String operator) {
-		RoomTypeStockSpecial roomTypeStockSpecial = new RoomTypeStockSpecial();
-		roomTypeStockSpecial.setRoomTypeId(roomTypeId);
-		roomTypeStockSpecial.setDay(date);
-		roomTypeStockSpecial.setTotalNumber(totalNumber);
-		roomTypeStockSpecial.setIsValid(ValidEnum.VALID.getCode());
-		roomTypeStockSpecial.setUpdateBy(operator);
-		roomTypeStockSpecial.setCreateBy(operator);
-		roomTypeStockSpecial.setUpdateDate(new Date());
-		roomTypeStockSpecial.setCreateDate(new Date());
-		return roomTypeStockSpecial;
+	private RoomTypeStockSpecialDto convertToDto(RoomTypeStockSpecialDto dbDto, Long roomTypeId, Date date, Long totalNumber, String operator) {
+		RoomTypeStockSpecialDto dto = null;
+
+		if (null == dbDto) {
+			dto = new RoomTypeStockSpecialDto();
+			dto.setRoomTypeId(roomTypeId);
+			dto.setDay(date);
+			dto.setIsValid(ValidEnum.VALID.getCode());
+			dto.setCreateBy(operator);
+			dto.setCreateDate(new Date());
+		} else {
+			dto = dbDto;
+		}
+
+		dto.setTotalNumber(totalNumber);
+		dto.setUpdateBy(operator);
+		dto.setUpdateDate(new Date());
+		return dto;
 	}
 
 	@Override
