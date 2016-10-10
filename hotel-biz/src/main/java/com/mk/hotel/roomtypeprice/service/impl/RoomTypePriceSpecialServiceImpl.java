@@ -130,7 +130,9 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		if (null != dto) {
 			RoomTypePriceSpecial model = toModel(dto);
 			if (null == dto.getId()) {
-				return roomTypePriceSpecialMapper.insert(model);
+				int result = roomTypePriceSpecialMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
 			} else {
 				return roomTypePriceSpecialMapper.updateByPrimaryKey(model);
 			}
