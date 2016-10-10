@@ -96,7 +96,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 			dto.setRoomTypeId(roomTypeId);
 			dto.setDay(date);
-
+			dto.setSettlePrice(settlePrice);
 			dto.setCreateBy(operator);
 			dto.setCreateDate(new Date());
 		} else {
@@ -105,7 +105,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 		dto.setMarketPrice(marketPrice);
 		dto.setSalePrice(salePrice);
-		dto.setSettlePrice(settlePrice);
 		dto.setIsValid(ValidEnum.VALID.getCode());
 		dto.setUpdateBy(operator);
 		dto.setUpdateDate(new Date());
