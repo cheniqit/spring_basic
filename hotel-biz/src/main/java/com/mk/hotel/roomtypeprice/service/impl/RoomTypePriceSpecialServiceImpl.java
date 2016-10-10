@@ -11,10 +11,12 @@ import com.mk.hotel.roomtypeprice.mapper.RoomTypePriceSpecialMapper;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialExample;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -99,16 +101,58 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 	@Override
 	public int batchInsert(List<RoomTypePriceSpecialDto> roomTypePriceSpecialDtoList) {
+		if (null != roomTypePriceSpecialDtoList) {
+			List<RoomTypePriceSpecial> list = new ArrayList<RoomTypePriceSpecial>();
+			for (RoomTypePriceSpecialDto dto : roomTypePriceSpecialDtoList) {
+				list.add(toModel(dto));
+			}
+			return roomTypePriceSpecialMapper.batchInsert(list);
+		}
 		return 0;
 	}
 
 	@Override
 	public int saveOrUpdate(RoomTypePriceSpecialDto dto) {
+		if (null != dto) {
+			return roomTypePriceSpecialMapper.updateByPrimaryKey(toModel(dto));
+		}
 		return 0;
 	}
 
 	@Override
 	public RoomTypePriceSpecialDto selectById(Long id) {
+		if (null != id) {
+			RoomTypePriceSpecial model = roomTypePriceSpecialMapper.selectByPrimaryKey(id);
+			return toDto(model);
+		}
+		return null;
+	}
+
+	/**
+	 * dto转model
+	 * @param dto
+	 * @return
+	 */
+	public RoomTypePriceSpecial toModel(RoomTypePriceSpecialDto dto) {
+		if (null != dto) {
+			RoomTypePriceSpecial model = new RoomTypePriceSpecial();
+			BeanUtils.copyProperties(dto, model);
+			return model;
+		}
+		return null;
+	}
+
+	/**
+	 * model转dto
+	 * @param model
+	 * @return
+	 */
+	public RoomTypePriceSpecialDto toDto(RoomTypePriceSpecial model) {
+		if (null != model) {
+			RoomTypePriceSpecialDto dto = new RoomTypePriceSpecialDto();
+			BeanUtils.copyProperties(model, dto);
+			return dto;
+		}
 		return null;
 	}
 }

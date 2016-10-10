@@ -27,4 +27,11 @@ public interface RoomTypePriceSpecialLogMapper {
     int updateByPrimaryKeySelective(RoomTypePriceSpecialLog record);
 
     int updateByPrimaryKey(RoomTypePriceSpecialLog record);
+
+    /**
+     *
+     * @param list
+     * @return
+     */
+    int batchInsert(@Param("list") List<RoomTypePriceSpecialLog> list);
 }
