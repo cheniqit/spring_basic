@@ -153,6 +153,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         if (security.equals(token)) {
             return true;
         } else {
+            logger.info("roomTypeId:{} token:{} security:{}", roomTypeId, token, security);
             throw new MyException("认证错误");
         }
     }

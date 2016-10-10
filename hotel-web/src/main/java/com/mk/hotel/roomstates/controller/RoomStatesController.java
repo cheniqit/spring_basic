@@ -1,6 +1,5 @@
 package com.mk.hotel.roomstates.controller;
 
-import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
@@ -29,7 +28,7 @@ public class RoomStatesController {
     private static Logger logger = LoggerFactory.getLogger(RoomStatesController.class);
 
     @Autowired
-    private IRoomStatesService roomstatesService;
+    private IRoomStatesService roomStatesService;
 
     @RequestMapping(value = "/querystates", method = RequestMethod.POST)
     @ResponseBody
@@ -38,7 +37,7 @@ public class RoomStatesController {
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
 
-        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, start, end, token);
+        List<RoomStatesDto> dataList = this.roomStatesService.queryStates(roomTypeId, start, end, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -54,7 +53,7 @@ public class RoomStatesController {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
-        this.roomstatesService.updatePriceAndStock(roomTypeId, start, end, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
+        this.roomStatesService.updatePriceAndStock(roomTypeId, start, end, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -68,7 +67,7 @@ public class RoomStatesController {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
-        this.roomstatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId, token);
+        this.roomStatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -82,7 +81,7 @@ public class RoomStatesController {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
-        this.roomstatesService.updateStock(roomTypeId, start, end, totalStock, operatorId, token);
+        this.roomStatesService.updateStock(roomTypeId, start, end, totalStock, operatorId, token);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
