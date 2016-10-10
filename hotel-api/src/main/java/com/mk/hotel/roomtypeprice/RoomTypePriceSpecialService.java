@@ -35,6 +35,13 @@ public interface RoomTypePriceSpecialService {
 	/**
 	 *
 	 * @param roomTypeId
+	 * @param day
+     * @return
+     */
+	RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day);
+	/**
+	 *
+	 * @param roomTypeId
 	 * @param date
 	 * @param marketPrice
 	 * @param salePrice

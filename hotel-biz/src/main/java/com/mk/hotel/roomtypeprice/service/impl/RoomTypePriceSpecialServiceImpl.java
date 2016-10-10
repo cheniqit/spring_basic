@@ -76,6 +76,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		if(CollectionUtils.isEmpty(roomTypePriceSpecialList)){
 			roomTypePriceSpecialMapper.insert(roomTypePriceSpecial);
 		}else if(!CollectionUtils.isEmpty(roomTypePriceSpecialList)){
+
 			roomTypePriceSpecial.setCreateDate(null);
 			roomTypePriceSpecial.setCreateBy(null);
 			roomTypePriceSpecialMapper.updateByExampleSelective(roomTypePriceSpecial ,example);
@@ -136,6 +137,11 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			RoomTypePriceSpecial model = roomTypePriceSpecialMapper.selectByPrimaryKey(id);
 			return toDto(model);
 		}
+		return null;
+	}
+
+	@Override
+	public RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day) {
 		return null;
 	}
 

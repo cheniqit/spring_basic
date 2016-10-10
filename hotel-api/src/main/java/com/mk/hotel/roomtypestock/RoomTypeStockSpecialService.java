@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtypestock;
 
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 
 import java.math.BigDecimal;
@@ -32,6 +33,13 @@ public interface RoomTypeStockSpecialService {
 	 */
 	RoomTypeStockSpecialDto selectById(Long id);
 
+	/**
+	 *
+	 * @param roomTypeId
+	 * @param day
+	 * @return
+	 */
+	RoomTypeStockSpecialDto selectByDay(Long roomTypeId, Date day);
 	/**
 	 *
 	 * @param roomTypeId

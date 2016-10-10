@@ -112,6 +112,11 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		return null;
 	}
 
+	@Override
+	public RoomTypeStockSpecialDto selectByDay(Long roomTypeId, Date day) {
+		return null;
+	}
+
 	/**
 	 * dto转model
 	 * @param dto
