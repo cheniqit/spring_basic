@@ -151,7 +151,20 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 	@Override
 	public RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day) {
-		return null;
+		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
+		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
+
+		List<RoomTypePriceSpecial> list = this.roomTypePriceSpecialMapper.selectByExample(example);
+
+		if (list.isEmpty()) {
+			return null;
+		} else if (list.size() == 1) {
+			RoomTypePriceSpecial special = list.get(0);
+
+			return toDto(special);
+		} else {
+			throw new MyException("价格配置错误,根据房型和时间查到多条配置信息");
+		}
 	}
 
 	/**
