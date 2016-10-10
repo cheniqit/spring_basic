@@ -15,7 +15,6 @@ import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
-import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
@@ -36,8 +35,6 @@ import java.util.List;
 @Component
 public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private RoomTypePriceMapper roomTypePriceMapper;
 
     private DefaultMQPushConsumer consumer;
 
