@@ -39,7 +39,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		if (marketPrice == null) {
 			marketPrice = settlePrice.multiply(new BigDecimal("0.15"));
 			marketPrice.setScale(0, BigDecimal.ROUND_UP);
-			marketPrice = settlePrice.multiply(BigDecimal.TEN);
+			marketPrice = marketPrice.multiply(BigDecimal.TEN);
 		}
 
 		//
