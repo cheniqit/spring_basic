@@ -53,7 +53,9 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         }
 
         if (null == endDate) {
-            endDate = DateUtils.addDays(startDate, 30);
+            endDate = DateUtils.addDays(startDate, 31);
+        } else {
+            endDate = DateUtils.addDays(endDate, 1);
         }
 
         //
