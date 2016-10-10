@@ -618,14 +618,14 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void mergeRoomTypeStock(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
+    public void mergeRoomTypeStock(Long roomTypeId, Date date, Long totalNumber, String operator){
         RoomTypeStockExample example = new RoomTypeStockExample();
         example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
         List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
         RoomTypeStock roomTypeStock = new RoomTypeStock();
         roomTypeStock.setDay(date);
         roomTypeStock.setRoomTypeId(roomTypeId);
-        roomTypeStock.setNumber(totalNumber.longValue());
+        roomTypeStock.setNumber(totalNumber);
         roomTypeStock.setUpdateBy(operator);
         roomTypeStock.setUpdateDate(new Date());
         roomTypeStock.setCreateBy(operator);
