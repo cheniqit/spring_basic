@@ -9,8 +9,8 @@ import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
-import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceServiceImpl;
-import com.mk.hotel.roomtypestock.service.impl.RoomTypeStockServiceImpl;
+import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
+import com.mk.hotel.roomtypestock.service.impl.RoomTypeStockSpecialServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +31,10 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     private static Logger logger = LoggerFactory.getLogger(RoomStatesServiceImpl.class);
 
     @Autowired
-    private RoomTypePriceServiceImpl roomTypePriceService;
+    private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
 
     @Autowired
-    private RoomTypeStockServiceImpl roomTypeStockService;
+    private RoomTypeStockSpecialServiceImpl roomTypeStockSpecialService;
 
     @Autowired
     private RoomTypePriceService priceService;
@@ -107,12 +107,12 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         int diffDay = DateUtils.diffDay(startDate, endDate);
         int result;
         if(diffDay == 0){
-            roomTypePriceService.updateRoomTypePriceSpecialRule(roomTypeId, startDate, marketPrice, salePrice, settlePrice, operatorId);
+            roomTypePriceSpecialService.updateRoomTypePriceSpecialRule(roomTypeId, startDate, marketPrice, salePrice, settlePrice, operatorId);
             result = 1;
         }else{
             for(int i =0; i<=diffDay; i++){
                 Date date = DateUtils.addDays(startDate, i);
-                roomTypePriceService.updateRoomTypePriceSpecialRule(roomTypeId, date, marketPrice, salePrice, settlePrice, operatorId);
+                roomTypePriceSpecialService.updateRoomTypePriceSpecialRule(roomTypeId, date, marketPrice, salePrice, settlePrice, operatorId);
             }
             result = diffDay+1;
         }
@@ -124,12 +124,12 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         int diffDay = DateUtils.diffDay(startDate, endDate);
         int result;
         if(diffDay == 0){
-            roomTypeStockService.updateRoomTypeStockSpecialRule(roomTypeId, startDate, totalStock, operatorId);
+            roomTypeStockSpecialService.updateRoomTypeStockSpecialRule(roomTypeId, startDate, totalStock, operatorId);
             result = 1;
         }else{
             for(int i =0; i<=diffDay; i++){
                 Date date = DateUtils.addDays(startDate, i);
-                roomTypeStockService.updateRoomTypeStockSpecialRule(roomTypeId, date, totalStock, operatorId);
+                roomTypeStockSpecialService.updateRoomTypeStockSpecialRule(roomTypeId, date, totalStock, operatorId);
             }
             result = diffDay+1;
         }
