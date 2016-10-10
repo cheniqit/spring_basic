@@ -27,4 +27,11 @@ public interface RoomTypeStockNormalMapper {
     int updateByPrimaryKeySelective(RoomTypeStockNormal record);
 
     int updateByPrimaryKey(RoomTypeStockNormal record);
+
+    /**
+     * 批量插入
+     * @param list
+     * @return
+     */
+    int batchInsert(@Param("list") List<RoomTypeStockNormal> list);
 }

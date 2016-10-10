@@ -352,4 +352,20 @@
       is_valid = #{isValid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" >
+    insert into room_type_stock_normal (id, room_type_id, mon_total_number,
+    tue_total_number, wed_total_number, thu_total_number,
+    fri_total_number, sat_total_number, sun_total_number,
+    create_date, create_by, update_date,
+    update_by, is_valid)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.roomTypeId,jdbcType=BIGINT}, #{item.monTotalNumber,jdbcType=BIGINT},
+      #{item.tueTotalNumber,jdbcType=BIGINT}, #{item.wedTotalNumber,jdbcType=BIGINT}, #{item.thuTotalNumber,jdbcType=BIGINT},
+      #{item.friTotalNumber,jdbcType=BIGINT}, #{item.satTotalNumber,jdbcType=BIGINT}, #{item.sunTotalNumber,jdbcType=BIGINT},
+      #{item.createDate,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=VARCHAR}, #{item.updateDate,jdbcType=TIMESTAMP},
+      #{item.updateBy,jdbcType=VARCHAR}, #{item.isValid,jdbcType=CHAR})
+    </foreach>
+  </insert>
 </mapper>

@@ -27,4 +27,11 @@ public interface RoomTypeStockSpecialMapper {
     int updateByPrimaryKeySelective(RoomTypeStockSpecial record);
 
     int updateByPrimaryKey(RoomTypeStockSpecial record);
+
+    /**
+     * 批量插入
+     * @param list
+     * @return
+     */
+    int batchInsert(@Param("list") List<RoomTypeStockSpecial> list);
 }
