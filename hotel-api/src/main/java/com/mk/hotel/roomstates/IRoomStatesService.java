@@ -15,11 +15,11 @@ public interface IRoomStatesService {
 
     int updatePriceAndStock(Long roomTypeId, Date startDate, Date endDate,
                             BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                            BigDecimal totalStock, String optionId, String token);
+                            BigDecimal totalStock, String operatorId, String token);
 
     int updatePrice(Long roomTypeId, Date startDate, Date endDate,
-                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String optionId, String token);
+                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token);
 
     int updateStock(Long roomTypeId, Date startDate, Date endDate,
-                                    BigDecimal totalStock, String optionId, String token);
+                                    BigDecimal totalStock, String operatorId, String token);
 }

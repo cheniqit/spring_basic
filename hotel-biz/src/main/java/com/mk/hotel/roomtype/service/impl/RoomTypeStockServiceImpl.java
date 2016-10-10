@@ -4,6 +4,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
@@ -22,12 +23,14 @@ import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.model.RoomTypeStockExample;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -610,5 +613,28 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
         return result;
 
+    }
+
+    public void mergeRoomTypeStock(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
+        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
+        RoomTypeStock roomTypeStock = new RoomTypeStock();
+        roomTypeStock.setDay(date);
+        roomTypeStock.setRoomTypeId(roomTypeId);
+        roomTypeStock.setNumber(totalNumber.longValue());
+        roomTypeStock.setUpdateBy(operator);
+        roomTypeStock.setUpdateDate(new Date());
+        roomTypeStock.setCreateBy(operator);
+        roomTypeStock.setCreateDate(new Date());
+        roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
+        if(CollectionUtils.isEmpty(roomTypeStockList)){
+            roomTypeStockMapper.insert(roomTypeStock);
+        }else if(roomTypeStockList.size() == 1){
+            roomTypeStock.setCreateDate(null);
+            roomTypeStockMapper.updateByExample(roomTypeStock ,example);
+        }else{
+            throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
+        }
     }
 }
