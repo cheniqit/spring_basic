@@ -30,7 +30,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	@Autowired
 	private RoomTypePriceSpecialMapper roomTypePriceSpecialMapper;
 
-	public void updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
+	public int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
 		if(settlePrice == null){
 			throw new MyException("参数错误");
 		}
@@ -57,6 +57,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		}
 		//转换保存
 		RoomTypePriceSpecial roomTypePriceSpecial = convertToRoomTypePriceSpecial(roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
+
 		//保存
 		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
 		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
@@ -64,17 +65,22 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 		if(CollectionUtils.isEmpty(roomTypePriceSpecialList)){
 			roomTypePriceSpecialMapper.insert(roomTypePriceSpecial);
-		}else if(roomTypePriceSpecialList.size() == 1){
+		}else if(!CollectionUtils.isEmpty(roomTypePriceSpecialList)){
 			roomTypePriceSpecial.setCreateDate(null);
-			roomTypePriceSpecialMapper.updateByExample(roomTypePriceSpecial ,example);
+			roomTypePriceSpecial.setCreateBy(null);
+			roomTypePriceSpecialMapper.updateByExampleSelective(roomTypePriceSpecial ,example);
 		}else{
 			throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
 		}
+
+		//send msg
 		try{
 			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", JsonUtils.toJson(roomTypePriceSpecial));
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
 		}
+
+		return 1;
 	}
 
 	private RoomTypePriceSpecial convertToRoomTypePriceSpecial(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator) {

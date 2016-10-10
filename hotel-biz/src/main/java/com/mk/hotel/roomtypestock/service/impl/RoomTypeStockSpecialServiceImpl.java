@@ -31,7 +31,7 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 	@Autowired
 	private RoomTypeStockSpecialMapper roomTypeStockSpecialMapper;
 
-	public void updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
+	public int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
 		if(roomTypeId == null){
 			throw new MyException("参数错误");
 		}
@@ -64,6 +64,8 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		}catch (Exception e){
 			throw new MyException("库存价格配置错误,发送消息错误");
 		}
+
+		return 1;
 	}
 
 	private RoomTypeStockSpecial convertToRoomTypeStockSpecial(Long roomTypeId, Date date, BigDecimal totalNumber, String operator) {

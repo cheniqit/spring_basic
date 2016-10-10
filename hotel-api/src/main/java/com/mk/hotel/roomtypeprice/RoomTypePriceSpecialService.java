@@ -2,6 +2,8 @@ package com.mk.hotel.roomtypeprice;
 
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +31,16 @@ public interface RoomTypePriceSpecialService {
 	 * @return
 	 */
 	RoomTypePriceSpecialDto selectById(Long id);
+
+	/**
+	 *
+	 * @param roomTypeId
+	 * @param date
+	 * @param marketPrice
+	 * @param salePrice
+	 * @param settlePrice
+	 * @param operator
+     * @return
+     */
+	int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator);
 }
