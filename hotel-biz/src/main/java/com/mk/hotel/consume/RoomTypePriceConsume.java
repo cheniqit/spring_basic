@@ -49,6 +49,8 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
     @Autowired
     private HotelServiceImpl hotelService;
 
+    private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
+
     @Override
     public void afterPropertiesSet(){
         try {
@@ -57,9 +59,10 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
              * 注意：ConsumerGroupName需要由应用来保证唯一
              */
             consumer = new DefaultMQPushConsumer(
-                    Constant.CONSUMER_GROUP_NAME);
+                    CONSUMER_GROUP_NAME);
+            logger.info("RoomTypePriceConsume name addr: "+msgProducer.getNamesrvAddr());
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
-            consumer.setInstanceName("hotelRoomTypePriceConsumer");
+            consumer.setInstanceName(CONSUMER_GROUP_NAME);
 
             consumer.subscribe(Constant.TOPIC_ROOMTYPE_PRICE, "*");
 

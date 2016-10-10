@@ -47,6 +47,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
     @Autowired
     private RoomTypeStockServiceImpl roomTypeStockService;
 
+    private static String CONSUMER_GROUP_NAME = "hotelRoomTypeStockConsumer";
 
     @Override
     public void afterPropertiesSet(){
@@ -56,9 +57,10 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
              * 注意：ConsumerGroupName需要由应用来保证唯一
              */
             consumer = new DefaultMQPushConsumer(
-                    Constant.CONSUMER_GROUP_NAME);
+                    CONSUMER_GROUP_NAME);
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
-            consumer.setInstanceName("hotelRoomTypeStockConsumer");
+            logger.info("RoomTypeStockConsume name addr: "+msgProducer.getNamesrvAddr());
+            consumer.setInstanceName(CONSUMER_GROUP_NAME);
 
             consumer.subscribe(Constant.TOPIC_ROOMTYPE_STOCK, "*");
 
