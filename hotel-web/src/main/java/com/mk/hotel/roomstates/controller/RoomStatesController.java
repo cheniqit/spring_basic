@@ -1,5 +1,7 @@
 package com.mk.hotel.roomstates.controller;
 
+import com.mk.framework.DateUtils;
+import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,9 +35,10 @@ public class RoomStatesController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> queryStates(Long roomTypeId, String startDate, String endDate, String token) {
 
+        Date start = this.parseDate(startDate);
+        Date end = this.parseDate(endDate);
 
-        //TODO
-        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, null, null, token);
+        List<RoomStatesDto> dataList = this.roomstatesService.queryStates(roomTypeId, start, end, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -47,8 +52,9 @@ public class RoomStatesController {
                                                                        BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
                                                                        BigDecimal totalStock, String operatorId, String token) {
 
-        //TODO
-        this.roomstatesService.updatePriceAndStock(roomTypeId, null, null, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
+        Date start = this.parseDate(startDate);
+        Date end = this.parseDate(endDate);
+        this.roomstatesService.updatePriceAndStock(roomTypeId, start, end, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -60,8 +66,9 @@ public class RoomStatesController {
     public ResponseEntity<HashMap<String, Object>> updatePrice(Long roomTypeId, String startDate, String endDate,
                                                                BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token) {
 
-        //TODO
-        this.roomstatesService.updatePrice(roomTypeId, null, null, marketPrice, salePrice, settlePrice, operatorId, token);
+        Date start = this.parseDate(startDate);
+        Date end = this.parseDate(endDate);
+        this.roomstatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -73,11 +80,27 @@ public class RoomStatesController {
     public ResponseEntity<HashMap<String, Object>> updateStock(Long roomTypeId, String startDate, String endDate,
                                                                BigDecimal totalStock, String operatorId, String token) {
 
-        //TODO
-        this.roomstatesService.updateStock(roomTypeId, null, null, totalStock, operatorId, token);
+        Date start = this.parseDate(startDate);
+        Date end = this.parseDate(endDate);
+        this.roomstatesService.updateStock(roomTypeId, start, end, totalStock, operatorId, token);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    private Date parseDate(String strDate) {
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //
+        Date result = null;
+        try {
+            result = format.parse(strDate);
+        } catch (Exception e) {
+            throw new MyException("日期格式错误, 应为 yyyy-MM-dd");
+        }
+
+        return result;
     }
 }
 
