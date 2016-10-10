@@ -3,14 +3,22 @@ package com.mk.hotel.roomstates.service.impl;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.security.MD5;
+import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
-import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
-import com.mk.hotel.roomtypestock.service.impl.RoomTypeStockSpecialServiceImpl;
+import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialLogService;
+import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialService;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialLogDto;
+import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialLog;
+import com.mk.hotel.roomtypestock.RoomTypeStockSpecialLogService;
+import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialLogDto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +39,15 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     private static Logger logger = LoggerFactory.getLogger(RoomStatesServiceImpl.class);
 
     @Autowired
-    private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
+    private RoomTypePriceSpecialService roomTypePriceSpecialService;
+
+    private RoomTypePriceSpecialLogService roomTypePriceSpecialLogService;
 
     @Autowired
-    private RoomTypeStockSpecialServiceImpl roomTypeStockSpecialService;
+    private RoomTypeStockSpecialService roomTypeStockSpecialService;
+
+    @Autowired
+    private RoomTypeStockSpecialLogService roomTypeStockSpecialLogService;
 
     @Autowired
     private RoomTypePriceService priceService;
@@ -117,34 +130,39 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     @Override
     public int updatePrice(Long roomTypeId, Date startDate, Date endDate, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token) {
         int diffDay = DateUtils.diffDay(startDate, endDate);
-        int result;
-        if(diffDay == 0){
-            roomTypePriceSpecialService.updateRoomTypePriceSpecialRule(roomTypeId, startDate, marketPrice, salePrice, settlePrice, operatorId);
-            result = 1;
-        }else{
-            for(int i =0; i<=diffDay; i++){
-                Date date = DateUtils.addDays(startDate, i);
-                roomTypePriceSpecialService.updateRoomTypePriceSpecialRule(roomTypeId, date, marketPrice, salePrice, settlePrice, operatorId);
-            }
-            result = diffDay+1;
+
+        //
+        List<RoomTypePriceSpecialLogDto> dtoList = new ArrayList<RoomTypePriceSpecialLogDto>();
+        //
+        int result = 0;
+        for(int i =0; i<=diffDay; i++){
+            Date date = DateUtils.addDays(startDate, i);
+            result += roomTypePriceSpecialService.updateRoomTypePriceSpecialRule(roomTypeId, date, marketPrice, salePrice, settlePrice, operatorId);
+            dtoList.add(this.convertToRoomTypePriceSpecialLog(roomTypeId, date, marketPrice, salePrice, settlePrice, operatorId));
         }
+
+        //save log
+        this.roomTypePriceSpecialLogService.batchInsert(dtoList);
         return result;
     }
 
     @Override
     public int updateStock(Long roomTypeId, Date startDate, Date endDate, BigDecimal totalStock, String operatorId, String token) {
         int diffDay = DateUtils.diffDay(startDate, endDate);
-        int result;
-        if(diffDay == 0){
-            roomTypeStockSpecialService.updateRoomTypeStockSpecialRule(roomTypeId, startDate, totalStock, operatorId);
-            result = 1;
-        }else{
-            for(int i =0; i<=diffDay; i++){
-                Date date = DateUtils.addDays(startDate, i);
-                roomTypeStockSpecialService.updateRoomTypeStockSpecialRule(roomTypeId, date, totalStock, operatorId);
-            }
-            result = diffDay+1;
+
+        //
+        List<RoomTypeStockSpecialLogDto> dtoList = new ArrayList<RoomTypeStockSpecialLogDto>();
+
+        //
+        int result =0;
+        for(int i =0; i<=diffDay; i++){
+            Date date = DateUtils.addDays(startDate, i);
+            result += roomTypeStockSpecialService.updateRoomTypeStockSpecialRule(roomTypeId, date, totalStock, operatorId);
+            dtoList.add(this.convertToRoomTypeStockSpecialLog(roomTypeId, date, totalStock, operatorId));
         }
+
+        //save log
+        this.roomTypeStockSpecialLogService.batchInsert(dtoList);
         return result;
     }
 
@@ -168,5 +186,34 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
             logger.info("roomTypeId:{} token:{} security:{}", roomTypeId, token, security);
             throw new MyException("认证错误");
         }
+    }
+
+
+    private RoomTypePriceSpecialLogDto convertToRoomTypePriceSpecialLog(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator) {
+        RoomTypePriceSpecialLogDto logDto = new RoomTypePriceSpecialLogDto();
+        logDto.setRoomTypeId(roomTypeId);
+        logDto.setDay(date);
+        logDto.setMarketPrice(marketPrice);
+        logDto.setSalePrice(salePrice);
+        logDto.setSettlePrice(settlePrice);
+        logDto.setIsValid(ValidEnum.VALID.getCode());
+        logDto.setUpdateBy(operator);
+        logDto.setCreateBy(operator);
+        logDto.setUpdateDate(new Date());
+        logDto.setCreateDate(new Date());
+        return logDto;
+    }
+
+    private RoomTypeStockSpecialLogDto convertToRoomTypeStockSpecialLog(Long roomTypeId, Date date, BigDecimal totalNumber, String operator) {
+        RoomTypeStockSpecialLogDto logDto = new RoomTypeStockSpecialLogDto();
+        logDto.setRoomTypeId(roomTypeId);
+        logDto.setDay(date);
+        logDto.setTotalNumber(totalNumber);
+        logDto.setIsValid(ValidEnum.VALID.getCode());
+        logDto.setUpdateBy(operator);
+        logDto.setCreateBy(operator);
+        logDto.setUpdateDate(new Date());
+        logDto.setCreateDate(new Date());
+        return logDto;
     }
 }

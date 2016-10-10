@@ -30,7 +30,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	@Autowired
 	private RoomTypePriceSpecialMapper roomTypePriceSpecialMapper;
 
-	public void updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
+	public int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
 		if(settlePrice == null){
 			throw new MyException("参数错误");
 		}
@@ -73,14 +73,14 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
 		}
 
-		//保存log
-
 		//send msg
 		try{
 			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", JsonUtils.toJson(roomTypePriceSpecial));
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
 		}
+
+		return 1;
 	}
 
 	private RoomTypePriceSpecial convertToRoomTypePriceSpecial(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator) {

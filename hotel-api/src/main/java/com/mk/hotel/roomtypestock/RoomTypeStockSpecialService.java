@@ -2,6 +2,8 @@ package com.mk.hotel.roomtypestock;
 
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +31,14 @@ public interface RoomTypeStockSpecialService {
 	 * @return
 	 */
 	RoomTypeStockSpecialDto selectById(Long id);
+
+	/**
+	 *
+	 * @param roomTypeId
+	 * @param date
+	 * @param totalNumber
+	 * @param operator
+     * @return
+     */
+	int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator);
 }
