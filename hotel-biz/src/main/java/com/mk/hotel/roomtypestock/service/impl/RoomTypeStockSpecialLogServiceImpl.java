@@ -35,6 +35,12 @@ public class RoomTypeStockSpecialLogServiceImpl implements RoomTypeStockSpecialL
 	@Override
 	public int saveOrUpdate(RoomTypeStockSpecialLogDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypeStockSpecialLog model = toModel(dto);
+				int result = roomTypeStockSpecialLogMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypeStockSpecialLogMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

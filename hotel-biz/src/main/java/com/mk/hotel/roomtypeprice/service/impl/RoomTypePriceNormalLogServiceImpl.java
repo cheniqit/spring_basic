@@ -35,6 +35,12 @@ public class RoomTypePriceNormalLogServiceImpl implements RoomTypePriceNormalLog
 	@Override
 	public int saveOrUpdate(RoomTypePriceNormalLogDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypePriceNormalLog model = toModel(dto);
+				int result = roomTypePriceNormalLogMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypePriceNormalLogMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

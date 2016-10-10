@@ -35,6 +35,12 @@ public class RoomTypePriceSpecialLogServiceImpl implements RoomTypePriceSpecialL
 	@Override
 	public int saveOrUpdate(RoomTypePriceSpecialLogDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypePriceSpecialLog model = toModel(dto);
+				int result = roomTypePriceSpecialLogMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypePriceSpecialLogMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

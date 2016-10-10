@@ -38,6 +38,12 @@ public class RoomTypePriceNormalServiceImpl implements RoomTypePriceNormalServic
 	@Override
 	public int saveOrUpdate(RoomTypePriceNormalDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypePriceNormal model = toModel(dto);
+				int result = roomTypePriceNormalMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypePriceNormalMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

@@ -6,7 +6,6 @@ import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.message.MsgProducer;
-import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialMapper;
@@ -17,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,6 +97,12 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 	@Override
 	public int saveOrUpdate(RoomTypeStockSpecialDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypeStockSpecial model = toModel(dto);
+				int result = roomTypeStockSpecialMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;
