@@ -3,7 +3,6 @@ package com.mk.hotel.roomstates.service.impl;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.security.MD5;
-import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceServiceImpl;
@@ -26,9 +25,6 @@ import java.util.List;
 public class RoomStatesServiceImpl implements IRoomStatesService {
 
     private static Logger logger = LoggerFactory.getLogger(RoomStatesServiceImpl.class);
-
-    @Autowired
-    private MsgProducer msgProducer;
 
     @Autowired
     private RoomTypePriceServiceImpl roomTypePriceService;
