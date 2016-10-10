@@ -108,7 +108,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     @Override
     public int updatePriceAndStock(Long roomTypeId, Date startDate, Date endDate,
                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                   BigDecimal totalStock, String optionId, String token) {
+                                   Long totalStock, String optionId, String token) {
         //
         this.checkToken(roomTypeId, token);
 
@@ -145,7 +145,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     }
 
     @Override
-    public int updateStock(Long roomTypeId, Date startDate, Date endDate, BigDecimal totalStock, String operatorId, String token) {
+    public int updateStock(Long roomTypeId, Date startDate, Date endDate, Long totalStock, String operatorId, String token) {
         int diffDay = DateUtils.diffDay(startDate, endDate);
 
         //
@@ -202,7 +202,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         return logDto;
     }
 
-    private RoomTypeStockSpecialLogDto convertToRoomTypeStockSpecialLog(Long roomTypeId, Date date, BigDecimal totalNumber, String operator) {
+    private RoomTypeStockSpecialLogDto convertToRoomTypeStockSpecialLog(Long roomTypeId, Date date, Long totalNumber, String operator) {
         RoomTypeStockSpecialLogDto logDto = new RoomTypeStockSpecialLogDto();
         logDto.setRoomTypeId(roomTypeId);
         logDto.setDay(date);

@@ -49,7 +49,7 @@ public class RoomStatesController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(Long roomTypeId, String startDate, String endDate,
                                                                        BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                                                       BigDecimal totalStock, String operatorId, String token) {
+                                                                       Long totalStock, String operatorId, String token) {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
@@ -77,7 +77,7 @@ public class RoomStatesController {
     @RequestMapping(value = "/updatestock", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateStock(Long roomTypeId, String startDate, String endDate,
-                                                               BigDecimal totalStock, String operatorId, String token) {
+                                                               Long totalStock, String operatorId, String token) {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);

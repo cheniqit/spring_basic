@@ -48,5 +48,5 @@ public interface RoomTypeStockSpecialService {
 	 * @param operator
      * @return
      */
-	int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator);
+	int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, Long totalNumber, String operator);
 }

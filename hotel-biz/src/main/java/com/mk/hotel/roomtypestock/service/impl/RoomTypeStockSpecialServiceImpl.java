@@ -32,7 +32,7 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 	@Autowired
 	private RoomTypeStockSpecialMapper roomTypeStockSpecialMapper;
 
-	public int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, BigDecimal totalNumber, String operator){
+	public int updateRoomTypeStockSpecialRule(Long roomTypeId, Date date, Long totalNumber, String operator){
 		if(roomTypeId == null){
 			throw new MyException("参数错误");
 		}
@@ -70,7 +70,7 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		return 1;
 	}
 
-	private RoomTypeStockSpecial convertToRoomTypeStockSpecial(Long roomTypeId, Date date, BigDecimal totalNumber, String operator) {
+	private RoomTypeStockSpecial convertToRoomTypeStockSpecial(Long roomTypeId, Date date, Long totalNumber, String operator) {
 		RoomTypeStockSpecial roomTypeStockSpecial = new RoomTypeStockSpecial();
 		roomTypeStockSpecial.setRoomTypeId(roomTypeId);
 		roomTypeStockSpecial.setDay(date);

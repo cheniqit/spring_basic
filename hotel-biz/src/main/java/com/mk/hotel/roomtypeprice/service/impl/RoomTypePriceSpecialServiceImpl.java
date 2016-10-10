@@ -65,29 +65,22 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		if(operator == null){
 			throw new MyException("参数错误");
 		}
-		//转换保存
-		RoomTypePriceSpecial roomTypePriceSpecial = convertToRoomTypePriceSpecial(roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
 
-		//保存
-		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
-		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
-		List<RoomTypePriceSpecial> roomTypePriceSpecialList = roomTypePriceSpecialMapper.selectByExample(example);
+		RoomTypePriceSpecialDto dto = this.selectByDay(roomTypeId, date);
 
-		if(CollectionUtils.isEmpty(roomTypePriceSpecialList)){
-			roomTypePriceSpecialMapper.insert(roomTypePriceSpecial);
-		}else if(!CollectionUtils.isEmpty(roomTypePriceSpecialList)){
-
-			roomTypePriceSpecial.setCreateDate(null);
-			roomTypePriceSpecial.setCreateBy(null);
-			roomTypePriceSpecialMapper.updateByExampleSelective(roomTypePriceSpecial ,example);
-		}else{
-			throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
+		if (null == dto) {
+			//转换保存
+			dto = convertToDto(null, roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
+		} else {
+			dto = convertToDto(dto, roomTypeId, date, marketPrice, salePrice, settlePrice, operator);
 		}
+
+		this.saveOrUpdate(dto);
 
 		//send msg
 		try{
-			String message = JsonUtils.toJson(roomTypePriceSpecial, DateUtils.FORMAT_DATETIME);
-			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", "", message);
+			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
+			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "special", dto.getId().toString(), message);
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
 		}
@@ -95,19 +88,28 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		return 1;
 	}
 
-	private RoomTypePriceSpecial convertToRoomTypePriceSpecial(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator) {
-		RoomTypePriceSpecial roomTypePriceSpecial = new RoomTypePriceSpecial();
-		roomTypePriceSpecial.setRoomTypeId(roomTypeId);
-		roomTypePriceSpecial.setDay(date);
-		roomTypePriceSpecial.setMarketPrice(marketPrice);
-		roomTypePriceSpecial.setSalePrice(salePrice);
-		roomTypePriceSpecial.setSettlePrice(settlePrice);
-		roomTypePriceSpecial.setIsValid(ValidEnum.VALID.getCode());
-		roomTypePriceSpecial.setUpdateBy(operator);
-		roomTypePriceSpecial.setCreateBy(operator);
-		roomTypePriceSpecial.setUpdateDate(new Date());
-		roomTypePriceSpecial.setCreateDate(new Date());
-		return roomTypePriceSpecial;
+	private RoomTypePriceSpecialDto convertToDto(RoomTypePriceSpecialDto dbDto, Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator) {
+		RoomTypePriceSpecialDto dto = null;
+
+		if (null == dbDto) {
+			dto = new RoomTypePriceSpecialDto();
+
+			dto.setRoomTypeId(roomTypeId);
+			dto.setDay(date);
+
+			dto.setCreateBy(operator);
+			dto.setCreateDate(new Date());
+		} else {
+			dto = dbDto;
+		}
+
+		dto.setMarketPrice(marketPrice);
+		dto.setSalePrice(salePrice);
+		dto.setSettlePrice(settlePrice);
+		dto.setIsValid(ValidEnum.VALID.getCode());
+		dto.setUpdateBy(operator);
+		dto.setUpdateDate(new Date());
+		return dto;
 	}
 
 
@@ -126,7 +128,14 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	@Override
 	public int saveOrUpdate(RoomTypePriceSpecialDto dto) {
 		if (null != dto) {
-			return roomTypePriceSpecialMapper.updateByPrimaryKey(toModel(dto));
+			RoomTypePriceSpecial model = toModel(dto);
+			if (null == dto.getId()) {
+				int result = roomTypePriceSpecialMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			} else {
+				return roomTypePriceSpecialMapper.updateByPrimaryKey(model);
+			}
 		}
 		return 0;
 	}
@@ -144,11 +153,17 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	public RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day) {
 		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
 		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
-		List<RoomTypePriceSpecial> roomTypePriceSpecialList = roomTypePriceSpecialMapper.selectByExample(example);
-		if (null != roomTypePriceSpecialList && 0 < roomTypePriceSpecialList.size()) {
-			return toDto(roomTypePriceSpecialList.get(0));
+		List<RoomTypePriceSpecial> list = this.roomTypePriceSpecialMapper.selectByExample(example);
+
+		if (list.isEmpty()) {
+			return null;
+		} else if (list.size() == 1) {
+			RoomTypePriceSpecial special = list.get(0);
+
+			return toDto(special);
+		} else {
+			throw new MyException("价格配置错误,根据房型和时间查到多条配置信息");
 		}
-		return null;
 	}
 
 	/**

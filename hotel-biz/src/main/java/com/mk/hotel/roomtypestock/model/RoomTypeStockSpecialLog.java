@@ -10,7 +10,7 @@ public class RoomTypeStockSpecialLog {
 
     private Date day;
 
-    private BigDecimal totalNumber;
+    private Long totalNumber;
 
     private Date createDate;
 
@@ -46,11 +46,11 @@ public class RoomTypeStockSpecialLog {
         this.day = day;
     }
 
-    public BigDecimal getTotalNumber() {
+    public Long getTotalNumber() {
         return totalNumber;
     }
 
-    public void setTotalNumber(BigDecimal totalNumber) {
+    public void setTotalNumber(Long totalNumber) {
         this.totalNumber = totalNumber;
     }
 

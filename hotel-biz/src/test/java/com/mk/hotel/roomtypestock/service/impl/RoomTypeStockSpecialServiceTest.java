@@ -37,7 +37,7 @@ public class RoomTypeStockSpecialServiceTest extends BaseTest {
 			dto.setUpdateBy("id");
 			dto.setUpdateDate(new Date());
 			dto.setDay(new Date());
-			dto.setTotalNumber(BigDecimal.valueOf(Math.random() * 100 + i));
+			dto.setTotalNumber(1l);
 
 			list.add(dto);
 		}

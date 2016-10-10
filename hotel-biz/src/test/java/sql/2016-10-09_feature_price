@@ -160,7 +160,7 @@ CREATE TABLE `room_type_stock_special` (
   `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
 
   `day` date NOT NULL COMMENT '日期',
-  `total_number` decimal(12,2) DEFAULT NULL COMMENT '总库存',
+  `total_number` bigint(3) DEFAULT NULL COMMENT '总库存',
 
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
@@ -205,7 +205,7 @@ CREATE TABLE `room_type_stock_special_log` (
   `room_type_id` bigint(18) NOT NULL COMMENT '房型id',
 
   `day` date NOT NULL COMMENT '日期',
-  `total_number` decimal(12,2) DEFAULT NULL COMMENT '总库存',
+  `total_number` bigint(3) DEFAULT NULL COMMENT '总库存',
 
   `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `create_by` varchar(50) DEFAULT NULL COMMENT '创建人',
