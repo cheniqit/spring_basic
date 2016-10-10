@@ -9,15 +9,12 @@ public class RoomTypeStockSpecial {
     private Long id;
 
     private Long roomTypeId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date day;
 
-    private BigDecimal totalNumber;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Long totalNumber;
     private Date createDate;
 
     private String createBy;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateDate;
 
     private String updateBy;
@@ -48,11 +45,11 @@ public class RoomTypeStockSpecial {
         this.day = day;
     }
 
-    public BigDecimal getTotalNumber() {
+    public Long getTotalNumber() {
         return totalNumber;
     }
 
-    public void setTotalNumber(BigDecimal totalNumber) {
+    public void setTotalNumber(Long totalNumber) {
         this.totalNumber = totalNumber;
     }
 
