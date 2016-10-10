@@ -578,4 +578,30 @@
       is_valid = #{isValid,jdbcType=CHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="batchInsert" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into room_type_price_normal_log (id, room_type_id, mon_market_price,
+    mon_sale_price, mon_settle_price, tue_market_price,
+    tue_sale_price, tue_settle_price, wed_market_price,
+    wed_sale_price, wed_settle_price, thu_market_price,
+    thu_sale_price, thu_settle_price, fri_market_price,
+    fri_sale_price, fri_settle_price, sat_market_price,
+    sat_sale_price, sat_settle_price, sun_market_price,
+    sun_sale_price, sun_settle_price, create_date,
+    create_by, update_date, update_by,
+    is_valid)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.roomTypeId,jdbcType=BIGINT}, #{item.monMarketPrice,jdbcType=DECIMAL},
+      #{item.monSalePrice,jdbcType=DECIMAL}, #{item.monSettlePrice,jdbcType=DECIMAL}, #{item.tueMarketPrice,jdbcType=DECIMAL},
+      #{item.tueSalePrice,jdbcType=DECIMAL}, #{item.tueSettlePrice,jdbcType=DECIMAL}, #{item.wedMarketPrice,jdbcType=DECIMAL},
+      #{item.wedSalePrice,jdbcType=DECIMAL}, #{item.wedSettlePrice,jdbcType=DECIMAL}, #{item.thuMarketPrice,jdbcType=DECIMAL},
+      #{item.thuSalePrice,jdbcType=DECIMAL}, #{item.thuSettlePrice,jdbcType=DECIMAL}, #{item.friMarketPrice,jdbcType=DECIMAL},
+      #{item.friSalePrice,jdbcType=DECIMAL}, #{item.friSettlePrice,jdbcType=DECIMAL}, #{item.satMarketPrice,jdbcType=DECIMAL},
+      #{item.satSalePrice,jdbcType=DECIMAL}, #{item.satSettlePrice,jdbcType=DECIMAL}, #{item.sunMarketPrice,jdbcType=DECIMAL},
+      #{item.sunSalePrice,jdbcType=DECIMAL}, #{item.sunSettlePrice,jdbcType=DECIMAL}, #{item.createDate,jdbcType=TIMESTAMP},
+      #{item.createBy,jdbcType=VARCHAR}, #{item.updateDate,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR},
+      #{item.isValid,jdbcType=CHAR})
+    </foreach>
+  </insert>
 </mapper>
