@@ -114,6 +114,12 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 
 	@Override
 	public RoomTypeStockSpecialDto selectByDay(Long roomTypeId, Date day) {
+		RoomTypeStockSpecialExample example = new RoomTypeStockSpecialExample();
+		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
+		List<RoomTypeStockSpecial> roomTypeStockSpecialList = roomTypeStockSpecialMapper.selectByExample(example);
+		if (null != roomTypeStockSpecialList && 0 < roomTypeStockSpecialList.size()) {
+			return toDto(roomTypeStockSpecialList.get(0));
+		}
 		return null;
 	}
 

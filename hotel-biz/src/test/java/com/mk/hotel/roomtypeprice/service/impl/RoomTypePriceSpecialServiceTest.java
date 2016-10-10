@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,5 +58,16 @@ public class RoomTypePriceSpecialServiceTest extends BaseTest {
 		dto.setIsValid("f");
 		int affect = roomTypePriceSpecialService.saveOrUpdate(dto);
 		logger.info("row:{}", affect);
+	}
+
+	@Test
+	public void testSelcetByDay() throws ParseException {
+		Long roomTypeId = new Long(9);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+		Date day = simpleDateFormat.parse("2016-10-10");
+		RoomTypePriceSpecialDto dto = roomTypePriceSpecialService.selectByDay(roomTypeId, day);
+		if (null != dto) {
+			logger.info("room_type_id:{}", dto.getRoomTypeId());
+		}
 	}
 }

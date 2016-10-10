@@ -142,6 +142,12 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 	@Override
 	public RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day) {
+		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
+		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
+		List<RoomTypePriceSpecial> roomTypePriceSpecialList = roomTypePriceSpecialMapper.selectByExample(example);
+		if (null != roomTypePriceSpecialList && 0 < roomTypePriceSpecialList.size()) {
+			return toDto(roomTypePriceSpecialList.get(0));
+		}
 		return null;
 	}
 
