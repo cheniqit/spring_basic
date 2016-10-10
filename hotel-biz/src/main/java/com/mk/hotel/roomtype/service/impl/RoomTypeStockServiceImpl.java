@@ -56,6 +56,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     @Autowired
     private RoomTypeFullStockLogService roomTypeFullStockLogService;
 
+
+
+
     private Integer getValueByRedisKeyName(Jedis jedis, String key, String field) {
 
         boolean isNeedCloseJedis = false;
