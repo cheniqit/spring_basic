@@ -35,6 +35,12 @@ public class RoomTypeStockNormalLogServiceImpl implements RoomTypeStockNormalLog
 	@Override
 	public int saveOrUpdate(RoomTypeStockNormalLogDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypeStockNormalLog model = toModel(dto);
+				int result = roomTypeStockNormalLogMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypeStockNormalLogMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

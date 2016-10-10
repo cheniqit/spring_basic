@@ -1,6 +1,7 @@
 package com.mk.hotel.roomtypestock.service.impl;
 
 import com.mk.common.BaseTest;
+import com.mk.framework.DateUtils;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,5 +57,19 @@ public class RoomTypeStockSpecialServiceTest extends BaseTest {
 		dto.setIsValid("f");
 		int affect = roomTypeStockSpecialService.saveOrUpdate(dto);
 		logger.info("row:{}", affect);
+	}
+
+	@Test
+	public void testSelectByDay() {
+		//
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date d = format.parse("2016-11-01");
+			RoomTypeStockSpecialDto dto = roomTypeStockSpecialService.selectByDay(31877l, d);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

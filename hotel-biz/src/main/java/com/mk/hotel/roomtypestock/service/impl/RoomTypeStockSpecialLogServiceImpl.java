@@ -6,7 +6,6 @@ import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialLogMapper;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecialLog;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,6 +35,12 @@ public class RoomTypeStockSpecialLogServiceImpl implements RoomTypeStockSpecialL
 	@Override
 	public int saveOrUpdate(RoomTypeStockSpecialLogDto dto) {
 		if (null != dto) {
+			if (null == dto.getId()) {
+				RoomTypeStockSpecialLog model = toModel(dto);
+				int result = roomTypeStockSpecialLogMapper.insert(model);
+				dto.setId(model.getId());
+				return result;
+			}
 			return roomTypeStockSpecialLogMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;

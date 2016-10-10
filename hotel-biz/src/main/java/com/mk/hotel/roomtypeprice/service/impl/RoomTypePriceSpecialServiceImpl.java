@@ -96,7 +96,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 			dto.setRoomTypeId(roomTypeId);
 			dto.setDay(date);
-
 			dto.setCreateBy(operator);
 			dto.setCreateDate(new Date());
 		} else {
@@ -153,7 +152,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	public RoomTypePriceSpecialDto selectByDay(Long roomTypeId, Date day) {
 		RoomTypePriceSpecialExample example = new RoomTypePriceSpecialExample();
 		example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(day).andIsValidEqualTo(ValidEnum.VALID.getCode());
-
 		List<RoomTypePriceSpecial> list = this.roomTypePriceSpecialMapper.selectByExample(example);
 
 		if (list.isEmpty()) {
