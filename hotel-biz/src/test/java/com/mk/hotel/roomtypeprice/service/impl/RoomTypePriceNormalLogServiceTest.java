@@ -24,7 +24,7 @@ public class RoomTypePriceNormalLogServiceTest extends BaseTest {
 	@Test
 	public void testBatchInsert() {
 		List<RoomTypePriceNormalLogDto> list = new ArrayList<RoomTypePriceNormalLogDto>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 2; i < 10; i++) {
 			RoomTypePriceNormalLogDto dto = new RoomTypePriceNormalLogDto();
 			dto.setId(new Long(i));
 			dto.setRoomTypeId(new Long(i));
