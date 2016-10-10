@@ -6,6 +6,10 @@ import com.mk.framework.security.MD5;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
+import com.mk.hotel.roomtype.RoomTypePriceService;
+import com.mk.hotel.roomtype.RoomTypeStockService;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtypestock.service.impl.RoomTypeStockServiceImpl;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +40,12 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     @Autowired
     private RoomTypeStockServiceImpl roomTypeStockService;
 
+    @Autowired
+    private RoomTypePriceService priceService;
+
+    @Autowired
+    private RoomTypeStockService stockService;
+
     @Override
     public List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate, String token) {
         //
@@ -53,7 +63,22 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         //
         Date[] dates = DateUtils.getStartEndDate(startDate, endDate);
         for (Date date : dates) {
+            //
+            RoomTypePriceDto priceDto = this.priceService.queryPriceFromRedis(roomTypeId, date);
+            RoomTypeStockDto stockDto = this.stockService.queryStockFromRedis(roomTypeId, date);
+
+            //
             RoomStatesDto dto = new RoomStatesDto();
+            dto.setDay(date);
+            if (null != priceDto) {
+                dto.setMarketPrice(priceDto.getCost());
+                dto.setSalePrice(priceDto.getPrice());
+                dto.setSettlePrice(priceDto.getSettlePrice());
+            }
+            if (null != stockDto) {
+                dto.setTotalStock(BigDecimal.valueOf(stockDto.getTotalNum()));
+                dto.setStock(BigDecimal.valueOf(stockDto.getAvailableNum() + stockDto.getPromoNum()));
+            }
 
             roomStatesDtoList.add(dto);
         }

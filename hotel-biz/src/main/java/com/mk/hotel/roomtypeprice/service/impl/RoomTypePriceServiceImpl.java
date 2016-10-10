@@ -10,6 +10,7 @@ import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialExample;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.List;
 /**
  * Created by chenqi on 16/10/9.
  */
+@Service
 public class RoomTypePriceServiceImpl {
     @Autowired
     private MsgProducer msgProducer;
