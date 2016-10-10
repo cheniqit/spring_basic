@@ -1,5 +1,7 @@
 package com.mk.hotel.roomtypeprice.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ public class RoomTypePriceSpecial {
 
     private Long roomTypeId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
     private Date day;
 
     private BigDecimal marketPrice;
@@ -16,10 +19,12 @@ public class RoomTypePriceSpecial {
 
     private BigDecimal settlePrice;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createDate;
 
     private String createBy;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateDate;
 
     private String updateBy;

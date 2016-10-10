@@ -34,11 +34,20 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		if(settlePrice == null){
 			throw new MyException("参数错误");
 		}
-		if(marketPrice == null || salePrice == null){
-			salePrice = settlePrice;
-			marketPrice = settlePrice.multiply(new BigDecimal("0.5")).add(settlePrice);
-			marketPrice.setScale(0, BigDecimal.ROUND_HALF_UP);
+
+		//
+		if (marketPrice == null) {
+			marketPrice = settlePrice.multiply(new BigDecimal("0.15"));
+			marketPrice.setScale(0, BigDecimal.ROUND_UP);
+			marketPrice = settlePrice.multiply(BigDecimal.TEN);
 		}
+
+		//
+		if (salePrice == null) {
+			salePrice = settlePrice;
+		}
+
+
 		if(roomTypeId == null){
 			throw new MyException("参数错误");
 		}
