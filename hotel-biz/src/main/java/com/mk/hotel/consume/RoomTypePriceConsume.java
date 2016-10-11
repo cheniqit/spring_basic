@@ -20,6 +20,7 @@ import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
+import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -53,6 +54,9 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
 
     @Autowired
     private QueueErrorInfoServiceImpl queueErrorInfoService;
+
+    @Autowired
+    private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
 
     private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
 
@@ -105,14 +109,19 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
                             RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+                            //为避免消息重复直接查询数据库
+                            RoomTypePriceSpecialDto roomTypePriceSpecialDto = roomTypePriceSpecialService.selectByDay(roomType.getId(), roomTypePriceSpecial.getDay());
+                            if(roomTypePriceSpecialDto == null){
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            }
                             roomTypePriceDto.setRoomTypeId(roomType.getId());
                             roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
-                            roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
-                            roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
-                            roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
+                            roomTypePriceDto.setCost(roomTypePriceSpecialDto.getMarketPrice());
+                            roomTypePriceDto.setPrice(roomTypePriceSpecialDto.getSalePrice());
+                            roomTypePriceDto.setSettlePrice(roomTypePriceSpecialDto.getSettlePrice());
                             roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
                             roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
-                                    roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
+                                    roomTypePriceSpecialDto.getSalePrice(), roomTypePriceSpecialDto.getMarketPrice(), roomTypePriceSpecialDto.getSettlePrice(), "specialTopic");
                             OtsInterface.initHotel(hotelDto.getId());
                         }else{
 
