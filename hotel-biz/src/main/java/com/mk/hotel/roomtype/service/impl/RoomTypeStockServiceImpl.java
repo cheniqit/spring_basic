@@ -69,6 +69,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             isNeedCloseJedis = true;
         }
         String strNum = jedis.hget(key, field);
+        if(StringUtils.isBlank(strNum)) {
+            return null;
+        }
 
         try {
             return Integer.parseInt(strNum);
@@ -249,6 +252,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
+
+            //持久化
+            this.savePersistToDb(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -419,6 +425,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
+
+            //持久化
+            this.savePersistToDb(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -545,6 +554,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                         day,
                         0,
                         0);
+
+                //持久化
+                this.savePersistToDb(roomTypeId, day);
             }
         } finally {
             //unlock

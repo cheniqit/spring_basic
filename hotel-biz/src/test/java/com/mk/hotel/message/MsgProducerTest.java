@@ -2,6 +2,7 @@ package com.mk.hotel.message;
 
 import com.mk.common.BaseTest;
 import com.mk.hotel.common.Constant;
+import com.mk.hotel.consume.enums.TopicEnum;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,6 @@ public class MsgProducerTest extends BaseTest{
 
     @Test
     public void testSendMsg() throws Exception {
-        msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_PRICE, "test");
+        msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "test");
     }
 }
