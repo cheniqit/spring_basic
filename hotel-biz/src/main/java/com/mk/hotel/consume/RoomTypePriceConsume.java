@@ -85,7 +85,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             }
-                            logger.info(msg);
+                            logger.info(topicEnum.getName()+" msg :"+msg);
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
