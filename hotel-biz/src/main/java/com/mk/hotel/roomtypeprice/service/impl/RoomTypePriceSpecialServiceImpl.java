@@ -53,9 +53,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	@Autowired
 	private HotelServiceImpl hotelService;
 
-	@Autowired
-	private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
-
 	public int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
 		if(settlePrice == null){
 			throw new MyException("参数错误");
