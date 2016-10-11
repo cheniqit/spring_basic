@@ -18,6 +18,7 @@ import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -119,11 +120,12 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             //
                             Map<String, Object> messageMap = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, Map.class);
                             String strRoomTypeId = (String) messageMap.get("roomTypeId");
-                            Date date = (Date) messageMap.get("date");
-                            logger.info("savePersistToDb roomTypeId:{} date:{}", strRoomTypeId, date);
+                            String strDate = (String) messageMap.get("date");
+                            logger.info("savePersistToDb roomTypeId:{} date:{}", strRoomTypeId, strDate);
 
                             //
                             Long roomTypeId = Long.valueOf(strRoomTypeId);
+                            Date date = DateUtils.strToDate(strDate, DateUtils.FORMAT_DATETIME);
                             int result = roomTypeStockService.savePersistToDb(roomTypeId, date);
                             logger.info("savePersistToDb roomTypeId:{} date:{} result:{}", roomTypeId, date, result);
                             if (result > 0) {
