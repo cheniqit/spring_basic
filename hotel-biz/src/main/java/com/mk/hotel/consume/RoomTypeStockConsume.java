@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
+import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
@@ -78,6 +79,8 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     MessageExt messageExt = msgs.get(0);
                     String msg = null;
+                    String lockValue = null;
+                    String lockKey = null;
                     try {
 
                         try {
@@ -90,6 +93,11 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         if("special".equals(messageExt.getTags())){
 
                             RoomTypeStockSpecialDto roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecialDto.class);
+                            lockKey = "hotel_roomtype_stock" + roomTypeStockSpecial.getRoomTypeId()+roomTypeStockSpecial.getDay();
+                            DistributedLockUtil.tryLock(lockKey, 40);
+                            if(lockValue ==null){
+                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                            }
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypeStockSpecial.getRoomTypeId());
                             if(roomType == null){
@@ -123,6 +131,10 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }finally {
+                        if(lockKey != null && lockValue != null){
+                            DistributedLockUtil.releaseLock(lockKey, lockValue);
+                        }
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }

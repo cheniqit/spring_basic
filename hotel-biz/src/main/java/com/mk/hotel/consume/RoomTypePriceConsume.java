@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
+import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.consume.enums.TopicEnum;
@@ -78,6 +79,8 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                         List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     MessageExt messageExt = msgs.get(0);
                     String msg = null;
+                    String lockValue = null;
+                    String lockKey = null;
                     try {
                         if("special".equals(messageExt.getTags())){
                             try {
@@ -87,6 +90,11 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             }
                             logger.info(topicEnum.getName()+" msg :"+msg);
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
+                            lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
+                            DistributedLockUtil.tryLock(lockKey, 40);
+                            if(lockValue ==null){
+                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                            }
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
                             if(roomType == null){
@@ -113,6 +121,10 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                         queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }finally {
+                        if(lockKey != null && lockValue != null){
+                            DistributedLockUtil.releaseLock(lockKey, lockValue);
+                        }
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
