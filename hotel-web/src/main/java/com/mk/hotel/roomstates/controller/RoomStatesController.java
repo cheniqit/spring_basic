@@ -3,7 +3,8 @@ package com.mk.hotel.roomstates.controller;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
-import com.mk.hotel.roomstates.dto.RoomTypePriceNormalDto;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceNormalDto;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalDto;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +70,7 @@ public class RoomStatesController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
 
-        //TODO service
-
+        this.roomStatesService.updateNormalPrice(dto, operatorId, token);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -93,7 +93,7 @@ public class RoomStatesController {
 
     @RequestMapping(value = "/updatenormalstock", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> updateNormalStock(String operatorId, String token) {
+    public ResponseEntity<HashMap<String, Object>> updateNormalStock(RoomTypeStockNormalDto dto, String operatorId, String token) {
 
         //TODO service
 

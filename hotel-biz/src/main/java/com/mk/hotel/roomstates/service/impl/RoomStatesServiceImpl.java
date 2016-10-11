@@ -10,15 +10,29 @@ import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
+import com.mk.hotel.roomtypeprice.RoomTypePriceNormalLogService;
+import com.mk.hotel.roomtypeprice.RoomTypePriceNormalService;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialLogService;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialService;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceNormalDto;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceNormalLogDto;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialLogDto;
+import com.mk.hotel.roomtypeprice.mapper.RoomTypePriceNormalLogMapper;
+import com.mk.hotel.roomtypeprice.model.RoomTypePriceNormal;
+import com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog;
+import com.mk.hotel.roomtypestock.RoomTypeStockNormalLogService;
+import com.mk.hotel.roomtypestock.RoomTypeStockNormalService;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialLogService;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalDto;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalLogDto;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialLogDto;
+import com.mk.hotel.roomtypestock.model.RoomTypeStockNormal;
+import com.mk.hotel.roomtypestock.model.RoomTypeStockNormalLog;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +66,18 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
 
     @Autowired
     private RoomTypeStockService stockService;
+
+    @Autowired
+    private RoomTypePriceNormalService roomTypePriceNormalService;
+
+    @Autowired
+    private RoomTypePriceNormalLogService roomTypePriceNormalLogService;
+
+    @Autowired
+    private RoomTypeStockNormalService roomTypeStockNormalService;
+
+    @Autowired
+    private RoomTypeStockNormalLogService roomTypeStockNormalLogService;
 
     @Override
     public List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate, String token) {
@@ -173,7 +199,36 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     }
 
     @Override
-    public int updateNormalPrice() {
+    public int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId, String token) {
+        if (null != dto) {
+            this.checkToken(dto.getRoomTypeId(), token);
+            dto.setUpdateBy(operatorId);
+            dto.setCreateBy(operatorId);
+            int row = roomTypeStockNormalService.saveOrUpdate(dto);
+            RoomTypeStockNormalLogDto logDto = new RoomTypeStockNormalLogDto();
+            BeanUtils.copyProperties(dto, logDto);
+            List<RoomTypeStockNormalLogDto> list = new ArrayList<RoomTypeStockNormalLogDto>();
+            list.add(logDto);
+            int rowLog = roomTypeStockNormalLogService.batchInsert(list);
+            return row + rowLog;
+        }
+        return 0;
+    }
+
+    @Override
+    public int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
+        if (null != dto) {
+            this.checkToken(dto.getRoomTypeId(), token);
+            dto.setUpdateBy(operatorId);
+            dto.setCreateBy(operatorId);
+            int row = roomTypePriceNormalService.saveOrUpdate(dto);
+            RoomTypePriceNormalLogDto logDto = new RoomTypePriceNormalLogDto();
+            BeanUtils.copyProperties(dto, logDto);
+            List<RoomTypePriceNormalLogDto> list = new ArrayList<RoomTypePriceNormalLogDto>();
+            list.add(logDto);
+            int rowLog = roomTypePriceNormalLogService.batchInsert(list);
+            return row + rowLog;
+        }
         return 0;
     }
 
