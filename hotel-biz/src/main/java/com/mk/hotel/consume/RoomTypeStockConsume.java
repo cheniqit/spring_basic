@@ -94,7 +94,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
 
                             RoomTypeStockSpecialDto roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecialDto.class);
                             lockKey = "hotel_roomtype_stock" + roomTypeStockSpecial.getRoomTypeId()+roomTypeStockSpecial.getDay();
-                            DistributedLockUtil.tryLock(lockKey, 40);
+                            lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }

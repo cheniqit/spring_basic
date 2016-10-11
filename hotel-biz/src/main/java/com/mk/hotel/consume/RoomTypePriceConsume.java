@@ -91,7 +91,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             logger.info(topicEnum.getName()+" msg :"+msg);
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
-                            DistributedLockUtil.tryLock(lockKey, 40);
+                            lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
