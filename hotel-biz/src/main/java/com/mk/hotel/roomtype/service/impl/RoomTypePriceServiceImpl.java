@@ -209,9 +209,11 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             //
             RoomTypePriceDto dto = new RoomTypePriceDto();
             dto.setRoomTypeId(roomTypeId);
-            dto.setPrice(roomTypePrice.getPrice());
-            dto.setCost(roomTypePrice.getOriginPrice());
-            dto.setSettlePrice(roomTypePrice.getSettlePrice());
+            if (null != roomTypePrice) {
+                dto.setPrice(roomTypePrice.getPrice());
+                dto.setCost(roomTypePrice.getOriginPrice());
+                dto.setSettlePrice(roomTypePrice.getSettlePrice());
+            }
             dto.setDay(day);
 
             return dto;
