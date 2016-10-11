@@ -2,12 +2,15 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
@@ -15,16 +18,15 @@ import com.mk.hotel.roomtype.RoomTypeFullStockLogService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.RoomTypeStockBean;
-import com.mk.hotel.roomtype.dto.RoomTypeDto;
-import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
-import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
-import com.mk.hotel.roomtype.dto.StockInfoDto;
+import com.mk.hotel.roomtype.dto.*;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.model.RoomTypeStockExample;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +34,7 @@ import redis.clients.jedis.Jedis;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RoomTypeStockServiceImpl implements RoomTypeStockService {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private HotelStockRemoteService hotelStockRemoteService;
@@ -55,7 +55,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     @Autowired
     private RoomTypeFullStockLogService roomTypeFullStockLogService;
 
-
+    @Autowired
+    private MsgProducer msgProducer;
 
 
     private Integer getValueByRedisKeyName(Jedis jedis, String key, String field) {
@@ -66,6 +67,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             isNeedCloseJedis = true;
         }
         String strNum = jedis.hget(key, field);
+        if(StringUtils.isBlank(strNum)) {
+            return null;
+        }
 
         try {
             return Integer.parseInt(strNum);
@@ -246,6 +250,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
+
+            //持久化
+            this.messageToPersist(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -416,6 +423,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 RoomTypeDto dto = this.roomTypeService.selectById(roomTypeId);
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
+
+            //持久化
+            this.messageToPersist(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -542,6 +552,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                         day,
                         0,
                         0);
+
+                //持久化
+                this.messageToPersist(roomTypeId, day);
             }
         } finally {
             //unlock
@@ -617,63 +630,54 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-//    public int persistToDb(Long roomTypeId, Date date){
-//
-//        if (null == roomTypeId || null == date) {
-//            return -1;
-//        }
-//
-//        //get from redis
-//        RoomTypeStockRedisDto redisDto = this.queryStockFromRedis(roomTypeId, date);
-//        if (null == redisDto) {
-//            return -1;
-//        }
-//
-//        //get from db
-//        RoomTypeStock roomTypeStock = this.queryByDate(roomTypeId, date);
-//
-//        if (null == roomTypeStock) {
-//            roomTypeStock = new RoomTypeStock();
-//            roomTypeStock.setDay(date);
-//            roomTypeStock.setRoomTypeId(roomTypeId);
-//            roomTypeStock.setUpdateBy(operator);
-//            roomTypeStock.setUpdateDate(new Date());
-//            roomTypeStock.setCreateBy(operator);
-//            roomTypeStock.setCreateDate(new Date());
-//            roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
-//        } else {
-//
-//        }
-//
-//        roomTypeStock.setNumber(totalNumber);
-//        roomTypeStock.setTotalNumber(totalNumber);
-//        roomTypeStock.setUpdateBy(operator);
-//        roomTypeStock.setUpdateDate(new Date());
-//        //
-//
-//
-//        //
-//        RoomTypeStockExample example = new RoomTypeStockExample();
-//        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
-//        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
-//
-//        if(CollectionUtils.isEmpty(roomTypeStockList)){
-//            return roomTypeStockMapper.insert(roomTypeStock);
-//        }else if(roomTypeStockList.size() == 1){
-//            RoomTypeStock stock = roomTypeStockList.get(0);
-//
-//            if (null != number) {
-//                stock.setNumber(number);
-//            }
-//            stock.setTotalNumber(totalNumber);
-//            return roomTypeStockMapper.updateByPrimaryKey(stock);
-//
-//        }else{
-//            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
-//        }
-//    }
+    public int savePersistToDb(Long roomTypeId, Date date){
 
-    public RoomTypeStock queryByDate(Long roomTypeId, Date date) {
+        if (null == roomTypeId || null == date) {
+            return -1;
+        }
+
+        //get from redis
+        RoomTypeStockRedisDto redisDto = this.queryStockFromRedis(roomTypeId, date);
+        if (null == redisDto) {
+            return -1;
+        }
+
+        //get from db
+        RoomTypeStockDto dbDto = this.queryByDate(roomTypeId, date);
+
+        if (null == dbDto) {
+            dbDto = new RoomTypeStockDto();
+            dbDto.setDay(date);
+            dbDto.setRoomTypeId(roomTypeId);
+            dbDto.setUpdateBy("savePersistToDb");
+            dbDto.setUpdateDate(new Date());
+            dbDto.setCreateBy("savePersistToDb");
+            dbDto.setCreateDate(new Date());
+            dbDto.setIsValid(ValidEnum.VALID.getCode());
+        }
+
+        //
+        Integer num = 0;
+        Integer availableNum = redisDto.getAvailableNum();
+        Integer promoNum = redisDto.getPromoNum();
+
+        if (null != availableNum && null != promoNum) {
+            num = availableNum + promoNum;
+        } else if (null != availableNum) {
+            num = availableNum;
+        } else if (null != promoNum) {
+            num = promoNum;
+        }
+
+        dbDto.setNumber(num.longValue());
+        dbDto.setTotalNumber(redisDto.getTotalNum().longValue());
+        dbDto.setUpdateBy("savePersistToDb");
+        dbDto.setUpdateDate(new Date());
+        //
+        return this.saveOrUpdate(dbDto);
+    }
+
+    public RoomTypeStockDto queryByDate(Long roomTypeId, Date date) {
 
         //
         RoomTypeStockExample example = new RoomTypeStockExample();
@@ -682,22 +686,88 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         if(CollectionUtils.isEmpty(roomTypeStockList)){
             return null;
         } else if (roomTypeStockList.size() == 1) {
-            return roomTypeStockList.get(0);
+            RoomTypeStock stock = roomTypeStockList.get(0);
+            return convertToDto(stock);
         } else {
             throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
         }
     }
 
-    public int saveOrUpdate(RoomTypeStock stock) {
-        if (null == stock) {
+    public int saveOrUpdate(RoomTypeStockDto dto) {
+        if (null == dto) {
             return -1;
         }
 
+        RoomTypeStock stock = convertToBean(dto);
+
         if (null == stock.getId()) {
-            return this.roomTypeStockMapper.insert(stock);
+            int result = -1;
+            result = this.roomTypeStockMapper.insert(stock);
+            dto.setId(stock.getId());
+            return result;
         } else {
             return this.roomTypeStockMapper.updateByPrimaryKey(stock);
         }
     }
 
+    private RoomTypeStockDto convertToDto(RoomTypeStock stock) {
+
+        if (null != stock) {
+            RoomTypeStockDto dto = new RoomTypeStockDto();
+            dto.setId(stock.getId());
+            dto.setRoomTypeId(stock.getRoomTypeId());
+            dto.setDay(stock.getDay());
+            dto.setNumber(stock.getNumber());
+            dto.setTotalNumber(stock.getTotalNumber());
+            dto.setCreateBy(stock.getCreateBy());
+            dto.setCreateDate(stock.getCreateDate());
+            dto.setUpdateBy(stock.getUpdateBy());
+            dto.setUpdateDate(stock.getUpdateDate());
+            dto.setIsValid(stock.getIsValid());
+            return dto;
+        } else {
+            return null;
+        }
+    }
+
+    private RoomTypeStock convertToBean(RoomTypeStockDto dto) {
+
+        if (null != dto) {
+            RoomTypeStock stock = new RoomTypeStock();
+
+            stock.setId(dto.getId());
+            stock.setRoomTypeId(dto.getRoomTypeId());
+            stock.setDay(dto.getDay());
+            stock.setNumber(dto.getNumber());
+            stock.setTotalNumber(dto.getTotalNumber());
+            stock.setCreateBy(dto.getCreateBy());
+            stock.setCreateDate(dto.getCreateDate());
+            stock.setUpdateBy(dto.getUpdateBy());
+            stock.setUpdateDate(dto.getUpdateDate());
+            stock.setIsValid(dto.getIsValid());
+            return stock;
+        } else {
+            return null;
+        }
+    }
+
+
+    private void messageToPersist (Long roomTypeId, Date date) {
+        if (null == roomTypeId || null == date) {
+            return;
+        }
+
+        Map<String, Object> messageMap = new HashMap<String, Object>();
+        messageMap.put("roomTypeId", roomTypeId.toString());
+        messageMap.put("date", date);
+
+        String message = JsonUtils.toJson(messageMap, DateUtils.FORMAT_DATETIME);
+        try {
+            String msgKey = TopicEnum.ROOM_TYPE_STOCK.getName() + System.currentTimeMillis() + message;
+            msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "savePersistToDb", msgKey, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+    }
 }

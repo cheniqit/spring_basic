@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtype;
 
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
 import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 
@@ -87,4 +88,15 @@ public interface RoomTypeStockService {
      */
     List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
 
+    /**
+     * 从redis 持久化到 db
+     * @param roomTypeId
+     * @param date
+     * @return
+     */
+    int savePersistToDb(Long roomTypeId, Date date);
+
+    int saveOrUpdate(RoomTypeStockDto dto);
+
+    RoomTypeStockDto queryByDate(Long roomTypeId, Date date);
 }

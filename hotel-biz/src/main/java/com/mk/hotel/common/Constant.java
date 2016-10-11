@@ -25,10 +25,9 @@ public class Constant {
     public static final String PUSH_INFO_SET = "PUSH_INFO_SET";
     public static final String TASK_FACTORY_REMOTE_URL = UrlUtils.getUrl("task.factory.remote.url");
 
-    /**topic**/
-    public static final String TOPIC_ROOMTYPE_PRICE = "hotel_roomtype_price";
-    public static final String TOPIC_ROOMTYPE_STOCK = "hotel_roomtype_stock";
-
 
     public static final String CONSUMER_GROUP_NAME = "hotelConsumerGroupName";
+
+
+    public static final int MSG_KEY_LOCK_EXPIRE_TIME = 24 * 60 * 60 * 1000;
 }

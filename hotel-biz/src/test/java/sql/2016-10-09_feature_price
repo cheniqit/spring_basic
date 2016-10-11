@@ -215,3 +215,13 @@ CREATE TABLE `room_type_stock_special_log` (
   PRIMARY KEY (`id`),
   KEY `idx_room_type_id` (`room_type_id`,`day`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COMMENT='房型指定日库存表log';
+
+
+CREATE TABLE `queue_error_info` (
+  `id` bigint(18) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `type` bigint(18) NOT NULL COMMENT 'type 1: 库存，2：价格',
+  `topic` varchar(100) NOT NULL COMMENT '消息队列topic名称',
+  `msg` longtext NOT NULL COMMENT '消息内容',
+  `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息队列处理错误信息表'

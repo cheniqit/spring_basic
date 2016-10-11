@@ -7,24 +7,21 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
+import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.hotel.common.Constant;
-import com.mk.hotel.common.utils.OtsInterface;
-import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
+import com.mk.hotel.consume.enums.TopicEnum;
+import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.message.MsgProducer;
-import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
-import com.mk.hotel.roomtype.model.RoomType;
-import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
-import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
-import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
+import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -42,13 +39,10 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
     private MsgProducer msgProducer;
 
     @Autowired
-    private RoomTypePriceServiceImpl roomTypePriceService;
+    private QueueErrorInfoServiceImpl queueErrorInfoService;
 
     @Autowired
-    private RoomTypeServiceImpl roomTypeService;
-
-    @Autowired
-    private HotelServiceImpl hotelService;
+    private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
 
     private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
 
@@ -64,8 +58,8 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
             logger.info("RoomTypePriceConsume name addr: "+msgProducer.getNamesrvAddr());
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
             consumer.setInstanceName(CONSUMER_GROUP_NAME);
-
-            consumer.subscribe(Constant.TOPIC_ROOMTYPE_PRICE, "*");
+            final TopicEnum topicEnum = TopicEnum.ROOM_TYPE_PRICE;
+            consumer.subscribe(topicEnum.getName(), "*");
 
             consumer.registerMessageListener(new MessageListenerConcurrently() {
                 /**
@@ -74,41 +68,46 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                 public ConsumeConcurrentlyStatus consumeMessage(
                         List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     MessageExt messageExt = msgs.get(0);
+                    String msg = null;
+                    String lockValue = null;
+                    String lockKey = null;
+                    //
+                    String messageKey = messageExt.getKeys();
+                    String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
+                    if(messageValue == null){
+                        logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+
+                    //
+                    try {
+                        msg = new String(messageExt.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(topicEnum.getName()+" msg :"+msg);
                     try {
                         if("special".equals(messageExt.getTags())){
-                            String msg = null;
-                            try {
-                                msg = new String(messageExt.getBody(), "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            logger.info(msg);
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
-                            //查找对应的fangid
-                            RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
-                            if(roomType == null){
-                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
+                            lockValue = DistributedLockUtil.tryLock(lockKey, 40);
+                            if(lockValue ==null){
+                                logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
+                                DistributedLockUtil.releaseLock(messageKey, messageValue);
+                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
-                            HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
-                            if(hotelDto == null){
-                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                            }
-                            RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
-                            roomTypePriceDto.setRoomTypeId(roomType.getId());
-                            roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
-                            roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
-                            roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
-                            roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
-                            roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
-                            roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
-                                    roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
-                            OtsInterface.initHotel(hotelDto.getId());
+                            roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
                         }else{
 
                         }
                     }catch (Exception e){
+                        queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }finally {
+                        if(lockKey != null && lockValue != null){
+                            DistributedLockUtil.releaseLock(lockKey, lockValue);
+                        }
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }

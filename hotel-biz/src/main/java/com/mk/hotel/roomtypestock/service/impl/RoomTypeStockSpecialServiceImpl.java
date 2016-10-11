@@ -3,8 +3,8 @@ package com.mk.hotel.roomtypestock.service.impl;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
-import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
@@ -57,9 +57,11 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 
 		//
 		try{
+			String messageKey = TopicEnum.ROOM_TYPE_STOCK.getName() + System.currentTimeMillis() + dto.getId();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
-			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_STOCK, "special", dto.getId().toString(), message);
+			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "special", messageKey, message);
 		}catch (Exception e){
+			e.printStackTrace();
 			throw new MyException("库存价格配置错误,发送消息错误");
 		}
 
@@ -106,8 +108,9 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 				int result = roomTypeStockSpecialMapper.insert(model);
 				dto.setId(model.getId());
 				return result;
+			} else {
+				return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
 			}
-			return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;
 	}
