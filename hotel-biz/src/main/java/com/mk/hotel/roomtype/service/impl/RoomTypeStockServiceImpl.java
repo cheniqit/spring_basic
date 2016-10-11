@@ -758,7 +758,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         Map<String, Object> messageMap = new HashMap<String, Object>();
-        messageMap.put("roomTypeId", roomTypeId);
+        messageMap.put("roomTypeId", roomTypeId.toString());
         messageMap.put("date", date);
 
         String message = JsonUtils.toJson(messageMap, DateUtils.FORMAT_DATETIME);

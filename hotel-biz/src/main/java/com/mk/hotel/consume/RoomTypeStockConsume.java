@@ -118,10 +118,12 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         } else if ("savePersistToDb".equals(messageExt.getTags())) {
                             //
                             Map<String, Object> messageMap = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, Map.class);
-                            Long roomTypeId = (Long) messageMap.get("roomTypeId");
+                            String strRoomTypeId = (String) messageMap.get("roomTypeId");
                             Date date = (Date) messageMap.get("date");
-                            logger.info("savePersistToDb roomTypeId:{} date:{}", roomTypeId, date);
+                            logger.info("savePersistToDb roomTypeId:{} date:{}", strRoomTypeId, date);
 
+                            //
+                            Long roomTypeId = Long.valueOf(strRoomTypeId);
                             int result = roomTypeStockService.savePersistToDb(roomTypeId, date);
                             logger.info("savePersistToDb roomTypeId:{} date:{} result:{}", roomTypeId, date, result);
                             if (result > 0) {
