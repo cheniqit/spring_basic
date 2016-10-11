@@ -111,7 +111,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.mk.hotel.roomtypestock.model.RoomTypeStockNormalLog" useGeneratedKeys="true" keyProperty="true"  >
+  <insert id="insert" parameterType="com.mk.hotel.roomtypestock.model.RoomTypeStockNormalLog" useGeneratedKeys="true" keyProperty="id"  >
     insert into room_type_stock_normal_log (id, room_type_id, mon_total_number, 
       tue_total_number, wed_total_number, thu_total_number, 
       fri_total_number, sat_total_number, sun_total_number, 
@@ -123,7 +123,7 @@
       #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=VARCHAR}, #{isValid,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.mk.hotel.roomtypestock.model.RoomTypeStockNormalLog" useGeneratedKeys="true" keyProperty="true" >
+  <insert id="insertSelective" parameterType="com.mk.hotel.roomtypestock.model.RoomTypeStockNormalLog" useGeneratedKeys="true" keyProperty="id" >
     insert into room_type_stock_normal_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

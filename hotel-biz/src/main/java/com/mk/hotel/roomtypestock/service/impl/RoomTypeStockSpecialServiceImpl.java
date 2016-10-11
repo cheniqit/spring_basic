@@ -106,8 +106,9 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 				int result = roomTypeStockSpecialMapper.insert(model);
 				dto.setId(model.getId());
 				return result;
+			} else {
+				return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
 			}
-			return roomTypeStockSpecialMapper.updateByPrimaryKey(toModel(dto));
 		}
 		return 0;
 	}
