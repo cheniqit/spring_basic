@@ -3,15 +3,14 @@ package com.mk.hotel.roomtypestock.service.impl;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
-import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtypestock.RoomTypeStockSpecialService;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialMapper;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecial;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecialExample;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 		//
 		try{
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
-			msgProducer.sendMsg(Constant.TOPIC_ROOMTYPE_STOCK, "special", dto.getId().toString(), message);
+			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "special", dto.getId().toString(), message);
 		}catch (Exception e){
 			throw new MyException("库存价格配置错误,发送消息错误");
 		}

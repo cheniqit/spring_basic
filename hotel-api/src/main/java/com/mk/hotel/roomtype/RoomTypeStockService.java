@@ -94,7 +94,7 @@ public interface RoomTypeStockService {
      * @param date
      * @return
      */
-    int persistToDb(Long roomTypeId, Date date);
+    int savePersistToDb(Long roomTypeId, Date date);
 
     int saveOrUpdate(RoomTypeStockDto dto);
 

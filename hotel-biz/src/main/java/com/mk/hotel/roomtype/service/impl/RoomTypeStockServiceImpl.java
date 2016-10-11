@@ -1,13 +1,19 @@
 package com.mk.hotel.roomtype.service.impl;
 
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
+import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
@@ -27,11 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,7 +57,8 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     @Autowired
     private RoomTypeFullStockLogService roomTypeFullStockLogService;
 
-
+    @Autowired
+    private MsgProducer msgProducer;
 
 
     private Integer getValueByRedisKeyName(Jedis jedis, String key, String field) {
@@ -614,7 +620,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public int persistToDb(Long roomTypeId, Date date){
+    public int savePersistToDb(Long roomTypeId, Date date){
 
         if (null == roomTypeId || null == date) {
             return -1;
@@ -633,17 +639,29 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             dbDto = new RoomTypeStockDto();
             dbDto.setDay(date);
             dbDto.setRoomTypeId(roomTypeId);
-            dbDto.setUpdateBy("persistToDb");
+            dbDto.setUpdateBy("savePersistToDb");
             dbDto.setUpdateDate(new Date());
-            dbDto.setCreateBy("persistToDb");
+            dbDto.setCreateBy("savePersistToDb");
             dbDto.setCreateDate(new Date());
             dbDto.setIsValid(ValidEnum.VALID.getCode());
         }
 
+        //
+        Integer num = 0;
+        Integer availableNum = redisDto.getAvailableNum();
+        Integer promoNum = redisDto.getPromoNum();
 
-        dbDto.setNumber(0l);
+        if (null != availableNum && null != promoNum) {
+            num = availableNum + promoNum;
+        } else if (null != availableNum) {
+            num = availableNum;
+        } else if (null != promoNum) {
+            num = promoNum;
+        }
+
+        dbDto.setNumber(num.longValue());
         dbDto.setTotalNumber(redisDto.getTotalNum().longValue());
-        dbDto.setUpdateBy("persistToDb");
+        dbDto.setUpdateBy("savePersistToDb");
         dbDto.setUpdateDate(new Date());
         //
         return this.saveOrUpdate(dbDto);
@@ -723,4 +741,22 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
     }
 
+
+    private void messageToPersist (Long roomTypeId, Date date) {
+        if (null == roomTypeId || null == date) {
+            return;
+        }
+
+        Map<String, Object> messageMap = new HashMap<String, Object>();
+        messageMap.put("roomTypeId", roomTypeId);
+        messageMap.put("date", date);
+
+        String message = JsonUtils.toJson(messageMap, DateUtils.FORMAT_DATETIME);
+        try {
+            msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "savePersistToDb", roomTypeId.toString(), message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+    }
 }

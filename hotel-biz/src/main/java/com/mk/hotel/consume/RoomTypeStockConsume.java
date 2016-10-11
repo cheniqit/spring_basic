@@ -13,6 +13,7 @@ import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
+import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
@@ -25,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenqi on 16/10/9.
@@ -46,7 +49,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
     private HotelServiceImpl hotelService;
 
     @Autowired
-    private RoomTypeStockServiceImpl roomTypeStockService;
+    private RoomTypeStockService roomTypeStockService;
 
     @Autowired
     private QueueErrorInfoServiceImpl queueErrorInfoService;
@@ -77,13 +80,16 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                     MessageExt messageExt = msgs.get(0);
                     String msg = null;
                     try {
+
+                        try {
+                            msg = new String(messageExt.getBody(), "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        logger.info(msg);
+
                         if("special".equals(messageExt.getTags())){
-                            try {
-                                msg = new String(messageExt.getBody(), "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            logger.info(msg);
+
                             RoomTypeStockSpecialDto roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypeStockSpecial.getRoomTypeId());
@@ -98,7 +104,20 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             //放入redis
                             roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
                                     roomTypeStockSpecial.getTotalNumber().intValue(), 0);
-                        }else{
+                        } else if ("savePersistToDb".equals(messageExt.getTags())) {
+                            //
+                            Map<String, Object> messageMap = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, Map.class);
+                            Long roomTypeId = (Long) messageMap.get("roomTypeId");
+                            Date date = (Date) messageMap.get("date");
+                            logger.info("savePersistToDb roomTypeId:{} date:{}", roomTypeId, date);
+
+                            int result = roomTypeStockService.savePersistToDb(roomTypeId, date);
+                            if (result > 0) {
+                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                            } else {
+                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                            }
+                        } else{
 
                         }
                     }catch (Exception e){
