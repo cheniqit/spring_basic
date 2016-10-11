@@ -11,7 +11,6 @@ import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import com.mk.hotel.roomtypestock.mapper.RoomTypeStockSpecialMapper;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecial;
 import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecialExample;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
