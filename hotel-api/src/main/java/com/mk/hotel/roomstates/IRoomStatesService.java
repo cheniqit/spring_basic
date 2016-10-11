@@ -22,4 +22,6 @@ public interface IRoomStatesService {
 
     int updateStock(Long roomTypeId, Date startDate, Date endDate,
                                     Long totalStock, String operatorId, String token);
+
+    int updateNormalPrice();
 }
