@@ -1,8 +1,5 @@
 package com.mk.hotel.roomtype.service.impl;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
@@ -28,12 +25,13 @@ import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.model.RoomTypeStockExample;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class RoomTypeStockServiceImpl implements RoomTypeStockService {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private HotelStockRemoteService hotelStockRemoteService;
@@ -254,7 +252,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
 
             //持久化
-            this.savePersistToDb(roomTypeId, day);
+            this.messageToPersist(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -427,7 +425,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             }
 
             //持久化
-            this.savePersistToDb(roomTypeId, day);
+            this.messageToPersist(roomTypeId, day);
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -556,7 +554,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                         0);
 
                 //持久化
-                this.savePersistToDb(roomTypeId, day);
+                this.messageToPersist(roomTypeId, day);
             }
         } finally {
             //unlock
