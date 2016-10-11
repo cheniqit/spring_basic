@@ -9,6 +9,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
@@ -21,12 +22,14 @@ import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -85,7 +88,14 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String msg = null;
                     String lockValue = null;
                     String lockKey = null;
+                    Jedis jedis = null;
                     try {
+                        jedis = RedisUtil.getJedis();
+                        String msgKey = messageExt.getKeys();
+                        String msgKeyResult = jedis.get(msgKey);
+                        if(StringUtils.isNotBlank(msgKeyResult)){
+                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                        }
                         if("special".equals(messageExt.getTags())){
                             try {
                                 msg = new String(messageExt.getBody(), "UTF-8");

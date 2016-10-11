@@ -27,4 +27,7 @@ public class Constant {
 
 
     public static final String CONSUMER_GROUP_NAME = "hotelConsumerGroupName";
+
+
+    public static final int MSG_KEY_LOCK_EXPIRE_TIME = 24 * 60 * 60 * 1000;
 }

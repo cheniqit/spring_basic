@@ -1,8 +1,11 @@
 package com.mk.hotel.roomtypeprice.service.impl;
 
 import com.mk.framework.DateUtils;
+import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.message.MsgProducer;
@@ -14,6 +17,7 @@ import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialExample;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -77,11 +81,18 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		this.saveOrUpdate(dto);
 
 		//send msg
-		try{
+
+		Jedis jedis = null;
+		try {
+			jedis = RedisUtil.getJedis();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
-			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", dto.getId().toString(), message);
+			String key = TopicEnum.ROOM_TYPE_PRICE.getName()+System.currentTimeMillis()+dto.getId();
+			DistributedLockUtil.tryLock(key, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
+			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", key, message);
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
+		}if (jedis != null) {
+			jedis.close();
 		}
 
 		return 1;
