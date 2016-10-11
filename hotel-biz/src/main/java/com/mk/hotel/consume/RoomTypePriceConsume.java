@@ -111,7 +111,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             DistributedLockUtil.releaseLock(lockKey, lockValue);
                         }
                     }
-                    DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
