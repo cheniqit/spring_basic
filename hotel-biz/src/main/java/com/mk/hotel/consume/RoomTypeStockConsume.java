@@ -84,6 +84,14 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                     String lockKey = null;
                     try {
 
+                        //
+                        String messageKey = messageExt.getKeys();
+                        String messageValue = DistributedLockUtil.tryLock(messageKey, 1000 * 60 * 60 * 24);
+                        if(messageValue == null){
+                            logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                        }
+
                         try {
                             msg = new String(messageExt.getBody(), "UTF-8");
                         } catch (UnsupportedEncodingException e) {
