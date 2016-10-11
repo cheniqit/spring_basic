@@ -96,21 +96,25 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             lockKey = "hotel_roomtype_stock" + roomTypeStockSpecial.getRoomTypeId()+roomTypeStockSpecial.getDay();
                             lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
+                                logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypeStockSpecial.getRoomTypeId());
                             if(roomType == null){
+                                logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
                             HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
                             if(hotelDto == null){
+                                logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
 
                             //放入redis
-                            roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
+                            String result = roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
                                     roomTypeStockSpecial.getTotalNumber().intValue(), 0);
+                            logger.info("result:{}", result);
                         } else if ("savePersistToDb".equals(messageExt.getTags())) {
                             //
                             Map<String, Object> messageMap = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, Map.class);
@@ -119,6 +123,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             logger.info("savePersistToDb roomTypeId:{} date:{}", roomTypeId, date);
 
                             int result = roomTypeStockService.savePersistToDb(roomTypeId, date);
+                            logger.info("savePersistToDb roomTypeId:{} date:{} result:{}", roomTypeId, date, result);
                             if (result > 0) {
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             } else {
