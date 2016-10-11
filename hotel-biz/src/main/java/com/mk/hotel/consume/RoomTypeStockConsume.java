@@ -16,7 +16,6 @@ import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
-import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +85,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
-                        logger.info(msg);
+                        logger.info(topicEnum.getName()+" msg :"+msg);
 
                         if("special".equals(messageExt.getTags())){
 
