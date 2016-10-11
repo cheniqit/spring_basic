@@ -114,13 +114,15 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
-                            RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
                             //为避免消息重复直接查询数据库
                             RoomTypePriceSpecialDto roomTypePriceSpecialDto = roomTypePriceSpecialService.selectByDay(roomType.getId(), roomTypePriceSpecial.getDay());
                             if(roomTypePriceSpecialDto == null){
                                 logger.info("topic name:{} msg :{} roomTypePriceSpecialDto is null RECONSUME_LATER", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
+
+                            //
+                            RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
                             roomTypePriceDto.setRoomTypeId(roomType.getId());
                             roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
                             roomTypePriceDto.setCost(roomTypePriceSpecialDto.getMarketPrice());
