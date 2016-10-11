@@ -82,26 +82,32 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String lockValue = null;
                     String lockKey = null;
                     try {
+
+                        //
+                        try {
+                            msg = new String(messageExt.getBody(), "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        logger.info(topicEnum.getName()+" msg :"+msg);
+
                         if("special".equals(messageExt.getTags())){
-                            try {
-                                msg = new String(messageExt.getBody(), "UTF-8");
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            }
-                            logger.info(topicEnum.getName()+" msg :"+msg);
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
                             lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
+                                logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
                             if(roomType == null){
+                                logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
                             HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
                             if(hotelDto == null){
+                                logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
                             RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
