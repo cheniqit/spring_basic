@@ -9,14 +9,12 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
-import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -74,8 +72,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String lockValue = null;
                     String lockKey = null;
                     Jedis jedis = null;
-
-
                     //
                     String messageKey = messageExt.getKeys();
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
@@ -91,9 +87,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                         e.printStackTrace();
                     }
                     logger.info(topicEnum.getName()+" msg :"+msg);
-
                     try {
-
                         if("special".equals(messageExt.getTags())){
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
@@ -103,11 +97,12 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 DistributedLockUtil.releaseLock(messageKey, messageValue);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
-                            return roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
+                            roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
                         }else{
 
                         }
                     }catch (Exception e){
+                        DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                         queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -116,6 +111,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                             DistributedLockUtil.releaseLock(lockKey, lockValue);
                         }
                     }
+                    DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });

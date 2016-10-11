@@ -1,13 +1,10 @@
 package com.mk.hotel.roomtypeprice.service.impl;
 
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.mk.framework.DateUtils;
-import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.framework.proxy.http.RedisUtil;
-import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.consume.enums.TopicEnum;
@@ -112,7 +109,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			jedis = RedisUtil.getJedis();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
 			String key = TopicEnum.ROOM_TYPE_PRICE.getName()+System.currentTimeMillis()+dto.getId();
-			DistributedLockUtil.tryLock(key, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", key, message);
 		}catch (Exception e){
 			throw new MyException("房型价格配置错误,发送消息错误");
@@ -228,17 +224,17 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		return null;
 	}
 
-	public ConsumeConcurrentlyStatus executeConsumeMessage(RoomTypePriceSpecialDto roomTypePriceSpecial, TopicEnum topicEnum) {
+	public void executeConsumeMessage(RoomTypePriceSpecialDto roomTypePriceSpecial, TopicEnum topicEnum) {
 		//查找对应的fangid
 		RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
 		if(roomType == null){
 			logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), JSONUtil.toJson(roomTypePriceSpecial));
-			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+			throw new MyException("roomType is null");
 		}
 		HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
 		if(hotelDto == null){
 			logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), JSONUtil.toJson(roomTypePriceSpecial));
-			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+			throw new MyException("hotelDto is null");
 		}
 		//
 		RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
@@ -251,6 +247,5 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
 				roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
 		OtsInterface.initHotel(hotelDto.getId());
-		return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	}
 }
