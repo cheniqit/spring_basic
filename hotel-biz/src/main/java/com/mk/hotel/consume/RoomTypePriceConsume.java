@@ -71,7 +71,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String msg = null;
                     String lockValue = null;
                     String lockKey = null;
-                    Jedis jedis = null;
                     //
                     String messageKey = messageExt.getKeys();
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
@@ -102,7 +101,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
 
                         }
                     }catch (Exception e){
-                        DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                         queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
