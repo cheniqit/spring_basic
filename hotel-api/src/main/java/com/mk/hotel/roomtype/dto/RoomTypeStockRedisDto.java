@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by huangjie on 16/8/15.
  */
-public class RoomTypeStockDto {
+public class RoomTypeStockRedisDto {
     //签约总房量
     private Integer totalNum;
     //计划特价房量

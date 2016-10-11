@@ -3,6 +3,8 @@ package com.mk.hotel.roomstates.controller;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
+import com.mk.hotel.roomstates.dto.RoomTypePriceNormalDto;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,10 @@ public class RoomStatesController {
     public ResponseEntity<HashMap<String, Object>> queryStates(Long roomTypeId, String startDate, String endDate, String token) {
 
         Date start = this.parseDate(startDate);
-        Date end = this.parseDate(endDate);
+        Date end = null;
+        if (StringUtils.isNotBlank(endDate)) {
+            end = this.parseDate(endDate);
+        }
 
         List<RoomStatesDto> dataList = this.roomStatesService.queryStates(roomTypeId, start, end, token);
 
@@ -60,6 +65,18 @@ public class RoomStatesController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/updatenormalprice", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
+
+        //TODO service
+
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/updateprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updatePrice(Long roomTypeId, String startDate, String endDate,
@@ -68,6 +85,18 @@ public class RoomStatesController {
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
         this.roomStatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId, token);
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updatenormalstock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updateNormalStock(String operatorId, String token) {
+
+        //TODO service
+
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
