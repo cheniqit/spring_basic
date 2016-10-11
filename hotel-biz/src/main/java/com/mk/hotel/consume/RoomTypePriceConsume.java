@@ -8,8 +8,9 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
-import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.utils.OtsInterface;
+import com.mk.hotel.consume.enums.TopicEnum;
+import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
@@ -18,7 +19,6 @@ import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
-import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -50,6 +50,9 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
     @Autowired
     private HotelServiceImpl hotelService;
 
+    @Autowired
+    private QueueErrorInfoServiceImpl queueErrorInfoService;
+
     private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
 
     @Override
@@ -64,8 +67,8 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
             logger.info("RoomTypePriceConsume name addr: "+msgProducer.getNamesrvAddr());
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
             consumer.setInstanceName(CONSUMER_GROUP_NAME);
-
-            consumer.subscribe(Constant.TOPIC_ROOMTYPE_PRICE, "*");
+            final TopicEnum topicEnum = TopicEnum.ROOM_TYPE_PRICE;
+            consumer.subscribe(topicEnum.getName(), "*");
 
             consumer.registerMessageListener(new MessageListenerConcurrently() {
                 /**
@@ -74,9 +77,9 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                 public ConsumeConcurrentlyStatus consumeMessage(
                         List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     MessageExt messageExt = msgs.get(0);
+                    String msg = null;
                     try {
                         if("special".equals(messageExt.getTags())){
-                            String msg = null;
                             try {
                                 msg = new String(messageExt.getBody(), "UTF-8");
                             } catch (UnsupportedEncodingException e) {
@@ -107,6 +110,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
 
                         }
                     }catch (Exception e){
+                        queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
