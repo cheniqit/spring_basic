@@ -17,7 +17,7 @@ import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.bean.RoomTypeStockBean;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypeFullStockLogDto;
-import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -431,7 +430,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     }
 
     @Override
-    public RoomTypeStockDto queryStockFromRedis(Long roomTypeId, Date day) {
+    public RoomTypeStockRedisDto queryStockFromRedis(Long roomTypeId, Date day) {
         if (null == roomTypeId || null == day ) {
             return null;
         }
@@ -459,7 +458,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             Integer promoNum = getValueByRedisKeyName(jedis, promoHashName, strDate);
 
             //
-            RoomTypeStockDto dto = new RoomTypeStockDto();
+            RoomTypeStockRedisDto dto = new RoomTypeStockRedisDto();
             dto.setRoomTypeId(roomTypeId);
             dto.setDay(day);
             dto.setTotalNum(totalNum);
@@ -618,26 +617,87 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     }
 
-    public void mergeRoomTypeStock(Long roomTypeId, Date date, Long totalNumber, String operator){
+//    public int persistToDb(Long roomTypeId, Date date){
+//
+//        if (null == roomTypeId || null == date) {
+//            return -1;
+//        }
+//
+//        //get from redis
+//        RoomTypeStockRedisDto redisDto = this.queryStockFromRedis(roomTypeId, date);
+//        if (null == redisDto) {
+//            return -1;
+//        }
+//
+//        //get from db
+//        RoomTypeStock roomTypeStock = this.queryByDate(roomTypeId, date);
+//
+//        if (null == roomTypeStock) {
+//            roomTypeStock = new RoomTypeStock();
+//            roomTypeStock.setDay(date);
+//            roomTypeStock.setRoomTypeId(roomTypeId);
+//            roomTypeStock.setUpdateBy(operator);
+//            roomTypeStock.setUpdateDate(new Date());
+//            roomTypeStock.setCreateBy(operator);
+//            roomTypeStock.setCreateDate(new Date());
+//            roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
+//        } else {
+//
+//        }
+//
+//        roomTypeStock.setNumber(totalNumber);
+//        roomTypeStock.setTotalNumber(totalNumber);
+//        roomTypeStock.setUpdateBy(operator);
+//        roomTypeStock.setUpdateDate(new Date());
+//        //
+//
+//
+//        //
+//        RoomTypeStockExample example = new RoomTypeStockExample();
+//        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
+//        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
+//
+//        if(CollectionUtils.isEmpty(roomTypeStockList)){
+//            return roomTypeStockMapper.insert(roomTypeStock);
+//        }else if(roomTypeStockList.size() == 1){
+//            RoomTypeStock stock = roomTypeStockList.get(0);
+//
+//            if (null != number) {
+//                stock.setNumber(number);
+//            }
+//            stock.setTotalNumber(totalNumber);
+//            return roomTypeStockMapper.updateByPrimaryKey(stock);
+//
+//        }else{
+//            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
+//        }
+//    }
+
+    public RoomTypeStock queryByDate(Long roomTypeId, Date date) {
+
+        //
         RoomTypeStockExample example = new RoomTypeStockExample();
         example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
         List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
-        RoomTypeStock roomTypeStock = new RoomTypeStock();
-        roomTypeStock.setDay(date);
-        roomTypeStock.setRoomTypeId(roomTypeId);
-        roomTypeStock.setNumber(totalNumber);
-        roomTypeStock.setUpdateBy(operator);
-        roomTypeStock.setUpdateDate(new Date());
-        roomTypeStock.setCreateBy(operator);
-        roomTypeStock.setCreateDate(new Date());
-        roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
         if(CollectionUtils.isEmpty(roomTypeStockList)){
-            roomTypeStockMapper.insert(roomTypeStock);
-        }else if(roomTypeStockList.size() == 1){
-            roomTypeStock.setCreateDate(null);
-            roomTypeStockMapper.updateByExample(roomTypeStock ,example);
-        }else{
-            throw new MyException("房型价格配置错误,根据房型和时间查到多条配置信息");
+            return null;
+        } else if (roomTypeStockList.size() == 1) {
+            return roomTypeStockList.get(0);
+        } else {
+            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
         }
     }
+
+    public int saveOrUpdate(RoomTypeStock stock) {
+        if (null == stock) {
+            return -1;
+        }
+
+        if (null == stock.getId()) {
+            return this.roomTypeStockMapper.insert(stock);
+        } else {
+            return this.roomTypeStockMapper.updateByPrimaryKey(stock);
+        }
+    }
+
 }

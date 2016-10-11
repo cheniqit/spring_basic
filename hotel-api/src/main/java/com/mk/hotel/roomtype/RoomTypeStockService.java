@@ -1,6 +1,6 @@
 package com.mk.hotel.roomtype;
 
-import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 
 import java.util.Date;
@@ -76,7 +76,7 @@ public interface RoomTypeStockService {
      * @param day
      * @return
      */
-    RoomTypeStockDto queryStockFromRedis(Long roomTypeId, Date day);
+    RoomTypeStockRedisDto queryStockFromRedis(Long roomTypeId, Date day);
 
     /**
      *

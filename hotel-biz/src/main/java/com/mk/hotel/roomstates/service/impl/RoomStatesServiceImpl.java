@@ -9,7 +9,7 @@ import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeStockService;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
-import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialLogService;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialService;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialLogDto;
@@ -74,7 +74,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         for (Date date : dates) {
             //
             RoomTypePriceDto priceDto = this.priceService.queryPriceFromRedis(roomTypeId, date);
-            RoomTypeStockDto stockDto = this.stockService.queryStockFromRedis(roomTypeId, date);
+            RoomTypeStockRedisDto stockDto = this.stockService.queryStockFromRedis(roomTypeId, date);
 
             //
             RoomStatesDto dto = new RoomStatesDto();
@@ -127,6 +127,10 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
 
     @Override
     public int updatePrice(Long roomTypeId, Date startDate, Date endDate, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token) {
+        //
+        this.checkToken(roomTypeId, token);
+
+        //
         int diffDay = DateUtils.diffDay(startDate, endDate);
 
         //
@@ -146,6 +150,10 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
 
     @Override
     public int updateStock(Long roomTypeId, Date startDate, Date endDate, Long totalStock, String operatorId, String token) {
+        //
+        this.checkToken(roomTypeId, token);
+
+        //
         int diffDay = DateUtils.diffDay(startDate, endDate);
 
         //
@@ -162,6 +170,11 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         //save log
         this.roomTypeStockSpecialLogService.batchInsert(dtoList);
         return result;
+    }
+
+    @Override
+    public int updateNormalPrice() {
+        return 0;
     }
 
     /**

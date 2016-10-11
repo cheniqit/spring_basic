@@ -17,6 +17,7 @@ import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
+import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
     @Autowired
     private HotelServiceImpl hotelService;
 
+    private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
+
     @Override
     public void afterPropertiesSet(){
         try {
@@ -57,9 +60,10 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
              * 注意：ConsumerGroupName需要由应用来保证唯一
              */
             consumer = new DefaultMQPushConsumer(
-                    Constant.CONSUMER_GROUP_NAME);
+                    CONSUMER_GROUP_NAME);
+            logger.info("RoomTypePriceConsume name addr: "+msgProducer.getNamesrvAddr());
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
-            consumer.setInstanceName("hotelRoomTypePriceConsumer");
+            consumer.setInstanceName(CONSUMER_GROUP_NAME);
 
             consumer.subscribe(Constant.TOPIC_ROOMTYPE_PRICE, "*");
 
@@ -79,7 +83,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 e.printStackTrace();
                             }
                             logger.info(msg);
-                            RoomTypePriceSpecial roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecial.class);
+                            RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
                             if(roomType == null){

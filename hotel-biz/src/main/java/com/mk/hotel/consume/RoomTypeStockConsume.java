@@ -15,7 +15,7 @@ import com.mk.hotel.message.MsgProducer;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtype.service.impl.RoomTypeStockServiceImpl;
-import com.mk.hotel.roomtypestock.model.RoomTypeStockSpecial;
+import com.mk.hotel.roomtypestock.dto.RoomTypeStockSpecialDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -47,6 +47,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
     @Autowired
     private RoomTypeStockServiceImpl roomTypeStockService;
 
+    private static String CONSUMER_GROUP_NAME = "hotelRoomTypeStockConsumer";
 
     @Override
     public void afterPropertiesSet(){
@@ -56,9 +57,10 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
              * 注意：ConsumerGroupName需要由应用来保证唯一
              */
             consumer = new DefaultMQPushConsumer(
-                    Constant.CONSUMER_GROUP_NAME);
+                    CONSUMER_GROUP_NAME);
             consumer.setNamesrvAddr(msgProducer.getNamesrvAddr());
-            consumer.setInstanceName("hotelRoomTypeStockConsumer");
+            logger.info("RoomTypeStockConsume name addr: "+msgProducer.getNamesrvAddr());
+            consumer.setInstanceName(CONSUMER_GROUP_NAME);
 
             consumer.subscribe(Constant.TOPIC_ROOMTYPE_STOCK, "*");
 
@@ -78,7 +80,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                                 e.printStackTrace();
                             }
                             logger.info(msg);
-                            RoomTypeStockSpecial roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecial.class);
+                            RoomTypeStockSpecialDto roomTypeStockSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypeStockSpecialDto.class);
                             //查找对应的fangid
                             RoomType roomType = roomTypeService.selectRoomTypeById(roomTypeStockSpecial.getRoomTypeId());
                             if(roomType == null){
@@ -88,8 +90,8 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             if(hotelDto == null){
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             }
-                            roomTypeStockService.mergeRoomTypeStock(roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
-                                    roomTypeStockSpecial.getTotalNumber(),roomTypeStockSpecial.getCreateBy());
+
+                            //放入redis
                             roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
                                     roomTypeStockSpecial.getTotalNumber().intValue(), 0);
                         }else{
