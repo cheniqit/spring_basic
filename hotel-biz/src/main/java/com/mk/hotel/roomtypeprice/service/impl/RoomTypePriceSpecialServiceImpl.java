@@ -1,19 +1,30 @@
 package com.mk.hotel.roomtypeprice.service.impl;
 
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
+import com.mk.framework.proxy.http.JSONUtil;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.consume.enums.TopicEnum;
+import com.mk.hotel.hotelinfo.dto.HotelDto;
+import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
+import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
+import com.mk.hotel.roomtype.model.RoomType;
+import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
+import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.RoomTypePriceSpecialService;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.mapper.RoomTypePriceSpecialMapper;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecial;
 import com.mk.hotel.roomtypeprice.model.RoomTypePriceSpecialExample;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,10 +40,24 @@ import java.util.List;
  */
 @Service
 public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialService {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private MsgProducer msgProducer;
 	@Autowired
 	private RoomTypePriceSpecialMapper roomTypePriceSpecialMapper;
+
+	@Autowired
+	private RoomTypePriceServiceImpl roomTypePriceService;
+
+	@Autowired
+	private RoomTypeServiceImpl roomTypeService;
+
+	@Autowired
+	private HotelServiceImpl hotelService;
+
+	@Autowired
+	private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
 
 	public int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
 		if(settlePrice == null){
@@ -201,5 +226,31 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			return dto;
 		}
 		return null;
+	}
+
+	public ConsumeConcurrentlyStatus executeConsumeMessage(RoomTypePriceSpecialDto roomTypePriceSpecial, TopicEnum topicEnum) {
+		//查找对应的fangid
+		RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
+		if(roomType == null){
+			logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), JSONUtil.toJson(roomTypePriceSpecial));
+			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+		}
+		HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
+		if(hotelDto == null){
+			logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), JSONUtil.toJson(roomTypePriceSpecial));
+			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+		}
+		//
+		RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+		roomTypePriceDto.setRoomTypeId(roomType.getId());
+		roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
+		roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
+		roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
+		roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
+		roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
+		roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
+				roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
+		OtsInterface.initHotel(hotelDto.getId());
+		return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	}
 }

@@ -10,16 +10,9 @@ import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.proxy.http.RedisUtil;
-import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
-import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.message.MsgProducer;
-import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
-import com.mk.hotel.roomtype.model.RoomType;
-import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
-import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
 import org.apache.commons.lang.StringUtils;
@@ -45,15 +38,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
 
     @Autowired
     private MsgProducer msgProducer;
-
-    @Autowired
-    private RoomTypePriceServiceImpl roomTypePriceService;
-
-    @Autowired
-    private RoomTypeServiceImpl roomTypeService;
-
-    @Autowired
-    private HotelServiceImpl hotelService;
 
     @Autowired
     private QueueErrorInfoServiceImpl queueErrorInfoService;
@@ -110,35 +94,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
-                            //查找对应的fangid
-                            RoomType roomType = roomTypeService.selectRoomTypeById(roomTypePriceSpecial.getRoomTypeId());
-                            if(roomType == null){
-                                logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), msg);
-                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                            }
-                            HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
-                            if(hotelDto == null){
-                                logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), msg);
-                                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                            }
-                            //为避免消息重复直接查询数据库
-                            RoomTypePriceSpecialDto roomTypePriceSpecialDto = roomTypePriceSpecialService.selectByDay(roomType.getId(), roomTypePriceSpecial.getDay());
-                            if(roomTypePriceSpecialDto == null){
-                                logger.info("topic name:{} msg :{} roomTypePriceSpecialDto is null RECONSUME_LATER", topicEnum.getName(), msg);
-                                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                            }
-
-                            //
-                            RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
-                            roomTypePriceDto.setRoomTypeId(roomType.getId());
-                            roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
-                            roomTypePriceDto.setCost(roomTypePriceSpecialDto.getMarketPrice());
-                            roomTypePriceDto.setPrice(roomTypePriceSpecialDto.getSalePrice());
-                            roomTypePriceDto.setSettlePrice(roomTypePriceSpecialDto.getSettlePrice());
-                            roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
-                            roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
-                                    roomTypePriceSpecialDto.getSalePrice(), roomTypePriceSpecialDto.getMarketPrice(), roomTypePriceSpecialDto.getSettlePrice(), "specialTopic");
-                            OtsInterface.initHotel(hotelDto.getId());
+                            return roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
                         }else{
 
                         }
