@@ -61,6 +61,7 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "special", messageKey, message);
 		}catch (Exception e){
+			e.printStackTrace();
 			throw new MyException("库存价格配置错误,发送消息错误");
 		}
 

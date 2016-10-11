@@ -108,6 +108,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			String key = TopicEnum.ROOM_TYPE_PRICE.getName()+System.currentTimeMillis()+dto.getId();
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", key, message);
 		}catch (Exception e){
+			e.printStackTrace();
 			throw new MyException("房型价格配置错误,发送消息错误");
 		}if (jedis != null) {
 			jedis.close();
