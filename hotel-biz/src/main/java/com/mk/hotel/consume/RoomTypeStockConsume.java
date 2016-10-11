@@ -9,6 +9,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
+import com.mk.hotel.common.Constant;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
@@ -82,22 +83,25 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                     String msg = null;
                     String lockValue = null;
                     String lockKey = null;
+
+                    //
+                    String messageKey = messageExt.getKeys();
+                    String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
+                    if(messageValue == null){
+                        logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+
+                    //
                     try {
+                        msg = new String(messageExt.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(topicEnum.getName()+" msg :"+msg);
 
-                        //
-                        String messageKey = messageExt.getKeys();
-                        String messageValue = DistributedLockUtil.tryLock(messageKey, 1000 * 60 * 60 * 24);
-                        if(messageValue == null){
-                            logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-
-                        try {
-                            msg = new String(messageExt.getBody(), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        logger.info(topicEnum.getName()+" msg :"+msg);
+                    //
+                    try {
 
                         if("special".equals(messageExt.getTags())){
 
@@ -106,6 +110,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
                                 logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
+                                DistributedLockUtil.releaseLock(messageKey, messageValue);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                             //查找对应的fangid
@@ -139,6 +144,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             if (result > 0) {
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             } else {
+                                DistributedLockUtil.releaseLock(messageKey, messageValue);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                         } else{

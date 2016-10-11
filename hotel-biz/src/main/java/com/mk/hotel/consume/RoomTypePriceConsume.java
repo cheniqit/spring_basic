@@ -10,6 +10,7 @@ import com.mk.framework.DateUtils;
 import com.mk.framework.DistributedLockUtil;
 import com.mk.framework.JsonUtils;
 import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.hotel.common.Constant;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.message.MsgProducer;
@@ -73,25 +74,33 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String lockValue = null;
                     String lockKey = null;
                     Jedis jedis = null;
+
+
+                    //
+                    String messageKey = messageExt.getKeys();
+                    String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
+                    if(messageValue == null){
+                        logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+
+                    //
                     try {
-                        jedis = RedisUtil.getJedis();
-                        String msgKey = messageExt.getKeys();
-                        String msgKeyResult = jedis.get(msgKey);
-                        if(StringUtils.isNotBlank(msgKeyResult)){
-                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                        }
-                        try {
-                            msg = new String(messageExt.getBody(), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        logger.info(topicEnum.getName()+" msg :"+msg);
+                        msg = new String(messageExt.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(topicEnum.getName()+" msg :"+msg);
+
+                    try {
+
                         if("special".equals(messageExt.getTags())){
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);
                             lockKey = "hotel_roomtype_price_lock" + roomTypePriceSpecial.getRoomTypeId()+roomTypePriceSpecial.getDay();
                             lockValue = DistributedLockUtil.tryLock(lockKey, 40);
                             if(lockValue ==null){
                                 logger.info("topic name:{} msg :{} lockValue is null RECONSUME_LATER", topicEnum.getName(), msg);
+                                DistributedLockUtil.releaseLock(messageKey, messageValue);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                             return roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
