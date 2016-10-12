@@ -94,11 +94,16 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
 
                     //
                     String messageKey = messageExt.getKeys();
-                    logger.info("messageKey :{} ",messageKey);
-                    String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
-                    if(messageValue == null){
-                        logger.info("topic name:{} msg :{} messageKey :{} messageValue is null success", topicEnum.getName(), msg, messageKey);
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    logger.info("messageKey :{} ", messageKey);
+                    String messageValue = null;
+                    //savePersistToDb 不加锁
+                    if (!"savePersistToDb".equals(messageExt.getTags())) {
+                        //
+                        messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
+                        if (messageValue == null) {
+                            logger.info("topic name:{} msg :{} messageKey :{} messageValue is null success", topicEnum.getName(), msg, messageKey);
+                            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                        }
                     }
 
 
@@ -146,7 +151,6 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             if (result > 0) {
                                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                             } else {
-                                DistributedLockUtil.releaseLock(messageKey, messageValue);
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                         } else{
