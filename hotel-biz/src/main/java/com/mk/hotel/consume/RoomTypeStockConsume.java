@@ -94,9 +94,10 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
 
                     //
                     String messageKey = messageExt.getKeys();
+                    logger.info("messageKey :{} ",messageKey);
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     if(messageValue == null){
-                        logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                        logger.info("topic name:{} msg :{} messageKey :{} messageValue is null success", topicEnum.getName(), msg, messageKey);
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
