@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.framework.AppUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.JSONUtil;
@@ -36,6 +37,7 @@ public class RoomTypeCopyService {
 
     public void handleRoomType (String body) {
 
+        Transaction t = Cat.newTransaction("PMS", "roomType-handleRoomType");
         //
         HotelService hotelService = AppUtils.getBean(HotelService.class);
 
@@ -60,6 +62,7 @@ public class RoomTypeCopyService {
                 fangHotelId = roomTypeJson.getHotelid();
             }
         } catch (Exception e) {
+            t.complete();
             throw new MyException("-99", "-99", "格式错误");
         }
 
@@ -117,9 +120,13 @@ public class RoomTypeCopyService {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
+        t.complete();
     }
 
     public void handleRoomTypeDel(String body) {
+
+        Transaction t = Cat.newTransaction("PMS", "roomType-handleRoomTypeDel");
 
         //
         HotelService hotelService = AppUtils.getBean(HotelService.class);
@@ -168,10 +175,14 @@ public class RoomTypeCopyService {
 
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
+        } finally {
+            t.complete();
         }
     }
 
     public void handleRoomTypePrice(String body) {
+
+        Transaction t = Cat.newTransaction("PMS", "roomType-handleRoomTypePrice");
 
         //
         HotelService hotelService = AppUtils.getBean(HotelService.class);
@@ -186,6 +197,7 @@ public class RoomTypeCopyService {
             //json
             roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
         } catch (Exception e) {
+            t.complete();
             throw new MyException("-99", "-99", "格式错误");
         }
 
@@ -267,6 +279,8 @@ public class RoomTypeCopyService {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
+        t.complete();
 
     }
 

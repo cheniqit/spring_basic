@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.execution.pushinfo.JobManager;
 import com.mk.framework.AppUtils;
 import com.mk.framework.JsonUtils;
@@ -41,6 +42,8 @@ public class HotelCopyService {
 
     public void handleHotelAll (String body) {
 
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleHotelAll");
+
         List<HotelAllJson> hotelJsonList = new ArrayList<HotelAllJson>();
         try {
             //
@@ -55,6 +58,7 @@ public class HotelCopyService {
                 hotelJsonList.add(hotelJson);
             }
         } catch (Exception e) {
+            t.complete();
             throw new MyException("-99", "-99", "格式错误");
         }
 
@@ -168,6 +172,7 @@ public class HotelCopyService {
 
             JobManager.addPushInfoToRefreshJob(JsonUtils.toJson(hotelDto), LogPushTypeEnum.hotel);
 
+            t.complete();
 //            //
 //            HotelService hotelService = AppUtils.getBean(HotelService.class);
 //
@@ -180,20 +185,27 @@ public class HotelCopyService {
 
     public void handleHotelDetail (String body) {
 
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleHotelDetail");
 
-        HotelDto hotelDto = JsonUtils.fromJson(body, HotelDto.class);
-        logger.info("handleHotelDetail: hotelId:{} start", hotelDto.getId());
+        try {
 
-        HotelService hotelService = AppUtils.getBean(HotelService.class);
-        hotelService.saveOrUpdateByFangId(hotelDto, HotelSourceEnum.LEZHU);
+            HotelDto hotelDto = JsonUtils.fromJson(body, HotelDto.class);
+            logger.info("handleHotelDetail: hotelId:{} start", hotelDto.getId());
 
-        //
-        OtsInterface.initHotel(hotelDto.getId());
-        logger.info("handleHotelDetail: hotelId:{} init", hotelDto.getId());
+            HotelService hotelService = AppUtils.getBean(HotelService.class);
+            hotelService.saveOrUpdateByFangId(hotelDto, HotelSourceEnum.LEZHU);
+
+            //
+            OtsInterface.initHotel(hotelDto.getId());
+            logger.info("handleHotelDetail: hotelId:{} init", hotelDto.getId());
+        }finally {
+            t.complete();
+        }
     }
 
 
     public void handleHotelDel (String body) {
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleHotelDel");
           /*
         {
             "hotelid": "2811, 2311,22333"
@@ -221,11 +233,15 @@ public class HotelCopyService {
             }
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
+        } finally {
+            t.complete();
         }
 
     }
 
     public void handleHotelFacility (String body) {
+
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleHotelFacility");
 
         //
         HotelService hotelService = AppUtils.getBean(HotelService.class);
@@ -240,6 +256,7 @@ public class HotelCopyService {
             //
             facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
         } catch (Exception e) {
+            t.complete();
             throw new MyException("-99", "-99", "格式错误");
         }
 
@@ -297,19 +314,33 @@ public class HotelCopyService {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
+        t.complete();
     }
 
 
     public void handleHotelFanqie (String proxyInnJson) {
-        //
-        HotelService hotelService = AppUtils.getBean(HotelService.class);
-        hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
+
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleHotelFanqie");
+        try {
+            //
+            HotelService hotelService = AppUtils.getBean(HotelService.class);
+            hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
+        } finally {
+            t.complete();
+        }
     }
 
 
     public void handleRoomStatusFanqie (String mappingJson) {
-        //
-        HotelService hotelService = AppUtils.getBean(HotelService.class);
-        hotelService.mergeFangqieRoomStatusByHotelFanqieMappingJson(mappingJson);
+
+        Transaction t = Cat.newTransaction("PMS", "hotel-handleRoomStatusFanqie");
+        try {
+            //
+            HotelService hotelService = AppUtils.getBean(HotelService.class);
+            hotelService.mergeFangqieRoomStatusByHotelFanqieMappingJson(mappingJson);
+        } finally {
+            t.complete();
+        }
     }
 }
