@@ -721,8 +721,10 @@ public class HotelServiceImpl implements HotelService {
         if (null != roomList) {
 
             List<RoomDetailList> roomDetailLists = roomList.getList();
-            for (RoomDetailList detailList : roomDetailLists) {
-                this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+            if (null != roomDetailLists) {
+                for (RoomDetailList detailList : roomDetailLists) {
+                    this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+                }
             }
         }
 
