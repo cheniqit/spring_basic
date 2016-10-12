@@ -105,7 +105,9 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		try {
 			jedis = RedisUtil.getJedis();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
-			String key = TopicEnum.ROOM_TYPE_PRICE.getName()+System.currentTimeMillis()+dto.getId();
+			String key = new StringBuilder(TopicEnum.ROOM_TYPE_PRICE.getName())
+					.append(System.currentTimeMillis())
+					.append(dto.getId()).toString();
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", key, message);
 		}catch (Exception e){
 			e.printStackTrace();
