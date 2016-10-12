@@ -762,8 +762,9 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         messageMap.put("date", date);
 
         String message = JsonUtils.toJson(messageMap, DateUtils.FORMAT_DATETIME);
+        String strDate =  DateUtils.formatDateTime(date);
         try {
-            String msgKey = TopicEnum.ROOM_TYPE_STOCK.getName() + System.currentTimeMillis() + message;
+            String msgKey = TopicEnum.ROOM_TYPE_STOCK.getName() + System.currentTimeMillis() + roomTypeId + strDate;
             msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "savePersistToDb", msgKey, message);
         } catch (Exception e) {
             e.printStackTrace();
