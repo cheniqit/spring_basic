@@ -133,9 +133,22 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                             }
 
                             //放入redis
-                            String result = roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
-                                    roomTypeStockSpecial.getTotalNumber().intValue(), 0);
-                            logger.info("result:{}", result);
+                            roomTypeStockService.lock(
+                                    hotelDto.getId().toString(),
+                                    roomTypeStockSpecial.getRoomTypeId().toString(),
+                                    roomTypeStockSpecial.getDay(),
+                                    RoomTypeStockService.LOCK_TIIME,
+                                    RoomTypeStockService.MAX_WAIT_TIME_OUT);
+                            try {
+                                String result = roomTypeStockService.updateRedisStockByTotal(hotelDto.getId(), roomTypeStockSpecial.getRoomTypeId(), roomTypeStockSpecial.getDay(),
+                                        roomTypeStockSpecial.getTotalNumber().intValue(), 0);
+                                logger.info("result:{}", result);
+                            } finally {
+                                roomTypeStockService.unlock(
+                                        hotelDto.getId().toString(),
+                                        roomTypeStockSpecial.getRoomTypeId().toString(),
+                                        roomTypeStockSpecial.getDay());
+                            }
                         } else if ("savePersistToDb".equals(messageExt.getTags())) {
                             //
                             Map<String, Object> messageMap = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, Map.class);

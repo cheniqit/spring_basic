@@ -343,21 +343,22 @@ public class FanqielaileRoomTypeProxyService {
                     stock.getDay());
         }
 
-        //
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(stock.getDay());
-        List<RoomTypeStock> roomTypeStockList = this.roomTypeStockMapper.selectByExample(example);
-
-        if (roomTypeStockList.isEmpty()) {
-            this.roomTypeStockMapper.insert(stock);
-        } else {
-            RoomTypeStock dbStock = roomTypeStockList.get(0);
-            dbStock.setNumber(stock.getNumber());
-            dbStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
-            dbStock.setUpdateDate(new Date());
-
-            this.roomTypeStockMapper.updateByPrimaryKeySelective(dbStock);
-        }
+        //由消息通知处理
+//        //
+//        RoomTypeStockExample example = new RoomTypeStockExample();
+//        example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(stock.getDay());
+//        List<RoomTypeStock> roomTypeStockList = this.roomTypeStockMapper.selectByExample(example);
+//
+//        if (roomTypeStockList.isEmpty()) {
+//            this.roomTypeStockMapper.insert(stock);
+//        } else {
+//            RoomTypeStock dbStock = roomTypeStockList.get(0);
+//            dbStock.setNumber(stock.getNumber());
+//            dbStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+//            dbStock.setUpdateDate(new Date());
+//
+//            this.roomTypeStockMapper.updateByPrimaryKeySelective(dbStock);
+//        }
     }
     private RoomTypeStock convertRoomTypeStock(Long roomTypeId, RoomDetail roomDetail) {
 
