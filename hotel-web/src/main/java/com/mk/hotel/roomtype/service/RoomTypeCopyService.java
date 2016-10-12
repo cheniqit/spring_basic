@@ -121,6 +121,7 @@ public class RoomTypeCopyService {
             OtsInterface.initHotel(dbHotel.getId());
         }
 
+        t.setStatus(Transaction.SUCCESS);
         t.complete();
     }
 
@@ -173,6 +174,7 @@ public class RoomTypeCopyService {
             //
             OtsInterface.initHotel(hotelDto.getId());
 
+            t.setStatus(Transaction.SUCCESS);
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         } finally {
@@ -280,6 +282,7 @@ public class RoomTypeCopyService {
             OtsInterface.initHotel(dbHotel.getId());
         }
 
+        t.setStatus(Transaction.SUCCESS);
         t.complete();
 
     }

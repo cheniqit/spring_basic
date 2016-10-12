@@ -35,7 +35,12 @@ public class LogPushServiceImpl implements LogPushService {
                 BeanUtils.copyProperties(logPushDto, logPush);
 
                 logPush.setCreateDate(new Date());
-                return this.logPushMapper.insert(logPush);
+                int result = this.logPushMapper.insert(logPush);
+
+                if (result > 0) {
+                    t.setStatus(Transaction.SUCCESS);
+                }
+                return result;
             }
         } finally {
             t.complete();

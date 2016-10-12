@@ -171,7 +171,7 @@ public class HotelCopyService {
 
 
             JobManager.addPushInfoToRefreshJob(JsonUtils.toJson(hotelDto), LogPushTypeEnum.hotel);
-
+            t.setStatus(Transaction.SUCCESS);
             t.complete();
 //            //
 //            HotelService hotelService = AppUtils.getBean(HotelService.class);
@@ -198,6 +198,8 @@ public class HotelCopyService {
             //
             OtsInterface.initHotel(hotelDto.getId());
             logger.info("handleHotelDetail: hotelId:{} init", hotelDto.getId());
+
+            t.setStatus(Transaction.SUCCESS);
         }finally {
             t.complete();
         }
@@ -231,6 +233,8 @@ public class HotelCopyService {
                 //
                 OtsInterface.initHotel(id);
             }
+
+            t.setStatus(Transaction.SUCCESS);
         } catch (Exception e) {
             throw new MyException("-99", "-99", "格式错误");
         } finally {
@@ -315,6 +319,7 @@ public class HotelCopyService {
             OtsInterface.initHotel(dbHotel.getId());
         }
 
+        t.setStatus(Transaction.SUCCESS);
         t.complete();
     }
 
@@ -326,6 +331,7 @@ public class HotelCopyService {
             //
             HotelService hotelService = AppUtils.getBean(HotelService.class);
             hotelService.mergeFangqieHotelByProxyInnJson(proxyInnJson);
+            t.setStatus(Transaction.SUCCESS);
         } finally {
             t.complete();
         }
@@ -339,6 +345,7 @@ public class HotelCopyService {
             //
             HotelService hotelService = AppUtils.getBean(HotelService.class);
             hotelService.mergeFangqieRoomStatusByHotelFanqieMappingJson(mappingJson);
+            t.setStatus(Transaction.SUCCESS);
         } finally {
             t.complete();
         }
