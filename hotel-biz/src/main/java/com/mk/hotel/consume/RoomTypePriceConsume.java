@@ -21,7 +21,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -75,7 +74,7 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String messageKey = messageExt.getKeys();
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     if(messageValue == null){
-                        logger.info("topic name:{} msg :{} messageValue is null success", topicEnum.getName(), msg);
+                        logger.info("topic name:{} msg :{} messageKey:{} messageValue is null success", topicEnum.getName(), msg, messageKey);
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
