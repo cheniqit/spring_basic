@@ -377,6 +377,7 @@ public class FanqielaileRoomTypeProxyService {
         roomTypeStock.setDay(day);
         roomTypeStock.setRoomTypeId(roomTypeId);
         roomTypeStock.setNumber(roomNum.longValue());
+        roomTypeStock.setTotalNumber(0l);
         roomTypeStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
         roomTypeStock.setUpdateDate(new Date());
         roomTypeStock.setCreateBy(Constant.SYSTEM_USER_NAME);

@@ -670,7 +670,11 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         dbDto.setNumber(num.longValue());
-        dbDto.setTotalNumber(redisDto.getTotalNum().longValue());
+        if (null == redisDto.getTotalNum()) {
+            dbDto.setTotalNumber(0l);
+        } else {
+            dbDto.setTotalNumber(redisDto.getTotalNum().longValue());
+        }
         dbDto.setUpdateBy("savePersistToDb");
         dbDto.setUpdateDate(new Date());
         //
