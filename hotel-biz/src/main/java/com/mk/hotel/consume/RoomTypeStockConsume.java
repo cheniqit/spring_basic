@@ -172,7 +172,7 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                     }catch (Exception e){
                         queueErrorInfoService.saveQueueErrorInfo(msg, topicEnum);
                         e.printStackTrace();
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                     }finally {
                         if(lockKey != null && lockValue != null){
                             DistributedLockUtil.releaseLock(lockKey, lockValue);
