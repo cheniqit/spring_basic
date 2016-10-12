@@ -72,6 +72,13 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                     String lockValue = null;
                     String lockKey = null;
                     //
+                    try {
+                        msg = new String(messageExt.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(topicEnum.getName()+" msg :"+msg);
+                    //
                     String messageKey = messageExt.getKeys();
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     if(messageValue == null){
@@ -79,13 +86,6 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
-                    //
-                    try {
-                        msg = new String(messageExt.getBody(), "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    logger.info(topicEnum.getName()+" msg :"+msg);
                     try {
                         if("special".equals(messageExt.getTags())){
                             RoomTypePriceSpecialDto roomTypePriceSpecial = JsonUtils.fromJson(msg, DateUtils.FORMAT_DATETIME, RoomTypePriceSpecialDto.class);

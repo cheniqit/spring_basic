@@ -85,6 +85,14 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                     String lockKey = null;
 
                     //
+                    try {
+                        msg = new String(messageExt.getBody(), "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    logger.info(topicEnum.getName()+" msg :"+msg);
+
+                    //
                     String messageKey = messageExt.getKeys();
                     String messageValue = DistributedLockUtil.tryLock(messageKey, Constant.MSG_KEY_LOCK_EXPIRE_TIME);
                     if(messageValue == null){
@@ -92,13 +100,6 @@ public class RoomTypeStockConsume implements InitializingBean,DisposableBean {
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
 
-                    //
-                    try {
-                        msg = new String(messageExt.getBody(), "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    logger.info(topicEnum.getName()+" msg :"+msg);
 
                     //
                     try {
