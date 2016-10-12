@@ -57,7 +57,9 @@ public class RoomTypeStockSpecialServiceImpl implements RoomTypeStockSpecialServ
 
 		//
 		try{
-			String messageKey = TopicEnum.ROOM_TYPE_STOCK.getName() + System.currentTimeMillis() + dto.getId();
+			String messageKey = new StringBuilder(TopicEnum.ROOM_TYPE_STOCK.getName())
+					.append(System.currentTimeMillis())
+					.append(dto.getId()).toString();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_STOCK.getName(), "special", messageKey, message);
 		}catch (Exception e){
