@@ -58,8 +58,8 @@ public class FanqielaileRoomTypeProxyService {
     private RoomTypeMapper roomTypeMapper;
     @Autowired
     private RoomTypePriceMapper roomTypePriceMapper;
-    @Autowired
-    private RoomTypeStockMapper roomTypeStockMapper;
+//    @Autowired
+//    private RoomTypeStockMapper roomTypeStockMapper;
     @Autowired
     private RoomTypeServiceImpl roomTypeService;
     @Autowired
