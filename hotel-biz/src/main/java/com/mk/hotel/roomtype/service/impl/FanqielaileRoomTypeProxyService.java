@@ -2,6 +2,7 @@ package com.mk.hotel.roomtype.service.impl;
 
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
@@ -244,48 +245,64 @@ public class FanqielaileRoomTypeProxyService {
     }
     public void saveOrUpdateRoomDetail(Long hotelId, RoomDetailList roomDetailList) {
 
-        Integer roomTypeId = roomDetailList.getRoomTypeId();
-        RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(roomTypeId.longValue(), hotelId);
+        Transaction t = Cat.newTransaction("fanqie", "saveOrUpdateRoomDetail");
+        try {
+            Integer roomTypeId = roomDetailList.getRoomTypeId();
+            RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(roomTypeId.longValue(), hotelId);
 
-        if (null == roomTypeDto) {
-            throw new MyException("-99","-99","房型未找到");
-        }
+            if (null == roomTypeDto) {
+                throw new MyException("-99", "-99", "房型未找到");
+            }
 
-        //
-        List<RoomDetail> roomDetails = roomDetailList.getRoomDetail();
-        for (RoomDetail detail : roomDetails) {
+            //
+            List<RoomDetail> roomDetails = roomDetailList.getRoomDetail();
+            for (RoomDetail detail : roomDetails) {
 
-            this.saveOrUpdateRoomTypePrice(roomTypeDto, detail);
-            this.saveOrUpdateRoomTypeStock(roomTypeDto, detail);
+                this.saveOrUpdateRoomTypePrice(roomTypeDto, detail);
+                this.saveOrUpdateRoomTypeStock(roomTypeDto, detail);
+            }
+
+            t.setStatus(Transaction.SUCCESS);
+        } finally {
+            t.complete();
         }
     }
 
     private void saveOrUpdateRoomTypePrice (RoomTypeDto roomTypeDto, RoomDetail detail) {
-        RoomTypePrice roomTypePrice = this.convertRoomTypePrice(roomTypeDto.getId(), detail);
 
-        //
-        RoomTypePriceExample roomTypePriceExample = new RoomTypePriceExample();
-        roomTypePriceExample.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(roomTypePrice.getDay());
-        List<RoomTypePrice> roomTypePriceList = this.roomTypePriceMapper.selectByExample(roomTypePriceExample);
+        Transaction t = Cat.newTransaction("fanqie", "saveOrUpdateRoomTypePrice");
 
-        //redis
-        this.roomTypePriceService.updateRedisPrice(
-                roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
-                "FanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail");
+        try {
+            RoomTypePrice roomTypePrice = this.convertRoomTypePrice(roomTypeDto.getId(), detail);
 
-        //db
-        if (roomTypePriceList.isEmpty()) {
-            this.roomTypePriceMapper.insert(roomTypePrice);
+            //
+            RoomTypePriceExample roomTypePriceExample = new RoomTypePriceExample();
+            roomTypePriceExample.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(roomTypePrice.getDay());
+            List<RoomTypePrice> roomTypePriceList = this.roomTypePriceMapper.selectByExample(roomTypePriceExample);
 
-        } else {
-            RoomTypePrice dbPrice = roomTypePriceList.get(0);
-            dbPrice.setPrice(roomTypePrice.getPrice());
-            dbPrice.setCost(roomTypePrice.getCost());
+            //redis
+            this.roomTypePriceService.updateRedisPrice(
+                    roomTypeDto.getId(), roomTypeDto.getName(),
+                    roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
+                    "FanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail");
 
-            dbPrice.setUpdateDate(new Date());
-            dbPrice.setUpdateBy("hotel_system");
-            this.roomTypePriceMapper.updateByPrimaryKeySelective(dbPrice);
+            //db
+            if (roomTypePriceList.isEmpty()) {
+                this.roomTypePriceMapper.insert(roomTypePrice);
+
+            } else {
+                RoomTypePrice dbPrice = roomTypePriceList.get(0);
+                dbPrice.setPrice(roomTypePrice.getPrice());
+                dbPrice.setCost(roomTypePrice.getCost());
+
+                dbPrice.setUpdateDate(new Date());
+                dbPrice.setUpdateBy("hotel_system");
+                this.roomTypePriceMapper.updateByPrimaryKeySelective(dbPrice);
+            }
+
+            t.setStatus(Transaction.SUCCESS);
+        } finally {
+            t.complete();
         }
     }
     private RoomTypePrice convertRoomTypePrice(Long roomTypeId, RoomDetail roomDetail) {
@@ -320,27 +337,37 @@ public class FanqielaileRoomTypeProxyService {
         return roomTypePrice;
     }
     private void saveOrUpdateRoomTypeStock (RoomTypeDto roomTypeDto, RoomDetail detail) {
+
+
+        Transaction t = Cat.newTransaction("fanqie", "saveOrUpdateRoomTypeStock");
+
         RoomTypeStock stock = this.convertRoomTypeStock(roomTypeDto.getId(), detail);
 
-        //
-        this.roomTypeStockService.lock(
-                roomTypeDto.getHotelId().toString(),
-                roomTypeDto.getId().toString(),
-                stock.getDay(),
-                RoomTypeStockService.LOCK_TIIME,
-                RoomTypeStockService.MAX_WAIT_TIME_OUT);
         try {
-            this.roomTypeStockService.updateRedisStock(
-                    roomTypeDto.getHotelId(),
-                    roomTypeDto.getId(),
-                    stock.getDay(),
-                    detail.getRoomNum(),
-                    0);
-        } finally {
-            this.roomTypeStockService.unlock(
+            //
+            this.roomTypeStockService.lock(
                     roomTypeDto.getHotelId().toString(),
                     roomTypeDto.getId().toString(),
-                    stock.getDay());
+                    stock.getDay(),
+                    RoomTypeStockService.LOCK_TIIME,
+                    RoomTypeStockService.MAX_WAIT_TIME_OUT);
+            try {
+                this.roomTypeStockService.updateRedisStock(
+                        roomTypeDto.getHotelId(),
+                        roomTypeDto.getId(),
+                        stock.getDay(),
+                        detail.getRoomNum(),
+                        0);
+            } finally {
+                this.roomTypeStockService.unlock(
+                        roomTypeDto.getHotelId().toString(),
+                        roomTypeDto.getId().toString(),
+                        stock.getDay());
+            }
+
+            t.setStatus(Transaction.SUCCESS);
+        } finally {
+            t.complete();
         }
 
         //由消息通知处理
@@ -453,30 +480,35 @@ public class FanqielaileRoomTypeProxyService {
     }
 
     public void updateFanqieRoomTypeInfo(PushRoomType pushRoomType) {
-        List<PushRoomType.RoomType> pushRoomTypeList = pushRoomType.getRoomType();
-        for(PushRoomType.RoomType proom : pushRoomTypeList){
-            String accId = proom.getAccountId();
-            HotelFanqieMappingExample example = new HotelFanqieMappingExample();
-            example.createCriteria().andAccountIdEqualTo(Long.valueOf(accId));
-            List<HotelFanqieMapping> hotelFanqieMappingList = hotelFanqieMappingMapper.selectByExample(example);
-            if(CollectionUtils.isEmpty(hotelFanqieMappingList)){
-                continue;
+        Transaction t = Cat.newTransaction("fanqie","updateFanqieRoomTypeInfo");
+        try {
+            List<PushRoomType.RoomType> pushRoomTypeList = pushRoomType.getRoomType();
+            for (PushRoomType.RoomType proom : pushRoomTypeList) {
+                String accId = proom.getAccountId();
+                HotelFanqieMappingExample example = new HotelFanqieMappingExample();
+                example.createCriteria().andAccountIdEqualTo(Long.valueOf(accId));
+                List<HotelFanqieMapping> hotelFanqieMappingList = hotelFanqieMappingMapper.selectByExample(example);
+                if (CollectionUtils.isEmpty(hotelFanqieMappingList)) {
+                    continue;
+                }
+                Long innId = hotelFanqieMappingList.get(0).getInnId();
+                HotelExample hotelExample = new HotelExample();
+                hotelExample.createCriteria().andFangIdEqualTo(innId);
+                List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
+                if (CollectionUtils.isEmpty(hotelList)) {
+                    continue;
+                }
+                RoomDetailList roomDetailList = new RoomDetailList();
+                roomDetailList.setRoomTypeId(Integer.valueOf(proom.getRoomTypeId()));
+                roomDetailList.setRoomTypeName(proom.getRoomTypeName());
+                List<RoomDetail> roomDetails = convertRoomTypeDetails(proom.getRoomDetails());
+                roomDetailList.setRoomDetail(roomDetails);
+                saveOrUpdateRoomDetail(hotelList.get(0).getId(), roomDetailList);
             }
-            Long innId = hotelFanqieMappingList.get(0).getInnId();
-            HotelExample hotelExample = new HotelExample();
-            hotelExample.createCriteria().andFangIdEqualTo(innId);
-            List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
-            if(CollectionUtils.isEmpty(hotelList)){
-                continue;
-            }
-            RoomDetailList roomDetailList = new RoomDetailList();
-            roomDetailList.setRoomTypeId(Integer.valueOf(proom.getRoomTypeId()));
-            roomDetailList.setRoomTypeName(proom.getRoomTypeName());
-            List<RoomDetail> roomDetails = convertRoomTypeDetails(proom.getRoomDetails());
-            roomDetailList.setRoomDetail(roomDetails);
-            saveOrUpdateRoomDetail(hotelList.get(0).getId(), roomDetailList);
 
-
+            t.setStatus(Transaction.SUCCESS);
+        } finally {
+            t.complete();
         }
 
     }
