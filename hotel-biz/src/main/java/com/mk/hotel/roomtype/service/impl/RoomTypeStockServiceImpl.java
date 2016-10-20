@@ -234,10 +234,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 availableNum = allAvailableNum - totalPromoNum;
             }
 
-            //
-            jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
-            jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
-            jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
 
             //
             StringBuilder result = new StringBuilder();
@@ -251,8 +247,21 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
 
-            //持久化
-            this.messageToPersist(roomTypeId, day);
+            //判断是否要持久化. 持久化条件 1-原值有空情况, 2-原值与新值不相同(有变化)
+            if (null == originalTotalPromoNum || null == originalAvailableNum || null == originalPromoNum ||
+                    originalTotalPromoNum.compareTo(totalPromoNum) != 0 ||
+                    originalAvailableNum.compareTo(allAvailableNum) != 0 ||
+                    originalPromoNum.compareTo(promoNum) != 0) {
+
+                //
+                jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
+                jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
+                jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
+
+                //
+                this.messageToPersist(roomTypeId, day);
+            }
+
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -397,6 +406,12 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
 
             //
+            Integer originalTotalHashNum = getValueByRedisKeyName(jedis, totalHashName, strDate);
+            Integer originalTotalPromoNum = getValueByRedisKeyName(jedis, totalPromoHashName, strDate);
+            Integer originalAvailableNum = getValueByRedisKeyName(jedis, availableHashName, strDate);
+            Integer originalPromoNum = getValueByRedisKeyName(jedis, promoHashName, strDate);
+
+            //
             RoomTypeStockBean stockBean = this.calcStockByTotal(roomTypeId, strDate, totalNum, totalPromoNum, jedis);
             if (null == stockBean) {
                 return "库存更新失败,请联系管理员1";
@@ -405,12 +420,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
             //
             Integer availableNum = stockBean.getAvailableNum();
             Integer promoNum = stockBean.getPromoNum();
-
-            //
-            jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
-            jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
-            jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
-            jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
 
             //
             StringBuilder result = new StringBuilder();
@@ -424,8 +433,24 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 result.append(dto.getName()).append("房型,").append(strDate).append(" 普通房超卖:").append(availableNum * -1).append("间\n");
             }
 
-            //持久化
-            this.messageToPersist(roomTypeId, day);
+            //判断是否要持久化. 持久化条件 1-原值有空情况, 2-原值与新值不相同(有变化)
+            if (null == originalTotalHashNum ||null == originalTotalPromoNum ||
+                    null == originalAvailableNum || null == originalPromoNum ||
+                    originalTotalHashNum.compareTo(totalNum) != 0 ||
+                    originalTotalPromoNum.compareTo(totalPromoNum) != 0 ||
+                    originalAvailableNum.compareTo(availableNum) != 0 ||
+                    originalPromoNum.compareTo(promoNum) != 0) {
+
+                //
+                jedis.hset(totalHashName, strDate, String.valueOf(totalNum));
+                jedis.hset(totalPromoHashName, strDate, String.valueOf(totalPromoNum));
+                jedis.hset(availableHashName, strDate, String.valueOf(availableNum));
+                jedis.hset(promoHashName, strDate, String.valueOf(promoNum));
+
+                //
+                this.messageToPersist(roomTypeId, day);
+            }
+
             return result.toString();
         } catch (Exception e) {
             e.printStackTrace();
