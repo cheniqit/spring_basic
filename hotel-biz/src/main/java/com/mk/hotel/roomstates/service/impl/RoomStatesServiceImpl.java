@@ -4,6 +4,7 @@ import com.mk.framework.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.ValidEnum;
+import com.mk.hotel.hotelinfo.dto.UpdatePriceAndStock;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtype.RoomTypePriceService;
@@ -208,6 +209,19 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
             return row + rowLog;
         }
         return 0;
+    }
+
+    @Override
+    public void updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock) {
+        List<UpdatePriceAndStock.DateList> dateList = updatePriceAndStock.getDateList();
+        for(UpdatePriceAndStock.DateList date : dateList){
+            updatePrice(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
+                    date.getPrice(), date.getPrePayPrice(), date.getSettlementPrice(), updatePriceAndStock.getUserId() , updatePriceAndStock.getToken());
+
+            updateStock(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
+                    date.getNumber(), updatePriceAndStock.getUserId() , updatePriceAndStock.getToken());
+        }
+
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.mk.hotel.roomstates.controller;
 
 import com.mk.framework.excepiton.MyException;
+import com.mk.hotel.hotelinfo.dto.UpdatePriceAndStock;
 import com.mk.hotel.roomstates.IRoomStatesService;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceNormalDto;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalDto;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +114,22 @@ public class RoomStatesController {
         Date end = this.parseDate(endDate);
         this.roomStatesService.updateStock(roomTypeId, start, end, totalStock, operatorId, token);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock) {
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        if(updatePriceAndStock == null || updatePriceAndStock.getRoomTypeId() == null || CollectionUtils.isEmpty(updatePriceAndStock.getDateList())){
+            result.put("errmsg", "参数错误");
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        this.roomStatesService.updatePriceAndStock(updatePriceAndStock);
+
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }

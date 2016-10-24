@@ -1,5 +1,6 @@
 package com.mk.hotel.roomstates;
 
+import com.mk.hotel.hotelinfo.dto.UpdatePriceAndStock;
 import com.mk.hotel.roomstates.dto.RoomStatesDto;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceNormalDto;
 import com.mk.hotel.roomtypestock.dto.RoomTypeStockNormalDto;
@@ -28,4 +29,6 @@ public interface IRoomStatesService {
     int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token);
 
     int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId, String token);
+
+    void updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock);
 }
