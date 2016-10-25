@@ -1,5 +1,7 @@
 package com.mk.hotel.roomstates.controller;
 
+import com.mk.framework.DateUtils;
+import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.hotelinfo.dto.UpdatePriceAndStock;
 import com.mk.hotel.roomstates.IRoomStatesService;
@@ -44,8 +46,8 @@ public class RoomStatesController {
         if (StringUtils.isNotBlank(endDate)) {
             end = this.parseDate(endDate);
         }
-
-        List<RoomStatesDto> dataList = this.roomStatesService.queryStates(roomTypeId, start, end, token);
+        roomStatesService.checkToken(roomTypeId, token);
+        List<RoomStatesDto> dataList = this.roomStatesService.queryStates(roomTypeId, start, end);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -56,8 +58,8 @@ public class RoomStatesController {
     @RequestMapping(value = "/updatenormalprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
-
-        this.roomStatesService.updateNormalPrice(dto, operatorId, token);
+        roomStatesService.checkToken(dto.getRoomTypeId(), token);
+        this.roomStatesService.updateNormalPrice(dto, operatorId);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -71,7 +73,8 @@ public class RoomStatesController {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
-        this.roomStatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId, token);
+        roomStatesService.checkToken(roomTypeId, token);
+        this.roomStatesService.updatePrice(roomTypeId, start, end, marketPrice, salePrice, settlePrice, operatorId);
 
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -97,7 +100,8 @@ public class RoomStatesController {
 
         Date start = this.parseDate(startDate);
         Date end = this.parseDate(endDate);
-        this.roomStatesService.updateStock(roomTypeId, start, end, totalStock, operatorId, token);
+        roomStatesService.checkToken(roomTypeId, token);
+        this.roomStatesService.updateStock(roomTypeId, start, end, totalStock, operatorId);
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
@@ -106,14 +110,20 @@ public class RoomStatesController {
 
     @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(UpdatePriceAndStock date) {
+    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(String date) {
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
-        if(date == null || date.getRoomTypeId() == null || CollectionUtils.isEmpty(date.getDateList())){
+        if(StringUtils.isBlank(date)){
             result.put("errmsg", "参数错误");
             result.put("success", "F");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
-        this.roomStatesService.updatePriceAndStock(date);
+        UpdatePriceAndStock updatePriceAndStock = JsonUtils.fromJson(date, DateUtils.FORMAT_DATE, UpdatePriceAndStock.class);
+        if(updatePriceAndStock == null || updatePriceAndStock.getRoomTypeId() == null || CollectionUtils.isEmpty(updatePriceAndStock.getDateList())){
+            result.put("errmsg", "参数错误");
+            result.put("success", "F");
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+        this.roomStatesService.updatePriceAndStock(updatePriceAndStock);
 
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);

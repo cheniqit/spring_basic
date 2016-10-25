@@ -76,9 +76,8 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     private RoomTypeStockNormalLogService roomTypeStockNormalLogService;
 
     @Override
-    public List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate, String token) {
-        //
-        this.checkToken(roomTypeId, token);
+    public List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate) {
+
         //
         List<RoomStatesDto> roomStatesDtoList = new ArrayList<RoomStatesDto>();
         if (null == roomTypeId || null == startDate) {
@@ -130,27 +129,24 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     @Override
     public int updatePriceAndStock(Long roomTypeId, Date startDate, Date endDate,
                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                   Long totalStock, String optionId, String token) {
-        //
-        this.checkToken(roomTypeId, token);
+                                   Long totalStock, String optionId) {
+
 
         //
         int i = 0;
         if (null != settlePrice) {
-            i += this.updatePrice(roomTypeId, startDate, endDate, marketPrice, salePrice, settlePrice, optionId, token);
+            i += this.updatePrice(roomTypeId, startDate, endDate, marketPrice, salePrice, settlePrice, optionId);
         }
 
         if (null != totalStock) {
-            i += this.updateStock(roomTypeId, startDate, endDate, totalStock, optionId, token);
+            i += this.updateStock(roomTypeId, startDate, endDate, totalStock, optionId);
         }
 
         return i;
     }
 
     @Override
-    public int updatePrice(Long roomTypeId, Date startDate, Date endDate, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token) {
-        //
-        this.checkToken(roomTypeId, token);
+    public int updatePrice(Long roomTypeId, Date startDate, Date endDate, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId) {
 
         //
         int diffDay = DateUtils.diffDay(startDate, endDate);
@@ -171,9 +167,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     }
 
     @Override
-    public int updateStock(Long roomTypeId, Date startDate, Date endDate, Long totalStock, String operatorId, String token) {
-        //
-        this.checkToken(roomTypeId, token);
+    public int updateStock(Long roomTypeId, Date startDate, Date endDate, Long totalStock, String operatorId) {
 
         //
         int diffDay = DateUtils.diffDay(startDate, endDate);
@@ -195,9 +189,8 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     }
 
     @Override
-    public int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId, String token) {
+    public int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId) {
         if (null != dto) {
-            this.checkToken(dto.getRoomTypeId(), token);
             dto.setUpdateBy(operatorId);
             dto.setCreateBy(operatorId);
             int row = roomTypeStockNormalService.saveOrUpdate(dto);
@@ -216,18 +209,17 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         List<UpdatePriceAndStock.DateList> dateList = updatePriceAndStock.getDateList();
         for(UpdatePriceAndStock.DateList date : dateList){
             updatePrice(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
-                    date.getPrice(), date.getPrePayPrice(), date.getSettlementPrice(), updatePriceAndStock.getUserId() , updatePriceAndStock.getToken());
+                    date.getPrice(), date.getPrePayPrice(), date.getSettlementPrice(), updatePriceAndStock.getUserId());
 
             updateStock(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
-                    date.getNumber(), updatePriceAndStock.getUserId() , updatePriceAndStock.getToken());
+                    date.getNumber(), updatePriceAndStock.getUserId());
         }
 
     }
 
     @Override
-    public int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
+    public int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId) {
         if (null != dto) {
-            this.checkToken(dto.getRoomTypeId(), token);
             dto.setUpdateBy(operatorId);
             dto.setCreateBy(operatorId);
             int row = roomTypePriceNormalService.saveOrUpdate(dto);
@@ -246,7 +238,7 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
      * @param token
      * @return
      */
-    private boolean checkToken(Long roomTypeId, String token) {
+    public boolean checkToken(Long roomTypeId, String token) {
         if (null == roomTypeId || StringUtils.isBlank(token)) {
             throw new MyException("认证错误");
         }

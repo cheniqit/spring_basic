@@ -14,21 +14,24 @@ import java.util.List;
  */
 public interface IRoomStatesService {
 
-    List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate, String token);
+    List<RoomStatesDto> queryStates(Long roomTypeId, Date startDate, Date endDate);
 
     int updatePriceAndStock(Long roomTypeId, Date startDate, Date endDate,
                             BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                            Long totalStock, String operatorId, String token);
+                            Long totalStock, String operatorId);
 
     int updatePrice(Long roomTypeId, Date startDate, Date endDate,
-                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId, String token);
+                                    BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operatorId);
 
     int updateStock(Long roomTypeId, Date startDate, Date endDate,
-                                    Long totalStock, String operatorId, String token);
+                                    Long totalStock, String operatorId);
 
-    int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token);
+    int updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId);
 
-    int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId, String token);
+    int updateNormalStock(RoomTypeStockNormalDto dto, String operatorId);
 
     void updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock);
+
+    boolean checkToken(Long roomTypeId, String token);
+
 }
