@@ -52,7 +52,7 @@
             <param-name>crossDomainPatterns</param-name>
             <param-value>
                 /file/upload,/hotel/savepicture,/hotel/delpicture,/hotel/updateHotelPrice,
-                /statistics
+                /statistics,/roomstates/updatepriceandstock
             </param-value>
         </init-param>
     </filter>
