@@ -53,21 +53,6 @@ public class RoomStatesController {
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(Long roomTypeId, String startDate, String endDate,
-                                                                       BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
-                                                                       Long totalStock, String operatorId, String token) {
-
-        Date start = this.parseDate(startDate);
-        Date end = this.parseDate(endDate);
-        this.roomStatesService.updatePriceAndStock(roomTypeId, start, end, marketPrice, salePrice, settlePrice, totalStock, operatorId, token);
-
-        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
-        result.put("success", "T");
-        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/updatenormalprice", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> updateNormalPrice(RoomTypePriceNormalDto dto, String operatorId, String token) {
@@ -121,14 +106,14 @@ public class RoomStatesController {
 
     @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock) {
+    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(UpdatePriceAndStock date) {
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
-        if(updatePriceAndStock == null || updatePriceAndStock.getRoomTypeId() == null || CollectionUtils.isEmpty(updatePriceAndStock.getDateList())){
+        if(date == null || date.getRoomTypeId() == null || CollectionUtils.isEmpty(date.getDateList())){
             result.put("errmsg", "参数错误");
             result.put("success", "F");
             return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
         }
-        this.roomStatesService.updatePriceAndStock(updatePriceAndStock);
+        this.roomStatesService.updatePriceAndStock(date);
 
         result.put("success", "T");
         return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
