@@ -17,6 +17,7 @@
         <spring.version>4.1.5.RELEASE</spring.version>
         <org.aspectj-version>1.7.3</org.aspectj-version>
         <mockito.core.version>1.9.5</mockito.core.version>
+        <motan.version>0.2.1</motan.version>
     </properties>
 
     <dependencies>
@@ -258,24 +259,29 @@
         <dependency>
             <groupId>com.weibo</groupId>
             <artifactId>motan-core</artifactId>
-            <version>0.1.1</version>
+            <version>${motan.version}</version>
         </dependency>
         <dependency>
             <groupId>com.weibo</groupId>
             <artifactId>motan-transport-netty</artifactId>
-            <version>0.1.1</version>
+            <version>${motan.version}</version>
         </dependency>
         <dependency>
             <groupId>com.weibo</groupId>
             <artifactId>motan-registry-zookeeper</artifactId>
-            <version>0.1.1</version>
+            <version>${motan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.38</version>
         </dependency>
 
         <!-- only needed for spring-based features -->
         <dependency>
             <groupId>com.weibo</groupId>
             <artifactId>motan-springsupport</artifactId>
-            <version>0.1.1</version>
+            <version>${motan.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba.rocketmq</groupId>
