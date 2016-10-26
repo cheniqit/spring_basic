@@ -108,9 +108,9 @@ public class RoomStatesController {
     }
 
 
-    @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
+    @RequestMapping(value = "/updatepriceandstockorz", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(String date) {
+    public ResponseEntity<HashMap<String, Object>> updatePriceAndStockByOrz(String date) {
         HashMap<String, Object> result = new LinkedHashMap<String, Object>();
         if(StringUtils.isBlank(date)){
             result.put("errmsg", "参数错误");
@@ -143,5 +143,22 @@ public class RoomStatesController {
 
         return result;
     }
+
+    @RequestMapping(value = "/updatepriceandstock", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> updatePriceAndStock(Long roomTypeId, String startDate, String endDate,
+                                                                       BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice,
+                                                                       Long totalStock, String operatorId, String token) {
+
+        Date start = this.parseDate(startDate);
+        Date end = this.parseDate(endDate);
+        roomStatesService.checkToken(roomTypeId, token);
+        this.roomStatesService.updatePriceAndStock(roomTypeId, start, end, marketPrice, salePrice, settlePrice, totalStock, operatorId);
+
+        HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+        result.put("success", "T");
+        return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+    }
+
 }
 
