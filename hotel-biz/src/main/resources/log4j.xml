@@ -11,8 +11,8 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="com.mk.taskfactory.web">
-        <level value="debug" />
+	<logger name="com.mk.hotel">
+        <level value="info" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->

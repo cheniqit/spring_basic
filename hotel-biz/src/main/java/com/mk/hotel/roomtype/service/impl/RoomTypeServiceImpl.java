@@ -123,7 +123,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomTypeExample roomTypeExample = new RoomTypeExample();
         roomTypeExample.createCriteria().andIdEqualTo(roomTypeId);
         //
-        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
+        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExampleWithBLOBs(roomTypeExample);
         if (roomTypeList.isEmpty()) {
             return null;
         }
