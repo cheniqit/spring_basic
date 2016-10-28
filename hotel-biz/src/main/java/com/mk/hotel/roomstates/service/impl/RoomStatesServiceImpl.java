@@ -208,10 +208,10 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
     public void updatePriceAndStock(UpdatePriceAndStock updatePriceAndStock) {
         List<UpdatePriceAndStock.DateList> dateList = updatePriceAndStock.getDateList();
         for(UpdatePriceAndStock.DateList date : dateList){
-            updatePrice(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
+            updatePrice(updatePriceAndStock.getRoomTypeId(), date.getDay(), date.getDay(),
                     date.getPrice(), date.getPrePayPrice(), date.getSettlementPrice(), updatePriceAndStock.getUserId());
 
-            updateStock(updatePriceAndStock.getRoomTypeId(), date.getDay(), DateUtils.addDays(date.getDay(), 1),
+            updateStock(updatePriceAndStock.getRoomTypeId(), date.getDay(), date.getDay(),
                     date.getNumber(), updatePriceAndStock.getUserId());
         }
 
