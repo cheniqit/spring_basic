@@ -2,6 +2,7 @@ package com.mk.hotel.common.enums;
 
 public enum HotelMsgTypeEnum {
 
+
     HOTEL_NEW(100,"新增酒店"),
 
     HOTEL_UPDATE(110,"酒店更新"),
@@ -19,6 +20,8 @@ public enum HotelMsgTypeEnum {
     ROOM_TYPE_OFFLINE(291,"房型下线"),
 
     ;
+
+    public static String TOPIC_NAME ="hotel";
 
     private int id;
     private String name;
