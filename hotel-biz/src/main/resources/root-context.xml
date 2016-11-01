@@ -8,9 +8,9 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
 
-	<import resource="db-context.xml" />
-    <import resource="motan_server.xml" />
+	<import resource="spring/db-context.xml" />
+    <import resource="spring/motan_server.xml" />
 
-
+    <import resource="spring/rocketmq-context.xml" ></import>
 
 </beans>
