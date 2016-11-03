@@ -375,7 +375,7 @@ public class HotelController {
         }
 
     }
-    @RequestMapping(value = "/findHotel", method = RequestMethod.POST)
+    @RequestMapping(value = "/findhotel", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> findHotel(HotelDto hotelDto, Integer pageNo, Integer pageSize) {
         try {

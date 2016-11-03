@@ -406,6 +406,33 @@ public class RoomTypeController {
                 result.put("errmsg", "参数为空");
                 return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
             }
+            RoomTypeDto roomTypeDto = roomTypeService.selectByHotelId(hotelId);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("roomType", roomTypeDto);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
+
+    @RequestMapping(value = "/findbyhotelid", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findByHotelId(Long hotelId) {
+        try {
+            if(hotelId == null){
+                HashMap<String,Object> result = new LinkedHashMap<String, Object>();
+                result.put("success", "F");
+                result.put("errmsg", "参数为空");
+                return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+            }
             List<RoomTypeDto> roomTypeDto = roomTypeService.selectRoomTypeByHotelId(hotelId);
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
