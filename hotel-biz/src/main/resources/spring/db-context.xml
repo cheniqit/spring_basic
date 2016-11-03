@@ -49,7 +49,7 @@
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/hotel/RoomTypeStockMapper.xml"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/hotel/*.xml"/>
 
 	</bean>
 
@@ -109,7 +109,7 @@
 
 	<bean id="sqlSessionFactoryOts" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceCPS"/>
-		<property name="mapperLocations" value="classpath:/sqlmap/ots/LandMarkMapper.xml"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/ots/*.xml"/>
 
 	</bean>
 

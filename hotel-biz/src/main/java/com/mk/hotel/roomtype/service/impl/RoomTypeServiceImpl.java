@@ -119,16 +119,17 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         if (null == roomTypeId) {
             throw new MyException("-99", "-99", "roomTypeId 不可为空");
         }
-        //
-        RoomTypeExample roomTypeExample = new RoomTypeExample();
-        roomTypeExample.createCriteria().andIdEqualTo(roomTypeId);
-        //
-        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExampleWithBLOBs(roomTypeExample);
-        if (roomTypeList.isEmpty()) {
-            return null;
-        }
-        RoomType roomType = roomTypeList.get(0);
+//        //
+//        RoomTypeExample roomTypeExample = new RoomTypeExample();
+//        roomTypeExample.createCriteria().andIdEqualTo(roomTypeId);
+//        //
+//        List<RoomType> roomTypeList = this.roomTypeMapper.selectByExampleWithBLOBs(roomTypeExample);
+//        if (roomTypeList.isEmpty()) {
+//            return null;
+//        }
+//        RoomType roomType = roomTypeList.get(0);
 
+        RoomType roomType = this.roomTypeMapper.selectByPrimaryKey(roomTypeId);
         //
         RoomTypeDto dto = new RoomTypeDto();
         BeanUtils.copyProperties(roomType, dto);
