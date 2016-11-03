@@ -28,11 +28,11 @@
    <context:property-placeholder location="classpath:db.properties"/>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
+		<property name="driverClass" value="${jdbc.driver}"/>
 
-		<property name="jdbcUrl" value="${hotel.mysql.jdbc.url}"/>
-		<property name="user" value="${hotel.mysql.jdbc.username}"/>
-		<property name="password" value="${hotel.mysql.jdbc.password}"/>
+		<property name="jdbcUrl" value="${hotel.jdbc.url}"/>
+		<property name="user" value="${hotel.jdbc.user}"/>
+		<property name="password" value="${hotel.jdbc.password}"/>
 		<property name="minPoolSize" value="5" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />
@@ -86,11 +86,11 @@
 <!---     ots สýพÝิด  -->
 
 	<bean id="dataSourceCPS" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${mysql.jdbc.driverClassName}"/>
+		<property name="driverClass" value="${jdbc.driver}"/>
 
-		<property name="jdbcUrl" value="${ots.mysql.jdbc.url}"/>
-		<property name="user" value="${ots.mysql.jdbc.username}"/>
-		<property name="password" value="${ots.mysql.jdbc.password}"/>
+		<property name="jdbcUrl" value="${ots.jdbc.url}"/>
+		<property name="user" value="${ots.jdbc.user}"/>
+		<property name="password" value="${ots.jdbc.password}"/>
 		<property name="minPoolSize" value="10" />
 		<property name="maxPoolSize" value="100" />
 		<property name="initialPoolSize" value="5" />

@@ -308,11 +308,11 @@
             <properties>
                 <label>develop</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/ots?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>smlt-writer</ots.jdbc.user>
                 <ots.jdbc.password>j9bcyZ5U5LQp7xxEomsu</ots.jdbc.password>
 
-                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/hotel?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></hotel.jdbc.url>
+                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.193.12:3306/hotel?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>root</hotel.jdbc.user>
                 <hotel.jdbc.password>LZBV5D5ak</hotel.jdbc.password>
 
@@ -373,11 +373,11 @@
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/ots?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></ots.jdbc.url>
+                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/ots?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>liming</ots.jdbc.user>
                 <ots.jdbc.password>nhpL4RznJl</ots.jdbc.password>
 
-                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/hotel?autoReconnect=true&zeroDateTimeBehavior=convertToNull&characterEncoding=utf8]]></hotel.jdbc.url>
+                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.144.135:3306/hotel?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>liming</hotel.jdbc.user>
                 <hotel.jdbc.password>nhpL4RznJl</hotel.jdbc.password>
 
@@ -430,11 +430,11 @@
             <properties>
                 <label>product</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&characterEncoding=utf8]]></ots.jdbc.url>
+                <ots.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/ots?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></ots.jdbc.url>
                 <ots.jdbc.user>imike-writer</ots.jdbc.user>
                 <ots.jdbc.password>Imike-writer</ots.jdbc.password>
 
-                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/hotel?autoReconnect=true&characterEncoding=utf8]]></hotel.jdbc.url>
+                <hotel.jdbc.url><![CDATA[jdbc:mysql://10.10.119.90:3306/hotel?autoReconnect=true&amp;zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></hotel.jdbc.url>
                 <hotel.jdbc.user>imike-writer</hotel.jdbc.user>
                 <hotel.jdbc.password>Imike-writer</hotel.jdbc.password>
 

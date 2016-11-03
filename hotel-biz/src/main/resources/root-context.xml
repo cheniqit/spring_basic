@@ -4,13 +4,13 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <import resource="spring/rocketmq-context.xml" ></import>
     <context:component-scan base-package="com.mk.hotel">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
 
-	<import resource="spring/db-context.xml" />
-    <import resource="spring/motan_server.xml" />
 
-    <import resource="spring/rocketmq-context.xml" ></import>
+    <import resource="spring/db-context.xml" />
+    <import resource="spring/motan_server.xml" />
 
 </beans>
