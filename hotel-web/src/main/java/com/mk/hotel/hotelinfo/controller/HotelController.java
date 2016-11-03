@@ -375,6 +375,30 @@ public class HotelController {
         }
 
     }
+    @RequestMapping(value = "/findHotel", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HashMap<String, Object>> findHotel(HotelDto hotelDto, Integer pageNo, Integer pageSize) {
+        try {
+
+            List<HotelDto> hotelList = this.hotelService.findHotel(hotelDto, pageNo, pageSize);
+            int count = this.hotelService.countHotel(hotelDto);
+
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "T");
+            result.put("data", hotelList);
+            result.put("count", count);
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+            HashMap<String, Object> result = new LinkedHashMap<String, Object>();
+            result.put("success", "F");
+            result.put("errmsg", e.getMessage());
+            return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
+        }
+
+    }
+
 
     @RequestMapping(value = "/updatePromoRedisStock", method = RequestMethod.POST)
     @ResponseBody

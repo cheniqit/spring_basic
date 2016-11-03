@@ -746,4 +746,104 @@ public class HotelServiceImpl implements HotelService {
         }
         return hotelFanqieMappingList.get(0);
     }
+
+    public Integer countHotel(HotelDto dto) {
+        HotelExample example = this.createExample(dto, null, null);
+        return this.hotelMapper.countByExample(example);
+    }
+
+    public List<HotelDto> findHotel(HotelDto dto, Integer pageNo, Integer pageSize) {
+        //
+        HotelExample example = this.createExample(dto, pageNo, pageSize);
+        List<Hotel> hotelList = this.hotelMapper.selectByExample(example);
+
+        //
+        List<HotelDto> dtoList = new ArrayList<HotelDto>();
+        for (Hotel hotel : hotelList) {
+            dtoList.add(this.convertToDto(hotel));
+        }
+
+        return dtoList;
+    }
+
+    private HotelExample createExample(HotelDto dto, Integer pageNo, Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+
+        HotelExample example = new HotelExample();
+        example.setStart((pageNo - 1) * pageSize);
+        example.setPageCount(pageSize);
+
+        //
+        HotelExample.Criteria criteria = example.createCriteria();
+        if (null != dto) {
+            if (StringUtils.isNotBlank(dto.getName())) {
+                String likeName = "%" + dto.getName() + "%";
+                criteria.andNameLike(likeName);
+            }
+
+            if (StringUtils.isNotBlank(dto.getAddr())) {
+                String likeAddr = "%" + dto.getAddr() + "%";
+                criteria.andAddrLike(likeAddr);
+            }
+
+            if (StringUtils.isNotBlank(dto.getProvCode())) {
+                criteria.andProvCodeEqualTo(dto.getProvCode());
+            }
+
+            if (StringUtils.isNotBlank(dto.getCityCode())) {
+                criteria.andCityCodeEqualTo(dto.getCityCode());
+            }
+
+            if (StringUtils.isNotBlank(dto.getDisCode())) {
+                criteria.andDisCodeEqualTo(dto.getDisCode());
+            }
+        }
+        return example;
+    }
+
+    private HotelDto convertToDto (Hotel hotel) {
+        HotelDto dto = new HotelDto();
+
+        if (null == hotel) {
+            return dto;
+        }
+
+        dto.setId(hotel.getId());
+        dto.setFangId(hotel.getFangId());
+        dto.setName(hotel.getName());
+        dto.setAddr(hotel.getAddr());
+        dto.setPhone(hotel.getPhone());
+        dto.setLat(hotel.getLat());
+        dto.setLon(hotel.getLon());
+        dto.setDefaultLeaveTime(hotel.getDefaultLeaveTime());
+        dto.setHotelType(hotel.getHotelType());
+        dto.setRetentionTime(hotel.getRetentionTime());
+        dto.setRepairTime(hotel.getRepairTime());
+        dto.setIntroduction(hotel.getIntroduction());
+        dto.setProvCode(hotel.getProvCode());
+        dto.setCityCode(hotel.getCityCode());
+        dto.setDisCode(hotel.getDisCode());
+        dto.setCreateDate(hotel.getCreateDate());
+        dto.setCreateBy(hotel.getCreateBy());
+        dto.setUpdateDate(hotel.getUpdateDate());
+        dto.setUpdateBy(hotel.getUpdateBy());
+        dto.setIsValid(hotel.getIsValid());
+        dto.setTownCode(hotel.getTownCode());
+        dto.setBusinessZoneInfo(hotel.getBusinessZoneInfo());
+        dto.setAirportStationInfo(hotel.getAirportStationInfo());
+        dto.setScenicSpotsInfo(hotel.getScenicSpotsInfo());
+        dto.setHospitalInfo(hotel.getHospitalInfo());
+        dto.setCollegesInfo(hotel.getCollegesInfo());
+        dto.setOpenTime(hotel.getOpenTime());
+        dto.setRegTime(hotel.getRegTime());
+        dto.setPic(hotel.getPic());
+        dto.setSourceType(hotel.getSourceType());
+
+        return dto;
+    }
 }

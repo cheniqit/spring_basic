@@ -406,7 +406,7 @@ public class RoomTypeController {
                 result.put("errmsg", "参数为空");
                 return new ResponseEntity<HashMap<String, Object>>(result, HttpStatus.OK);
             }
-            RoomTypeDto roomTypeDto = roomTypeService.selectByHotelId(hotelId);
+            List<RoomTypeDto> roomTypeDto = roomTypeService.selectRoomTypeByHotelId(hotelId);
             HashMap<String,Object> result = new LinkedHashMap<String, Object>();
             result.put("success", "T");
             result.put("roomType", roomTypeDto);

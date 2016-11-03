@@ -42,4 +42,10 @@ public interface HotelService {
     List<String> mergeFangqieRoomStatus();
 
     void mergeFangqieRoomStatusByHotelFanqieMappingJson (String hotelFanqieMappingJson);
+
+
+
+    Integer countHotel(HotelDto dto) ;
+
+    List<HotelDto> findHotel(HotelDto dto, Integer pageNo, Integer pageSize);
 }

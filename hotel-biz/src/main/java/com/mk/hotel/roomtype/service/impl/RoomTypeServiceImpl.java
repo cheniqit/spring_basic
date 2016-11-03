@@ -182,7 +182,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         List<RoomType> roomTypeList = this.roomTypeMapper.selectByExample(roomTypeExample);
 
         List<RoomTypeDto> roomTypeDtoList = new ArrayList<RoomTypeDto>();
-
+        for (RoomType roomType : roomTypeList) {
+            roomTypeDtoList.add(this.convertToDto(roomType));
+        }
 
         return roomTypeDtoList;
     }
@@ -925,5 +927,35 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
 
         return result.toString();
+    }
+
+
+    private RoomTypeDto convertToDto (RoomType roomType) {
+        RoomTypeDto dto = new RoomTypeDto();
+        if (null == roomType) {
+            return dto;
+        }
+
+        dto.setId(roomType.getId());
+        dto.setFangId(roomType.getFangId());
+        dto.setHotelId(roomType.getHotelId());
+        dto.setName(roomType.getName());
+        dto.setArea(roomType.getArea());
+        dto.setBedType(roomType.getBedType());
+        dto.setBedSize(roomType.getBedSize());
+        dto.setRoomNum(roomType.getRoomNum());
+        dto.setPrepay(roomType.getPrepay());
+        dto.setBreakfast(roomType.getBreakfast());
+        dto.setStatus(roomType.getStatus());
+        dto.setRefund(roomType.getRefund());
+        dto.setMaxRoomNum(roomType.getMaxRoomNum());
+        dto.setRoomTypePics(roomType.getRoomTypePics());
+        dto.setCreateDate(roomType.getCreateDate());
+        dto.setCreateBy(roomType.getCreateBy());
+        dto.setUpdateDate(roomType.getUpdateDate());
+        dto.setUpdateBy(roomType.getUpdateBy());
+        dto.setIsValid(roomType.getIsValid());
+        return dto;
+
     }
 }
