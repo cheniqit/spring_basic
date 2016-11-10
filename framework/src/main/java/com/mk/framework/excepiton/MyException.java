@@ -4,38 +4,24 @@ import java.io.Serializable;
 
 public class MyException extends RuntimeException implements Serializable {
 
-    private String errorCode;
-    private String errorKey;
-
-    public MyException(String errorCode, String errorKey, String errorMsg) {
-        super(errorMsg);
-        this.errorCode = errorCode;
-        this.errorKey = errorKey;
-    }
-
-    public MyException(String errorCode, String errorKey) {
-        super("errorcode:" + errorCode);
-        this.errorCode = errorCode;
-        this.errorKey = errorKey;
-    }
+    private Integer code;
 
     public MyException(String msg){
         super(msg);
     }
-
-    public String getErrorCode() {
-        return errorCode;
+    public MyException(Integer code, String message) {
+        super(message);
+        this.code = code;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public Integer getCode() {
+        return code;
     }
 
-    public final String getErrorKey() {
-        return errorKey;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
-    public final void setErrorKey(String errorKey) {
-        this.errorKey = errorKey;
-    }
+
+
 }
