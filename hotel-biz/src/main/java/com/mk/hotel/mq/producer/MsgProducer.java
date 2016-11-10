@@ -1,4 +1,4 @@
-package com.mk.hotel.producer;
+package com.mk.hotel.mq.producer;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
