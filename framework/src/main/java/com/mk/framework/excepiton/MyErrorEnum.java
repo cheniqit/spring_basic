@@ -68,6 +68,10 @@ public enum MyErrorEnum {
     ROOM_TYPE_CONFIG_ERROR(-20305, "配置房型数据错误"),
     ROOM_INFO_ERROR(-20306, "房型信息错误"),
     ROOM_TYPE_ERROR(-20307, "房型错误 或 失效"),
+    ROOM_TYPE_FACILITY_DTO_LIST_IS_NULL(-20308, "roomTypeFacilityDtoList 不可为空"),
+    ROOM_FANG_ID_IS_NULL(-20309, "FangRoomTypeId 不能为空"),
+    ROOM_MUTLI_FANG_ID(-20310, "FangRoomTypeId 有不相同的存在"),
+    ROOM_PARAMS_ERROR(-20311, "参数错误"),
 
     /**
      * 订单 order

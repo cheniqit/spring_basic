@@ -4,6 +4,7 @@ package com.mk.hotel.roomtype.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.framework.security.MD5;
@@ -36,7 +37,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -248,7 +248,7 @@ public class FanqielaileRoomTypeProxyService {
         RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(roomTypeId.longValue(), hotelId);
 
         if (null == roomTypeDto) {
-            throw new MyException("-99","-99","房型未找到");
+            throw MyErrorEnum.ROOM_NOT_FOUND.getMyException();
         }
 
         //

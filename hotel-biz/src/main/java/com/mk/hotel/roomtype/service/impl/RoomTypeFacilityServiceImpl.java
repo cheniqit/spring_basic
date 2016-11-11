@@ -2,6 +2,7 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.Facility;
@@ -34,21 +35,21 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
 
     public void saveOrUpdateByFangid(List<RoomTypeFacilityDto> roomTypeFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
-            throw new MyException("-99", "-99", "roomTypeFacilityDtoList 不可为空");
+            throw MyErrorEnum.ROOM_TYPE_FACILITY_DTO_LIST_IS_NULL.getMyException();
         }
 
         //判断队列中的房型id是否相同
         Long sameFangRoomTypeId = null;
         for (RoomTypeFacilityDto dto : roomTypeFacilityDtoList) {
             if(null == dto.getFangRoomTypeId()) {
-                throw new MyException("-99", "-99", "FangRoomTypeId 不能为空");
+                throw MyErrorEnum.ROOM_FANG_ID_IS_NULL.getMyException();
             }
 
             if (null == sameFangRoomTypeId) {
                 sameFangRoomTypeId = dto.getFangRoomTypeId();
             } else {
                 if (!sameFangRoomTypeId.equals(dto.getFangRoomTypeId())) {
-                    throw new MyException("-99", "-99", "FangRoomTypeId 有不相同的存在");
+                    throw MyErrorEnum.ROOM_MUTLI_FANG_ID.getMyException();
                 }
             }
 
@@ -61,7 +62,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         //
         RoomTypeDto roomTypeDto = this.roomTypeService.selectByFangId(fangHotelId,fangRoomTypeId, hotelSourceEnum);
         if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "roomTypeFacilityDto.getFangHotelId();roomTypeFacilityDto.getFangRoomTypeId(); 错误");
+            throw MyErrorEnum.ROOM_PARAMS_ERROR.getMyException();
         }
 
         //redis
