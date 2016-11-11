@@ -290,7 +290,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
     public void saveOrUpdateByHotelId(Long hotelId, List<RoomTypeDto> roomTypeDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == hotelId || null == roomTypeDtoList) {
-            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+            throw MyErrorEnum.ROOM_PARAMS_IS_NULL.getMyException();
         }
         //本次上传的
         Map<Long, RoomTypeDto> dtoMap = new HashMap<Long, RoomTypeDto>();
@@ -326,13 +326,13 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public int saveOrUpdateByFangId(RoomTypeDto roomTypeDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "roomTypeDto 不可为空");
+            throw MyErrorEnum.ROOM_TYPE_DTO_IS_NULL.getMyException();
         }
 
         //hotelDto
         HotelDto hotelDto = hotelService.findByFangId(roomTypeDto.getFangHotelId(), hotelSourceEnum);
         if (null == hotelDto) {
-            throw new MyException("-99", "-99", "错误的roomTypeDto.FangHotelId");
+            throw MyErrorEnum.ROOM_FANG_HOTEL_ID_ERROR.getMyException();
         }
         roomTypeDto.setHotelId(hotelDto.getId());
 
@@ -409,7 +409,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         example.createCriteria().andIdEqualTo(hotelId);
         List<Hotel> hotelList = hotelMapper.selectByExample(example);
         if (hotelList.isEmpty()) {
-            throw new MyException("-99", "-99", "酒店不存在");
+            throw MyErrorEnum.HOTEL_NOT_FOUND.getMyException();
         }
         Hotel hotel = hotelList.get(0);
         //

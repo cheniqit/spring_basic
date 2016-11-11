@@ -56,6 +56,7 @@ public enum MyErrorEnum {
     HOTEL_INFO_IS_NULL(-20515, "参数错误,酒店信息为空"),
     HOTEL_NEED_PARAMS(-20516, "id,hotelSourceEnum必填"),
     HOTEL_MULTI_ONE_ID(-20517, "酒店信息错误,根据hotelId找到多个映射酒店信息"),
+    HOTEL_NOT_FOUND(-20518, "酒店不存在"),
 
     /**
      * 房型 room
@@ -76,6 +77,8 @@ public enum MyErrorEnum {
     ROOM_HOTEL_ID_IS_NULL(-20313, "hotelId 不可为空"),
     ROOM_NAME_IS_NULL(-20314, "name 不可为空"),
     ROOM_PARAMS_IS_NULL(-20315, "hotelId、roomTypeDtoList 不可为空"),
+    ROOM_TYPE_DTO_IS_NULL(-20316, "roomTypeDto 不可为空"),
+    ROOM_FANG_HOTEL_ID_ERROR(-20317, "错误的roomTypeDto.FangHotelId"),
 
     /**
      * 订单 order
