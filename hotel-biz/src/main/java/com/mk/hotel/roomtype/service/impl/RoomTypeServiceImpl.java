@@ -5,6 +5,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
@@ -37,10 +38,8 @@ import com.mk.hotel.roomtype.enums.RoomTypeCacheEnum;
 import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.enums.RoomTypeStockCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
-import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.model.RoomTypeExample;
-import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypeStock;
 import com.mk.hotel.roomtype.redisbean.BedType;
 import org.apache.commons.lang.StringUtils;
@@ -89,7 +88,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public RoomTypeDto selectByFangId(Long fangHotelId, Long fangRoomTypeId, HotelSourceEnum hotelSourceEnum) {
         if (null == fangHotelId || null == fangRoomTypeId) {
-            throw new MyException("-99", "-99", "fangId 不可为空");
+            throw MyErrorEnum.ROOM_FANG_ID_IS_NULL.getMyException();
         }
 
         //hotelDto
@@ -117,7 +116,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public RoomTypeDto selectById(Long roomTypeId) {
         if (null == roomTypeId) {
-            throw new MyException("-99", "-99", "roomTypeId 不可为空");
+            throw MyErrorEnum.ROOM_TYPE_ID_IS_NULL.getMyException();
         }
 //        //
 //        RoomTypeExample roomTypeExample = new RoomTypeExample();
@@ -140,7 +139,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public RoomType selectRoomTypeById(Long roomTypeId) {
         if (null == roomTypeId) {
-            throw new MyException("-99", "-99", "roomTypeId 不可为空");
+            throw MyErrorEnum.ROOM_TYPE_ID_IS_NULL.getMyException();
         }
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
@@ -151,7 +150,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public RoomTypeDto selectByHotelId(Long hotelId) {
         if (null == hotelId) {
-            throw new MyException("-99", "-99", "hotelId 不可为空");
+            throw MyErrorEnum.ROOM_HOTEL_ID_IS_NULL.getMyException();
         }
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
@@ -173,7 +172,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public List<RoomTypeDto> selectRoomTypeByHotelId(Long hotelId) {
         if (null == hotelId) {
-            throw new MyException("-99", "-99", "hotelId 不可为空");
+            throw MyErrorEnum.ROOM_HOTEL_ID_IS_NULL.getMyException();
         }
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
@@ -192,7 +191,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public RoomTypeDto selectByFangId(Long fangRoomTypeId, Long hotelId) {
         if (null == fangRoomTypeId) {
-            throw new MyException("-99", "-99", "fangId 不可为空");
+            throw MyErrorEnum.ROOM_FANG_ID_IS_NULL.getMyException();
         }
 
         //
@@ -217,10 +216,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Override
     public RoomTypeDto selectByName(Long hotelId ,String name) {
         if (StringUtils.isBlank(name)) {
-            throw new MyException("-99", "-99", "name 不可为空");
+            throw MyErrorEnum.ROOM_NAME_IS_NULL.getMyException();
         }
         if (hotelId == null) {
-            throw new MyException("-99", "-99", "hotelId 不可为空");
+            throw MyErrorEnum.ROOM_HOTEL_ID_IS_NULL.getMyException();
         }
         //
         RoomTypeExample roomTypeExample = new RoomTypeExample();
@@ -242,7 +241,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void deleteByHotelId(Long hotelId, List<Long> idList) {
         if (null == hotelId || null == idList) {
-            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+            throw MyErrorEnum.ROOM_PARAMS_IS_NULL.getMyException();
         }
 
         //
@@ -269,7 +268,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void updateOnlineByHotelId(Long hotelId, List<Long> idList) {
         if (null == hotelId || null == idList) {
-            throw new MyException("-99", "-99", "hotelId、roomTypeDtoList 不可为空");
+            throw MyErrorEnum.ROOM_PARAMS_IS_NULL.getMyException();
         }
 
         //

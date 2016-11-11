@@ -3,7 +3,7 @@ package com.mk.hotel.roomtype.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
 import com.mk.framework.JsonUtils;
-import com.mk.framework.excepiton.MyException;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.roomtype.RoomTypePriceService;
@@ -44,7 +44,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
     public int saveOrUpdateByFangId(RoomTypePriceDto roomTypePriceDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypePriceDto) {
-            throw new MyException("-99", "-99", "roomTypePriceDto 不可为空");
+            throw MyErrorEnum.ROOM_TYPE_PRICE_DTO_IS_NULL.getMyException();
         }
 
         //roomType
@@ -52,7 +52,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
                 this.roomTypeService.selectByFangId(
                         roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId(), hotelSourceEnum);
         if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId() 错误");
+            throw MyErrorEnum.ROOM_PARAMS_ERROR.getMyException();
         }
         //
         RoomTypePriceExample roomTypePriceExample = new RoomTypePriceExample();

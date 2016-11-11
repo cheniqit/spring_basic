@@ -72,6 +72,10 @@ public enum MyErrorEnum {
     ROOM_FANG_ID_IS_NULL(-20309, "FangRoomTypeId 不能为空"),
     ROOM_MUTLI_FANG_ID(-20310, "FangRoomTypeId 有不相同的存在"),
     ROOM_PARAMS_ERROR(-20311, "参数错误"),
+    ROOM_TYPE_PRICE_DTO_IS_NULL(-20312, "roomTypePriceDto 不可为空"),
+    ROOM_HOTEL_ID_IS_NULL(-20313, "hotelId 不可为空"),
+    ROOM_NAME_IS_NULL(-20314, "name 不可为空"),
+    ROOM_PARAMS_IS_NULL(-20315, "hotelId、roomTypeDtoList 不可为空"),
 
     /**
      * 订单 order
