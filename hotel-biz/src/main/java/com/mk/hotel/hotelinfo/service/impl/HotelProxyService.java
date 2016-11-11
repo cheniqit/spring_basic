@@ -2,6 +2,7 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
@@ -181,7 +182,7 @@ public class HotelProxyService {
 
     private Hotel convertHotel(HotelQueryDetailResponse hotelQueryDetailResponse, HotelSourceEnum hotelSourceEnum) throws Exception {
         if(hotelQueryDetailResponse == null || hotelQueryDetailResponse.getData() == null || hotelQueryDetailResponse.getData().getHotel() == null){
-            throw new Exception("参数错误,酒店信息为空");
+            throw MyErrorEnum.HOTEL_INFO_ERROR.getMyException();
         }
         HotelQueryDetailResponse.HotelInfo hotelInfo = hotelQueryDetailResponse.getData().getHotel();
         Hotel hotel = new Hotel();

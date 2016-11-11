@@ -53,6 +53,9 @@ public enum MyErrorEnum {
     HOTEL_PARAM_ERROR_UPDATE_PIC(-20512, "更新图片信息失效时候参数错误"),
     HOTEL_PIC_INFO_IS_NULL(-20513, "hotelPicInfo参数为空"),
     HOTEL_PIC_INFO_ERROR(-20514, "hotelPicInfo信息错误"),
+    HOTEL_INFO_IS_NULL(-20515, "参数错误,酒店信息为空"),
+    HOTEL_NEED_PARAMS(-20516, "id,hotelSourceEnum必填"),
+    HOTEL_MULTI_ONE_ID(-20517, "酒店信息错误,根据hotelId找到多个映射酒店信息"),
 
     /**
      * 房型 room

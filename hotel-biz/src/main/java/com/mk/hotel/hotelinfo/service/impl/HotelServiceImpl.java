@@ -5,6 +5,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.DistanceUtil;
 import com.mk.framework.JsonUtils;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.redisbean.Pic;
@@ -106,7 +107,7 @@ public class HotelServiceImpl implements HotelService {
     public void deleteByFangId(Long id, HotelSourceEnum hotelSourceEnum) {
 
         if (null == id || null == hotelSourceEnum) {
-            throw new MyException("-99", "-99", "id,hotelSourceEnum必填");
+            throw MyErrorEnum.HOTEL_NEED_PARAMS.getMyException();
         }
 
         //
@@ -134,7 +135,7 @@ public class HotelServiceImpl implements HotelService {
     public void saveOrUpdateByFangId(HotelDto hotelDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == hotelDto || null == hotelDto.getFangId() || null == hotelSourceEnum) {
-            throw new MyException("-99", "-99", "hotelDto fangId hotelSourceEnum必填");
+            throw MyErrorEnum.HOTEL_NEED_PARAMS.getMyException();
         }
 
         //
@@ -742,7 +743,7 @@ public class HotelServiceImpl implements HotelService {
         if(org.apache.commons.collections.CollectionUtils.isEmpty(hotelFanqieMappingList)){
             return null;
         }else if(hotelFanqieMappingList.size() > 1){
-            throw new MyException("酒店信息错误,根据hotelId找到多个映射酒店信息");
+            throw MyErrorEnum.HOTEL_MULTI_ONE_ID.getMyException();
         }
         return hotelFanqieMappingList.get(0);
     }
