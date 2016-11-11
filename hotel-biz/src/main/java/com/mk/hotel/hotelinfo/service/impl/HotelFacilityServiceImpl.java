@@ -3,7 +3,7 @@ package com.mk.hotel.hotelinfo.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.Constant;
 import com.mk.framework.JsonUtils;
-import com.mk.framework.excepiton.MyException;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -57,14 +57,14 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
 
     public void saveOrUpdateByFangId (List<HotelFacilityDto> hotelFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == hotelFacilityDtoList || hotelFacilityDtoList.isEmpty()) {
-            throw new MyException("-99", "-99", "hotelFacilityDtoList 不可为空");
+            throw MyErrorEnum.HOTEL_FACILITY_DTO_LIST_IS_NULL.getMyException();
         }
 
         HotelFacilityDto hotelFacilityDto = hotelFacilityDtoList.get(0);
         //
         HotelDto hotelDto = this.hotelService.findByFangId(hotelFacilityDto.getFangHotelId(), hotelSourceEnum);
         if (null == hotelDto) {
-            throw new MyException("-99", "-99", "hotelFacilityDto.getFangHotelId() 错误");
+            throw MyErrorEnum.HOTEL_FANG_ID_ERROR.getMyException();
         }
 
         //redis
