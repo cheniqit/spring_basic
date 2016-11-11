@@ -907,7 +907,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public String updateRoomTypeToRedis(Long hotelId, Long roomTypeId){
         RoomType roomType = selectRoomTypeById(roomTypeId);
         if(roomType == null || roomType.getId() == null){
-            throw new MyException("roomTypeId错误,没有找到房型信息");
+            throw MyErrorEnum.ROOM_NOT_FOUND.getMyException();
         }
         //房型信息
         this.updateRedisRoomType(roomTypeId, roomType, "RoomTypeService.updateRoomTypeToRedis");

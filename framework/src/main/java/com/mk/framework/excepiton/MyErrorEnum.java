@@ -11,7 +11,7 @@ public enum MyErrorEnum {
      */
     COMMON_SIGN_ERROR(-20000, "签名验证错误"),
     COMMON_PARAMS_IS_NULL(-20001, "参数为空"),
-
+    COMMON_LOCK_TIMEOUT(-20002, "锁定超时"),
 
 
     /**
@@ -79,6 +79,8 @@ public enum MyErrorEnum {
     ROOM_PARAMS_IS_NULL(-20315, "hotelId、roomTypeDtoList 不可为空"),
     ROOM_TYPE_DTO_IS_NULL(-20316, "roomTypeDto 不可为空"),
     ROOM_FANG_HOTEL_ID_ERROR(-20317, "错误的roomTypeDto.FangHotelId"),
+    ROOM_FANGBABA_INTERFACE_ERROR(-20318, "房爸爸接口调用错误"),
+    ROOM_UPDATE_STOCK_ERROR(-20319, "更新库存时,hotelId,roomTypeIdk,day,availableNum,promoNum必填"),
 
     /**
      * 订单 order

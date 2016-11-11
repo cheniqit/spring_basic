@@ -2,6 +2,7 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.DateUtils;
+import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.proxy.http.RedisUtil;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
@@ -94,7 +95,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
                 long now = System.currentTimeMillis();
                 long diff = now - start;
                 if (diff > maxWaitTimeOut) {
-                    throw new MyException("-99", "-99", "锁定超时");
+                    throw MyErrorEnum.COMMON_LOCK_TIMEOUT.getMyException();
                 }
             }
 
@@ -110,7 +111,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
         }
 
-        throw new MyException("-99", "-99", "锁定超时");
+        throw MyErrorEnum.COMMON_LOCK_TIMEOUT.getMyException();
     }
 
     public void unlock(String hotelId, String roomTypeId, Date day) {
@@ -145,7 +146,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
         RoomTypeDto roomTypeDto = this.roomTypeService.selectById(roomTypeId);
         if (null == roomTypeDto) {
-            throw new MyException("-99", "-99", "房型不存在");
+            throw MyErrorEnum.ROOM_NOT_FOUND.getMyException();
         }
 
         //
@@ -156,7 +157,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         queryStockRequest.setEndtime(DateUtils.formatDate(DateUtils.addDays(new Date(), 30)));
         QueryStockResponse response = hotelStockRemoteService.queryStock(queryStockRequest);
         if (response == null || response.getData() == null) {
-            throw new MyException("-99", "-99", "房爸爸接口调用错误");
+            throw MyErrorEnum.ROOM_FANGBABA_INTERFACE_ERROR.getMyException();
         }
 
         //
@@ -177,7 +178,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     public String updateRedisStock(Long hotelId, Long roomTypeId, Date day, Integer allAvailableNum, Integer totalPromoNum) {
         if (null == hotelId || null == roomTypeId || null == day || null == allAvailableNum || null == totalPromoNum) {
-            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,availableNum,promoNum必填");
+            throw MyErrorEnum.ROOM_UPDATE_STOCK_ERROR.getMyException();
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = format.format(day);
@@ -254,7 +255,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     private RoomTypeStockBean calcStockByTotal(Long roomTypeId, String strDate, Integer totalNum, Integer totalPromoNum, Jedis jedis) {
         if (null == roomTypeId || StringUtils.isBlank(strDate) || null == totalNum || null == totalPromoNum) {
-            throw new MyException("-99", "-99", "更新库存时,roomTypeIdk,day,totalNum,promoNum必填");
+            throw MyErrorEnum.ROOM_UPDATE_STOCK_ERROR.getMyException();
         }
 
         if (totalNum.compareTo(totalPromoNum) < 0) {
@@ -357,7 +358,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
     public String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum) {
         if (null == hotelId || null == roomTypeId || null == day || null == totalNum || null == totalPromoNum) {
-            throw new MyException("-99", "-99", "更新库存时,hotelId,roomTypeIdk,day,totalNum,promoNum必填");
+            throw MyErrorEnum.ROOM_UPDATE_STOCK_ERROR.getMyException();
         }
 
         if (totalNum.compareTo(totalPromoNum) < 0) {
