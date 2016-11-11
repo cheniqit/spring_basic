@@ -43,6 +43,16 @@ public enum MyErrorEnum {
     HOTEL_ID_IS_NULL(-20202, "酒店id为空"),
     HOTEL_FACILITY_DTO_LIST_IS_NULL(-20203, "hotelFacilityDtoList 不可为空"),
     HOTEL_FANG_ID_ERROR(-20204, "hotelFacilityDto.getFangHotelId() 错误"),
+    HOTEL_PIC_TYPE_IS_NULL(-20205, "picType参数为空"),
+    HOTEL_PIC_TYPE_ERROR(-20206, "picType参数错误"),
+    HOTEL_NEED_ROOM_TYPE_ID(-20507, "上传房型图片时必传roomTypeId"),
+    HOTEL_ROOM_TYPE_ID_ERROR(-20508, "上传房型图片时roomTypeId错误"),
+    HOTEL_PIC_ADDRESS_ERROR(-20509, "没有图片地址信息"),
+    HOTEL_NEED_ROOM_TYPE_ID_DELETE(-20510, "删除房型图片时必传roomTypeId"),
+    HOTEL_ROOM_TYPE_ID_ERROR_DELETE(-20511, "删除房型图片时,roomTypeId参数错误"),
+    HOTEL_PARAM_ERROR_UPDATE_PIC(-20512, "更新图片信息失效时候参数错误"),
+    HOTEL_PIC_INFO_IS_NULL(-20513, "hotelPicInfo参数为空"),
+    HOTEL_PIC_INFO_ERROR(-20514, "hotelPicInfo信息错误"),
 
     /**
      * 房型 room
