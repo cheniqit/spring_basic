@@ -55,7 +55,7 @@ public class HotelCopyService {
                 hotelJsonList.add(hotelJson);
             }
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
 
         for (HotelAllJson hotelJson : hotelJsonList) {
@@ -220,7 +220,7 @@ public class HotelCopyService {
                 OtsInterface.initHotel(id);
             }
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
 
     }
@@ -240,7 +240,7 @@ public class HotelCopyService {
             //
             facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
 
         Long fangHotelId = facilityJson.getHotelid();

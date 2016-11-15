@@ -141,11 +141,11 @@ public class RoomTypeController {
                 hotelId = Long.parseLong(strHotelId);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new MyException("-99", "-99", "hotelid 格式错误");
+                throw new MyException("hotelid 格式错误");
             }
             HotelDto hotelDto = this.hotelService.findByFangId(hotelId, HotelSourceEnum.LEZHU);
             if (null == hotelDto) {
-                throw new MyException("-99", "-99", "hotel未找到");
+                throw new MyException("hotel未找到");
             }
 
             //
@@ -164,7 +164,7 @@ public class RoomTypeController {
             OtsInterface.initHotel(hotelDto.getId());
 
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
@@ -274,7 +274,7 @@ public class RoomTypeController {
     public ResponseEntity<HashMap<String, Object>> mergeRoomTypePriceOnlyOne(Long hotelId) {
         try {
             if(hotelId == null){
-                throw new MyException("-99", "-99", "hotelId必填");
+                throw new MyException("hotelId必填");
             }
             roomTypeService.mergeRoomTypeByHotelId(hotelId);
         }catch (Exception e) {

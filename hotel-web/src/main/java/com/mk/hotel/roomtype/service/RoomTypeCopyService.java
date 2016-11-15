@@ -60,7 +60,7 @@ public class RoomTypeCopyService {
                 fangHotelId = roomTypeJson.getHotelid();
             }
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
 
         //
@@ -78,7 +78,7 @@ public class RoomTypeCopyService {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 Cat.logError(e);
-                throw new MyException("-99", "-99", "area格式错误");
+                throw new MyException("area格式错误");
             }
 
             roomTypeDto.setArea(intArea);
@@ -91,7 +91,7 @@ public class RoomTypeCopyService {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     Cat.logError(e);
-                    throw new MyException("-99", "-99", "BedType格式错误");
+                    throw new MyException("BedType格式错误");
                 }
             }
 
@@ -144,11 +144,11 @@ public class RoomTypeCopyService {
                 hotelId = Long.parseLong(strHotelId);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new MyException("-99", "-99", "hotelid 格式错误");
+                throw new MyException("hotelid 格式错误");
             }
             HotelDto hotelDto = hotelService.findByFangId(hotelId, HotelSourceEnum.LEZHU);
             if (null == hotelDto) {
-                throw new MyException("-99", "-99", "hotel未找到");
+                throw new MyException("hotel未找到");
             }
 
             //
@@ -167,7 +167,7 @@ public class RoomTypeCopyService {
             OtsInterface.initHotel(hotelDto.getId());
 
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
     }
 
@@ -186,7 +186,7 @@ public class RoomTypeCopyService {
             //json
             roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
         } catch (Exception e) {
-            throw new MyException("-99", "-99", "格式错误");
+            throw new MyException("格式错误");
         }
 
         //fang-hotelId
