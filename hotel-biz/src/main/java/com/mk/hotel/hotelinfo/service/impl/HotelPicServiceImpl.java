@@ -1,9 +1,8 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
-import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
-import com.mk.hotel.common.Constant;
+import com.mk.framework.json.JsonUtils;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.redisbean.Pic;
 import com.mk.hotel.common.redisbean.PicList;
@@ -22,7 +21,6 @@ import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypeServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Picture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

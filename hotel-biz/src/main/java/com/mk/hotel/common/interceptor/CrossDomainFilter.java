@@ -2,7 +2,7 @@ package com.mk.hotel.common.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
-import com.mk.framework.NetUtils;
+import com.mk.framework.network.NetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ public class CrossDomainFilter implements Filter {
 		String hardwarecode = httpServletRequest.getParameter("hardwarecode");
 		String param = "";
 		try {
-			ip = NetUtils.getIpAddr(httpServletRequest);
+			ip = NetUtils.getLocalIp(httpServletRequest);
 			param = new ObjectMapper().writeValueAsString(httpServletRequest.getParameterMap());
 		} catch (Exception e) {
 			e.printStackTrace();

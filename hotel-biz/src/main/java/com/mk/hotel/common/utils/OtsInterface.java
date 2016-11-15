@@ -1,14 +1,12 @@
 package com.mk.hotel.common.utils;
 
-import com.mk.framework.HttpUtils;
-import com.mk.framework.JsonUtils;
-import com.mk.framework.UrlUtils;
+import com.mk.framework.http.HttpUtils;
+import com.mk.framework.json.JsonUtils;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.remote.pms.common.FbbCommonResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 

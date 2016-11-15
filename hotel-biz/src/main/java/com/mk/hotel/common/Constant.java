@@ -1,6 +1,7 @@
 package com.mk.hotel.common;
 
-import com.mk.framework.UrlUtils;
+
+import com.mk.hotel.common.utils.UrlUtils;
 
 /**
  * Created by chenqi on 16/5/30.

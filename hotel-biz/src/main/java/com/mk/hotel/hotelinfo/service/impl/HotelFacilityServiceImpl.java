@@ -1,10 +1,9 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.redisbean.Facility;
@@ -53,6 +52,12 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
     @Autowired
     private HotelMapper hotelMapper;
 
+
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
+
+    private static final String SYSTEM_USER_NAME = "hotel_system";
     private Logger logger = LoggerFactory.getLogger(HotelFacilityServiceImpl.class);
 
     public void saveOrUpdateByFangId (List<HotelFacilityDto> hotelFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
@@ -100,7 +105,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             String facilityKeyName = HotelFacilityCacheEnum.getFacilityKeyName(String.valueOf(hotelId));
 
             //redis rem
@@ -144,7 +149,7 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
-        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        PageBean pageBean = new PageBean(pageNo, count, 1000);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
         example.setPageCount(pageBean.getPageCount());
@@ -169,9 +174,9 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                             dto.setFacilityId(json.getId());
                             dto.setFacilityName(json.getTagname());
                             dto.setFacilityType(json.getTaggroupid());
-                            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+                            dto.setUpdateBy(SYSTEM_USER_NAME);
                             dto.setUpdateDate(new Date());
-                            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+                            dto.setCreateBy(SYSTEM_USER_NAME);
                             dto.setCreateDate(new Date());
                             dto.setIsValid(ValidEnum.VALID.getCode());
                             roomTypeFacilityDtoList.add(dto);
@@ -192,9 +197,9 @@ public class HotelFacilityServiceImpl implements HotelFacilityService {
                         dto.setFacilityId(Long.valueOf(tags.getId()));
                         dto.setFacilityName(tags.getTagname());
                         dto.setFacilityType(Long.valueOf(tags.getTaggroupid()));
-                        dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+                        dto.setUpdateBy(SYSTEM_USER_NAME);
                         dto.setUpdateDate(new Date());
-                        dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+                        dto.setCreateBy(SYSTEM_USER_NAME);
                         dto.setCreateDate(new Date());
                         dto.setIsValid(ValidEnum.VALID.getCode());
                         hotelFacilityDtoList.add(dto);

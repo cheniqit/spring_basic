@@ -1,9 +1,7 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.net.PmsAuthHeader;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
@@ -55,6 +53,7 @@ public class HotelProxyService {
     private RoomTypeService roomTypeService;
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
+    private static final String SYSTEM_USER_NAME = "hotel_system";
 
 
 
@@ -114,7 +113,7 @@ public class HotelProxyService {
                 roomTypeDto.setFangHotelId(hotel.getFangId());
                 roomTypeDto.setName("客房");
                 roomTypeDto.setIsValid("T");
-                roomTypeDto.setCreateBy(Constant.SYSTEM_USER_NAME);
+                roomTypeDto.setCreateBy(SYSTEM_USER_NAME);
                 roomTypeDto.setUpdateDate(new Date());
 
                 roomTypeService.saveOrUpdateByFangId(roomTypeDto, HotelSourceEnum.CRM);
@@ -214,16 +213,16 @@ public class HotelProxyService {
             List<LandMark> landMarks = landMarkMapper.selectByExample(example);
             hotelService.setAllLandMarkList(landMarks);
         }
-        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, hotelService.getAllLandMarkList());
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(hotelInfo.getLongitude(), hotelInfo.getLatitude(), 3000, hotelService.getAllLandMarkList());
         hotel.setBusinessZoneInfo(hotelLandMark.getBusinessZoneInfo().toString());
         hotel.setAirportStationInfo(hotelLandMark.getAirportStationInfo().toString());
         hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
         hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
         hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
 
-        hotel.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        hotel.setUpdateBy(SYSTEM_USER_NAME);
         hotel.setUpdateDate(new Date());
-        hotel.setCreateBy(Constant.SYSTEM_USER_NAME);
+        hotel.setCreateBy(SYSTEM_USER_NAME);
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
 

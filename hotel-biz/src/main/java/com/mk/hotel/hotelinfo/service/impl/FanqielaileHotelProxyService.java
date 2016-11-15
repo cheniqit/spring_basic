@@ -1,9 +1,8 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
-import com.mk.framework.Constant;
 import com.mk.framework.coordinate.Coordinate;
 import com.mk.framework.coordinate.CoordinateUtils;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -67,6 +66,10 @@ public class FanqielaileHotelProxyService {
     @Autowired
     private HotelFacilityServiceImpl hotelFacilityServiceImpl;
 
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
+    private static final String SYSTEM_USER_NAME = "hotel_system";
     private static Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     public Hotel saveOrUpdateHotel(Integer innId, Inn inn) {
@@ -116,9 +119,9 @@ public class FanqielaileHotelProxyService {
             dto.setFangHotelId(innId);
             dto.setFacilityId(facilityEnum.getId().longValue());
             dto.setFacilityName(facilityEnum.getTitle());
-            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+            dto.setUpdateBy(SYSTEM_USER_NAME);
             dto.setUpdateDate(new Date());
-            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+            dto.setCreateBy(SYSTEM_USER_NAME);
             dto.setCreateDate(new Date());
             dto.setIsValid(ValidEnum.VALID.getCode());
             hotelFacilityDtoList.add(dto);
@@ -137,9 +140,9 @@ public class FanqielaileHotelProxyService {
         mapping.setInnId(innId);
         mapping.setAccountId(accountId);
         mapping.setPattern(pattern);
-        mapping.setCreateBy(Constant.SYSTEM_USER_NAME);
+        mapping.setCreateBy(SYSTEM_USER_NAME);
         mapping.setCreateDate(new Date());
-        mapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        mapping.setUpdateBy(SYSTEM_USER_NAME);
         mapping.setUpdateDate(new Date());
         mapping.setIsValid("T");
 
@@ -159,13 +162,13 @@ public class FanqielaileHotelProxyService {
 
                     dbMapping.setIsValid("T");
                     dbMapping.setUpdateDate(new Date());
-                    dbMapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+                    dbMapping.setUpdateBy(SYSTEM_USER_NAME);
 
                 } else {
                     //不存在,更新原记录setIsValid置为"F"
                     dbMapping.setIsValid("F");
                     dbMapping.setUpdateDate(new Date());
-                    dbMapping.setUpdateBy(Constant.SYSTEM_USER_NAME);
+                    dbMapping.setUpdateBy(SYSTEM_USER_NAME);
                 }
 
             }
@@ -239,7 +242,7 @@ public class FanqielaileHotelProxyService {
         HotelLandMark hotelLandMark = hotelService.getHotelLandMark(
                 gaodiCoordinate.getLon(),
                 gaodiCoordinate.getLat(),
-                Constant.HOTEL_TO_HOT_AREA_DISTANCE,
+                3000,
                 hotelService.getAllLandMarkList());
 
         //hotelType
@@ -295,9 +298,9 @@ public class FanqielaileHotelProxyService {
         hotel.setScenicSpotsInfo(hotelLandMark.getScenicSpotsInfo().toString());
         hotel.setHospitalInfo(hotelLandMark.getHospitalInfo().toString());
         hotel.setCollegesInfo(hotelLandMark.getCollegesInfo().toString());
-        hotel.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        hotel.setUpdateBy(SYSTEM_USER_NAME);
         hotel.setUpdateDate(new Date());
-        hotel.setCreateBy(Constant.SYSTEM_USER_NAME);
+        hotel.setCreateBy(SYSTEM_USER_NAME);
         hotel.setCreateDate(new Date());
         hotel.setIsValid(ValidEnum.VALID.getCode());
 
@@ -313,7 +316,7 @@ public class FanqielaileHotelProxyService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             String key = jedis.get("fanqieFlushAllPic");
             if (StringUtils.isNotBlank(key)) {
                 return null;

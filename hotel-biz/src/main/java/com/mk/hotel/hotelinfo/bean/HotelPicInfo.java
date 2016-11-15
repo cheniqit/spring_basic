@@ -1,6 +1,7 @@
 package com.mk.hotel.hotelinfo.bean;
 
-import com.mk.framework.JsonUtils;
+
+import com.mk.framework.json.JsonUtils;
 
 import java.util.List;
 
