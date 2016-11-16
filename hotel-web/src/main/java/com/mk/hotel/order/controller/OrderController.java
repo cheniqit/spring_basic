@@ -61,9 +61,10 @@ public class OrderController {
             Integer pmsOrderStatus = Integer.valueOf(orderStatusPush.getOrderstatus());
             if(PmsOrderStatusEnum.checkIn.getCode().equals(pmsOrderStatus)){
                 boolean resultFlag = OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
-                if(!resultFlag){
-                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid());
-                }
+                //由ots 经 mq 统一通知
+//                if(!resultFlag){
+//                    hawkRemoteService.orderNotify(orderStatusPush.getOrderid());
+//                }
             }
             if(PmsOrderStatusEnum.channelCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.pmsFullStock.getCode().equals(pmsOrderStatus)
@@ -72,6 +73,7 @@ public class OrderController {
                     || PmsOrderStatusEnum.serviceCanceled.getCode().equals(pmsOrderStatus)){
                 OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
             }
+
             if(PmsOrderStatusEnum.noshow.getCode().equals(pmsOrderStatus)){
                 OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
             }
