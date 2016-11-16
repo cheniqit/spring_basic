@@ -1,10 +1,9 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.DateUtils;
-import com.mk.framework.JsonUtils;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.date.DateUtils;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.common.enums.ValidEnum;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.remote.pms.hotel.json.HotelPriceResponse;
@@ -48,6 +47,10 @@ public class RoomTypeProxyService {
     @Autowired
     private RoomTypeStockServiceImpl roomTypeStockService;
 
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
+    private final String SYSTEM_USER_NAME = "hotel_system";
     private static Logger logger = LoggerFactory.getLogger(RoomTypeProxyService.class);
 
     @Transactional
@@ -107,9 +110,9 @@ public class RoomTypeProxyService {
         roomType.setRoomTypePics(hotelRoomType.getRoomtypepics());
 
 
-        roomType.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomType.setUpdateBy(SYSTEM_USER_NAME);
         roomType.setUpdateDate(new Date());
-        roomType.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomType.setCreateBy(SYSTEM_USER_NAME);
         roomType.setCreateDate(new Date());
         roomType.setIsValid(ValidEnum.VALID.getCode());
         return roomType;
@@ -191,9 +194,9 @@ public class RoomTypeProxyService {
         cost = cost.setScale(2, BigDecimal.ROUND_HALF_UP);
         roomTypePrice.setCost(cost);
 
-        roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setUpdateBy(SYSTEM_USER_NAME);
         roomTypePrice.setUpdateDate(new Date());
-        roomTypePrice.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setCreateBy(SYSTEM_USER_NAME);
         roomTypePrice.setCreateDate(new Date());
         roomTypePrice.setIsValid(ValidEnum.VALID.getCode());
         return roomTypePrice;
@@ -276,9 +279,9 @@ public class RoomTypeProxyService {
         roomTypeStock.setRoomTypeId(roomTypeId);
         roomTypeStock.setNumber(Long.valueOf(stockInfo.getNum()));
 
-        roomTypeStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setUpdateBy(SYSTEM_USER_NAME);
         roomTypeStock.setUpdateDate(new Date());
-        roomTypeStock.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setCreateBy(SYSTEM_USER_NAME);
         roomTypeStock.setCreateDate(new Date());
         roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
 
@@ -294,7 +297,7 @@ public class RoomTypeProxyService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             promoRoomTypeJson = jedis.get(key);
         } catch (Exception e) {
             e.printStackTrace();

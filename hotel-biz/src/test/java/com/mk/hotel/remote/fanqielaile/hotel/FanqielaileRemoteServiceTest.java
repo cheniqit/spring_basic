@@ -1,7 +1,6 @@
 package com.mk.hotel.remote.fanqielaile.hotel;
 
-import com.mk.framework.DateUtils;
-import org.apache.commons.httpclient.util.DateUtil;
+import com.mk.framework.date.DateUtils;
 import org.junit.Test;
 
 import java.util.Date;

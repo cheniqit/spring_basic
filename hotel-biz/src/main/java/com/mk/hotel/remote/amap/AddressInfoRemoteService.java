@@ -1,16 +1,15 @@
 package com.mk.hotel.remote.amap;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.HttpUtils;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.http.HttpUtils;
+import com.mk.framework.json.JsonUtils;
 import com.mk.hotel.remote.amap.json.AddressByLocationResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.cache.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +18,20 @@ import java.util.regex.Pattern;
  */
 @Service
 public class AddressInfoRemoteService {
+
+    private final String AMAP_REMOTE_URL = "http://restapi.amap.com";
     private static Logger logger = LoggerFactory.getLogger(AddressInfoRemoteService.class);
 
     public static String REGEO = "/v3/geocode/regeo?output=json&location=%s,%s&key=f8f3fd85e51b484bd18de839f1082429&radius=1000&extensions=all";
 
     public AddressByLocationResponse findAddressByLocation(String latLocation, String longLocation){
         logger.info("call findAddressByLocation params latLocation={},longLocation={}", latLocation, longLocation);
-        String remoteResult = HttpUtils.getData(Constant.AMAP_REMOTE_URL + String.format(this.REGEO, longLocation, latLocation));
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(AMAP_REMOTE_URL + String.format(this.REGEO, longLocation, latLocation));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if(StringUtils.isBlank(remoteResult)){
             return null;
         }
@@ -36,7 +42,12 @@ public class AddressInfoRemoteService {
 
     public String findTownCodeByLocation(String latLocation, String longLocation){
         logger.info("call findAddressByLocation params latLocation={},longLocation={}", latLocation, longLocation);
-        String remoteResult = HttpUtils.getData(Constant.AMAP_REMOTE_URL + String.format(this.REGEO, longLocation, latLocation));
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(AMAP_REMOTE_URL + String.format(this.REGEO, longLocation, latLocation));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if(StringUtils.isBlank(remoteResult)){
             return null;
         }

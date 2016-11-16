@@ -2,9 +2,9 @@ package com.mk.pms.hoteldetail.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.mk.framework.Constant;
-import com.mk.framework.JsonUtils;
-import com.mk.framework.net.HttpUtils;
+import com.mk.framework.http.HttpUtils;
+import com.mk.framework.json.JsonUtils;
+import com.mk.hotel.common.utils.UrlUtils;
 import com.mk.pms.hoteldetail.json.HotelDetail;
 import com.mk.pms.hoteldetail.service.HotelDetailService;
 import com.mk.pms.roomtype.json.Picture;
@@ -19,6 +19,9 @@ import java.util.List;
  */
 @Service
 public class HotelDetailServiceImpl implements HotelDetailService{
+
+    private final static String PMS_REMOTE_URL = UrlUtils.getUrl("pms.remote.url");
+    private final static String HOTEL_DETAIL_QUERY_API = "/hotel/detail/query";
 
     public HotelDetail queryHotelDetail(Long hotelId){
         HotelDetail hotelDetail = null;
@@ -72,7 +75,7 @@ public class HotelDetailServiceImpl implements HotelDetailService{
 
     }
     public static String getHotelDetailJson(Long hotelId){
-        String url = String.format("%s%s", Constant.PMS_REMOTE_URL, Constant.HOTEL_DETAIL_QUERY_API);
+        String url = String.format("%s%s", PMS_REMOTE_URL, HOTEL_DETAIL_QUERY_API);
 
         JSONObject queryHotelDetailJson = new JSONObject();
         queryHotelDetailJson.put("hotelid", hotelId);
@@ -80,7 +83,7 @@ public class HotelDetailServiceImpl implements HotelDetailService{
         String resp = null;
 
         try {
-            resp = HttpUtils.doPost(url, queryHotelDetailJson.toJSONString());
+            resp = HttpUtils.dopostjson(url, queryHotelDetailJson.toJSONString());
         }catch (Exception e){
             e.printStackTrace();
         }

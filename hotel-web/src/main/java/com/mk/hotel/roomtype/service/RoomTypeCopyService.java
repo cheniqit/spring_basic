@@ -4,22 +4,19 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
-import com.mk.framework.AppUtils;
 import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.spring.AppUtils;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
-import com.mk.hotel.hotelinfo.json.hotelall.HotelAllJson;
-import com.mk.hotel.hotelinfo.json.hotelall.RoomTypeJson;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.json.roomtypeprice.PriceInfoJson;
 import com.mk.hotel.roomtype.json.roomtypeprice.RoomTypePriceJson;
-import com.mk.hotel.roomtype.redisbean.RoomTypePrice;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
@@ -53,7 +50,7 @@ public class RoomTypeCopyService {
             for (int i = 0; i < bodySize; i++) {
                 String strRoomTypeJson = bodyJson.get(i).toString();
                 //
-                com.mk.hotel.roomtype.json.roomtype.RoomTypeJson roomTypeJson = JSONUtil.fromJson(strRoomTypeJson, com.mk.hotel.roomtype.json.roomtype.RoomTypeJson.class);
+                com.mk.hotel.roomtype.json.roomtype.RoomTypeJson roomTypeJson = JsonUtils.fromJson(strRoomTypeJson, com.mk.hotel.roomtype.json.roomtype.RoomTypeJson.class);
                 roomTypeJsonList.add(roomTypeJson);
 
                 //
@@ -184,7 +181,7 @@ public class RoomTypeCopyService {
         RoomTypePriceJson roomTypePriceJson = null;
         try {
             //json
-            roomTypePriceJson = JSONUtil.fromJson(body, RoomTypePriceJson.class);
+            roomTypePriceJson = JsonUtils.fromJson(body, RoomTypePriceJson.class);
         } catch (Exception e) {
             throw new MyException("格式错误");
         }

@@ -1,10 +1,10 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.DateUtils;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
@@ -31,6 +31,9 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
     private RoomTypeService roomTypeService;
     @Autowired
     private RoomTypePriceMapper roomTypePriceMapper;
+
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
 
     public int saveOrUpdateByFangId(List<RoomTypePriceDto> roomTypePriceDtoList, HotelSourceEnum hotelSourceEnum) {
 
@@ -106,7 +109,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(String.valueOf(roomTypeId));
 
             //

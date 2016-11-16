@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
-import com.mk.framework.AppUtils;
-import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.JSONUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.spring.AppUtils;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.hotelinfo.HotelFacilityService;
 import com.mk.hotel.hotelinfo.HotelService;
@@ -51,7 +50,7 @@ public class HotelCopyService {
                 String strHotelALLJson = hotelAllArray.get(i).toString();
 
                 //
-                HotelAllJson hotelJson = JSONUtil.fromJson(strHotelALLJson, HotelAllJson.class);
+                HotelAllJson hotelJson = JsonUtils.fromJson(strHotelALLJson, HotelAllJson.class);
                 hotelJsonList.add(hotelJson);
             }
         } catch (Exception e) {
@@ -238,7 +237,7 @@ public class HotelCopyService {
         HotelFacilityJson facilityJson = null;
         try {
             //
-            facilityJson = JSONUtil.fromJson(body, HotelFacilityJson.class);
+            facilityJson = JsonUtils.fromJson(body, HotelFacilityJson.class);
         } catch (Exception e) {
             throw new MyException("格式错误");
         }

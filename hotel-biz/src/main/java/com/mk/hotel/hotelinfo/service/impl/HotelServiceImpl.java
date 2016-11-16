@@ -2,12 +2,10 @@ package com.mk.hotel.hotelinfo.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.DistanceUtil;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.coordinate.DistanceUtil;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.common.redisbean.Pic;
 import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
@@ -92,6 +90,9 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     private HawkRemoteService hawkRemoteService;
 
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
     private Logger logger = LoggerFactory.getLogger(HotelServiceImpl.class);
 
     private static List<LandMark> allLandMarkList = new ArrayList<LandMark>();
@@ -172,7 +173,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
+                    hotelDto.getLon().doubleValue(), hotelDto.getLat().doubleValue(), 3000, this.getAllLandMarkList());
             //town code
             String townCode = addressInfoRemoteService.findTownCodeByLocation(
                     String.valueOf(hotelDto.getLat()), String.valueOf(hotelDto.getLon()));
@@ -326,7 +327,7 @@ public class HotelServiceImpl implements HotelService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             String hotelKeyName = HotelCacheEnum.getHotelKeyName(String.valueOf(hotelId));
             String originalHotelJson = jedis.get(hotelKeyName);
@@ -464,7 +465,7 @@ public class HotelServiceImpl implements HotelService {
                 this.setAllLandMarkList(landMarks);
             }
             HotelLandMark hotelLandMark = this.getHotelLandMark(
-                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), Constant.HOTEL_TO_HOT_AREA_DISTANCE, this.getAllLandMarkList());
+                    hotel.getLon().doubleValue(), hotel.getLat().doubleValue(), 3000, this.getAllLandMarkList());
 
             //
             com.mk.hotel.hotelinfo.redisbean.Hotel hotelInRedis = new com.mk.hotel.hotelinfo.redisbean.Hotel();

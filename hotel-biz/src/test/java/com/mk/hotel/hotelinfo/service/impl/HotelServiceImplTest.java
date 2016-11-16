@@ -1,18 +1,11 @@
 package com.mk.hotel.hotelinfo.service.impl;
 
 import com.mk.common.BaseTest;
-import com.mk.framework.Constant;
-import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.hotelinfo.bean.HotelLandMark;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
-import com.mk.ots.mapper.LandMarkMapper;
-import com.mk.ots.model.LandMark;
-import com.mk.ots.model.LandMarkExample;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 /**
  * Created by chenqi on 16/5/10.
@@ -47,6 +40,6 @@ public class HotelServiceImplTest extends BaseTest{
 
     @Test
     public void testGetHotelLandMark() throws Exception {
-        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(new Double("121.44610100") , new Double("31.28332200"), Constant.HOTEL_TO_HOT_AREA_DISTANCE);
+        HotelLandMark hotelLandMark = hotelService.getHotelLandMark(new Double("121.44610100") , new Double("31.28332200"), 3000);
     }
 }

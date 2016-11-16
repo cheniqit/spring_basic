@@ -2,12 +2,10 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.DateUtils;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.redisbean.PicList;
 import com.mk.hotel.common.utils.OtsInterface;
@@ -83,6 +81,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     private RoomTypeStockServiceImpl roomTypeStockService;
     @Autowired
     private RoomTypeFullStockLogService roomTypeFullStockLogService;
+
+
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
 
     private Logger logger = LoggerFactory.getLogger(RoomTypeServiceImpl.class);
 
@@ -429,7 +431,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
-        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        PageBean pageBean = new PageBean(pageNo, count, 1000);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
         example.setPageCount(pageBean.getPageCount());
@@ -456,7 +458,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //roomTypeKey
             String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
@@ -490,7 +492,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //roomTypeKey
             String roomTypeKeyName = RoomTypeCacheEnum.getRoomTypeKeyName(String.valueOf(roomTypeId));
@@ -607,7 +609,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
         if(pageSize == null){
-            pageSize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
+            pageSize = 1000;
         }
         PageBean pageBean = new PageBean(pageNo, count, pageSize);
         HotelExample example = new HotelExample();
@@ -647,7 +649,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
-        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        PageBean pageBean = new PageBean(pageNo, count, 1000);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
         example.setPageCount(pageBean.getPageCount());
@@ -699,7 +701,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
-        PageBean pageBean = new PageBean(pageNo, count, Constant.DEFAULT_REMOTE_PAGE_SIZE);
+        PageBean pageBean = new PageBean(pageNo, count, 1000);
         HotelExample example = new HotelExample();
         example.setStart(pageBean.getStart());
         example.setPageCount(pageBean.getPageCount());
@@ -729,7 +731,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     public void clearStockAndPrice() {
         Jedis jedis = null;
         try {
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             /*
                 先清除hotel库

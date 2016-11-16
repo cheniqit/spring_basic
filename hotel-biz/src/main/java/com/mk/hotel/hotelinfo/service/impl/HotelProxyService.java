@@ -11,6 +11,7 @@ import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.hotelinfo.model.HotelExample;
 import com.mk.hotel.remote.amap.AddressInfoRemoteService;
+import com.mk.hotel.remote.pms.common.PmsAuthHeader;
 import com.mk.hotel.remote.pms.hotel.HotelRemoteService;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailRequest;
 import com.mk.hotel.remote.pms.hotel.json.HotelQueryDetailResponse;

@@ -1,8 +1,8 @@
 package com.mk.hotel.remote.pms.hotelstock;
 
-import com.mk.framework.DateUtils;
-import com.mk.framework.net.PmsAuthHeader;
+import com.mk.framework.date.DateUtils;
 import com.mk.hotel.remote.pms.common.FbbCommonResponse;
+import com.mk.hotel.remote.pms.common.PmsAuthHeader;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockRequest;
 import com.mk.hotel.remote.pms.hotelstock.json.QueryStockResponse;
 import org.junit.Assert;

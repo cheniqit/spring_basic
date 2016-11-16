@@ -1,9 +1,12 @@
 package com.mk.execution.pushinfo;
 
 import com.dianping.cat.Cat;
+import com.mk.framework.redis.MkJedisConnectionFactory;
+import com.mk.framework.spring.AppUtils;
 import com.mk.hotel.common.Constant;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -13,6 +16,7 @@ class JobQueue {
 
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(JobQueue.class);
 
+    private MkJedisConnectionFactory jedisConnectionFactory = (MkJedisConnectionFactory) AppUtils.getBean(MkJedisConnectionFactory.class);
 
     private static class LazyInit {
         private static JobQueue jobQueue;
@@ -34,7 +38,7 @@ class JobQueue {
     Long getLeftInfo () {
         Jedis jedis = null;
         try {
-            jedis = JedisUtil.get();
+            jedis = jedisConnectionFactory.getJedis();
             return jedis.scard(Constant.PUSH_INFO_SET);
         }catch (Exception e){
             e.printStackTrace();
@@ -49,7 +53,7 @@ class JobQueue {
     void push(JobQueueMessage msg) {
         Jedis jedis = null;
         try {
-            jedis = JedisUtil.get();
+            jedis = jedisConnectionFactory.getJedis();
             jedis.sadd(Constant.PUSH_INFO_SET, JSONUtil.toJson(msg));
 
         }catch (Exception e){
@@ -65,7 +69,7 @@ class JobQueue {
     JobQueueMessage brpop() {
         Jedis jedis = null;
         try {
-            jedis = JedisUtil.get();
+            jedis = jedisConnectionFactory.getJedis();
 
             String msgJson = jedis.spop(Constant.PUSH_INFO_SET);
             if (StringUtils.isNotBlank(msgJson)){
@@ -91,7 +95,7 @@ class JobQueue {
         Jedis jedis = null;
         try {
 
-            jedis = JedisUtil.get();
+            jedis = jedisConnectionFactory.getJedis();
 
             if (msg != null) {
                 jedis.srem(Constant.PUSH_INFO_SET,JSONUtil.toJson(msg));

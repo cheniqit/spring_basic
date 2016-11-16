@@ -1,10 +1,10 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.DateUtils;
+import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.hotelinfo.mapper.HotelMapper;
 import com.mk.hotel.hotelinfo.model.Hotel;
 import com.mk.hotel.remote.pms.hotelstock.HotelStockRemoteService;
@@ -52,11 +52,14 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     @Autowired
     private RoomTypeFullStockLogService roomTypeFullStockLogService;
 
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
     private Integer getValueByRedisKeyName(Jedis jedis, String key, String field) {
 
         boolean isNeedCloseJedis = false;
         if (null == jedis) {
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             isNeedCloseJedis = true;
         }
         String strNum = jedis.hget(key, field);
@@ -78,7 +81,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
 
         Jedis jedis = null;
         try {
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //
             String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, day);
@@ -117,7 +120,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     public void unlock(String hotelId, String roomTypeId, Date day) {
         Jedis jedis = null;
         try {
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //
             String lockKeyName = RoomTypeStockCacheEnum.getLockKeyName(hotelId, roomTypeId, day);
@@ -187,7 +190,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //
             String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
@@ -268,7 +271,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         try {
             if (null == jedis) {
                 isNeedCloseJedis = true;
-                jedis = RedisUtil.getJedis();
+                jedis = jedisConnectionFactory.getJedis();
             }
 
             //key
@@ -374,7 +377,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
 
             //key
             String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
@@ -531,7 +534,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         Date[] dates = DateUtils.getStartEndDate(from, to);
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             //hashName
             String hashName = RoomTypeStockCacheEnum.getPromoHashName(roomTypeId);
 
@@ -576,7 +579,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         Date[] dates = DateUtils.getStartEndDate(from, to);
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             //hashName
             String hashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
 

@@ -1,17 +1,13 @@
 package com.mk.hotel.base.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mk.framework.FileUpload;
+import com.mk.framework.file.FileUpload;
 import com.mk.hotel.common.Constant;
 import com.mk.hotel.common.utils.QiniuUtils;
-import com.mk.hotel.hotelinfo.enums.HotelPicTypeEnum;
-import com.mk.hotel.hotelinfo.service.impl.HotelPicServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

@@ -2,11 +2,9 @@ package com.mk.hotel.roomtype.service.impl;
 
 
 import com.dianping.cat.Cat;
-import com.mk.framework.Constant;
-import com.mk.framework.DateUtils;
+import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -73,6 +71,11 @@ public class FanqielaileRoomTypeProxyService {
     @Autowired
     private HotelMapper hotelMapper;
 
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
+
+    public final String SYSTEM_USER_NAME = "hotel_system";
+
     private static Logger logger = LoggerFactory.getLogger(FanqielaileRoomTypeProxyService.class);
 
     public RoomType saveOrUpdateRoomType(Integer innId,Long hotelId, com.mk.hotel.remote.fanqielaile.hotel.json.roomtype.RoomType fanqieRoomType) {
@@ -117,9 +120,9 @@ public class FanqielaileRoomTypeProxyService {
             dto.setRoomTypeId(roomTypeID);
             dto.setFacilityId(facilityEnum.getId().longValue());
             dto.setFacilityName(facilityEnum.getTitle());
-            dto.setUpdateBy(Constant.SYSTEM_USER_NAME);
+            dto.setUpdateBy(SYSTEM_USER_NAME);
             dto.setUpdateDate(new Date());
-            dto.setCreateBy(Constant.SYSTEM_USER_NAME);
+            dto.setCreateBy(SYSTEM_USER_NAME);
             dto.setCreateDate(new Date());
             dto.setIsValid(ValidEnum.VALID.getCode());
             roomTypeFacilityDtoList.add(dto);
@@ -192,9 +195,9 @@ public class FanqielaileRoomTypeProxyService {
         roomType.setPicsSign(picSign);
         roomType.setRoomTypePics(pic);
 
-        roomType.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomType.setUpdateBy(SYSTEM_USER_NAME);
         roomType.setUpdateDate(new Date());
-        roomType.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomType.setCreateBy(SYSTEM_USER_NAME);
         roomType.setCreateDate(new Date());
         roomType.setIsValid(ValidEnum.VALID.getCode());
         return roomType;
@@ -206,7 +209,7 @@ public class FanqielaileRoomTypeProxyService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             String key = jedis.get("fanqieFlushAllPic");
             if (StringUtils.isNotBlank(key)) {
                 return null;
@@ -312,9 +315,9 @@ public class FanqielaileRoomTypeProxyService {
         roomTypePrice.setDay(day);
         roomTypePrice.setPrice(price);
         roomTypePrice.setCost(cost);
-        roomTypePrice.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setUpdateBy(SYSTEM_USER_NAME);
         roomTypePrice.setUpdateDate(new Date());
-        roomTypePrice.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypePrice.setCreateBy(SYSTEM_USER_NAME);
         roomTypePrice.setCreateDate(new Date());
         roomTypePrice.setIsValid(ValidEnum.VALID.getCode());
         return roomTypePrice;
@@ -353,7 +356,7 @@ public class FanqielaileRoomTypeProxyService {
         } else {
             RoomTypeStock dbStock = roomTypeStockList.get(0);
             dbStock.setNumber(stock.getNumber());
-            dbStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+            dbStock.setUpdateBy(SYSTEM_USER_NAME);
             dbStock.setUpdateDate(new Date());
 
             this.roomTypeStockMapper.updateByPrimaryKeySelective(dbStock);
@@ -377,9 +380,9 @@ public class FanqielaileRoomTypeProxyService {
         roomTypeStock.setDay(day);
         roomTypeStock.setRoomTypeId(roomTypeId);
         roomTypeStock.setNumber(roomNum.longValue());
-        roomTypeStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setUpdateBy(SYSTEM_USER_NAME);
         roomTypeStock.setUpdateDate(new Date());
-        roomTypeStock.setCreateBy(Constant.SYSTEM_USER_NAME);
+        roomTypeStock.setCreateBy(SYSTEM_USER_NAME);
         roomTypeStock.setCreateDate(new Date());
         roomTypeStock.setIsValid(ValidEnum.VALID.getCode());
 

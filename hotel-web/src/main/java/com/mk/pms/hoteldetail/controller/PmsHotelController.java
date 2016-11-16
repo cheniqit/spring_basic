@@ -1,6 +1,6 @@
 package com.mk.pms.hoteldetail.controller;
 
-import com.mk.framework.net.HttpUtils;
+import com.mk.framework.http.HttpUtils;
 import com.mk.hotel.hotelinfo.HotelService;
 import com.mk.hotel.log.LogPushService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,7 @@ public class PmsHotelController {
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> hotelDetail() {
         String url = "http://api.fangbaba.cc/open/area/queryProvince";
-        String resultStr = null;
-        try {
-            resultStr =  HttpUtils.doPost(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String resultStr =  HttpUtils.doPost(url, null);
         HashMap<String,Object> result= new LinkedHashMap<String, Object>();
         result.put("success", "T");
         result.put("hotel", resultStr);

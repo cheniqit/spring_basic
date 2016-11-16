@@ -1,10 +1,9 @@
 package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.JsonUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
-import com.mk.framework.excepiton.MyException;
-import com.mk.framework.proxy.http.RedisUtil;
+import com.mk.framework.json.JsonUtils;
+import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.common.redisbean.Facility;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
 import com.mk.hotel.roomtype.RoomTypeFacilityService;
@@ -32,6 +31,9 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
 
     @Autowired
     private RoomTypeFacilityMapper roomTypeFacilityMapper;
+
+    @Autowired
+    private MkJedisConnectionFactory jedisConnectionFactory;
 
     public void saveOrUpdateByFangid(List<RoomTypeFacilityDto> roomTypeFacilityDtoList, HotelSourceEnum hotelSourceEnum) {
         if (null == roomTypeFacilityDtoList || roomTypeFacilityDtoList.isEmpty()) {
@@ -100,7 +102,7 @@ public class RoomTypeFacilityServiceImpl implements RoomTypeFacilityService {
         Jedis jedis = null;
         try {
             //
-            jedis = RedisUtil.getJedis();
+            jedis = jedisConnectionFactory.getJedis();
             String facilityKeyName = RoomTypeFacilityCacheEnum.getFacilityKeyName(String.valueOf(roomTypeId));
 
             //redis rem

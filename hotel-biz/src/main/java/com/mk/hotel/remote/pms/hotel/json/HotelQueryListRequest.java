@@ -1,6 +1,5 @@
 package com.mk.hotel.remote.pms.hotel.json;
 
-import com.mk.framework.Constant;
 
 /**
  * Created by chenqi on 16/5/11.
@@ -15,7 +14,7 @@ public class HotelQueryListRequest {
 
     public HotelQueryListRequest(Integer page) {
         this.page = page;
-        this.pagesize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
+        this.pagesize = 1000;
     }
 
     public HotelQueryListRequest(Integer page, Integer pagesize) {

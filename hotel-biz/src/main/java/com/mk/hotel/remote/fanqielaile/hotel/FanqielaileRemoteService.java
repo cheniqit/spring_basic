@@ -1,9 +1,9 @@
 package com.mk.hotel.remote.fanqielaile.hotel;
 
-import com.mk.framework.HttpUtils;
-import com.mk.framework.JsonUtils;
-import com.mk.framework.UrlUtils;
+import com.mk.framework.http.HttpUtils;
+import com.mk.framework.json.JsonUtils;
 import com.mk.framework.security.MD5;
+import com.mk.hotel.common.utils.UrlUtils;
 import com.mk.hotel.remote.fanqielaile.hotel.json.inn.InnList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.proxysalelist.SaleList;
 import com.mk.hotel.remote.fanqielaile.hotel.json.roomstatus.RoomList;
@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -40,7 +40,12 @@ public class FanqielaileRemoteService {
                 .append("?").append(signAndSoOn);
 
         //
-        String remoteResult = HttpUtils.getData(url.toString());
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(url.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         SaleList response = null;
         if (StringUtils.isNotBlank(remoteResult)) {
@@ -65,7 +70,12 @@ public class FanqielaileRemoteService {
                 .append(accountId);
 
         //
-        String remoteResult = HttpUtils.getData(url.toString());
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(url.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         InnList response = null;
         if (StringUtils.isNotBlank(remoteResult)) {
@@ -91,7 +101,12 @@ public class FanqielaileRemoteService {
                 .append(accountId);
 
         //
-        String remoteResult = HttpUtils.getData(url.toString());
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(url.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         RoomTypeList response = null;
 
         if (StringUtils.isNotBlank(remoteResult)) {
@@ -125,7 +140,12 @@ public class FanqielaileRemoteService {
                 .append("&to=").append(strTo);
 
         //
-        String remoteResult = HttpUtils.getData(url.toString());
+        String remoteResult = null;
+        try {
+            remoteResult = HttpUtils.doGet(url.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         RoomList response = null;
 

@@ -1,11 +1,8 @@
 package com.mk.hotel.remote.hawk;
 
-import com.mk.framework.HttpUtils;
-import com.mk.framework.JsonUtils;
-import com.mk.framework.UrlUtils;
 import com.mk.framework.excepiton.MyException;
-import com.mk.hotel.remote.fanqielaile.hotel.json.inn.InnList;
-import org.apache.commons.collections.map.HashedMap;
+import com.mk.framework.http.HttpUtils;
+import com.mk.hotel.common.utils.UrlUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

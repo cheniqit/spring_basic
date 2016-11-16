@@ -1,7 +1,7 @@
 package com.mk.hotel.order.controller;
 
 import com.dianping.cat.Cat;
-import com.mk.framework.JsonUtils;
+import com.mk.framework.json.JsonUtils;
 import com.mk.hotel.common.enums.PmsOrderStatusEnum;
 import com.mk.hotel.common.utils.OtsInterface;
 import com.mk.hotel.log.LogPushService;
@@ -9,7 +9,6 @@ import com.mk.hotel.log.dto.LogPushDto;
 import com.mk.hotel.log.enums.LogPushTypeEnum;
 import com.mk.hotel.order.controller.json.OrderStatusPush;
 import com.mk.hotel.remote.hawk.HawkRemoteService;
-import com.mk.hotel.remote.hawk.enums.OrderStatusEnum;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

@@ -270,22 +270,20 @@
     <repositories>
         <repository>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
             <id>public</id>
             <name>Public Repositories</name>
-            <url>http://mvn.imike.cn:8081/mkrepo/</url>
+            <url>http://mvn.imike.cn:8081/repositories/releases</url>
         </repository>
         <repository>
-            <id>nexus</id>
-            <name>maven</name>
-            <url>http://repo1.maven.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
+            <id>snapshots</id>
+            <name>Snapshots</name>
+            <url>http://mvn.imike.cn:8081/repositories/snapshots</url>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -325,9 +323,9 @@
 
                 <spring.redis.sentinel.master>ots-dev-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.154.159:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <jedis.pool.max.idle>20</jedis.pool.max.idle>
+                <jedis.pool.min.idle>8</jedis.pool.min.idle>
+                <jedis.pool.max.total>500</jedis.pool.max.total>
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
@@ -390,9 +388,9 @@
 
                 <spring.redis.sentinel.master>ots-smlt-bj-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.115.57:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <jedis.pool.max.idle>20</jedis.pool.max.idle>
+                <jedis.pool.min.idle>8</jedis.pool.min.idle>
+                <jedis.pool.max.total>500</jedis.pool.max.total>
                 <pms.remote.url>http://api.fangbaba.cc/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>88db86e86f4884ab2244bff28b9252e3</pms.token>
@@ -447,9 +445,9 @@
 
                 <spring.redis.sentinel.master>ots-redis</spring.redis.sentinel.master>
                 <spring.redis.sentinel.nodes>10.10.103.141:26379,10.10.104.151:26379</spring.redis.sentinel.nodes>
-                <jedis.pool.maxidl>20</jedis.pool.maxidl>
-                <jedis.pool.minidl>8</jedis.pool.minidl>
-                <jedis.pool.maxtotal>500</jedis.pool.maxtotal>
+                <jedis.pool.max.idle>20</jedis.pool.max.idle>
+                <jedis.pool.min.idle>8</jedis.pool.min.idle>
+                <jedis.pool.max.total>500</jedis.pool.max.total>
                 <pms.remote.url>http://api.fangbaba.com/open</pms.remote.url>
                 <pms.channelid>11</pms.channelid>
                 <pms.token>a3b803635c9477677f17bfc6cf490624</pms.token>

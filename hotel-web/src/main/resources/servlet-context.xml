@@ -23,7 +23,7 @@
     <context:component-scan base-package="com.mk.framework" />
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <context:spring-configured />
-    <bean id="SpringApplicationContext" class="com.mk.framework.AppUtils"></bean>
+    <bean id="SpringApplicationContext" class="com.mk.framework.spring.AppUtils"></bean>
     <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>

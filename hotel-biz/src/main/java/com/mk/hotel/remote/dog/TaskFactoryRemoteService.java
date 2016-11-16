@@ -1,8 +1,8 @@
 package com.mk.hotel.remote.dog;
 
 import com.google.gson.Gson;
+import com.mk.framework.http.HttpUtils;
 import com.mk.hotel.common.Constant;
-import com.mk.framework.HttpUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.remote.dog.common.HotelCommonResponse;
 import org.apache.commons.lang.StringUtils;

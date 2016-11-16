@@ -2,7 +2,6 @@ package com.mk.hotel.hotelinfo.controller;
 
 import com.dianping.cat.Cat;
 import com.mk.execution.pushinfo.JobManager;
-import com.mk.framework.Constant;
 import com.mk.framework.excepiton.MyException;
 import com.mk.hotel.common.bean.PageBean;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -351,7 +350,7 @@ public class HotelController {
                 pageNo = 1;
             }
             if (pageSize == null) {
-                pageSize = Constant.DEFAULT_REMOTE_PAGE_SIZE;
+                pageSize = 1000;
             }
             //酒店分页
             HotelExample hotelExample = new HotelExample();
@@ -586,7 +585,7 @@ public class HotelController {
         HotelLandMark hotelLandMark = hotelService.getHotelLandMark(
                 lon,
                 lat,
-                Constant.HOTEL_TO_HOT_AREA_DISTANCE,
+                3000,
                 hotelService.getAllLandMarkList());
         return new ResponseEntity<HotelLandMark>(hotelLandMark, HttpStatus.OK);
     }

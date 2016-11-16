@@ -1,7 +1,6 @@
 package com.mk.hotel.remote.pms.hotel;
 
-import com.mk.framework.DateUtils;
-import com.mk.hotel.remote.pms.common.FbbCommonResponse;
+import com.mk.framework.date.DateUtils;
 import com.mk.hotel.remote.pms.hotel.json.*;
 import org.junit.Assert;
 import org.junit.Test;
