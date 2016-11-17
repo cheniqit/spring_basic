@@ -764,6 +764,19 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
     }
 
+    public List<RoomTypeStockDto> queryFromDb(Long roomTypeId, Date fromDate, Date toDate) {
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
+        List<RoomTypeStock> list = roomTypeStockMapper.selectByExample(example);
+
+        List<RoomTypeStockDto> dtoList = new ArrayList<RoomTypeStockDto>();
+        for (RoomTypeStock bean : list) {
+            RoomTypeStockDto dto = this.convertToDto(bean);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
 
     @Override
     public RoomTypeStockRedisDto queryFromRedis(Long roomTypeId, Date day) {
@@ -816,10 +829,22 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         return null;
     }
 
-    public List<RoomTypeStock> queryFromDb(Long roomTypeId, Date fromDate, Date toDate) {
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
-        return roomTypeStockMapper.selectByExample(example);
+    public List<RoomTypeStockRedisDto> queryFromRedis(Long roomTypeId, Date fromDate, Date toDate) {
+
+        if (null == roomTypeId || null == fromDate || null == toDate) {
+            return new ArrayList<RoomTypeStockRedisDto>();
+        }
+
+        //
+        Date[] dates = DateUtils.getStartEndDate(fromDate, toDate);
+
+        //
+        List<RoomTypeStockRedisDto> dtoList = new ArrayList<RoomTypeStockRedisDto>();
+        for (Date date : dates) {
+            RoomTypeStockRedisDto dto = this.queryFromRedis(roomTypeId, date);
+            dtoList.add(dto);
+        }
+        return dtoList;
     }
 
 

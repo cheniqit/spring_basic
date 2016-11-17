@@ -73,14 +73,6 @@ public interface RoomTypeStockService {
     String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
 
     /**
-     * 查询redis中库存量
-     * @param roomTypeId
-     * @param day
-     * @return
-     */
-    RoomTypeStockRedisDto queryFromRedis(Long roomTypeId, Date day);
-
-    /**
      *
      * @param roomTypeId
      * @param begin
@@ -88,6 +80,18 @@ public interface RoomTypeStockService {
      * @return
      */
     List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
+
+
+    /**
+     * 从redis 持久化到 db
+     * @param roomTypeId
+     * @param date
+     * @return
+     */
+    int savePersistToDb(Long roomTypeId, Date date);
+
+    int saveOrUpdate(RoomTypeStockDto dto);
+
 
     /**
      * 查询特价库存
@@ -106,7 +110,6 @@ public interface RoomTypeStockService {
      * @return
      */
     Map<String, Integer> getNormalStockFromRedis(String roomTypeId, Date from, Date to) ;
-
     /**
      * 查询连续天内的可用特价库存
      * @param roomTypeId
@@ -125,15 +128,18 @@ public interface RoomTypeStockService {
      */
     Integer getAvailableByNormalFromRedis(String roomTypeId, String from, String to);
 
+
     /**
-     * 从redis 持久化到 db
+     * 查询redis中库存量
      * @param roomTypeId
-     * @param date
+     * @param day
      * @return
      */
-    int savePersistToDb(Long roomTypeId, Date date);
+    RoomTypeStockRedisDto queryFromRedis(Long roomTypeId, Date day);
 
-    int saveOrUpdate(RoomTypeStockDto dto);
+    List<RoomTypeStockRedisDto> queryFromRedis(Long roomTypeId, Date fromDate, Date toDate);
 
     RoomTypeStockDto queryFromDb(Long roomTypeId, Date date);
+
+    List<RoomTypeStockDto> queryFromDb(Long roomTypeId, Date fromDate, Date toDate);
 }
