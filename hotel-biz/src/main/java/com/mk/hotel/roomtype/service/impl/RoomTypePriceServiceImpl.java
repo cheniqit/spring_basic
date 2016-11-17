@@ -3,6 +3,7 @@ package com.mk.hotel.roomtype.service.impl;
 import com.dianping.cat.Cat;
 import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
+import com.mk.framework.excepiton.MyException;
 import com.mk.framework.json.JsonUtils;
 import com.mk.framework.redis.MkJedisConnectionFactory;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
@@ -44,6 +45,49 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         return 1;
     }
 
+    public int saveOrUpdateByRoomTypeId(RoomTypePriceDto roomTypePriceDto, String operator) {
+
+        if (null == roomTypePriceDto) {
+            throw new MyException("roomTypePriceDto 不可为空");
+        }
+
+        //roomType
+        RoomTypeDto roomTypeDto =
+                this.roomTypeService.selectById(roomTypePriceDto.getRoomTypeId());
+        if (null == roomTypeDto) {
+            throw new MyException("roomTypePriceDto.getFangHotelId(), roomTypePriceDto.getFangRoomTypeId() 错误");
+        }
+        //
+        RoomTypePriceExample roomTypePriceExample = new RoomTypePriceExample();
+        roomTypePriceExample.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(roomTypePriceDto.getDay());
+        List<RoomTypePrice> roomTypePriceList = this.roomTypePriceMapper.selectByExample(roomTypePriceExample);
+
+        //db
+        if (roomTypePriceList.isEmpty()) {
+            RoomTypePrice roomTypePrice = new RoomTypePrice();
+            roomTypePrice.setRoomTypeId(roomTypeDto.getId());
+            roomTypePrice.setDay(roomTypePriceDto.getDay());
+            roomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            roomTypePrice.setCost(roomTypePriceDto.getCost());
+            roomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
+            roomTypePrice.setIsValid("T");
+
+            roomTypePrice.setCreateDate(new Date());
+            roomTypePrice.setCreateBy(operator);
+            roomTypePrice.setUpdateDate(new Date());
+            roomTypePrice.setUpdateBy(operator);
+            return this.roomTypePriceMapper.insert(roomTypePrice);
+        } else {
+            RoomTypePrice dbRoomTypePrice = roomTypePriceList.get(0);
+            dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            dbRoomTypePrice.setCost(roomTypePriceDto.getCost());
+            dbRoomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
+            dbRoomTypePrice.setUpdateDate(new Date());
+            dbRoomTypePrice.setUpdateBy(operator);
+            return this.roomTypePriceMapper.updateByPrimaryKeySelective(dbRoomTypePrice);
+        }
+    }
+
     public int saveOrUpdateByFangId(RoomTypePriceDto roomTypePriceDto, HotelSourceEnum hotelSourceEnum) {
 
         if (null == roomTypePriceDto) {
@@ -65,7 +109,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         //redis
         this.updateRedisPrice(
                 roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(), roomTypePriceDto.getCost(),
+                roomTypePriceDto.getDay(), roomTypePriceDto.getPrice(), roomTypePriceDto.getCost(), roomTypePriceDto.getSettlePrice(),
                 "RoomTypePriceService.saveOrUpdateByFangId");
 
         //db
@@ -74,6 +118,8 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             roomTypePrice.setRoomTypeId(roomTypeDto.getId());
             roomTypePrice.setDay(roomTypePriceDto.getDay());
             roomTypePrice.setPrice(roomTypePriceDto.getPrice());
+            roomTypePrice.setCost(roomTypePriceDto.getCost());
+            roomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
             roomTypePrice.setIsValid("T");
 
             roomTypePrice.setCreateDate(new Date());
@@ -87,14 +133,14 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             RoomTypePrice dbRoomTypePrice = roomTypePriceList.get(0);
             dbRoomTypePrice.setPrice(roomTypePriceDto.getPrice());
             dbRoomTypePrice.setCost(roomTypePriceDto.getCost());
-
+            dbRoomTypePrice.setSettlePrice(roomTypePriceDto.getSettlePrice());
             dbRoomTypePrice.setUpdateDate(new Date());
             dbRoomTypePrice.setUpdateBy("hotel_system");
             return this.roomTypePriceMapper.updateByPrimaryKeySelective(dbRoomTypePrice);
         }
     }
 
-    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, String cacheFrom) {
+    public void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price,BigDecimal cost, BigDecimal settlePrice, String cacheFrom) {
         if (null == roomTypeId || null == day || null == price) {
             return;
         }
@@ -118,6 +164,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             roomTypePrice.setRoomTypeName(roomTypeName);
             roomTypePrice.setPrice(price);
             roomTypePrice.setOriginPrice(cost);
+            roomTypePrice.setSettlePrice(settlePrice);
             roomTypePrice.setCacheTime(strDateTime);
             roomTypePrice.setCacheFrom(cacheFrom);
 
@@ -138,6 +185,51 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
                 jedis.close();
             }
         }
+    }
+
+
+    @Override
+    public RoomTypePriceDto queryPriceFromRedis(Long roomTypeId, Date day) {
+        if (null == roomTypeId || null == day) {
+            return null;
+        }
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = jedisConnectionFactory.getJedis();
+            String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(String.valueOf(roomTypeId));
+            //get
+            String priceJson = jedis.hget(priceHashName, strDate);
+
+            com.mk.hotel.roomtype.redisbean.RoomTypePrice roomTypePrice =
+                    JsonUtils.fromJson(priceJson, com.mk.hotel.roomtype.redisbean.RoomTypePrice.class);
+
+            //
+            RoomTypePriceDto dto = new RoomTypePriceDto();
+            dto.setRoomTypeId(roomTypeId);
+            if (null != roomTypePrice) {
+                dto.setPrice(roomTypePrice.getPrice());
+                dto.setCost(roomTypePrice.getOriginPrice());
+                dto.setSettlePrice(roomTypePrice.getSettlePrice());
+            }
+            dto.setDay(day);
+
+            return dto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+        return null;
     }
 
     public List<RoomTypePriceDto> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){

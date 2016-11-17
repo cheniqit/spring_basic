@@ -13,7 +13,9 @@ public interface RoomTypePriceService {
 
     int saveOrUpdateByFangId(List<RoomTypePriceDto> roomTypePriceDtoList, HotelSourceEnum hotelSourceEnum);
 
-    void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, String cacheFrom);
+    void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, BigDecimal settlePrice, String cacheFrom);
 
     List<RoomTypePriceDto> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate);
+
+    RoomTypePriceDto queryPriceFromRedis(Long roomTypeId, Date day);
 }

@@ -114,6 +114,7 @@ public class RoomTypeCopyService {
             //
             OtsInterface.initHotel(dbHotel.getId());
         }
+
     }
 
     public void handleRoomTypeDel(String body) {

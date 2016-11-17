@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mk.hotel.roomtypeprice.mapper.RoomTypePriceNormalLogMapper" >
+  <resultMap id="BaseResultMap" type="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="room_type_id" property="roomTypeId" jdbcType="BIGINT" />
+    <result column="mon_market_price" property="monMarketPrice" jdbcType="DECIMAL" />
+    <result column="mon_sale_price" property="monSalePrice" jdbcType="DECIMAL" />
+    <result column="mon_settle_price" property="monSettlePrice" jdbcType="DECIMAL" />
+    <result column="tue_market_price" property="tueMarketPrice" jdbcType="DECIMAL" />
+    <result column="tue_sale_price" property="tueSalePrice" jdbcType="DECIMAL" />
+    <result column="tue_settle_price" property="tueSettlePrice" jdbcType="DECIMAL" />
+    <result column="wed_market_price" property="wedMarketPrice" jdbcType="DECIMAL" />
+    <result column="wed_sale_price" property="wedSalePrice" jdbcType="DECIMAL" />
+    <result column="wed_settle_price" property="wedSettlePrice" jdbcType="DECIMAL" />
+    <result column="thu_market_price" property="thuMarketPrice" jdbcType="DECIMAL" />
+    <result column="thu_sale_price" property="thuSalePrice" jdbcType="DECIMAL" />
+    <result column="thu_settle_price" property="thuSettlePrice" jdbcType="DECIMAL" />
+    <result column="fri_market_price" property="friMarketPrice" jdbcType="DECIMAL" />
+    <result column="fri_sale_price" property="friSalePrice" jdbcType="DECIMAL" />
+    <result column="fri_settle_price" property="friSettlePrice" jdbcType="DECIMAL" />
+    <result column="sat_market_price" property="satMarketPrice" jdbcType="DECIMAL" />
+    <result column="sat_sale_price" property="satSalePrice" jdbcType="DECIMAL" />
+    <result column="sat_settle_price" property="satSettlePrice" jdbcType="DECIMAL" />
+    <result column="sun_market_price" property="sunMarketPrice" jdbcType="DECIMAL" />
+    <result column="sun_sale_price" property="sunSalePrice" jdbcType="DECIMAL" />
+    <result column="sun_settle_price" property="sunSettlePrice" jdbcType="DECIMAL" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="is_valid" property="isValid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, room_type_id, mon_market_price, mon_sale_price, mon_settle_price, tue_market_price, 
+    tue_sale_price, tue_settle_price, wed_market_price, wed_sale_price, wed_settle_price, 
+    thu_market_price, thu_sale_price, thu_settle_price, fri_market_price, fri_sale_price, 
+    fri_settle_price, sat_market_price, sat_sale_price, sat_settle_price, sun_market_price, 
+    sun_sale_price, sun_settle_price, create_date, create_by, update_date, update_by, 
+    is_valid
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from room_type_price_normal_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="start != null and pageCount != 0" >
+      limit ${start},${pageCount}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from room_type_price_normal_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from room_type_price_normal_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLogExample" >
+    delete from room_type_price_normal_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog" useGeneratedKeys="true" keyProperty="id">
+    insert into room_type_price_normal_log (id, room_type_id, mon_market_price, 
+      mon_sale_price, mon_settle_price, tue_market_price, 
+      tue_sale_price, tue_settle_price, wed_market_price, 
+      wed_sale_price, wed_settle_price, thu_market_price, 
+      thu_sale_price, thu_settle_price, fri_market_price, 
+      fri_sale_price, fri_settle_price, sat_market_price, 
+      sat_sale_price, sat_settle_price, sun_market_price, 
+      sun_sale_price, sun_settle_price, create_date, 
+      create_by, update_date, update_by, 
+      is_valid)
+    values (#{id,jdbcType=BIGINT}, #{roomTypeId,jdbcType=BIGINT}, #{monMarketPrice,jdbcType=DECIMAL}, 
+      #{monSalePrice,jdbcType=DECIMAL}, #{monSettlePrice,jdbcType=DECIMAL}, #{tueMarketPrice,jdbcType=DECIMAL}, 
+      #{tueSalePrice,jdbcType=DECIMAL}, #{tueSettlePrice,jdbcType=DECIMAL}, #{wedMarketPrice,jdbcType=DECIMAL}, 
+      #{wedSalePrice,jdbcType=DECIMAL}, #{wedSettlePrice,jdbcType=DECIMAL}, #{thuMarketPrice,jdbcType=DECIMAL}, 
+      #{thuSalePrice,jdbcType=DECIMAL}, #{thuSettlePrice,jdbcType=DECIMAL}, #{friMarketPrice,jdbcType=DECIMAL}, 
+      #{friSalePrice,jdbcType=DECIMAL}, #{friSettlePrice,jdbcType=DECIMAL}, #{satMarketPrice,jdbcType=DECIMAL}, 
+      #{satSalePrice,jdbcType=DECIMAL}, #{satSettlePrice,jdbcType=DECIMAL}, #{sunMarketPrice,jdbcType=DECIMAL}, 
+      #{sunSalePrice,jdbcType=DECIMAL}, #{sunSettlePrice,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{isValid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog" useGeneratedKeys="true" keyProperty="id">
+    insert into room_type_price_normal_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roomTypeId != null" >
+        room_type_id,
+      </if>
+      <if test="monMarketPrice != null" >
+        mon_market_price,
+      </if>
+      <if test="monSalePrice != null" >
+        mon_sale_price,
+      </if>
+      <if test="monSettlePrice != null" >
+        mon_settle_price,
+      </if>
+      <if test="tueMarketPrice != null" >
+        tue_market_price,
+      </if>
+      <if test="tueSalePrice != null" >
+        tue_sale_price,
+      </if>
+      <if test="tueSettlePrice != null" >
+        tue_settle_price,
+      </if>
+      <if test="wedMarketPrice != null" >
+        wed_market_price,
+      </if>
+      <if test="wedSalePrice != null" >
+        wed_sale_price,
+      </if>
+      <if test="wedSettlePrice != null" >
+        wed_settle_price,
+      </if>
+      <if test="thuMarketPrice != null" >
+        thu_market_price,
+      </if>
+      <if test="thuSalePrice != null" >
+        thu_sale_price,
+      </if>
+      <if test="thuSettlePrice != null" >
+        thu_settle_price,
+      </if>
+      <if test="friMarketPrice != null" >
+        fri_market_price,
+      </if>
+      <if test="friSalePrice != null" >
+        fri_sale_price,
+      </if>
+      <if test="friSettlePrice != null" >
+        fri_settle_price,
+      </if>
+      <if test="satMarketPrice != null" >
+        sat_market_price,
+      </if>
+      <if test="satSalePrice != null" >
+        sat_sale_price,
+      </if>
+      <if test="satSettlePrice != null" >
+        sat_settle_price,
+      </if>
+      <if test="sunMarketPrice != null" >
+        sun_market_price,
+      </if>
+      <if test="sunSalePrice != null" >
+        sun_sale_price,
+      </if>
+      <if test="sunSettlePrice != null" >
+        sun_settle_price,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="isValid != null" >
+        is_valid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roomTypeId != null" >
+        #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="monMarketPrice != null" >
+        #{monMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="monSalePrice != null" >
+        #{monSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="monSettlePrice != null" >
+        #{monSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueMarketPrice != null" >
+        #{tueMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueSalePrice != null" >
+        #{tueSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueSettlePrice != null" >
+        #{tueSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedMarketPrice != null" >
+        #{wedMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedSalePrice != null" >
+        #{wedSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedSettlePrice != null" >
+        #{wedSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuMarketPrice != null" >
+        #{thuMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuSalePrice != null" >
+        #{thuSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuSettlePrice != null" >
+        #{thuSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friMarketPrice != null" >
+        #{friMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friSalePrice != null" >
+        #{friSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friSettlePrice != null" >
+        #{friSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satMarketPrice != null" >
+        #{satMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satSalePrice != null" >
+        #{satSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satSettlePrice != null" >
+        #{satSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunMarketPrice != null" >
+        #{sunMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunSalePrice != null" >
+        #{sunSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunSettlePrice != null" >
+        #{sunSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLogExample" resultType="java.lang.Integer" >
+    select count(*) from room_type_price_normal_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update room_type_price_normal_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.roomTypeId != null" >
+        room_type_id = #{record.roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.monMarketPrice != null" >
+        mon_market_price = #{record.monMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.monSalePrice != null" >
+        mon_sale_price = #{record.monSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.monSettlePrice != null" >
+        mon_settle_price = #{record.monSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tueMarketPrice != null" >
+        tue_market_price = #{record.tueMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tueSalePrice != null" >
+        tue_sale_price = #{record.tueSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tueSettlePrice != null" >
+        tue_settle_price = #{record.tueSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wedMarketPrice != null" >
+        wed_market_price = #{record.wedMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wedSalePrice != null" >
+        wed_sale_price = #{record.wedSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wedSettlePrice != null" >
+        wed_settle_price = #{record.wedSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.thuMarketPrice != null" >
+        thu_market_price = #{record.thuMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.thuSalePrice != null" >
+        thu_sale_price = #{record.thuSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.thuSettlePrice != null" >
+        thu_settle_price = #{record.thuSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.friMarketPrice != null" >
+        fri_market_price = #{record.friMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.friSalePrice != null" >
+        fri_sale_price = #{record.friSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.friSettlePrice != null" >
+        fri_settle_price = #{record.friSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.satMarketPrice != null" >
+        sat_market_price = #{record.satMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.satSalePrice != null" >
+        sat_sale_price = #{record.satSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.satSettlePrice != null" >
+        sat_settle_price = #{record.satSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sunMarketPrice != null" >
+        sun_market_price = #{record.sunMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sunSalePrice != null" >
+        sun_sale_price = #{record.sunSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sunSettlePrice != null" >
+        sun_settle_price = #{record.sunSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateDate != null" >
+        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isValid != null" >
+        is_valid = #{record.isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update room_type_price_normal_log
+    set id = #{record.id,jdbcType=BIGINT},
+      room_type_id = #{record.roomTypeId,jdbcType=BIGINT},
+      mon_market_price = #{record.monMarketPrice,jdbcType=DECIMAL},
+      mon_sale_price = #{record.monSalePrice,jdbcType=DECIMAL},
+      mon_settle_price = #{record.monSettlePrice,jdbcType=DECIMAL},
+      tue_market_price = #{record.tueMarketPrice,jdbcType=DECIMAL},
+      tue_sale_price = #{record.tueSalePrice,jdbcType=DECIMAL},
+      tue_settle_price = #{record.tueSettlePrice,jdbcType=DECIMAL},
+      wed_market_price = #{record.wedMarketPrice,jdbcType=DECIMAL},
+      wed_sale_price = #{record.wedSalePrice,jdbcType=DECIMAL},
+      wed_settle_price = #{record.wedSettlePrice,jdbcType=DECIMAL},
+      thu_market_price = #{record.thuMarketPrice,jdbcType=DECIMAL},
+      thu_sale_price = #{record.thuSalePrice,jdbcType=DECIMAL},
+      thu_settle_price = #{record.thuSettlePrice,jdbcType=DECIMAL},
+      fri_market_price = #{record.friMarketPrice,jdbcType=DECIMAL},
+      fri_sale_price = #{record.friSalePrice,jdbcType=DECIMAL},
+      fri_settle_price = #{record.friSettlePrice,jdbcType=DECIMAL},
+      sat_market_price = #{record.satMarketPrice,jdbcType=DECIMAL},
+      sat_sale_price = #{record.satSalePrice,jdbcType=DECIMAL},
+      sat_settle_price = #{record.satSettlePrice,jdbcType=DECIMAL},
+      sun_market_price = #{record.sunMarketPrice,jdbcType=DECIMAL},
+      sun_sale_price = #{record.sunSalePrice,jdbcType=DECIMAL},
+      sun_settle_price = #{record.sunSettlePrice,jdbcType=DECIMAL},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      is_valid = #{record.isValid,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog" >
+    update room_type_price_normal_log
+    <set >
+      <if test="roomTypeId != null" >
+        room_type_id = #{roomTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="monMarketPrice != null" >
+        mon_market_price = #{monMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="monSalePrice != null" >
+        mon_sale_price = #{monSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="monSettlePrice != null" >
+        mon_settle_price = #{monSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueMarketPrice != null" >
+        tue_market_price = #{tueMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueSalePrice != null" >
+        tue_sale_price = #{tueSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="tueSettlePrice != null" >
+        tue_settle_price = #{tueSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedMarketPrice != null" >
+        wed_market_price = #{wedMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedSalePrice != null" >
+        wed_sale_price = #{wedSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="wedSettlePrice != null" >
+        wed_settle_price = #{wedSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuMarketPrice != null" >
+        thu_market_price = #{thuMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuSalePrice != null" >
+        thu_sale_price = #{thuSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="thuSettlePrice != null" >
+        thu_settle_price = #{thuSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friMarketPrice != null" >
+        fri_market_price = #{friMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friSalePrice != null" >
+        fri_sale_price = #{friSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="friSettlePrice != null" >
+        fri_settle_price = #{friSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satMarketPrice != null" >
+        sat_market_price = #{satMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satSalePrice != null" >
+        sat_sale_price = #{satSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="satSettlePrice != null" >
+        sat_settle_price = #{satSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunMarketPrice != null" >
+        sun_market_price = #{sunMarketPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunSalePrice != null" >
+        sun_sale_price = #{sunSalePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sunSettlePrice != null" >
+        sun_settle_price = #{sunSettlePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="isValid != null" >
+        is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mk.hotel.roomtypeprice.model.RoomTypePriceNormalLog" >
+    update room_type_price_normal_log
+    set room_type_id = #{roomTypeId,jdbcType=BIGINT},
+      mon_market_price = #{monMarketPrice,jdbcType=DECIMAL},
+      mon_sale_price = #{monSalePrice,jdbcType=DECIMAL},
+      mon_settle_price = #{monSettlePrice,jdbcType=DECIMAL},
+      tue_market_price = #{tueMarketPrice,jdbcType=DECIMAL},
+      tue_sale_price = #{tueSalePrice,jdbcType=DECIMAL},
+      tue_settle_price = #{tueSettlePrice,jdbcType=DECIMAL},
+      wed_market_price = #{wedMarketPrice,jdbcType=DECIMAL},
+      wed_sale_price = #{wedSalePrice,jdbcType=DECIMAL},
+      wed_settle_price = #{wedSettlePrice,jdbcType=DECIMAL},
+      thu_market_price = #{thuMarketPrice,jdbcType=DECIMAL},
+      thu_sale_price = #{thuSalePrice,jdbcType=DECIMAL},
+      thu_settle_price = #{thuSettlePrice,jdbcType=DECIMAL},
+      fri_market_price = #{friMarketPrice,jdbcType=DECIMAL},
+      fri_sale_price = #{friSalePrice,jdbcType=DECIMAL},
+      fri_settle_price = #{friSettlePrice,jdbcType=DECIMAL},
+      sat_market_price = #{satMarketPrice,jdbcType=DECIMAL},
+      sat_sale_price = #{satSalePrice,jdbcType=DECIMAL},
+      sat_settle_price = #{satSettlePrice,jdbcType=DECIMAL},
+      sun_market_price = #{sunMarketPrice,jdbcType=DECIMAL},
+      sun_sale_price = #{sunSalePrice,jdbcType=DECIMAL},
+      sun_settle_price = #{sunSettlePrice,jdbcType=DECIMAL},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      is_valid = #{isValid,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <insert id="batchInsert" useGeneratedKeys="true" parameterType="java.util.List">
+    insert into room_type_price_normal_log (id, room_type_id, mon_market_price,
+    mon_sale_price, mon_settle_price, tue_market_price,
+    tue_sale_price, tue_settle_price, wed_market_price,
+    wed_sale_price, wed_settle_price, thu_market_price,
+    thu_sale_price, thu_settle_price, fri_market_price,
+    fri_sale_price, fri_settle_price, sat_market_price,
+    sat_sale_price, sat_settle_price, sun_market_price,
+    sun_sale_price, sun_settle_price, create_date,
+    create_by, update_date, update_by,
+    is_valid)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.roomTypeId,jdbcType=BIGINT}, #{item.monMarketPrice,jdbcType=DECIMAL},
+      #{item.monSalePrice,jdbcType=DECIMAL}, #{item.monSettlePrice,jdbcType=DECIMAL}, #{item.tueMarketPrice,jdbcType=DECIMAL},
+      #{item.tueSalePrice,jdbcType=DECIMAL}, #{item.tueSettlePrice,jdbcType=DECIMAL}, #{item.wedMarketPrice,jdbcType=DECIMAL},
+      #{item.wedSalePrice,jdbcType=DECIMAL}, #{item.wedSettlePrice,jdbcType=DECIMAL}, #{item.thuMarketPrice,jdbcType=DECIMAL},
+      #{item.thuSalePrice,jdbcType=DECIMAL}, #{item.thuSettlePrice,jdbcType=DECIMAL}, #{item.friMarketPrice,jdbcType=DECIMAL},
+      #{item.friSalePrice,jdbcType=DECIMAL}, #{item.friSettlePrice,jdbcType=DECIMAL}, #{item.satMarketPrice,jdbcType=DECIMAL},
+      #{item.satSalePrice,jdbcType=DECIMAL}, #{item.satSettlePrice,jdbcType=DECIMAL}, #{item.sunMarketPrice,jdbcType=DECIMAL},
+      #{item.sunSalePrice,jdbcType=DECIMAL}, #{item.sunSettlePrice,jdbcType=DECIMAL}, #{item.createDate,jdbcType=TIMESTAMP},
+      #{item.createBy,jdbcType=VARCHAR}, #{item.updateDate,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=VARCHAR},
+      #{item.isValid,jdbcType=CHAR})
+    </foreach>
+  </insert>
+</mapper>

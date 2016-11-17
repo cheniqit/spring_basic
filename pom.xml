@@ -364,7 +364,6 @@
 
                 <zk_connect>10.10.170.93:2181,10.10.165.176:2181,10.10.147.218:2181</zk_connect>
 
-
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
             </properties>

@@ -5,6 +5,7 @@ import com.dianping.cat.Cat;
 import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.redis.MkJedisConnectionFactory;
+import com.mk.framework.excepiton.MyException;
 import com.mk.framework.security.MD5;
 import com.mk.hotel.common.enums.FacilityEnum;
 import com.mk.hotel.common.enums.ValidEnum;
@@ -29,7 +30,6 @@ import com.mk.hotel.roomtype.dto.RoomTypeFacilityDto;
 import com.mk.hotel.roomtype.enums.BedTypeEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypeMapper;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
-import com.mk.hotel.roomtype.mapper.RoomTypeStockMapper;
 import com.mk.hotel.roomtype.model.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -56,8 +56,8 @@ public class FanqielaileRoomTypeProxyService {
     private RoomTypeMapper roomTypeMapper;
     @Autowired
     private RoomTypePriceMapper roomTypePriceMapper;
-    @Autowired
-    private RoomTypeStockMapper roomTypeStockMapper;
+//    @Autowired
+//    private RoomTypeStockMapper roomTypeStockMapper;
     @Autowired
     private RoomTypeServiceImpl roomTypeService;
     @Autowired
@@ -261,9 +261,11 @@ public class FanqielaileRoomTypeProxyService {
             this.saveOrUpdateRoomTypePrice(roomTypeDto, detail);
             this.saveOrUpdateRoomTypeStock(roomTypeDto, detail);
         }
+
     }
 
     private void saveOrUpdateRoomTypePrice (RoomTypeDto roomTypeDto, RoomDetail detail) {
+
         RoomTypePrice roomTypePrice = this.convertRoomTypePrice(roomTypeDto.getId(), detail);
 
         //
@@ -274,7 +276,7 @@ public class FanqielaileRoomTypeProxyService {
         //redis
         this.roomTypePriceService.updateRedisPrice(
                 roomTypeDto.getId(), roomTypeDto.getName(),
-                roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(),
+                roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
                 "FanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail");
 
         //db
@@ -290,6 +292,7 @@ public class FanqielaileRoomTypeProxyService {
             dbPrice.setUpdateBy("hotel_system");
             this.roomTypePriceMapper.updateByPrimaryKeySelective(dbPrice);
         }
+
     }
     private RoomTypePrice convertRoomTypePrice(Long roomTypeId, RoomDetail roomDetail) {
 
@@ -323,6 +326,9 @@ public class FanqielaileRoomTypeProxyService {
         return roomTypePrice;
     }
     private void saveOrUpdateRoomTypeStock (RoomTypeDto roomTypeDto, RoomDetail detail) {
+
+
+
         RoomTypeStock stock = this.convertRoomTypeStock(roomTypeDto.getId(), detail);
 
         //
@@ -346,21 +352,22 @@ public class FanqielaileRoomTypeProxyService {
                     stock.getDay());
         }
 
-        //
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(stock.getDay());
-        List<RoomTypeStock> roomTypeStockList = this.roomTypeStockMapper.selectByExample(example);
-
-        if (roomTypeStockList.isEmpty()) {
-            this.roomTypeStockMapper.insert(stock);
-        } else {
-            RoomTypeStock dbStock = roomTypeStockList.get(0);
-            dbStock.setNumber(stock.getNumber());
-            dbStock.setUpdateBy(SYSTEM_USER_NAME);
-            dbStock.setUpdateDate(new Date());
-
-            this.roomTypeStockMapper.updateByPrimaryKeySelective(dbStock);
-        }
+        //由消息通知处理
+//        //
+//        RoomTypeStockExample example = new RoomTypeStockExample();
+//        example.createCriteria().andRoomTypeIdEqualTo(roomTypeDto.getId()).andDayEqualTo(stock.getDay());
+//        List<RoomTypeStock> roomTypeStockList = this.roomTypeStockMapper.selectByExample(example);
+//
+//        if (roomTypeStockList.isEmpty()) {
+//            this.roomTypeStockMapper.insert(stock);
+//        } else {
+//            RoomTypeStock dbStock = roomTypeStockList.get(0);
+//            dbStock.setNumber(stock.getNumber());
+//            dbStock.setUpdateBy(Constant.SYSTEM_USER_NAME);
+//            dbStock.setUpdateDate(new Date());
+//
+//            this.roomTypeStockMapper.updateByPrimaryKeySelective(dbStock);
+//        }
     }
     private RoomTypeStock convertRoomTypeStock(Long roomTypeId, RoomDetail roomDetail) {
 
@@ -381,6 +388,7 @@ public class FanqielaileRoomTypeProxyService {
         roomTypeStock.setRoomTypeId(roomTypeId);
         roomTypeStock.setNumber(roomNum.longValue());
         roomTypeStock.setUpdateBy(SYSTEM_USER_NAME);
+        roomTypeStock.setTotalNumber(0l);
         roomTypeStock.setUpdateDate(new Date());
         roomTypeStock.setCreateBy(SYSTEM_USER_NAME);
         roomTypeStock.setCreateDate(new Date());
@@ -455,19 +463,19 @@ public class FanqielaileRoomTypeProxyService {
 
     public void updateFanqieRoomTypeInfo(PushRoomType pushRoomType) {
         List<PushRoomType.RoomType> pushRoomTypeList = pushRoomType.getRoomType();
-        for(PushRoomType.RoomType proom : pushRoomTypeList){
+        for (PushRoomType.RoomType proom : pushRoomTypeList) {
             String accId = proom.getAccountId();
             HotelFanqieMappingExample example = new HotelFanqieMappingExample();
             example.createCriteria().andAccountIdEqualTo(Long.valueOf(accId));
             List<HotelFanqieMapping> hotelFanqieMappingList = hotelFanqieMappingMapper.selectByExample(example);
-            if(CollectionUtils.isEmpty(hotelFanqieMappingList)){
+            if (CollectionUtils.isEmpty(hotelFanqieMappingList)) {
                 continue;
             }
             Long innId = hotelFanqieMappingList.get(0).getInnId();
             HotelExample hotelExample = new HotelExample();
             hotelExample.createCriteria().andFangIdEqualTo(innId);
             List<Hotel> hotelList = hotelMapper.selectByExample(hotelExample);
-            if(CollectionUtils.isEmpty(hotelList)){
+            if (CollectionUtils.isEmpty(hotelList)) {
                 continue;
             }
             RoomDetailList roomDetailList = new RoomDetailList();
@@ -476,10 +484,7 @@ public class FanqielaileRoomTypeProxyService {
             List<RoomDetail> roomDetails = convertRoomTypeDetails(proom.getRoomDetails());
             roomDetailList.setRoomDetail(roomDetails);
             saveOrUpdateRoomDetail(hotelList.get(0).getId(), roomDetailList);
-
-
         }
-
     }
 
     private List<RoomDetail> convertRoomTypeDetails(List<PushRoomType.RoomDetail> roomDetails) {

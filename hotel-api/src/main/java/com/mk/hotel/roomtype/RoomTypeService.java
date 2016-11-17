@@ -23,9 +23,9 @@ public interface RoomTypeService {
 
     void mergeRoomTypePrice(int pageNo);
 
-    void mergeRoomTypePriceByHotelId(Long hotelId);
+    void neverRoomTypePriceByHotelId(Long hotelId);
 
-    void mergeRoomTypeStock(int pageNo);
+    void neverRoomTypeStock(int pageNo);
 
     Long getHotelIdByRedis (Long roomTypeId);
 
@@ -36,7 +36,7 @@ public interface RoomTypeService {
 
     void mergeRoomTypeDayStockByHotel(Long hotelId);
 
-    void mergeRoomTypeDayStock(Integer pageNo);
+    void neverRoomTypeDayStock(Integer pageNo);
 
     void mergeRoomTypeByHotelId(Long hotelId);
 

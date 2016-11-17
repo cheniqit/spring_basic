@@ -23,7 +23,7 @@ public interface HotelService {
      */
     HotelDto findByFangId(Long fangId, HotelSourceEnum hotelSourceEnum);
 
-    void mergePmsHotel(int pageNo);
+    void neverPmsHotel(int pageNo);
 
     void mergePmsHotelByHotelId(Long hotelId);
 

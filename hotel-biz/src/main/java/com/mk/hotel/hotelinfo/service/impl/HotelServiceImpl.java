@@ -289,11 +289,11 @@ public class HotelServiceImpl implements HotelService {
     public void mergePmsHotel(){
         //查询pms所有的信息房间列表id
         int pageNo = 1;
-        mergePmsHotel(pageNo);
+        neverPmsHotel(pageNo);
     }
 
-    public void mergePmsHotel(int pageNo){
-        logger.info("begin mergePmsHotel pageNo {}", pageNo);
+    public void neverPmsHotel(int pageNo){
+        logger.info("begin neverPmsHotel pageNo {}", pageNo);
         HotelQueryListRequest request = new HotelQueryListRequest(pageNo);
         HotelQueryListResponse response = hotelRemoteService.queryHotelList(request);
         if(response == null || response.getData() == null || CollectionUtils.isEmpty(response.getData().getHotels())){
@@ -301,9 +301,9 @@ public class HotelServiceImpl implements HotelService {
         }
         List<HotelQueryListResponse.HotelInfo> hotelInfoList = response.getData().getHotels();
         hotelProxyService.saveHotel(hotelInfoList);
-        logger.info("end mergePmsHotel pageNo {}", pageNo);
+        logger.info("end neverPmsHotel pageNo {}", pageNo);
         pageNo++;
-        mergePmsHotel(pageNo);
+        neverPmsHotel(pageNo);
     }
 
     public HotelDto updateCrmHotel(Long fangId){
@@ -723,8 +723,10 @@ public class HotelServiceImpl implements HotelService {
         if (null != roomList) {
 
             List<RoomDetailList> roomDetailLists = roomList.getList();
-            for (RoomDetailList detailList : roomDetailLists) {
-                this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+            if (null != roomDetailLists) {
+                for (RoomDetailList detailList : roomDetailLists) {
+                    this.fanqielaileRoomTypeProxyService.saveOrUpdateRoomDetail(hotel.getId(), detailList);
+                }
             }
         }
 

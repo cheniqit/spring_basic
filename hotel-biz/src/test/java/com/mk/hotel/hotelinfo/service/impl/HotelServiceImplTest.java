@@ -25,7 +25,7 @@ public class HotelServiceImplTest extends BaseTest{
 
     @Test
     public void testMergePmsHotel() throws Exception {
-        hotelService.mergePmsHotel(1);
+        hotelService.neverPmsHotel(1);
     }
 
     @Test

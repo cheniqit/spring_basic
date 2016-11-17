@@ -70,8 +70,11 @@ public class OrderController {
                     || PmsOrderStatusEnum.pmsFullStock.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.pmsCanceled.getCode().equals(pmsOrderStatus)
                     || PmsOrderStatusEnum.customerServiceCanceled.getCode().equals(pmsOrderStatus)
-                    || PmsOrderStatusEnum.serviceCanceled.getCode().equals(pmsOrderStatus)){
-                OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
+                    || PmsOrderStatusEnum.serviceCanceled.getCode().equals(pmsOrderStatus)
+                    || PmsOrderStatusEnum.confirmed.getCode().equals(pmsOrderStatus)){
+
+                //通知订单失败
+                boolean resultFlag = OtsInterface.updateOrderStatusByPms(orderStatusPush.getOrderid(), pmsOrderStatus);
             }
 
             if(PmsOrderStatusEnum.noshow.getCode().equals(pmsOrderStatus)){

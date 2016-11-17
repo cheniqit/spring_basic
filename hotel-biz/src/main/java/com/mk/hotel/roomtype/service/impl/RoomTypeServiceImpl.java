@@ -594,7 +594,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         OtsInterface.initHotel(new Long(hotel.getId()));
     }
 
-    public void mergeRoomTypePriceByHotelId(Long hotelId){
+    public void neverRoomTypePriceByHotelId(Long hotelId){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
         mergeRoomTypePriceByHotelId(hotel);
     }
@@ -642,10 +642,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     public void mergeRoomTypeStock(){
         int pageNo = 1;
-        mergeRoomTypeStock(pageNo);
+        neverRoomTypeStock(pageNo);
     }
 
-    public void mergeRoomTypeStock(int pageNo) {
+
+    public void neverRoomTypeStock(int pageNo) {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -661,7 +662,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomTypeStock(pageNo);
+        neverRoomTypeStock(pageNo);
     }
 
 
@@ -670,6 +671,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     @Override
     public void mergeRoomTypeStockByHotel(Long hotelId){
         Hotel hotel = hotelMapper.selectByPrimaryKey(hotelId);
+        if(hotel == null){
+            return;
+        }
         mergeRoomTypeStockByHotel(hotel);
     }
 
@@ -693,11 +697,11 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     public void mergeRoomTypeDayStock(){
-        mergeRoomTypeDayStock(1);
+        neverRoomTypeDayStock(1);
     }
 
     @Override
-    public void mergeRoomTypeDayStock(Integer pageNo) {
+    public void neverRoomTypeDayStock(Integer pageNo) {
         //酒店分页
         HotelExample hotelExample = new HotelExample();
         int count = hotelMapper.countByExample(hotelExample);
@@ -713,7 +717,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             mergeRoomTypeDayStockByHotel(hotel);
         }
         pageNo++;
-        mergeRoomTypeDayStock(pageNo);
+        neverRoomTypeDayStock(pageNo);
     }
 
     public void mergeRoomTypeDayStockByHotel(Hotel hotel){
@@ -916,7 +920,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         List<RoomTypePriceDto> roomTypePriceList  = roomTypePriceService.getRoomTypePrice(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //酒店价格
         for(RoomTypePriceDto roomTypePrice : roomTypePriceList){
-            roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(), roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), "RoomTypeService.updateRoomTypeToRedis");
+            roomTypePriceService.updateRedisPrice(roomTypeId, roomType.getName(),
+                    roomTypePrice.getDay(), roomTypePrice.getPrice(), roomTypePrice.getCost(), roomTypePrice.getSettlePrice(),
+                    "RoomTypeService.updateRoomTypeToRedis");
         }
         List<RoomTypeStock> roomTypeStockList = roomTypeStockService.queryRoomStockByRoomTypeId(roomTypeId, new Date(), DateUtils.addDays(new Date(), 30));
         //库存

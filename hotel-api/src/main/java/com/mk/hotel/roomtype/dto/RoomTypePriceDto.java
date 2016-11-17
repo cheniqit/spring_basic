@@ -21,6 +21,8 @@ public class RoomTypePriceDto  implements Serializable {
 
     private BigDecimal cost;
 
+    private BigDecimal settlePrice;
+
     private Date createDate;
 
     private String createBy;
@@ -69,6 +71,14 @@ public class RoomTypePriceDto  implements Serializable {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public BigDecimal getSettlePrice() {
+        return settlePrice;
+    }
+
+    public void setSettlePrice(BigDecimal settlePrice) {
+        this.settlePrice = settlePrice;
     }
 
     public Date getCreateDate() {

@@ -1,5 +1,7 @@
 package com.mk.hotel.roomtype;
 
+import com.mk.hotel.roomtype.dto.RoomTypeStockDto;
+import com.mk.hotel.roomtype.dto.RoomTypeStockRedisDto;
 import com.mk.hotel.roomtype.dto.StockInfoDto;
 
 import java.util.Date;
@@ -71,14 +73,21 @@ public interface RoomTypeStockService {
     String updateRedisStockByTotal(Long hotelId, Long roomTypeId, Date day, Integer totalNum, Integer totalPromoNum);
 
     /**
-     * 查询pms库存
+     * 查询redis中库存量
+     * @param roomTypeId
+     * @param day
+     * @return
+     */
+    RoomTypeStockRedisDto queryStockFromRedis(Long roomTypeId, Date day);
+
+    /**
+     *
      * @param roomTypeId
      * @param begin
      * @param end
      * @return
      */
     List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end);
-
 
     /**
      * 查询特价库存
@@ -120,4 +129,15 @@ public interface RoomTypeStockService {
      */
     Integer getAvailableByNormal(String hotelId, String roomTypeId, String from, String to);
 
+    /**
+     * 从redis 持久化到 db
+     * @param roomTypeId
+     * @param date
+     * @return
+     */
+    int savePersistToDb(Long roomTypeId, Date date);
+
+    int saveOrUpdate(RoomTypeStockDto dto);
+
+    RoomTypeStockDto queryByDate(Long roomTypeId, Date date);
 }

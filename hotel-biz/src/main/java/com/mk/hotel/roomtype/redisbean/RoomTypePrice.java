@@ -14,6 +14,8 @@ public class RoomTypePrice {
 
     private BigDecimal originPrice;
 
+    private BigDecimal settlePrice;
+
     private Integer promoOption;
 
     private String cacheTime;
@@ -74,5 +76,13 @@ public class RoomTypePrice {
 
     public void setCacheFrom(String cacheFrom) {
         this.cacheFrom = cacheFrom;
+    }
+
+    public BigDecimal getSettlePrice() {
+        return settlePrice;
+    }
+
+    public void setSettlePrice(BigDecimal settlePrice) {
+        this.settlePrice = settlePrice;
     }
 }
