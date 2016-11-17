@@ -91,43 +91,39 @@ public interface RoomTypeStockService {
 
     /**
      * 查询特价库存
-     * @param hotelId
      * @param roomTypeId
      * @param from
      * @param to
      * @return
      */
-    Map<String, Integer> getPromoStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) ;
+    Map<String, Integer> getPromoStockFromRedis(String roomTypeId, Date from, Date to) ;
 
     /**
      * 查询普通房库存
-     * @param hotelId
      * @param roomTypeId
      * @param from
      * @param to
      * @return
      */
-    Map<String, Integer> getNormalStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) ;
+    Map<String, Integer> getNormalStockFromRedis(String roomTypeId, Date from, Date to) ;
 
     /**
      * 查询连续天内的可用特价库存
-     * @param hotelId
      * @param roomTypeId
      * @param from
      * @param to
      * @return
      */
-    Integer getAvailableByPromoFromRedis(String hotelId, String roomTypeId, String from, String to) ;
+    Integer getAvailableByPromoFromRedis(String roomTypeId, String from, String to) ;
 
     /**
      * 查询连续天内的可用普通库存
-     * @param hotelId
      * @param roomTypeId
      * @param from
      * @param to
      * @return
      */
-    Integer getAvailableByNormalFromRedis(String hotelId, String roomTypeId, String from, String to);
+    Integer getAvailableByNormalFromRedis(String roomTypeId, String from, String to);
 
     /**
      * 从redis 持久化到 db

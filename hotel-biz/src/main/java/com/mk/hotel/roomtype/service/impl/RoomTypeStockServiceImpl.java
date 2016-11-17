@@ -823,7 +823,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
     }
 
 
-    public Map<String, Integer> getPromoStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) {
+    public Map<String, Integer> getPromoStockFromRedis(String roomTypeId, Date from, Date to) {
 
         if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
             return new HashMap<String, Integer>();
@@ -868,7 +868,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         return result;
     }
 
-    public Map<String, Integer> getNormalStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) {
+    public Map<String, Integer> getNormalStockFromRedis(String roomTypeId, Date from, Date to) {
 
         if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
             return new HashMap<String, Integer>();
@@ -912,7 +912,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         return result;
     }
 
-    public Integer getAvailableByPromoFromRedis(String hotelId, String roomTypeId, String from, String to) {
+    public Integer getAvailableByPromoFromRedis(String roomTypeId, String from, String to) {
 
         if (StringUtils.isBlank(roomTypeId)
                 || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
@@ -931,7 +931,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         //
-        Map<String, Integer> stock = this.getPromoStockFromRedis(hotelId, roomTypeId, dateFrom, dateTo);
+        Map<String, Integer> stock = this.getPromoStockFromRedis(roomTypeId, dateFrom, dateTo);
 
         //取最小数
         TreeSet<Integer> valueSet = new TreeSet();
@@ -949,7 +949,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
     }
 
-    public Integer getAvailableByNormalFromRedis(String hotelId, String roomTypeId, String from, String to) {
+    public Integer getAvailableByNormalFromRedis(String roomTypeId, String from, String to) {
 
         if (StringUtils.isBlank(roomTypeId)
                 || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
@@ -968,7 +968,7 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         //
-        Map<String, Integer> stock = this.getNormalStockFromRedis(hotelId, roomTypeId, dateFrom, dateTo);
+        Map<String, Integer> stock = this.getNormalStockFromRedis(roomTypeId, dateFrom, dateTo);
 
         //取最小数
         TreeSet<Integer> valueSet = new TreeSet();
