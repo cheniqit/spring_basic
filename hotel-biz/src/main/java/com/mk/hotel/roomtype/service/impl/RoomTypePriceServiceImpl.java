@@ -2,6 +2,7 @@ package com.mk.hotel.roomtype.service.impl;
 
 import com.dianping.cat.Cat;
 import com.mk.framework.date.DateUtils;
+import com.mk.framework.enums.ValidEnum;
 import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.json.JsonUtils;
@@ -189,7 +190,7 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
 
 
     @Override
-    public RoomTypePriceDto queryPriceFromRedis(Long roomTypeId, Date day) {
+    public RoomTypePriceDto queryFromRedis(Long roomTypeId, Date day) {
         if (null == roomTypeId || null == day) {
             return null;
         }
@@ -232,7 +233,25 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         return null;
     }
 
-    public List<RoomTypePriceDto> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate){
+    public RoomTypePriceDto queryFromDb(Long roomTypeId, Date date) {
+        if (null == roomTypeId || null == date) {
+            return null;
+        }
+        Date day = DateUtils.roundingDate(date);
+
+        //
+        RoomTypePriceExample example = new RoomTypePriceExample();
+        example.createCriteria().andDayEqualTo(day).andRoomTypeIdEqualTo(roomTypeId).andIsValidEqualTo(ValidEnum.VALID.getCode());
+        List<RoomTypePrice> roomTypePriceList = roomTypePriceMapper.selectByExample(example);
+
+        if (roomTypePriceList.isEmpty()) {
+            return null;
+        } else {
+            RoomTypePrice price = roomTypePriceList.get(0);
+            return this.convertToDto(price);
+        }
+    }
+    public List<RoomTypePriceDto> queryFromDb(Long roomTypeId, Date fromDate, Date toDate){
 
         List<RoomTypePriceDto> roomTypePriceDtoList = new ArrayList<RoomTypePriceDto>();
         if (null == fromDate || null == toDate) {
@@ -264,6 +283,40 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         //convert to dto
         for (RoomTypePrice roomTypePrice : roomTypePriceList) {
             roomTypePriceDtoList.add(this.convertToDto(roomTypePrice));
+        }
+        return roomTypePriceDtoList;
+    }
+
+    public List<RoomTypePriceDto> queryFromRedis(Long roomTypeId, Date fromDate, Date toDate){
+
+        List<RoomTypePriceDto> roomTypePriceDtoList = new ArrayList<RoomTypePriceDto>();
+        if (null == fromDate || null == toDate) {
+            return roomTypePriceDtoList;
+        }
+
+        //rounding
+        fromDate = DateUtils.roundingDate(fromDate);
+        toDate = DateUtils.roundingDate(toDate);
+
+        //开始时间晚于结束时间,直接返回
+        if (fromDate.after(toDate)) {
+            return roomTypePriceDtoList;
+        }
+
+        //
+        if (fromDate.compareTo(toDate) == 0) {
+            //同一天,不处理
+        } else {
+            //查询减一天
+            toDate = DateUtils.addDays(toDate, -1);
+        }
+
+        //
+        Date[] dates = DateUtils.getStartEndDate(fromDate, toDate);
+
+        //convert to dto
+        for (Date date : dates) {
+            roomTypePriceDtoList.add(this.queryFromRedis(roomTypeId, date));
         }
         return roomTypePriceDtoList;
     }

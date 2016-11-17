@@ -15,7 +15,12 @@ public interface RoomTypePriceService {
 
     void updateRedisPrice(Long roomTypeId, String roomTypeName, Date day, BigDecimal price, BigDecimal cost, BigDecimal settlePrice, String cacheFrom);
 
-    List<RoomTypePriceDto> getRoomTypePrice(Long roomTypeId, Date fromDate, Date toDate);
+    RoomTypePriceDto queryFromDb(Long roomTypeId, Date date);
 
-    RoomTypePriceDto queryPriceFromRedis(Long roomTypeId, Date day);
+    List<RoomTypePriceDto> queryFromDb(Long roomTypeId, Date fromDate, Date toDate);
+
+    RoomTypePriceDto queryFromRedis(Long roomTypeId, Date day);
+
+    List<RoomTypePriceDto> queryFromRedis(Long roomTypeId, Date fromDate, Date toDate);
+
 }

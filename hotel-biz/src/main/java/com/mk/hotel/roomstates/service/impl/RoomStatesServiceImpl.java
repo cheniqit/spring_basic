@@ -94,8 +94,8 @@ public class RoomStatesServiceImpl implements IRoomStatesService {
         Date[] dates = DateUtils.getStartEndDate(startDate, endDate);
         for (Date date : dates) {
             //
-            RoomTypePriceDto priceDto = this.priceService.queryPriceFromRedis(roomTypeId, date);
-            RoomTypeStockRedisDto stockDto = this.stockService.queryStockFromRedis(roomTypeId, date);
+            RoomTypePriceDto priceDto = this.priceService.queryFromRedis(roomTypeId, date);
+            RoomTypeStockRedisDto stockDto = this.stockService.queryFromRedis(roomTypeId, date);
 
             //
             RoomStatesDto dto = new RoomStatesDto();

@@ -78,7 +78,7 @@ public interface RoomTypeStockService {
      * @param day
      * @return
      */
-    RoomTypeStockRedisDto queryStockFromRedis(Long roomTypeId, Date day);
+    RoomTypeStockRedisDto queryFromRedis(Long roomTypeId, Date day);
 
     /**
      *
@@ -97,7 +97,7 @@ public interface RoomTypeStockService {
      * @param to
      * @return
      */
-    Map<String, Integer> getPromoStock(String hotelId, String roomTypeId, Date from, Date to) ;
+    Map<String, Integer> getPromoStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) ;
 
     /**
      * 查询普通房库存
@@ -107,7 +107,7 @@ public interface RoomTypeStockService {
      * @param to
      * @return
      */
-    Map<String, Integer> getNormalStock(String hotelId, String roomTypeId, Date from, Date to) ;
+    Map<String, Integer> getNormalStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) ;
 
     /**
      * 查询连续天内的可用特价库存
@@ -117,7 +117,7 @@ public interface RoomTypeStockService {
      * @param to
      * @return
      */
-    Integer getAvailableByPromo(String hotelId, String roomTypeId, String from, String to) ;
+    Integer getAvailableByPromoFromRedis(String hotelId, String roomTypeId, String from, String to) ;
 
     /**
      * 查询连续天内的可用普通库存
@@ -127,7 +127,7 @@ public interface RoomTypeStockService {
      * @param to
      * @return
      */
-    Integer getAvailableByNormal(String hotelId, String roomTypeId, String from, String to);
+    Integer getAvailableByNormalFromRedis(String hotelId, String roomTypeId, String from, String to);
 
     /**
      * 从redis 持久化到 db
@@ -139,5 +139,5 @@ public interface RoomTypeStockService {
 
     int saveOrUpdate(RoomTypeStockDto dto);
 
-    RoomTypeStockDto queryByDate(Long roomTypeId, Date date);
+    RoomTypeStockDto queryFromDb(Long roomTypeId, Date date);
 }

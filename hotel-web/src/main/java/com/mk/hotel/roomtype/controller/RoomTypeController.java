@@ -489,7 +489,7 @@ public class RoomTypeController {
     @RequestMapping(value = "/getRoomTypePrice")
     @ResponseBody
     public ResponseEntity<HashMap<String, Object>> getRoomTypePrice(Long roomTypeId, String fromDate, String toDate) {
-        List<RoomTypePriceDto>  roomTypePriceList = roomTypePriceService.getRoomTypePrice(roomTypeId,
+        List<RoomTypePriceDto>  roomTypePriceList = roomTypePriceService.queryFromDb(roomTypeId,
                 DateUtils.getDateFromString(fromDate, DateUtils.FORMAT_DATE),
                 DateUtils.getDateFromString(toDate, DateUtils.FORMAT_DATE));
         HashMap<String,Object> result = new LinkedHashMap<String, Object>();

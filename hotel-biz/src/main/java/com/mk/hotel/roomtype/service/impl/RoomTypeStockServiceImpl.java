@@ -469,56 +469,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         return "库存更新失败,请联系管理员2";
     }
 
-    @Override
-    public RoomTypeStockRedisDto queryStockFromRedis(Long roomTypeId, Date day) {
-        if (null == roomTypeId || null == day ) {
-            return null;
-        }
-
-        //key
-        String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
-        String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
-
-        String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
-        String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
-
-        //
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String strDate = format.format(day);
-
-        //
-        Jedis jedis = null;
-        try {
-            //
-            jedis = jedisConnectionFactory.getJedis();
-            //
-            Integer totalNum = getValueByRedisKeyName(jedis, totalHashName, strDate);
-            Integer totalPromoNum = getValueByRedisKeyName(jedis, totalPromoHashName, strDate);
-            Integer availableNum = getValueByRedisKeyName(jedis, availableHashName, strDate);
-            Integer promoNum = getValueByRedisKeyName(jedis, promoHashName, strDate);
-
-            //
-            RoomTypeStockRedisDto dto = new RoomTypeStockRedisDto();
-            dto.setRoomTypeId(roomTypeId);
-            dto.setDay(day);
-            dto.setTotalNum(totalNum);
-            dto.setTotalPromoNum(totalPromoNum);
-            dto.setAvailableNum(availableNum);
-            dto.setPromoNum(promoNum);
-
-            return dto;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        } finally {
-            if (null != jedis) {
-                jedis.close();
-            }
-        }
-
-        return null;
-    }
 
     public void fullStock(Long hotelId, Long roomTypeId, Date from, Date to) {
 
@@ -594,190 +544,20 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
     }
 
-    public List<RoomTypeStock> queryRoomStockByRoomTypeId(Long roomTypeId, Date fromDate, Date toDate) {
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
-        return roomTypeStockMapper.selectByExample(example);
-    }
-
-    public List<StockInfoDto> getStock(Long roomTypeId, Date begin, Date end){
-        List<RoomTypeStock> roomTypeStockList = queryRoomStockByRoomTypeId(roomTypeId, begin, end);
-        if(CollectionUtils.isEmpty(roomTypeStockList)){
-            return null;
-        }
-        List<StockInfoDto> result = new ArrayList<StockInfoDto>();
-        for(RoomTypeStock roomTypeStock : roomTypeStockList){
-            StockInfoDto stockInfoDto = new StockInfoDto();
-            stockInfoDto.setDate(DateUtils.formatDateTime(roomTypeStock.getDay(), DateUtils.FORMAT_DATE));
-            stockInfoDto.setNum(roomTypeStock.getNumber().toString());
-            result.add(stockInfoDto);
-        }
-        return result;
-    }
-
-
-    public Map<String, Integer> getPromoStock(String hotelId, String roomTypeId, Date from, Date to) {
-
-        if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
-            return new HashMap<String, Integer>();
-        }
-
-        Map<String, Integer> result = new LinkedMap();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        //
-        Jedis jedis = null;
-        //
-        Date[] dates = DateUtils.getStartEndDate(from, to);
-        try {
-            //
-            jedis = jedisConnectionFactory.getJedis();
-            //hashName
-            String hashName = RoomTypeStockCacheEnum.getPromoHashName(roomTypeId);
-
-            //
-            for (Date date : dates) {
-                String strDate = format.format(date);
-                String value = jedis.hget(hashName, strDate);
-
-                if (StringUtils.isBlank(value)) {
-                    result.put(strDate, null);
-                } else {
-                    Integer intVal = Integer.parseInt(value);
-                    result.put(strDate, intVal);
-                }
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        } finally {
-            if (null != jedis) {
-                jedis.close();
-            }
-        }
-
-        return result;
-    }
-
-    public Map<String, Integer> getNormalStock(String hotelId, String roomTypeId, Date from, Date to) {
-
-        if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
-            return new HashMap<String, Integer>();
-        }
-
-        Map<String, Integer> result = new LinkedMap();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-        //
-        Jedis jedis = null;
-        //
-        Date[] dates = DateUtils.getStartEndDate(from, to);
-        try {
-            //
-            jedis = jedisConnectionFactory.getJedis();
-            //hashName
-            String hashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
-
-            //
-            for (Date date : dates) {
-                String strDate = format.format(date);
-                String value = jedis.hget(hashName, strDate);
-
-                if (StringUtils.isBlank(value)) {
-                    result.put(strDate, null);
-                } else {
-                    Integer intVal = Integer.parseInt(value);
-                    result.put(strDate, intVal);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Cat.logError(e);
-        } finally {
-            if (null != jedis) {
-                jedis.close();
-            }
-        }
-
-        return result;
-    }
-
-    public Integer getAvailableByPromo(String hotelId,String roomTypeId, String from, String to) {
-
-        if (StringUtils.isBlank(roomTypeId)
-                || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
-            throw new MyException("roomTypeId, from, to 不可为空");
-        }
-        //form  to  YYMMDD
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        Date dateFrom = null;
-        Date dateTo = null;
-        try {
-            dateFrom = format.parse(from);
-            dateTo = format.parse(to);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new MyException("from, to 格式错误");
-        }
-
-        //
-        Map<String, Integer> stock = this.getPromoStock(hotelId, roomTypeId, dateFrom, dateTo);
-
-        //取最小数
-        TreeSet<Integer> valueSet = new TreeSet();
-        for (Integer value : stock.values()) {
-            if (null != value) {
-                valueSet.add(value);
-            }
-        }
-
-        //
-        if (valueSet.isEmpty()) {
-            return null;
-        } else {
-            return valueSet.first();
-        }
-    }
-
-    public Integer getAvailableByNormal(String hotelId, String roomTypeId, String from, String to) {
-
-        if (StringUtils.isBlank(roomTypeId)
-                || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
-            throw new MyException("hotelId, roomTypeId, from, to 不可为空");
-        }
-        //form  to  YYMMDD
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-        Date dateFrom = null;
-        Date dateTo = null;
-        try {
-            dateFrom = format.parse(from);
-            dateTo = format.parse(to);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new MyException("from, to 格式错误");
-        }
-
-        //
-        Map<String, Integer> stock = this.getNormalStock(hotelId, roomTypeId, dateFrom, dateTo);
-
-        //取最小数
-        TreeSet<Integer> valueSet = new TreeSet();
-        for (Integer value : stock.values()) {
-            if (null != value) {
-                valueSet.add(value);
-            }
-        }
-
-        //
-        if (valueSet.isEmpty()) {
-            return null;
-        } else {
-            return valueSet.first();
-        }
-    }
+//    public List<StockInfoDto> getStock(Long roomTypeId, Date begin, Date end){
+//        List<RoomTypeStock> roomTypeStockList = queryFromDb(roomTypeId, begin, end);
+//        if(CollectionUtils.isEmpty(roomTypeStockList)){
+//            return null;
+//        }
+//        List<StockInfoDto> result = new ArrayList<StockInfoDto>();
+//        for(RoomTypeStock roomTypeStock : roomTypeStockList){
+//            StockInfoDto stockInfoDto = new StockInfoDto();
+//            stockInfoDto.setDate(DateUtils.formatDateTime(roomTypeStock.getDay(), DateUtils.FORMAT_DATE));
+//            stockInfoDto.setNum(roomTypeStock.getNumber().toString());
+//            result.add(stockInfoDto);
+//        }
+//        return result;
+//    }
 
     public List<StockInfoDto> getRemoteStock (Long roomTypeId, Date begin, Date end) {
 
@@ -845,13 +625,13 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         }
 
         //get from redis
-        RoomTypeStockRedisDto redisDto = this.queryStockFromRedis(roomTypeId, date);
+        RoomTypeStockRedisDto redisDto = this.queryFromRedis(roomTypeId, date);
         if (null == redisDto) {
             return -1;
         }
 
         //get from db
-        RoomTypeStockDto dbDto = this.queryByDate(roomTypeId, date);
+        RoomTypeStockDto dbDto = this.queryFromDb(roomTypeId, date);
 
         if (null == dbDto) {
             dbDto = new RoomTypeStockDto();
@@ -887,22 +667,6 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         dbDto.setUpdateDate(new Date());
         //
         return this.saveOrUpdate(dbDto);
-    }
-
-    public RoomTypeStockDto queryByDate(Long roomTypeId, Date date) {
-
-        //
-        RoomTypeStockExample example = new RoomTypeStockExample();
-        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
-        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
-        if(CollectionUtils.isEmpty(roomTypeStockList)){
-            return null;
-        } else if (roomTypeStockList.size() == 1) {
-            RoomTypeStock stock = roomTypeStockList.get(0);
-            return convertToDto(stock);
-        } else {
-            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
-        }
     }
 
     public int saveOrUpdate(RoomTypeStockDto dto) {
@@ -981,6 +745,244 @@ public class RoomTypeStockServiceImpl implements RoomTypeStockService {
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
+        }
+    }
+
+    public RoomTypeStockDto queryFromDb(Long roomTypeId, Date date) {
+
+        //
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayEqualTo(date).andIsValidEqualTo(ValidEnum.VALID.getCode());
+        List<RoomTypeStock> roomTypeStockList = roomTypeStockMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(roomTypeStockList)){
+            return null;
+        } else if (roomTypeStockList.size() == 1) {
+            RoomTypeStock stock = roomTypeStockList.get(0);
+            return convertToDto(stock);
+        } else {
+            throw new MyException("房型库存配置错误,根据房型和时间查到多条配置信息");
+        }
+    }
+
+
+    @Override
+    public RoomTypeStockRedisDto queryFromRedis(Long roomTypeId, Date day) {
+        if (null == roomTypeId || null == day ) {
+            return null;
+        }
+
+        //key
+        String totalHashName = RoomTypeStockCacheEnum.getTotalHashName(String.valueOf(roomTypeId));
+        String totalPromoHashName = RoomTypeStockCacheEnum.getTotalPromoHashName(String.valueOf(roomTypeId));
+
+        String availableHashName = RoomTypeStockCacheEnum.getAvailableHashName(String.valueOf(roomTypeId));
+        String promoHashName = RoomTypeStockCacheEnum.getPromoHashName(String.valueOf(roomTypeId));
+
+        //
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = format.format(day);
+
+        //
+        Jedis jedis = null;
+        try {
+            //
+            jedis = jedisConnectionFactory.getJedis();
+            //
+            Integer totalNum = getValueByRedisKeyName(jedis, totalHashName, strDate);
+            Integer totalPromoNum = getValueByRedisKeyName(jedis, totalPromoHashName, strDate);
+            Integer availableNum = getValueByRedisKeyName(jedis, availableHashName, strDate);
+            Integer promoNum = getValueByRedisKeyName(jedis, promoHashName, strDate);
+
+            //
+            RoomTypeStockRedisDto dto = new RoomTypeStockRedisDto();
+            dto.setRoomTypeId(roomTypeId);
+            dto.setDay(day);
+            dto.setTotalNum(totalNum);
+            dto.setTotalPromoNum(totalPromoNum);
+            dto.setAvailableNum(availableNum);
+            dto.setPromoNum(promoNum);
+
+            return dto;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return null;
+    }
+
+    public List<RoomTypeStock> queryFromDb(Long roomTypeId, Date fromDate, Date toDate) {
+        RoomTypeStockExample example = new RoomTypeStockExample();
+        example.createCriteria().andRoomTypeIdEqualTo(roomTypeId).andDayBetween(fromDate, toDate);
+        return roomTypeStockMapper.selectByExample(example);
+    }
+
+
+    public Map<String, Integer> getPromoStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) {
+
+        if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
+            return new HashMap<String, Integer>();
+        }
+
+        Map<String, Integer> result = new LinkedMap();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = jedisConnectionFactory.getJedis();
+            //hashName
+            String hashName = RoomTypeStockCacheEnum.getPromoHashName(roomTypeId);
+
+            //
+            for (Date date : dates) {
+                String strDate = format.format(date);
+                String value = jedis.hget(hashName, strDate);
+
+                if (StringUtils.isBlank(value)) {
+                    result.put(strDate, null);
+                } else {
+                    Integer intVal = Integer.parseInt(value);
+                    result.put(strDate, intVal);
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return result;
+    }
+
+    public Map<String, Integer> getNormalStockFromRedis(String hotelId, String roomTypeId, Date from, Date to) {
+
+        if (StringUtils.isBlank(roomTypeId) || null == from || null == to) {
+            return new HashMap<String, Integer>();
+        }
+
+        Map<String, Integer> result = new LinkedMap();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        //
+        Jedis jedis = null;
+        //
+        Date[] dates = DateUtils.getStartEndDate(from, to);
+        try {
+            //
+            jedis = jedisConnectionFactory.getJedis();
+            //hashName
+            String hashName = RoomTypeStockCacheEnum.getAvailableHashName(roomTypeId);
+
+            //
+            for (Date date : dates) {
+                String strDate = format.format(date);
+                String value = jedis.hget(hashName, strDate);
+
+                if (StringUtils.isBlank(value)) {
+                    result.put(strDate, null);
+                } else {
+                    Integer intVal = Integer.parseInt(value);
+                    result.put(strDate, intVal);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        } finally {
+            if (null != jedis) {
+                jedis.close();
+            }
+        }
+
+        return result;
+    }
+
+    public Integer getAvailableByPromoFromRedis(String hotelId, String roomTypeId, String from, String to) {
+
+        if (StringUtils.isBlank(roomTypeId)
+                || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
+            throw new MyException("roomTypeId, from, to 不可为空");
+        }
+        //form  to  YYMMDD
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date dateFrom = null;
+        Date dateTo = null;
+        try {
+            dateFrom = format.parse(from);
+            dateTo = format.parse(to);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new MyException("from, to 格式错误");
+        }
+
+        //
+        Map<String, Integer> stock = this.getPromoStockFromRedis(hotelId, roomTypeId, dateFrom, dateTo);
+
+        //取最小数
+        TreeSet<Integer> valueSet = new TreeSet();
+        for (Integer value : stock.values()) {
+            if (null != value) {
+                valueSet.add(value);
+            }
+        }
+
+        //
+        if (valueSet.isEmpty()) {
+            return null;
+        } else {
+            return valueSet.first();
+        }
+    }
+
+    public Integer getAvailableByNormalFromRedis(String hotelId, String roomTypeId, String from, String to) {
+
+        if (StringUtils.isBlank(roomTypeId)
+                || StringUtils.isBlank(from) || StringUtils.isBlank(to)) {
+            throw new MyException("hotelId, roomTypeId, from, to 不可为空");
+        }
+        //form  to  YYMMDD
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        Date dateFrom = null;
+        Date dateTo = null;
+        try {
+            dateFrom = format.parse(from);
+            dateTo = format.parse(to);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new MyException("from, to 格式错误");
+        }
+
+        //
+        Map<String, Integer> stock = this.getNormalStockFromRedis(hotelId, roomTypeId, dateFrom, dateTo);
+
+        //取最小数
+        TreeSet<Integer> valueSet = new TreeSet();
+        for (Integer value : stock.values()) {
+            if (null != value) {
+                valueSet.add(value);
+            }
+        }
+
+        //
+        if (valueSet.isEmpty()) {
+            return null;
+        } else {
+            return valueSet.first();
         }
     }
 }
