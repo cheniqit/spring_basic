@@ -13,6 +13,7 @@ import com.mk.hotel.common.Constant;
 import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.consume.service.impl.QueueErrorInfoServiceImpl;
 import com.mk.hotel.mq.producer.MsgProducer;
+import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtypeprice.dto.RoomTypePriceSpecialDto;
 import com.mk.hotel.roomtypeprice.service.impl.RoomTypePriceSpecialServiceImpl;
 import org.slf4j.Logger;
@@ -23,7 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenqi on 16/10/9.
@@ -42,6 +45,9 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
 
     @Autowired
     private RoomTypePriceSpecialServiceImpl roomTypePriceSpecialService;
+
+    @Autowired
+    private RoomTypePriceService roomTypePriceService;
 
     private static String CONSUMER_GROUP_NAME = "hotelRoomTypePriceConsumer";
 
@@ -97,7 +103,20 @@ public class RoomTypePriceConsume implements InitializingBean,DisposableBean {
                                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                             }
                             roomTypePriceSpecialService.executeConsumeMessage(roomTypePriceSpecial, topicEnum);
-                        }else{
+                        } else if ("savePersistToDb".equals(messageExt.getTags())) {
+                            //
+                            Map<String, Object> messageMap = JsonUtils.fromJson(msg, Map.class, DateUtils.FORMAT_DATETIME);
+                            String strRoomTypeId = (String) messageMap.get("roomTypeId");
+                            String strDate = (String) messageMap.get("date");
+                            logger.info("savePersistToDb roomTypeId:{} date:{}", strRoomTypeId, strDate);
+
+                            //
+                            Long roomTypeId = Long.valueOf(strRoomTypeId);
+                            Date date = DateUtils.strToDate(strDate, DateUtils.FORMAT_DATETIME);
+
+                            int result = roomTypePriceService.savePersistToDb(roomTypeId, date);
+                            logger.info("savePersistToDb roomTypeId:{} date:{} result:{}", roomTypeId, date, result);
+                        } else{
 
                         }
                     }catch (Exception e){

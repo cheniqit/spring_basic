@@ -50,4 +50,5 @@ public interface RoomTypePriceSpecialService {
      * @return
      */
 	int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator);
+
 }

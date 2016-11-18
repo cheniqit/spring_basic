@@ -1,5 +1,6 @@
 package com.mk.hotel.roomtypeprice.service.impl;
 
+import com.dianping.cat.Cat;
 import com.mk.framework.date.DateUtils;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.json.JsonUtils;
@@ -10,6 +11,7 @@ import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.hotelinfo.dto.HotelDto;
 import com.mk.hotel.hotelinfo.service.impl.HotelServiceImpl;
 import com.mk.hotel.mq.producer.MsgProducer;
+import com.mk.hotel.roomtype.dto.RoomTypeDto;
 import com.mk.hotel.roomtype.dto.RoomTypePriceDto;
 import com.mk.hotel.roomtype.model.RoomType;
 import com.mk.hotel.roomtype.service.impl.RoomTypePriceServiceImpl;
@@ -27,9 +29,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by yanbaobin on 2016/10/10 9:45.
@@ -48,10 +48,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 
 	@Autowired
 	private RoomTypeServiceImpl roomTypeService;
-
-	@Autowired
-	private HotelServiceImpl hotelService;
-
 
 	@Autowired
 	private MkJedisConnectionFactory jedisConnectionFactory;
@@ -103,15 +99,16 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		this.saveOrUpdate(dto);
 
 		//send msg
-
 		Jedis jedis = null;
 		try {
 			jedis = jedisConnectionFactory.getJedis();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
+
 			String key = new StringBuilder(TopicEnum.ROOM_TYPE_PRICE.getName())
 					.append(System.currentTimeMillis())
 					.append(dto.getId()).toString();
 			msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "special", key, message);
+
 		}catch (Exception e){
 			e.printStackTrace();
 			throw new MyException("房型价格配置错误,发送消息错误");
@@ -234,21 +231,23 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 			logger.info("topic name:{} msg :{} roomType is null", topicEnum.getName(), JsonUtils.toJson(roomTypePriceSpecial));
 			throw new MyException("roomType is null");
 		}
-		HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
-		if(hotelDto == null){
-			logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), JsonUtils.toJson(roomTypePriceSpecial));
-			throw new MyException("hotelDto is null");
-		}
-		//
-		RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
-		roomTypePriceDto.setRoomTypeId(roomType.getId());
-		roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
-		roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
-		roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
-		roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
-		roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
+//		HotelDto hotelDto = hotelService.findById(roomType.getHotelId());
+//		if(hotelDto == null){
+//			logger.info("topic name:{} msg :{} hotel is null", topicEnum.getName(), JsonUtils.toJson(roomTypePriceSpecial));
+//			throw new MyException("hotelDto is null");
+//		}
+//		//
+//		RoomTypePriceDto roomTypePriceDto = new RoomTypePriceDto();
+//		roomTypePriceDto.setRoomTypeId(roomType.getId());
+//		roomTypePriceDto.setDay(roomTypePriceSpecial.getDay());
+//		roomTypePriceDto.setCost(roomTypePriceSpecial.getMarketPrice());
+//		roomTypePriceDto.setPrice(roomTypePriceSpecial.getSalePrice());
+//		roomTypePriceDto.setSettlePrice(roomTypePriceSpecial.getSettlePrice());
+//		roomTypePriceService.saveOrUpdateByRoomTypeId(roomTypePriceDto , roomTypePriceDto.getCreateBy());
+
+
 		roomTypePriceService.updateRedisPrice(roomTypePriceSpecial.getRoomTypeId(), roomType.getName(), roomTypePriceSpecial.getDay(),
 				roomTypePriceSpecial.getSalePrice(), roomTypePriceSpecial.getMarketPrice(), roomTypePriceSpecial.getSettlePrice(), "specialTopic");
-		OtsInterface.initHotel(hotelDto.getId());
+
 	}
 }

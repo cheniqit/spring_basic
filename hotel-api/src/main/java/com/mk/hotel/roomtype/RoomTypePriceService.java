@@ -23,4 +23,5 @@ public interface RoomTypePriceService {
 
     List<RoomTypePriceDto> queryFromRedis(Long roomTypeId, Date fromDate, Date toDate);
 
+    int savePersistToDb(Long roomTypeId, Date date);
 }

@@ -7,7 +7,10 @@ import com.mk.framework.excepiton.MyErrorEnum;
 import com.mk.framework.excepiton.MyException;
 import com.mk.framework.json.JsonUtils;
 import com.mk.framework.redis.MkJedisConnectionFactory;
+import com.mk.hotel.common.utils.OtsInterface;
+import com.mk.hotel.consume.enums.TopicEnum;
 import com.mk.hotel.hotelinfo.enums.HotelSourceEnum;
+import com.mk.hotel.mq.producer.MsgProducer;
 import com.mk.hotel.roomtype.RoomTypePriceService;
 import com.mk.hotel.roomtype.RoomTypeService;
 import com.mk.hotel.roomtype.dto.RoomTypeDto;
@@ -16,19 +19,20 @@ import com.mk.hotel.roomtype.enums.RoomTypePriceCacheEnum;
 import com.mk.hotel.roomtype.mapper.RoomTypePriceMapper;
 import com.mk.hotel.roomtype.model.RoomTypePrice;
 import com.mk.hotel.roomtype.model.RoomTypePriceExample;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class RoomTypePriceServiceImpl implements RoomTypePriceService {
 
+    @Autowired
+    private MsgProducer msgProducer;
     @Autowired
     private RoomTypeService roomTypeService;
     @Autowired
@@ -159,25 +163,41 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
             jedis = jedisConnectionFactory.getJedis();
             String priceHashName = RoomTypePriceCacheEnum.getPriceHashName(String.valueOf(roomTypeId));
 
-            //
-            com.mk.hotel.roomtype.redisbean.RoomTypePrice roomTypePrice = new com.mk.hotel.roomtype.redisbean.RoomTypePrice();
-            roomTypePrice.setRoomTypeId(roomTypeId);
-            roomTypePrice.setRoomTypeName(roomTypeName);
-            roomTypePrice.setPrice(price);
-            roomTypePrice.setOriginPrice(cost);
-            roomTypePrice.setSettlePrice(settlePrice);
-            roomTypePrice.setCacheTime(strDateTime);
-            roomTypePrice.setCacheFrom(cacheFrom);
+            //original
+            BigDecimal originalPrice = null;
+            BigDecimal originalCost = null;
+            BigDecimal originalSettlePrice = null;
 
-            //set
-            jedis.hset(priceHashName, strDate, JsonUtils.toJson(roomTypePrice));
+            String originalJson = jedis.hget(priceHashName, strDate);
+            if (StringUtils.isNotBlank(originalJson)) {
+                com.mk.hotel.roomtype.redisbean.RoomTypePrice originalRoomTypePrice =
+                        JsonUtils.fromJson(originalJson, com.mk.hotel.roomtype.redisbean.RoomTypePrice.class);
+                originalPrice = originalRoomTypePrice.getPrice();
+                originalCost = originalRoomTypePrice.getOriginPrice();
+                originalSettlePrice = originalRoomTypePrice.getSettlePrice();
+            }
 
-//            //
-//            Long hotelId = roomTypeService.getHotelIdByRedis(roomTypeId);
-//            if (null != hotelId) {
-//                //
-//                OtsInterface.initHotel(hotelId);
-//            }
+            //判断是否要持久化. 持久化条件 1-原值有空情况, 2-原值与新值不相同(有变化)
+            if (null == originalPrice || null == originalCost || null == originalSettlePrice
+                    || originalPrice.compareTo(price) != 0
+                    || originalCost.compareTo(cost) != 0
+                    || originalSettlePrice.compareTo(settlePrice) != 0) {
+                //
+                com.mk.hotel.roomtype.redisbean.RoomTypePrice roomTypePrice = new com.mk.hotel.roomtype.redisbean.RoomTypePrice();
+                roomTypePrice.setRoomTypeId(roomTypeId);
+                roomTypePrice.setRoomTypeName(roomTypeName);
+                roomTypePrice.setPrice(price);
+                roomTypePrice.setOriginPrice(cost);
+                roomTypePrice.setSettlePrice(settlePrice);
+                roomTypePrice.setCacheTime(strDateTime);
+                roomTypePrice.setCacheFrom(cacheFrom);
+
+                //set
+                jedis.hset(priceHashName, strDate, JsonUtils.toJson(roomTypePrice));
+
+                //save to db
+                this.messageToPersist(roomTypeId, day);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Cat.logError(e);
@@ -340,5 +360,60 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         dto.setIsValid(roomTypePrice.getIsValid());
         dto.setCost(roomTypePrice.getCost());
         return dto;
+    }
+
+
+    private void messageToPersist (Long roomTypeId, Date date) {
+        if (null == roomTypeId || null == date) {
+            return;
+        }
+
+        Map<String, Object> messageMap = new HashMap<String, Object>();
+        messageMap.put("roomTypeId", roomTypeId.toString());
+        messageMap.put("date", date);
+
+        String message = JsonUtils.toJson(messageMap, DateUtils.FORMAT_DATETIME);
+        String strDate =  DateUtils.formatDateTime(date);
+        try {
+            String msgKey = TopicEnum.ROOM_TYPE_PRICE.getName() + System.currentTimeMillis() + roomTypeId + strDate;
+            msgProducer.sendMsg(TopicEnum.ROOM_TYPE_PRICE.getName(), "savePersistToDb", msgKey, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Cat.logError(e);
+        }
+    }
+
+    public int savePersistToDb(Long roomTypeId, Date date) {
+
+        if (null == roomTypeId || null == date) {
+            return -1;
+        }
+
+        //get from redis
+        RoomTypePriceDto redisDto = this.queryFromRedis(roomTypeId, date);
+        if (null == redisDto) {
+            return -1;
+        }
+
+        //get from db
+        RoomTypePriceDto dbDto = this.queryFromDb(roomTypeId, date);
+
+        if (null == dbDto) {
+            dbDto = new RoomTypePriceDto();
+            dbDto.setRoomTypeId(roomTypeId);
+            dbDto.setDay(date);
+            dbDto.setIsValid(com.mk.hotel.common.enums.ValidEnum.VALID.getCode());
+        }
+
+        dbDto.setCost(redisDto.getCost());
+        dbDto.setPrice(redisDto.getPrice());
+        dbDto.setSettlePrice(redisDto.getSettlePrice());
+
+        int result = this.saveOrUpdateByRoomTypeId(dbDto, "savePersistToDb");
+
+        //
+        RoomTypeDto roomTypeDto = this.roomTypeService.selectById(roomTypeId);
+        OtsInterface.initHotel(roomTypeDto.getHotelId());
+        return result;
     }
 }
