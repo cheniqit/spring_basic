@@ -322,15 +322,6 @@ public class RoomTypePriceServiceImpl implements RoomTypePriceService {
         if (fromDate.after(toDate)) {
             return roomTypePriceDtoList;
         }
-
-        //
-        if (fromDate.compareTo(toDate) == 0) {
-            //同一天,不处理
-        } else {
-            //查询减一天
-            toDate = DateUtils.addDays(toDate, -1);
-        }
-
         //
         Date[] dates = DateUtils.getStartEndDate(fromDate, toDate);
 
