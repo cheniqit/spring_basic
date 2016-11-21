@@ -49,9 +49,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 	@Autowired
 	private RoomTypeServiceImpl roomTypeService;
 
-	@Autowired
-	private MkJedisConnectionFactory jedisConnectionFactory;
-
 	public int updateRoomTypePriceSpecialRule(Long roomTypeId, Date date, BigDecimal marketPrice, BigDecimal salePrice, BigDecimal settlePrice, String operator){
 		if(settlePrice == null){
 			throw new MyException("参数错误");
@@ -99,9 +96,7 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		this.saveOrUpdate(dto);
 
 		//send msg
-		Jedis jedis = null;
 		try {
-			jedis = jedisConnectionFactory.getJedis();
 			String message = JsonUtils.toJson(dto, DateUtils.FORMAT_DATETIME);
 
 			String key = new StringBuilder(TopicEnum.ROOM_TYPE_PRICE.getName())
@@ -112,8 +107,6 @@ public class RoomTypePriceSpecialServiceImpl implements RoomTypePriceSpecialServ
 		}catch (Exception e){
 			e.printStackTrace();
 			throw new MyException("房型价格配置错误,发送消息错误");
-		}if (jedis != null) {
-			jedis.close();
 		}
 
 		return 1;
