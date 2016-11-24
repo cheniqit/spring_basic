@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <build>
-        <finalName>mk_basic</finalName>
+        <finalName>pay</finalName>
     </build>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mk</groupId>
-    <artifactId>mk_basic</artifactId>
+    <artifactId>pay</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
@@ -323,7 +323,7 @@
 
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
-                <motanServiceGroup>mk_basic</motanServiceGroup>
+                <motanServiceGroup>pay</motanServiceGroup>
             </properties>
         </profile>
 
@@ -351,7 +351,7 @@
                 <zk_connect>10.10.144.40:2181,10.10.136.210:2181,10.10.115.52:2181</zk_connect>
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
-                <motanServiceGroup>mk_basic</motanServiceGroup>
+                <motanServiceGroup>pay</motanServiceGroup>
             </properties>
         </profile>
 
@@ -379,7 +379,7 @@
                 <zk_connect>10.10.105.143:2181,10.10.106.212:2181,10.10.103.91:2181</zk_connect>
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.228.33:9876;10.10.240.161:9876</rocketmq.namesrvAddr>
-                <motanServiceGroup>mk_basic</motanServiceGroup>
+                <motanServiceGroup>pay</motanServiceGroup>
             </properties>
         </profile>
 
