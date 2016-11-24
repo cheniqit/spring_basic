@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="driverClass" value="${jdbc.driver}"/>
+
+		<property name="jdbcUrl" value="${hotel.jdbc.url}"/>
+		<property name="user" value="${hotel.jdbc.user}"/>
+		<property name="password" value="${hotel.jdbc.password}"/>
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="100" />
+		<property name="initialPoolSize" value="5" />
+		<property name="maxIdleTime" value="5" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="acquireRetryAttempts" value="3" />
+		<property name="acquireRetryDelay" value="300" />
+		<property name="maxStatements" value="0"/>
+		<property name="maxStatementsPerConnection" value="1"/>
+		<property name="numHelperThreads" value="6"/>
+		<property name="maxAdministrativeTaskTime" value="5"/>
+		<property name="preferredTestQuery" value="SELECT 1"/>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:/sqlmap/hotel/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.mk.framework.cat.CatMybatisPlugins"></bean>
+			</array>
+		</property>
+	</bean>
+
+	<bean name="scannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mk.**.mapper"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<tx:advice id="txadvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
+			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
+			<tx:method name="never*" propagation="NEVER" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config expose-proxy="true">
+		<aop:pointcut id="txPointcut" expression="execution(* com.mk..service..*.*(..))" />
+		<aop:advisor advice-ref="txadvice" pointcut-ref="txPointcut" />
+	</aop:config>
+
+
+
+</beans>

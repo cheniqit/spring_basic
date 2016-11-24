@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:motan="http://api.weibo.com/schema/motan"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+   http://api.weibo.com/schema/motan http://api.weibo.com/schema/motan.xsd">
+
+    <motan:protocol name="motan" serialization="fastjson"  maxClientConnection="15" minClientConnection="2" requestTimeout="3000"/>
+
+    <!-- reference to the remote service -->
+    <motan:registry name="registry" regProtocol="zookeeper" address="${zk_connect}"/>
+
+    <!-- 通用referer基础配置 group="motan-open-rpc" module="motan-open-rpc"  -->
+    <motan:basicReferer id="clientBasicConfig"  registry="registry" protocol="motan" group="hotelGroup" module="motan"/>
+
+
+  <!--  <motan:referer id="remoteHotelService" interface="com.mk.hotel.hotelinfo.HotelService" basicReferer="clientBasicConfig"/>-->
+
+</beans>
