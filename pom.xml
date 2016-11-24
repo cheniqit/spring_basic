@@ -323,6 +323,7 @@
 
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
+                <motanServiceGroup>mk_basic</motanServiceGroup>
             </properties>
         </profile>
 
@@ -350,6 +351,7 @@
                 <zk_connect>10.10.144.40:2181,10.10.136.210:2181,10.10.115.52:2181</zk_connect>
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
+                <motanServiceGroup>mk_basic</motanServiceGroup>
             </properties>
         </profile>
 
@@ -377,6 +379,7 @@
                 <zk_connect>10.10.105.143:2181,10.10.106.212:2181,10.10.103.91:2181</zk_connect>
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.228.33:9876;10.10.240.161:9876</rocketmq.namesrvAddr>
+                <motanServiceGroup>mk_basic</motanServiceGroup>
             </properties>
         </profile>
 
