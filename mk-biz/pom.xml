@@ -136,7 +136,7 @@
         <!-- db -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>x -jdbc</artifactId>
+            <artifactId>jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>

@@ -1,31 +1,51 @@
-<?xml version="1.0" encoding="GBK"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xmlns:tx="http://www.springframework.org/schema/tx"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
-
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
-		<property name="driverClass" value="${jdbc.driver}"/>
-
-		<property name="jdbcUrl" value="${hotel.jdbc.url}"/>
-		<property name="user" value="${hotel.jdbc.user}"/>
-		<property name="password" value="${hotel.jdbc.password}"/>
-		<property name="minPoolSize" value="5" />
-		<property name="maxPoolSize" value="100" />
-		<property name="initialPoolSize" value="5" />
-		<property name="maxIdleTime" value="5" />
-		<property name="idleConnectionTestPeriod" value="60" />
-		<property name="acquireRetryAttempts" value="3" />
-		<property name="acquireRetryDelay" value="300" />
-		<property name="maxStatements" value="0"/>
-		<property name="maxStatementsPerConnection" value="1"/>
-		<property name="numHelperThreads" value="6"/>
-		<property name="maxAdministrativeTaskTime" value="5"/>
-		<property name="preferredTestQuery" value="SELECT 1"/>
+	<bean id="parentDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" abstract="true">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="500" />
+		<property name="maxWait" value="60000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
 	</bean>
+
+
+	<bean id="masterDataSource" parent="parentDataSource">
+		<property name="url" value="${master.jdbc.url}" />
+		<property name="username" value="${master.jdbc.user}" />
+		<property name="password" value="${master.jdbc.password}" />
+	</bean>
+
+	<bean id="slaveDataSource" parent="parentDataSource">
+		<property name="url" value="${slave.jdbc.url}" />
+		<property name="username" value="${slave.jdbc.user}" />
+		<property name="password" value="${slave.jdbc.password}" />
+	</bean>
+
+	<bean id="dataSource" class="com.mk.framework.db.ReadWriteSplittingDataSource">
+		<property name="targetDataSources">
+			<map>
+				<entry key="master" value-ref="masterDataSource" />
+				<entry key="slave" value-ref="slaveDataSource" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="transactionManager" class="com.mk.framework.db.ReadWriteSplittingTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="globalRollbackOnParticipationFailure" value="false" />
+	</bean>
+
+
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
@@ -43,11 +63,6 @@
 	</bean>
 
 
-
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
-
 	<tx:advice id="txadvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="add*" propagation="REQUIRED" />
@@ -56,7 +71,7 @@
 			<tx:method name="delete*" propagation="REQUIRED" />
 			<tx:method name="get*" read-only="true" propagation="SUPPORTS" />
 			<tx:method name="find*" read-only="true" propagation="SUPPORTS" />
-			<tx:method name="never*" propagation="NEVER" />
+			<tx:method name="noTran*" propagation="NEVER" />
 			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>
