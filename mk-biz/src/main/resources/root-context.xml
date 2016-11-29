@@ -12,9 +12,8 @@
     <aop:aspectj-autoproxy expose-proxy="true"/>
     <tx:annotation-driven/>
 
-    <context:property-placeholder location="classpath:/properties/*.properties"/>
+    <context:property-placeholder location="classpath*:/properties/*.properties"/>
     <import resource="spring/db-context.xml" />
-    <import resource="spring/rocketmq-context.xml" ></import>
     <import resource="spring/redis-context.xml" />
     <import resource="spring/motan_server.xml" />
 

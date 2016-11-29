@@ -324,6 +324,7 @@
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
                 <motanServiceGroup>pay</motanServiceGroup>
+                <dev>true</dev>
             </properties>
         </profile>
 
@@ -352,6 +353,7 @@
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.169.236:9876;10.10.152.97:9876</rocketmq.namesrvAddr>
                 <motanServiceGroup>pay</motanServiceGroup>
+                <dev>true</dev>
             </properties>
         </profile>
 
@@ -380,6 +382,7 @@
                 <!-- rocketmq -->
                 <rocketmq.namesrvAddr>10.10.228.33:9876;10.10.240.161:9876</rocketmq.namesrvAddr>
                 <motanServiceGroup>pay</motanServiceGroup>
+                <dev>false</dev>
             </properties>
         </profile>
 
