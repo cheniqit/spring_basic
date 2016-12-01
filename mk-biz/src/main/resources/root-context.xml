@@ -16,5 +16,6 @@
     <import resource="spring/db-context.xml" />
     <import resource="spring/redis-context.xml" />
     <import resource="spring/motan_server.xml" />
+    <import resource="spring/motan_client.xml" />
 
 </beans>
