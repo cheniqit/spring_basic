@@ -7,15 +7,13 @@
 
 
     <context:component-scan base-package="com.mk">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
+        <context:include-filter expression="org.springframework.web.bind.annotation.ControllerAdvice" type="annotation" />
     </context:component-scan>
     <aop:aspectj-autoproxy expose-proxy="true"/>
     <tx:annotation-driven/>
 
     <context:property-placeholder location="classpath*:/properties/*.properties"/>
-    <import resource="spring/db-context.xml" />
-    <import resource="spring/redis-context.xml" />
-    <import resource="spring/motan_server.xml" />
-    <import resource="spring/motan_client.xml" />
+    <import resource="spring/*.xml" />
 
 </beans>
