@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+
+	<appender name="infoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<Encoding>UTF-8</Encoding>
+		<file>${catalina.home}/logs/${build.finalName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.home}/logs/${build.finalName}.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%-20(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{80} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+
+
+	<logger name="com.ibatis" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="infoFile" />
+	</logger>
+	<logger name="java.sql.Connection" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="infoFile" />
+	</logger>
+	<logger name="java.sql.Statement" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="infoFile" />
+	</logger>
+	<logger name="java.sql.PreparedStatement" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="infoFile" />
+	</logger>
+	<logger name="java.sql.ResultSet" additivity="true">
+		<level value="WARN" />
+		<appender-ref ref="infoFile" />
+	</logger>
+
+	<logger name="org.springframework" additivity="true">
+		<level value="info"/>
+		<appender-ref ref="infoFile" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="console" />
+		<appender-ref ref="infoFile" />
+	</root>
+
+
+</configuration>

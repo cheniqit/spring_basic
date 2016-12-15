@@ -334,7 +334,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <label>product</label>
+                <label>simulate</label>
                 <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
                 <master.jdbc.url><![CDATA[jdbc:mysql://10.10.187.189:3306/ots?zeroDateTimeBehavior=convertToNull&amp;characterEncoding=utf8]]></master.jdbc.url>
                 <master.jdbc.user>smlt-writer</master.jdbc.user>
